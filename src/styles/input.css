@@ -1,7 +1,0 @@
-.custom-placeholder::placeholder {
-  padding-left: 0.3rem;
-  display: flex;
-}
-.without-ring:focus {
-  border: 2px solid red;
-}
