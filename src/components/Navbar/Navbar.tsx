@@ -14,7 +14,6 @@ interface NavbarProps {
 }
 const Navbar: FC<NavbarProps> = ({ children }) => {
   const pathname = usePathname();
-  console.log(pathname);
   const noUserPathnames: string[] = ["/login", "/signup", "/forgot-password"];
 
   const checkForbbidenPathname = (
