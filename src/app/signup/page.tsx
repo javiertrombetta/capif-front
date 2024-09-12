@@ -1,13 +1,13 @@
 import React from "react";
 import Image from "next/image";
 import gitLogo from "../../assets/GIT LOGO.png";
-import "../../styles/input.css";
-import "./signup.css";
 import Link from "next/link";
+import "../../styles/globals.css";
+import "./signup.css";
 
 export default function page() {
   return (
-    <div className="flex justify-center items-center h-[100vh]">
+    <div className="flex justify-center items-center h-[100vh] background">
       <div className="flex flex-col gap-[1.3rem] justify-center items-center signup-form">
         <Image
           className="w-[25rem]"
@@ -26,7 +26,7 @@ export default function page() {
             </label>
             <input
               className={
-                "custom-placeholder border-[#c8c8c8] border-[2px] w-[90%] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black"
+                "border-[#c8c8c8] border-[2px] w-[90%] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black"
               }
             />
           </div>
@@ -36,7 +36,7 @@ export default function page() {
             </label>
             <input
               className={
-                "custom-placeholder border-[#c8c8c8] border-[2px] w-[90%] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black"
+                "border-[#c8c8c8] border-[2px] w-[90%] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black"
               }
             />
           </div>
@@ -47,7 +47,7 @@ export default function page() {
             </label>
             <input
               className={
-                "custom-placeholder border-[#c8c8c8] border-[2px] w-[90%] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black"
+                "border-[#c8c8c8] border-[2px] w-[90%] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black"
               }
             />
           </div>
@@ -58,7 +58,7 @@ export default function page() {
             </label>
             <input
               className={
-                "custom-placeholder border-[#c8c8c8] border-[2px] w-[90%] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black"
+                "border-[#c8c8c8] border-[2px] w-[90%] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black"
               }
             />
           </div>

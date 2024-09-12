@@ -1,12 +1,13 @@
 import React from "react";
 import Image from "next/image";
 import gitLogo from "../../assets/GIT LOGO.png";
-import "./login.css";
 import Link from "next/link";
+import "../../styles/globals.css";
+import "./login.css";
 
 export default function page() {
   return (
-    <div className="flex justify-center items-center h-[100vh]">
+    <div className="flex justify-center items-center h-[100vh] background">
       <div className="flex flex-col gap-[1.3rem] justify-center items-center login-form">
         <Image
           className="w-[25rem]"

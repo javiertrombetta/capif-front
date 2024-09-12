@@ -2,9 +2,9 @@
 import React from "react";
 import Image from "next/image";
 import gitLogo from "../../assets/GIT LOGO.png";
-import "../../styles/input.css";
-import "./forgot-password.css";
 import { useRouter } from "next/navigation";
+import "./forgot-password.css";
+import "../../styles/globals.css";
 
 export default function page() {
   const router = useRouter();
@@ -14,7 +14,7 @@ export default function page() {
   };
 
   return (
-    <div className="flex justify-center items-center h-[100vh]">
+    <div className="flex justify-center items-center h-[100vh] background">
       <div className="flex flex-col gap-[1.3rem] justify-center items-center forgot-password-form">
         <Image
           className="w-[25rem]"
