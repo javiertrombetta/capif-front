@@ -28,8 +28,6 @@ body {
 
 .background {
   background-image: radial-gradient(circle, #1280e1 0%, #002069 100%);
-  width: 100%;
-  min-height: 100vh;
 }
 
 @layer utilities {

@@ -1,0 +1,49 @@
+.section {
+  border-left: 3px solid transparent;
+}
+
+.section:hover {
+  border-left: 3px solid #114586;
+}
+
+.slide {
+  display: flex;
+  clear: both;
+  width: 100%;
+  height: 0px;
+  overflow: hidden;
+  transition: height 0.4s ease;
+  text-align: start;
+  padding-left: 1.2rem;
+  font-size: 0.93rem;
+  gap: 0.5rem;
+  flex-direction: column;
+}
+
+.slide-visible {
+  display: flex;
+  clear: both;
+  width: 100%;
+  height: 17rem;
+  overflow: hidden;
+  transition: height 0.4s ease;
+  text-align: start;
+  padding-left: 1.2rem;
+  font-size: 0.93rem;
+  gap: 0.5rem;
+  flex-direction: column;
+}
+
+.menu-option-selected {
+  color: white;
+  cursor: pointer;
+}
+
+.menu-option {
+  color: #8aa4af;
+  cursor: pointer;
+}
+
+.menu-option:hover {
+  color: white;
+}
