@@ -1,10 +1,10 @@
 import React, { FC, ReactNode, useState } from "react";
 import { IoIosSpeedometer, IoIosArrowBack } from "react-icons/io";
-import "./Sidebar.css";
 import Link from "next/link";
 import { MenuOptions } from "@/types/types";
 import menuOptions from "@/utils/menuOptions";
 import { usePathname } from "next/navigation";
+import "./Sidebar.css";
 
 const Sidebar: FC = () => {
   const [showAdminMenu, setShowAdminMenu] = useState<boolean>(false);
@@ -54,7 +54,7 @@ const Sidebar: FC = () => {
         >
           <div className="flex items-center">
             <IoIosSpeedometer />
-            <p className="text-[1rem] ml-[0.5rem]">Administración</p>
+            <p className="text-[1rem] ml-[0.5rem] text-white">Administración</p>
           </div>
 
           <div>
@@ -79,7 +79,7 @@ const Sidebar: FC = () => {
         >
           <div className="flex items-center">
             <IoIosSpeedometer />
-            <p className="text-[1rem] ml-[0.5rem]">Repertorio</p>
+            <p className="text-[1rem] ml-[0.5rem] text-white">Repertorio</p>
           </div>
 
           <div>
