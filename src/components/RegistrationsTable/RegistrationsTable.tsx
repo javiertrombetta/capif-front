@@ -1,6 +1,6 @@
 "use client";
 import React, { FC, useRef, useState } from "react";
-import { IoIosMail, IoMdSettings } from "react-icons/io";
+import { IoMdSettings } from "react-icons/io";
 import { HiOutlineDocumentText } from "react-icons/hi2";
 import { FaEdit, FaMusic, FaRegEyeSlash } from "react-icons/fa";
 import { usersFakeData } from "@/utils/usersFakeData";
@@ -80,7 +80,7 @@ const RegistrationsTable: FC<RegistrationsTableProps> = () => {
               SELLO
             </th>
             <th scope="col" className="px-6 py-3">
-              FONOGRAMAS
+              <FaMusic className="text-black" size={17} />
             </th>
             <th scope="col" className="px-6 py-3">
               FECHA CREACIÓN
@@ -95,15 +95,6 @@ const RegistrationsTable: FC<RegistrationsTableProps> = () => {
               ISRC VIDEO
             </th>
             <th scope="col" className="px-6 py-3">
-              VERICAST
-            </th>
-            <th
-              scope="col"
-              className="px-6 py-3 flex justify-center items-center mt-[0.2rem]"
-            >
-              <IoIosMail size={20} />
-            </th>
-            <th scope="col" className="px-6 py-3">
               ACCIÓN
             </th>
           </tr>
@@ -111,14 +102,13 @@ const RegistrationsTable: FC<RegistrationsTableProps> = () => {
         <tbody>
           {usersFakeData.map((element) => (
             <tr className="bg-white border-b ">
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-[#1280e1] whitespace-nowrap"
-              >
+              <td scope="row" className="px-6 py-4 font-medium text-[#1280e1] ">
                 {element.email}
-              </th>
+              </td>
               <td className="px-6 py-4">{element.state}</td>
-              <td className="px-6 py-4">{element.cuit}</td>
+              <td className="px-7 py-4">
+                {<p className="whitespace-nowrap">{element.cuit}</p>}
+              </td>
               <td className="px-6 py-4">{element.name}</td>
               <td className="px-6 py-4">{element.phone}</td>
               <td className="px-6 py-4">{element.stamp}</td>
@@ -127,12 +117,6 @@ const RegistrationsTable: FC<RegistrationsTableProps> = () => {
               <td className="px-6 py-4">{element.updateDate}</td>
               <td className="px-6 py-4">{element.isrcAudio}</td>
               <td className="px-6 py-4">{element.isrcVideo}</td>
-              <td className="px-6 py-4">{element.vericast}</td>
-              <td className="px-6 py-4">
-                <p className="bg-[red] text-white text-center font-bold rounded-[0.2rem]">
-                  {element.notifications}
-                </p>
-              </td>
               <td className="px-6 py-4 relative group">
                 <button
                   onClick={() => toggleDropdown(element.id)}

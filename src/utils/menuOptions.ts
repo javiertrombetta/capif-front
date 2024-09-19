@@ -1,6 +1,5 @@
 import { MenuOptions } from "@/types/types";
-import { IoIosMail, IoIosWarning } from "react-icons/io";
-import { FaTags } from "react-icons/fa6";
+import { IoIosWarning } from "react-icons/io";
 import { HiUserPlus } from "react-icons/hi2";
 import {
   FaUniversity,
@@ -16,21 +15,9 @@ import { TbCircleLetterR } from "react-icons/tb";
 
 const adminMenuOptions: MenuOptions[] = [
   {
-    name: "Registros Pendientes",
-    icon: IoIosMail,
-    link: "/pending-registrations",
-  },
-
-  {
-    name: "Listado General",
-    icon: FaTags,
-    link: "/general-list",
-  },
-
-  {
-    name: "Registrados",
+    name: "Registros",
     icon: HiUserPlus,
-    link: "/registered",
+    link: "/records",
   },
   {
     name: "Pagos Manuales",
@@ -42,11 +29,7 @@ const adminMenuOptions: MenuOptions[] = [
     icon: FaUniversity,
     link: "/payments",
   },
-  {
-    name: "Usuarios",
-    icon: FaUsers,
-    link: "/users",
-  },
+
   {
     name: "Reporte por ISRC",
     icon: GrDocumentMissing,
@@ -60,6 +43,7 @@ const adminMenuOptions: MenuOptions[] = [
   {
     name: "T y C Políticas de Privacidad",
     icon: VscFiles,
+    link: "/privacy-policy",
   },
 ];
 
