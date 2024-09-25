@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { PT_Sans } from "next/font/google";
-import "../styles/globals.css";
 import Navbar from "@/components/Navbar/Navbar";
+import "../styles/globals.css";
 
 const ptSans = PT_Sans({ weight: "400", subsets: ["latin"] });
 

@@ -11,7 +11,7 @@ export default function page() {
       </div>
       <div className="mt-[2rem] pl-[1rem]">
         <label className="font-bold text-black">Buscar:</label>
-        <CustomInput clasName="ml-[0.5rem]" type="text" />
+        <CustomInput className="ml-[0.5rem]" type="text" />
       </div>
       <div className="mt-[2rem] flex justify-center items-center pl-[1rem] pr-[1rem] gap-[2rem]">
         <div className="flex flex-col w-[50%]">

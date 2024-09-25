@@ -34,7 +34,7 @@ export default function page() {
             </label>
             <input
               className={
-                "custom-placeholder border-[#c8c8c8] border-[2px] w-[90%] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black"
+                "custom-placeholder border-[#c8c8c8] border-[2px] w-[90%] outline-0 focus:border-[2px] focus:border-mainblue h-[2rem] text-black"
               }
             />
           </div>
