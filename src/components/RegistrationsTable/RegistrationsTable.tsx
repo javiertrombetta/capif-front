@@ -2,9 +2,10 @@
 import React, { FC, useRef, useState } from "react";
 import { IoMdSettings } from "react-icons/io";
 import { HiOutlineDocumentText } from "react-icons/hi2";
-import { FaEdit, FaMusic, FaRegEyeSlash } from "react-icons/fa";
+import { FaEdit, FaMusic, FaRegEyeSlash, FaUserAlt } from "react-icons/fa";
 import { usersFakeData } from "@/utils/usersFakeData";
 import dragTableFunctions from "@/hooks/dragTableFunctions";
+import { useRouter } from "next/navigation";
 import "./RegistrationsTable.css";
 
 interface RegistrationsTableProps {
@@ -29,6 +30,7 @@ interface RegistrationsTableProps {
 const RegistrationsTable: FC<RegistrationsTableProps> = () => {
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  const router = useRouter();
   const {
     handleMouseDown,
     handleMouseMove,
@@ -43,6 +45,10 @@ const RegistrationsTable: FC<RegistrationsTableProps> = () => {
     } else {
       setActiveDropdown(id);
     }
+  };
+
+  const redirectToOption = (route: string): void => {
+    router.push(route);
   };
 
   return (
@@ -100,8 +106,8 @@ const RegistrationsTable: FC<RegistrationsTableProps> = () => {
           </tr>
         </thead>
         <tbody>
-          {usersFakeData.map((element) => (
-            <tr className="bg-white border-b ">
+          {usersFakeData.map((element, index: number) => (
+            <tr key={index} className="bg-white border-b ">
               <td scope="row" className="px-6 py-4 font-medium text-[#1280e1] ">
                 {element.email}
               </td>
@@ -129,11 +135,23 @@ const RegistrationsTable: FC<RegistrationsTableProps> = () => {
                     activeDropdown === element.id ? "" : "hidden"
                   }`}
                 >
-                  <li className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]">
+                  <li
+                    onClick={() => redirectToOption("/procedures")}
+                    className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
+                  >
                     <HiOutlineDocumentText /> <p>Trámites</p>
                   </li>
-                  <li className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]">
+                  <li
+                    onClick={() => redirectToOption("/edit-user")}
+                    className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
+                  >
                     <FaEdit /> <p>Editar</p>
+                  </li>
+                  <li
+                    onClick={() => redirectToOption("/user-profile")}
+                    className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
+                  >
+                    <FaUserAlt /> <p>Ficha</p>
                   </li>
                   <li className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]">
                     <FaMusic /> <p>Repertorio</p>

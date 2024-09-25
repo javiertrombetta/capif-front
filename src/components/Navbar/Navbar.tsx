@@ -5,9 +5,9 @@ import { usePathname } from "next/navigation";
 import gitLogo from "../../assets/GIT LOGO.png";
 import { IoMenuSharp } from "react-icons/io5";
 import { PiUserCircleFill } from "react-icons/pi";
+import Sidebar from "../Sidebar/Sidebar";
 import "../../styles/globals.css";
 import "./Navbar.css";
-import Sidebar from "../Sidebar/Sidebar";
 
 interface NavbarProps {
   children: ReactNode;
