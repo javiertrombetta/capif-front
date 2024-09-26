@@ -20,7 +20,7 @@ const CustomInput: FC<CustomInputProps> = ({
     <>
       {label ? (
         <div className={`${containerClassName}`}>
-          <p className="font-bold">{label}</p>
+          <p className="font-bold text-black">{label}</p>
           <input
             placeholder={placeholder}
             type={type}
