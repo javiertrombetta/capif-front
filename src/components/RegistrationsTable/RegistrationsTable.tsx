@@ -1,10 +1,11 @@
 "use client";
 import React, { FC, useRef, useState } from "react";
-import { IoIosMail, IoMdSettings } from "react-icons/io";
+import { IoMdSettings } from "react-icons/io";
 import { HiOutlineDocumentText } from "react-icons/hi2";
-import { FaEdit, FaMusic, FaRegEyeSlash } from "react-icons/fa";
+import { FaEdit, FaMusic, FaRegEyeSlash, FaUserAlt } from "react-icons/fa";
 import { usersFakeData } from "@/utils/usersFakeData";
 import dragTableFunctions from "@/hooks/dragTableFunctions";
+import { useRouter } from "next/navigation";
 import "./RegistrationsTable.css";
 
 interface RegistrationsTableProps {
@@ -29,6 +30,7 @@ interface RegistrationsTableProps {
 const RegistrationsTable: FC<RegistrationsTableProps> = () => {
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  const router = useRouter();
   const {
     handleMouseDown,
     handleMouseMove,
@@ -43,6 +45,10 @@ const RegistrationsTable: FC<RegistrationsTableProps> = () => {
     } else {
       setActiveDropdown(id);
     }
+  };
+
+  const redirectToOption = (route: string): void => {
+    router.push(route);
   };
 
   return (
@@ -80,7 +86,7 @@ const RegistrationsTable: FC<RegistrationsTableProps> = () => {
               SELLO
             </th>
             <th scope="col" className="px-6 py-3">
-              FONOGRAMAS
+              <FaMusic className="text-black" size={17} />
             </th>
             <th scope="col" className="px-6 py-3">
               FECHA CREACIÓN
@@ -95,30 +101,20 @@ const RegistrationsTable: FC<RegistrationsTableProps> = () => {
               ISRC VIDEO
             </th>
             <th scope="col" className="px-6 py-3">
-              VERICAST
-            </th>
-            <th
-              scope="col"
-              className="px-6 py-3 flex justify-center items-center mt-[0.2rem]"
-            >
-              <IoIosMail size={20} />
-            </th>
-            <th scope="col" className="px-6 py-3">
               ACCIÓN
             </th>
           </tr>
         </thead>
         <tbody>
-          {usersFakeData.map((element) => (
-            <tr className="bg-white border-b ">
-              <th
-                scope="row"
-                className="px-6 py-4 font-medium text-[#1280e1] whitespace-nowrap"
-              >
+          {usersFakeData.map((element, index: number) => (
+            <tr key={index} className="bg-white border-b ">
+              <td scope="row" className="px-6 py-4 font-medium text-[#1280e1] ">
                 {element.email}
-              </th>
+              </td>
               <td className="px-6 py-4">{element.state}</td>
-              <td className="px-6 py-4">{element.cuit}</td>
+              <td className="px-7 py-4">
+                {<p className="whitespace-nowrap">{element.cuit}</p>}
+              </td>
               <td className="px-6 py-4">{element.name}</td>
               <td className="px-6 py-4">{element.phone}</td>
               <td className="px-6 py-4">{element.stamp}</td>
@@ -127,12 +123,6 @@ const RegistrationsTable: FC<RegistrationsTableProps> = () => {
               <td className="px-6 py-4">{element.updateDate}</td>
               <td className="px-6 py-4">{element.isrcAudio}</td>
               <td className="px-6 py-4">{element.isrcVideo}</td>
-              <td className="px-6 py-4">{element.vericast}</td>
-              <td className="px-6 py-4">
-                <p className="bg-[red] text-white text-center font-bold rounded-[0.2rem]">
-                  {element.notifications}
-                </p>
-              </td>
               <td className="px-6 py-4 relative group">
                 <button
                   onClick={() => toggleDropdown(element.id)}
@@ -145,11 +135,23 @@ const RegistrationsTable: FC<RegistrationsTableProps> = () => {
                     activeDropdown === element.id ? "" : "hidden"
                   }`}
                 >
-                  <li className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]">
+                  <li
+                    onClick={() => redirectToOption("/procedures")}
+                    className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
+                  >
                     <HiOutlineDocumentText /> <p>Trámites</p>
                   </li>
-                  <li className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]">
+                  <li
+                    onClick={() => redirectToOption("/edit-user")}
+                    className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
+                  >
                     <FaEdit /> <p>Editar</p>
+                  </li>
+                  <li
+                    onClick={() => redirectToOption("/user-profile")}
+                    className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
+                  >
+                    <FaUserAlt /> <p>Ficha</p>
                   </li>
                   <li className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]">
                     <FaMusic /> <p>Repertorio</p>

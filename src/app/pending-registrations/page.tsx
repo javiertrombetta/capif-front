@@ -13,7 +13,7 @@ export default function page() {
 
       <div className="mt-[1rem] pl-[1rem]">
         <label className="font-bold text-black">Buscar:</label>
-        <CustomInput clasName="ml-[0.5rem]" type="text" />
+        <CustomInput className="ml-[0.5rem]" type="text" />
       </div>
       <RegistrationsTable />
     </div>

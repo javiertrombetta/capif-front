@@ -15,40 +15,40 @@ export default function page() {
       <div className="ml-[2rem] mr-[2rem] mt-[1rem] W-[100%] flex justify-between gap-[2rem]">
         <div className="w-[50%]">
           <p className="font-bold text-black">PRODUCTOR</p>
-          <CustomInput type="text" clasName="w-[100%]" />
+          <CustomInput type="text" className="w-[100%]" />
         </div>
 
         <div className="w-[50%]">
           <p className="font-bold text-black">PERÍODO</p>
-          <CustomInput type="text" clasName="w-[100%]" />
+          <CustomInput type="text" className="w-[100%]" />
         </div>
       </div>
 
       <div className="ml-[2rem] mr-[2rem] mt-[1.5rem] W-[100%] flex justify-between gap-[2rem]">
         <div className="w-[50%]">
           <p className="font-bold text-black">CONCEPTO</p>
-          <CustomInput type="text" clasName="w-[100%]" />
+          <CustomInput type="text" className="w-[100%]" />
         </div>
 
         <div className="w-[50%]">
           <p className="font-bold text-black">TIPO</p>
-          <CustomInput type="text" clasName="w-[100%]" />
+          <CustomInput type="text" className="w-[100%]" />
         </div>
       </div>
 
       <div className="ml-[2rem] mr-[2rem] mt-[1.5rem] W-[100%] flex justify-between gap-[2rem]">
         <div className="w-[50%]">
           <p className="font-bold text-black">FECHA DESDE</p>
-          <CustomInput type="date" clasName="w-[100%] h-[2.3rem]" />
+          <CustomInput type="date" className="w-[100%] h-[2.3rem]" />
         </div>
 
         <div className="w-[50%]">
           <p className="font-bold text-black">FECHA HASTA</p>
-          <CustomInput type="date" clasName="w-[100%] h-[2.3rem]" />
+          <CustomInput type="date" className="w-[100%] h-[2.3rem]" />
         </div>
       </div>
       <div className="w-[100%] flex justify-center pl-[2rem] pr-[2rem]">
-        <button className="text-white w-[100%] h-[2.5rem] bg-[#1280e1] text-[1rem] mt-[1.5rem] font-bold flex justify-center items-center gap-[0.3rem]">
+        <button className="text-white w-[100%] h-[2.5rem] bg-mainblue text-[1rem] mt-[1.5rem] font-bold flex justify-center items-center gap-[0.3rem]">
           <FaSearch />
           Buscar
         </button>

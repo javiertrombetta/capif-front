@@ -1,10 +1,11 @@
 import React, { FC, ReactNode, useState } from "react";
-import { IoIosSpeedometer, IoIosArrowBack } from "react-icons/io";
-import "./Sidebar.css";
+import { IoIosSpeedometer, IoIosArrowBack, IoIosWarning } from "react-icons/io";
 import Link from "next/link";
 import { MenuOptions } from "@/types/types";
 import menuOptions from "@/utils/menuOptions";
 import { usePathname } from "next/navigation";
+import { FaRegCircle } from "react-icons/fa";
+import "./Sidebar.css";
 
 const Sidebar: FC = () => {
   const [showAdminMenu, setShowAdminMenu] = useState<boolean>(false);
@@ -54,7 +55,7 @@ const Sidebar: FC = () => {
         >
           <div className="flex items-center">
             <IoIosSpeedometer />
-            <p className="text-[1rem] ml-[0.5rem]">Administración</p>
+            <p className="text-[1rem] ml-[0.5rem] text-white">Administración</p>
           </div>
 
           <div>
@@ -63,7 +64,7 @@ const Sidebar: FC = () => {
         </button>
 
         <div
-          className={`mt-[0.5rem] ${showAdminMenu ? "slide-visible" : "slide"}`}
+          className={`mt-[0.5rem] ${showAdminMenu ? "admin-slide-visible" : "admin-slide"}`}
         >
           {menuOptions.adminMenuOptions.map(
             (element: MenuOptions, index: number) =>
@@ -79,7 +80,7 @@ const Sidebar: FC = () => {
         >
           <div className="flex items-center">
             <IoIosSpeedometer />
-            <p className="text-[1rem] ml-[0.5rem]">Repertorio</p>
+            <p className="text-[1rem] ml-[0.5rem] text-white">Repertorio</p>
           </div>
 
           <div>
@@ -88,8 +89,27 @@ const Sidebar: FC = () => {
         </button>
 
         <div
-          className={`mt-[0.5rem] ${showRepertorynMenu ? "slide-visible" : "slide"}`}
+          className={`mt-[0.5rem] ${showRepertorynMenu ? "repertory-slide-visible" : "repertory-slide"}`}
         >
+          <div className="flex items-center gap-[0.5rem] menu-option relative">
+            <div className="flex items-center gap-[0.5rem]">
+              <IoIosWarning size={17} />
+              <p>Resolución de conflictos</p>
+            </div>
+          </div>
+
+          <div className="solve-conflicts-slide-visible">
+            <p className="text-#8aa4af hover:text-white cursor-pointer flex items-center gap-[0.3rem]">
+              <FaRegCircle size={10} /> Iniciar Conflicto
+            </p>
+            <p className="text-#8aa4af hover:text-white cursor-pointer flex items-center gap-[0.3rem]">
+              <FaRegCircle size={10} /> Pendientes de resolución
+            </p>
+            <p className="text-#8aa4af hover:text-white cursor-pointer flex items-center gap-[0.3rem]">
+              <FaRegCircle size={10} /> Resueltos
+            </p>
+          </div>
+
           {menuOptions.repertoryMenuOptions.map(
             (element: MenuOptions, index: number) =>
               renderMenuOption(element, index)

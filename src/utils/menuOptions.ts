@@ -1,65 +1,49 @@
 import { MenuOptions } from "@/types/types";
-import { IoIosMail, IoIosWarning } from "react-icons/io";
-import { FaTags } from "react-icons/fa6";
+// import { IoIosWarning } from "react-icons/io";
 import { HiUserPlus } from "react-icons/hi2";
 import {
-  FaUniversity,
+  // FaUniversity,
   FaUsers,
-  FaInbox,
+  // FaInbox,
   FaMusic,
   FaCloudDownloadAlt,
   FaDatabase,
 } from "react-icons/fa";
 import { GrDocumentMissing } from "react-icons/gr";
 import { VscFiles } from "react-icons/vsc";
-import { TbCircleLetterR } from "react-icons/tb";
+// import { TbCircleLetterR } from "react-icons/tb";
 
 const adminMenuOptions: MenuOptions[] = [
   {
-    name: "Registros Pendientes",
-    icon: IoIosMail,
-    link: "/pending-registrations",
-  },
-
-  {
-    name: "Listado General",
-    icon: FaTags,
-    link: "/general-list",
-  },
-
-  {
-    name: "Registrados",
+    name: "Registros",
     icon: HiUserPlus,
-    link: "/registered",
+    link: "/records",
   },
-  {
-    name: "Pagos Manuales",
-    icon: FaUniversity,
-    link: "/manual-payments",
-  },
-  {
-    name: "Pagos",
-    icon: FaUniversity,
-    link: "/payments",
-  },
-  {
-    name: "Usuarios",
-    icon: FaUsers,
-    link: "/users",
-  },
+  // {
+  //   name: "Pagos Manuales",
+  //   icon: FaUniversity,
+  //   link: "/manual-payments",
+  // },
+  // {
+  //   name: "Pagos",
+  //   icon: FaUniversity,
+  //   link: "/payments",
+  // },
+
   {
     name: "Reporte por ISRC",
     icon: GrDocumentMissing,
     link: "/isrc-reports",
   },
-  {
-    name: "Cuenta Corriente",
-    icon: FaInbox,
-    link: "/current-account",
-  },
+  // {
+  //   name: "Cuenta Corriente",
+  //   icon: FaInbox,
+  //   link: "/current-account",
+  // },
   {
     name: "T y C Políticas de Privacidad",
     icon: VscFiles,
+    link: "/privacy-policy",
   },
 ];
 
@@ -67,12 +51,13 @@ const repertoryMenuOptions: MenuOptions[] = [
   {
     name: "Repertorio Declarado",
     icon: FaMusic,
+    link: "/repertory",
   },
 
-  {
-    name: "Resolución de Conflictos",
-    icon: IoIosWarning,
-  },
+  // {
+  //   name: "Resolución de Conflictos",
+  //   icon: IoIosWarning,
+  // },
 
   {
     name: "Productores",
@@ -90,14 +75,7 @@ const repertoryMenuOptions: MenuOptions[] = [
     name: "Reglas",
     icon: FaDatabase,
   },
-  {
-    name: "Modificación de Datos",
-    icon: FaDatabase,
-  },
-  {
-    name: "Titularidad",
-    icon: TbCircleLetterR,
-  },
+
   {
     name: "Depuración de repertorio",
     icon: FaDatabase,

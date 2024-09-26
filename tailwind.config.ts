@@ -15,6 +15,7 @@ const config: Config = {
       },
       colors: {
         customtext: "#737373",
+        mainblue: "#1280e1",
       },
     },
   },
