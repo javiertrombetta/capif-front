@@ -62,27 +62,33 @@ const repertoryMenuOptions: MenuOptions[] = [
   {
     name: "Productores",
     icon: FaUsers,
+    link: "/producers",
   },
   {
     name: "Alta Masiva",
     icon: FaDatabase,
+    link: "/mass-registration",
   },
   {
     name: "Archivos Repertorio",
     icon: FaDatabase,
+    link: "/repertory-files",
   },
   {
     name: "Reglas",
     icon: FaDatabase,
+    link: "/rules",
   },
 
   {
     name: "Depuración de repertorio",
     icon: FaDatabase,
+    link: "/refine-repertory",
   },
   {
     name: "Reportes",
     icon: FaCloudDownloadAlt,
+    link: "/reports",
   },
 ];
 

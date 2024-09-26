@@ -4,7 +4,7 @@ import Link from "next/link";
 import { MenuOptions } from "@/types/types";
 import menuOptions from "@/utils/menuOptions";
 import { usePathname } from "next/navigation";
-import { FaRegCircle } from "react-icons/fa";
+import { FaRegCircle, FaCircle } from "react-icons/fa";
 import "./Sidebar.css";
 
 const Sidebar: FC = () => {
@@ -40,6 +40,58 @@ const Sidebar: FC = () => {
         <element.icon size={17} />
         <p>{element.name}</p>
       </div>
+    );
+  };
+
+  const renderConflictsResolution: FC = () => {
+    return (
+      <>
+        <div className="flex items-center gap-[0.5rem] menu-option relative">
+          <div className="flex items-center gap-[0.5rem]">
+            <IoIosWarning size={17} />
+            <p>Resolución de conflictos</p>
+          </div>
+        </div>
+
+        <div className="solve-conflicts-slide-visible">
+          <Link href={"/start-conflict"}>
+            <p
+              className={`${pathname === "/start-conflict" && "text-white"} text-#8aa4af hover:text-white cursor-pointer flex items-center gap-[0.3rem]`}
+            >
+              {pathname === "/start-conflict" ? (
+                <FaCircle size={10} />
+              ) : (
+                <FaRegCircle size={10} />
+              )}
+              Iniciar Conflicto
+            </p>
+          </Link>
+          <Link href={"/pending-resolution"}>
+            <p
+              className={`${pathname === "/pending-resolution" && "text-white"} text-#8aa4af hover:text-white cursor-pointer flex items-center gap-[0.3rem]`}
+            >
+              {pathname === "/pending-resolution" ? (
+                <FaCircle size={10} />
+              ) : (
+                <FaRegCircle size={10} />
+              )}
+              Pendientes de resolución
+            </p>
+          </Link>
+          <Link href={"/solved"}>
+            <p
+              className={`${pathname === "/solved" && "text-white"} text-#8aa4af hover:text-white cursor-pointer flex items-center gap-[0.3rem]`}
+            >
+              {pathname === "/solved" ? (
+                <FaCircle size={10} />
+              ) : (
+                <FaRegCircle size={10} />
+              )}
+              Resueltos
+            </p>
+          </Link>
+        </div>
+      </>
     );
   };
 
@@ -91,24 +143,7 @@ const Sidebar: FC = () => {
         <div
           className={`mt-[0.5rem] ${showRepertorynMenu ? "repertory-slide-visible" : "repertory-slide"}`}
         >
-          <div className="flex items-center gap-[0.5rem] menu-option relative">
-            <div className="flex items-center gap-[0.5rem]">
-              <IoIosWarning size={17} />
-              <p>Resolución de conflictos</p>
-            </div>
-          </div>
-
-          <div className="solve-conflicts-slide-visible">
-            <p className="text-#8aa4af hover:text-white cursor-pointer flex items-center gap-[0.3rem]">
-              <FaRegCircle size={10} /> Iniciar Conflicto
-            </p>
-            <p className="text-#8aa4af hover:text-white cursor-pointer flex items-center gap-[0.3rem]">
-              <FaRegCircle size={10} /> Pendientes de resolución
-            </p>
-            <p className="text-#8aa4af hover:text-white cursor-pointer flex items-center gap-[0.3rem]">
-              <FaRegCircle size={10} /> Resueltos
-            </p>
-          </div>
+          {renderConflictsResolution({})}
 
           {menuOptions.repertoryMenuOptions.map(
             (element: MenuOptions, index: number) =>
