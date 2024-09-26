@@ -5,7 +5,7 @@ import Header from "@/commons/Header/Header";
 
 export default function page() {
   return (
-    <div className="h-[100vh] max-w-[100%] bg-[white] overflow-y-scroll overflow-x-hidden pb-[4rem]">
+    <div className="h-[100vh] w-[100%] bg-[white] overflow-y-scroll overflow-x-hidden pb-[4rem]">
       <Header title="Registros" />
 
       <div className="flex items-center mt-[1rem] gap-[2rem]">
