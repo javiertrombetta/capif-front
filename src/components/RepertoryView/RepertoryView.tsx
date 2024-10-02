@@ -5,6 +5,7 @@ import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
 import { RiEqualizerFill } from "react-icons/ri";
 import Modal from "@/commons/Modal/Modal";
+import CustomInput from "@/commons/CustomInput/CustomInput";
 
 const RepertoryView: FC = () => {
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
@@ -21,6 +22,7 @@ const RepertoryView: FC = () => {
     <CustomLayout className="relative">
       {isOpenModal && <Modal handleCloseModal={handleCloseModal} />}
       <Header title="Repertorio Declarado" />
+
       <div className="w-[100%] pl-[2rem] pr-[2rem]">
         <CustomButton
           onClick={handleOpenModal}
@@ -30,6 +32,12 @@ const RepertoryView: FC = () => {
           Filtros
         </CustomButton>
       </div>
+
+      <CustomInput
+        containerClassName="ml-[2rem] mt-[2rem]"
+        label="Buscar"
+        type="text"
+      />
 
       <div className="w-[100%] pl-[1rem] pr-[1rem]">
         <div className="relative overflow-x-auto mt-[2rem]">

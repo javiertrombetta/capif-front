@@ -1,8 +1,8 @@
 import React, { FC, ReactNode, useState } from "react";
 import { IoIosSpeedometer, IoIosArrowBack, IoIosWarning } from "react-icons/io";
 import Link from "next/link";
-import { MenuOptions } from "@/types/types";
-import menuOptions from "@/utils/menuOptions";
+import { AdminMenuOptions } from "@/types/types";
+import menuOptions from "@/utils/adminMenuOptions";
 import { usePathname } from "next/navigation";
 import { FaRegCircle, FaCircle } from "react-icons/fa";
 import "./Sidebar.css";
@@ -22,7 +22,10 @@ const Sidebar: FC = () => {
     setShowAdminMenu(false);
   };
 
-  const renderMenuOption = (element: MenuOptions, key: number): ReactNode => {
+  const renderMenuOption = (
+    element: AdminMenuOptions,
+    key: number
+  ): ReactNode => {
     if (element.link) {
       return (
         <Link
@@ -54,11 +57,11 @@ const Sidebar: FC = () => {
         </div>
 
         <div className="solve-conflicts-slide-visible">
-          <Link href={"/start-conflict"}>
+          <Link href={"/admin/start-conflict"}>
             <p
-              className={`${pathname === "/start-conflict" && "text-white"} text-#8aa4af hover:text-white cursor-pointer flex items-center gap-[0.3rem]`}
+              className={`${pathname === "/admin/start-conflict" && "text-white"} text-#8aa4af hover:text-white cursor-pointer flex items-center gap-[0.3rem]`}
             >
-              {pathname === "/start-conflict" ? (
+              {pathname === "/admin/start-conflict" ? (
                 <FaCircle size={10} />
               ) : (
                 <FaRegCircle size={10} />
@@ -66,11 +69,11 @@ const Sidebar: FC = () => {
               Iniciar Conflicto
             </p>
           </Link>
-          <Link href={"/pending-resolution"}>
+          <Link href={"/admin/pending-resolution"}>
             <p
-              className={`${pathname === "/pending-resolution" && "text-white"} text-#8aa4af hover:text-white cursor-pointer flex items-center gap-[0.3rem]`}
+              className={`${pathname === "/admin/pending-resolution" && "text-white"} text-#8aa4af hover:text-white cursor-pointer flex items-center gap-[0.3rem]`}
             >
-              {pathname === "/pending-resolution" ? (
+              {pathname === "/admin/pending-resolution" ? (
                 <FaCircle size={10} />
               ) : (
                 <FaRegCircle size={10} />
@@ -78,11 +81,11 @@ const Sidebar: FC = () => {
               Pendientes de resolución
             </p>
           </Link>
-          <Link href={"/solved"}>
+          <Link href={"/admin/solved"}>
             <p
-              className={`${pathname === "/solved" && "text-white"} text-#8aa4af hover:text-white cursor-pointer flex items-center gap-[0.3rem]`}
+              className={`${pathname === "/admin/solved" && "text-white"} text-#8aa4af hover:text-white cursor-pointer flex items-center gap-[0.3rem]`}
             >
-              {pathname === "/solved" ? (
+              {pathname === "/admin/solved" ? (
                 <FaCircle size={10} />
               ) : (
                 <FaRegCircle size={10} />
@@ -118,8 +121,8 @@ const Sidebar: FC = () => {
         <div
           className={`mt-[0.5rem] ${showAdminMenu ? "admin-slide-visible" : "admin-slide"}`}
         >
-          {menuOptions.adminMenuOptions.map(
-            (element: MenuOptions, index: number) =>
+          {menuOptions.administrationMenuOptions.map(
+            (element: AdminMenuOptions, index: number) =>
               renderMenuOption(element, index)
           )}
         </div>
@@ -146,7 +149,7 @@ const Sidebar: FC = () => {
           {renderConflictsResolution({})}
 
           {menuOptions.repertoryMenuOptions.map(
-            (element: MenuOptions, index: number) =>
+            (element: AdminMenuOptions, index: number) =>
               renderMenuOption(element, index)
           )}
         </div>

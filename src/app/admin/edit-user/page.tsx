@@ -26,7 +26,17 @@ export default function page() {
         <div className="w-[100%] gap-[0.5rem] flex flex-col">
           <p className="font-bold text-black">ROL</p>
           <select className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black">
-            <option>Admin</option>
+            <option>Administrador</option>
+            <option>Productor</option>
+          </select>
+        </div>
+
+        <div className="w-[100%] gap-[0.5rem] flex flex-col">
+          <p className="font-bold text-black">ESTADO</p>
+          <select
+            disabled
+            className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black"
+          >
             <option>Confirmado</option>
             <option>Nuevo</option>
             <option>Registrado</option>
@@ -55,9 +65,7 @@ export default function page() {
           <button className="flex items-center justify-center bg-mainblue w-fit h-[2rem] mt-[2rem] pl-[1rem] pr-[1rem] pt-[0.5rem] pb-[0.5rem] rounded-[0.2rem]">
             Aceptar
           </button>
-          <button className="flex items-center justify-center bg-mainblue w-fit h-[2rem] mt-[2rem] pl-[1rem] pr-[1rem] pt-[0.5rem] pb-[0.5rem] rounded-[0.2rem]">
-            Eliminar
-          </button>
+
           <button className="flex items-center justify-center bg-mainblue w-fit h-[2rem] mt-[2rem] pl-[1rem] pr-[1rem] pt-[0.5rem] pb-[0.5rem] rounded-[0.2rem]">
             Cancelar
           </button>

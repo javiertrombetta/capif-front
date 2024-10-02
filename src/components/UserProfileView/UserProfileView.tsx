@@ -24,10 +24,6 @@ const UserProfileView: FC = () => {
       title: "Datos Registro",
     },
     {
-      name: "consult",
-      title: "Consultas",
-    },
-    {
       name: "updates",
       title: "Actualizaciones",
     },
@@ -40,9 +36,6 @@ const UserProfileView: FC = () => {
   const renderTab = (): ReactNode => {
     if (currentTab === "register") {
       return <RegisterTab />;
-    }
-    if (currentTab === "consult") {
-      return <ConsultTab />;
     }
     if (currentTab === "updates") {
       return <UpdatesTab />;
@@ -115,25 +108,6 @@ const RegisterTab: FC = () => {
       </div>
 
       <EntityForm entity={currentEntity} />
-    </div>
-  );
-};
-
-const ConsultTab: FC = () => {
-  return (
-    <div className="w-[100%]">
-      <CustomButton className="mt-[2rem] ml-[2rem] mr-[2rem]">
-        Marcar Notificaciones Como Leídas
-      </CustomButton>
-      <div className="max-w-[96%] flex mt-[2rem] ml-[2rem] w-[100%] mr-[2rem] gap-[0.5rem]">
-        <PiUserCircleFill color="black" size={40} />
-        <CustomInput
-          className="grow"
-          placeholder="Ingresar comentario adicional"
-          type="text"
-        />
-        <CustomButton>Enviar</CustomButton>
-      </div>
     </div>
   );
 };

@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import gitLogo from "../../assets/GIT LOGO.png";
+import gitLogo from "../../../assets/GIT LOGO.png";
 import { useRouter } from "next/navigation";
 import "./forgot-password.css";
-import "../../styles/globals.css";
+import "../../../styles/globals.css";
 
 export default function page() {
   const router = useRouter();
