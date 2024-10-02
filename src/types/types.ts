@@ -1,6 +1,6 @@
 import { IconType } from "react-icons";
 
-export interface MenuOptions {
+export interface AdminMenuOptions {
   name: string;
   icon: IconType;
   link?: string;

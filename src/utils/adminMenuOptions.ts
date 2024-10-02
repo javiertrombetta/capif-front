@@ -1,4 +1,4 @@
-import { MenuOptions } from "@/types/types";
+import { AdminMenuOptions } from "@/types/types";
 // import { IoIosWarning } from "react-icons/io";
 import { HiUserPlus } from "react-icons/hi2";
 import {
@@ -13,11 +13,11 @@ import { GrDocumentMissing } from "react-icons/gr";
 import { VscFiles } from "react-icons/vsc";
 // import { TbCircleLetterR } from "react-icons/tb";
 
-const adminMenuOptions: MenuOptions[] = [
+const administrationMenuOptions: AdminMenuOptions[] = [
   {
     name: "Registros",
     icon: HiUserPlus,
-    link: "/records",
+    link: "/admin/records",
   },
   // {
   //   name: "Pagos Manuales",
@@ -33,7 +33,7 @@ const adminMenuOptions: MenuOptions[] = [
   {
     name: "Reporte por ISRC",
     icon: GrDocumentMissing,
-    link: "/isrc-reports",
+    link: "/admin/isrc-reports",
   },
   // {
   //   name: "Cuenta Corriente",
@@ -43,15 +43,15 @@ const adminMenuOptions: MenuOptions[] = [
   {
     name: "T y C Políticas de Privacidad",
     icon: VscFiles,
-    link: "/privacy-policy",
+    link: "/admin/privacy-policy",
   },
 ];
 
-const repertoryMenuOptions: MenuOptions[] = [
+const repertoryMenuOptions: AdminMenuOptions[] = [
   {
     name: "Repertorio Declarado",
     icon: FaMusic,
-    link: "/repertory",
+    link: "/admin/repertory",
   },
 
   // {
@@ -62,34 +62,29 @@ const repertoryMenuOptions: MenuOptions[] = [
   {
     name: "Productores",
     icon: FaUsers,
-    link: "/producers",
+    link: "/admin/producers",
   },
   {
     name: "Alta Masiva",
     icon: FaDatabase,
-    link: "/mass-registration",
+    link: "/admin/mass-registration",
   },
   {
     name: "Archivos Repertorio",
     icon: FaDatabase,
-    link: "/repertory-files",
-  },
-  {
-    name: "Reglas",
-    icon: FaDatabase,
-    link: "/rules",
+    link: "/admin/repertory-files",
   },
 
   {
     name: "Depuración de repertorio",
     icon: FaDatabase,
-    link: "/refine-repertory",
+    link: "/admin/refine-repertory",
   },
   {
     name: "Reportes",
     icon: FaCloudDownloadAlt,
-    link: "/reports",
+    link: "/admin/reports",
   },
 ];
 
-export default { adminMenuOptions, repertoryMenuOptions };
+export default { administrationMenuOptions, repertoryMenuOptions };

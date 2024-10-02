@@ -2,7 +2,7 @@ import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
 import React, { FC } from "react";
-import { FaSearch, FaRegFileExcel, FaRegHandPaper } from "react-icons/fa";
+import { FaSearch, FaRegFileExcel } from "react-icons/fa";
 import { IoIosWarning, IoMdSettings } from "react-icons/io";
 
 export default function page() {
@@ -84,12 +84,6 @@ export default function page() {
           <IoMdSettings color="black" size={25} />
           <p className="text-black text-center text-[0.8rem]">
             Ver conflictos del proceso
-          </p>
-        </div>
-        <div className="flex justify-center items-center flex-col border-[#c8c8c8] hover:border-[black] border-[1px] rounded-[0.5rem] h-[6rem] w-[16rem]">
-          <FaRegHandPaper color="black" size={25} />
-          <p className="text-black text-center text-[0.8rem]">
-            Resolver conflictos manualmente
           </p>
         </div>
       </div>

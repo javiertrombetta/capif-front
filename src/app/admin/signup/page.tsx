@@ -1,8 +1,8 @@
 import React from "react";
 import Image from "next/image";
-import gitLogo from "../../assets/GIT LOGO.png";
 import Link from "next/link";
-import "../../styles/globals.css";
+import gitLogo from "../../../assets/GIT LOGO.png";
+import "../../../styles/globals.css";
 import "./signup.css";
 
 export default function page() {
