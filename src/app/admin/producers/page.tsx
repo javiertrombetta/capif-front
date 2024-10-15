@@ -1,8 +1,9 @@
+import React, { FC } from "react";
+import { FaEdit } from "react-icons/fa";
+import Link from "next/link";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
-import React, { FC } from "react";
-import { FaEdit } from "react-icons/fa";
 
 export default function page() {
   const Table: FC = () => {
@@ -73,8 +74,12 @@ export default function page() {
           </select>
         </div>
         <div className="flex gap-[1rem]">
-          <CustomButton>Nueva Compañía Archivo</CustomButton>
-          <CustomButton>Nueva Compañía</CustomButton>
+          <Link href={"/admin/new-company-file"}>
+            <CustomButton>Nueva Compañía Archivo</CustomButton>
+          </Link>
+          <Link href={"/admin/new-company"}>
+            <CustomButton>Nueva Compañía</CustomButton>
+          </Link>
         </div>
       </div>
       <Table />

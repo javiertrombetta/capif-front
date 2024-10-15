@@ -1,11 +1,15 @@
+"use client";
+import React, { FC } from "react";
+import { FaEdit } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
-import React, { FC } from "react";
-import { FaEdit } from "react-icons/fa";
 
 export default function page() {
+  const router = useRouter();
+
   const Table: FC = () => {
     return (
       <div className="w-[100%] pl-[1rem] pr-[1rem]">
@@ -66,10 +70,27 @@ export default function page() {
   return (
     <CustomLayout>
       <Header title="Repertorio Declarado (por álbum)" />
-      <div className="mt-[2rem] w-[100%] flex justify-end items-center gap-[0.5rem]">
-        <CustomButton>Declarar Nuevo Repertorio</CustomButton>
-        <CustomButton>Generar Lote Envio</CustomButton>
-        <CustomButton className="bg-[#f39c12]">
+      <div className="mt-[2rem] w-[100%] flex justify-end items-center gap-[0.5rem] pr-[2rem] pl-[2rem]">
+        <CustomButton
+          onClick={() =>
+            router.push("/admin/repertory-files/declare-new-repertory")
+          }
+        >
+          Declarar Nuevo Repertorio
+        </CustomButton>
+
+        <CustomButton
+          onClick={() => router.push("/admin/repertory-files/generate-batch")}
+        >
+          Generar Lote Envio
+        </CustomButton>
+
+        <CustomButton
+          onClick={() =>
+            router.push("/admin/repertory-files/reject-without-vericast")
+          }
+          background="bg-[#f39c12]"
+        >
           Rechazar Sin Envío a Vericast
         </CustomButton>
       </div>

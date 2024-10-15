@@ -2,7 +2,8 @@ import React, { FC, ReactNode, useState } from "react";
 import { IoIosSpeedometer, IoIosArrowBack, IoIosWarning } from "react-icons/io";
 import Link from "next/link";
 import { AdminMenuOptions } from "@/types/types";
-import menuOptions from "@/utils/adminMenuOptions";
+import adminMenuOptions from "@/utils/adminMenuOptions";
+import producerMenuOptions from "@/utils/producerMenuOptions";
 import { usePathname } from "next/navigation";
 import { FaRegCircle, FaCircle } from "react-icons/fa";
 import "./Sidebar.css";
@@ -10,6 +11,8 @@ import "./Sidebar.css";
 const Sidebar: FC = () => {
   const [showAdminMenu, setShowAdminMenu] = useState<boolean>(false);
   const [showRepertorynMenu, setShowRepertorynMenu] = useState<boolean>(false);
+  const [currentRol, _setCurrentRol] = useState<"admin" | "producer">("admin");
+
   const pathname = usePathname();
 
   const handleShowAdminMenu = (): void => {
@@ -48,15 +51,15 @@ const Sidebar: FC = () => {
 
   const renderConflictsResolution: FC = () => {
     return (
-      <>
-        <div className="flex items-center gap-[0.5rem] menu-option relative">
+      <div className="h-[7.5rem]">
+        <div className="flex items-center gap-[0.5rem] menu-option relative ">
           <div className="flex items-center gap-[0.5rem]">
             <IoIosWarning size={17} />
             <p>Resolución de conflictos</p>
           </div>
         </div>
 
-        <div className="solve-conflicts-slide-visible">
+        <div className="solve-conflicts-slide-visible mt-[0.5rem]">
           <Link href={"/admin/start-conflict"}>
             <p
               className={`${pathname === "/admin/start-conflict" && "text-white"} text-#8aa4af hover:text-white cursor-pointer flex items-center gap-[0.3rem]`}
@@ -94,7 +97,7 @@ const Sidebar: FC = () => {
             </p>
           </Link>
         </div>
-      </>
+      </div>
     );
   };
 
@@ -121,10 +124,15 @@ const Sidebar: FC = () => {
         <div
           className={`mt-[0.5rem] ${showAdminMenu ? "admin-slide-visible" : "admin-slide"}`}
         >
-          {menuOptions.administrationMenuOptions.map(
-            (element: AdminMenuOptions, index: number) =>
-              renderMenuOption(element, index)
-          )}
+          {currentRol === "admin"
+            ? adminMenuOptions.administrationMenuOptions.map(
+                (element: AdminMenuOptions, index: number) =>
+                  renderMenuOption(element, index)
+              )
+            : producerMenuOptions.administrationMenuOptions.map(
+                (element: AdminMenuOptions, index: number) =>
+                  renderMenuOption(element, index)
+              )}
         </div>
       </div>
 
@@ -146,12 +154,17 @@ const Sidebar: FC = () => {
         <div
           className={`mt-[0.5rem] ${showRepertorynMenu ? "repertory-slide-visible" : "repertory-slide"}`}
         >
-          {renderConflictsResolution({})}
+          {currentRol === "admin" && renderConflictsResolution({})}
 
-          {menuOptions.repertoryMenuOptions.map(
-            (element: AdminMenuOptions, index: number) =>
-              renderMenuOption(element, index)
-          )}
+          {currentRol === "admin"
+            ? adminMenuOptions.repertoryMenuOptions.map(
+                (element: AdminMenuOptions, index: number) =>
+                  renderMenuOption(element, index)
+              )
+            : producerMenuOptions.repertoryMenuOptions.map(
+                (element: AdminMenuOptions, index: number) =>
+                  renderMenuOption(element, index)
+              )}
         </div>
       </div>
     </div>

@@ -1,11 +1,15 @@
+"use client";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
 import React, { FC } from "react";
 import { FaSearch, FaRegFileExcel } from "react-icons/fa";
 import { IoIosWarning, IoMdSettings } from "react-icons/io";
+import { useRouter } from "next/navigation";
 
 export default function page() {
+  const router = useRouter();
+
   const SearchForm: FC = () => {
     return (
       <div className="w-[100%]  mt-[2rem] flex flex-col gap-[1rem]">
@@ -74,13 +78,16 @@ export default function page() {
   const ActionButtons: FC = () => {
     return (
       <div className="w-[100%] mt-[2rem] flex justify-center items-center gap-[2rem]">
-        <div className="flex justify-center items-center flex-col border-[#c8c8c8] hover:border-[black] border-[1px] rounded-[0.5rem] h-[6rem] w-[16rem]">
+        <div className="cursor-pointer flex justify-center items-center flex-col border-[#c8c8c8] hover:border-[black] border-[1px] rounded-[0.5rem] h-[6rem] w-[16rem]">
           <IoIosWarning color="black" size={25} />
           <p className="text-black text-center text-[0.8rem]">
             Ver conflictos a iniciar
           </p>
         </div>
-        <div className="flex justify-center items-center flex-col border-[#c8c8c8] hover:border-[black] border-[1px] rounded-[0.5rem] h-[6rem] w-[16rem]">
+        <div
+          onClick={() => router.push("/admin/process-conflicts")}
+          className="cursor-pointer flex justify-center items-center flex-col border-[#c8c8c8] hover:border-[black] border-[1px] rounded-[0.5rem] h-[6rem] w-[16rem]"
+        >
           <IoMdSettings color="black" size={25} />
           <p className="text-black text-center text-[0.8rem]">
             Ver conflictos del proceso

@@ -1,5 +1,6 @@
 "use client";
 import React, { FC, useState } from "react";
+import { useRouter } from "next/navigation";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
@@ -10,12 +11,15 @@ import {
   FaQuestionCircle,
 } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
+import CustomTable from "@/commons/CustomTable/CustomTable";
 
 const PendingResolutionView: FC = () => {
+  const router = useRouter();
+
   const DropdownButton: FC = () => {
     const [activeDropdown, setActiveDropdown] = useState<boolean>(false);
     return (
-      <td className="px-6 py-4 relative group">
+      <div className="ml-[0.6rem]">
         <button
           onClick={() => {
             setActiveDropdown((prevState: boolean) => !prevState);
@@ -29,58 +33,28 @@ const PendingResolutionView: FC = () => {
             activeDropdown ? "" : "hidden"
           }`}
         >
-          <li className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]">
+          <li
+            onClick={() => router.push("/admin/conflict-auto-resolution")}
+            className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
+          >
             <IoMdSettings /> <p>Automática</p>
           </li>
-          <li className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]">
+          <li
+            onClick={() => router.push("/admin/conflict-manual-resolution")}
+            className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
+          >
             <FaRegHandPaper /> <p>Manual</p>
           </li>
-          <li className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]">
+          <li
+            onClick={() => router.push("/admin/conflict")}
+            className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
+          >
             <FaEye /> <p>Visualizar</p>
           </li>
           <li className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]">
             <FaQuestionCircle size={23} /> <p>¿Quién respondió?</p>
           </li>
         </ul>
-      </td>
-    );
-  };
-
-  const Table: FC = () => {
-    return (
-      <div className="w-[100%] pl-[1rem] pr-[1rem]">
-        <div className="relative mt-[2rem]">
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500 ">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-              <tr>
-                <th scope="col" className="px-6 py-3 font-bold text-[1rem]">
-                  #
-                </th>
-                <th scope="col" className="px-6 py-3 font-bold text-[1rem]">
-                  FECHA INICIO
-                </th>
-                <th scope="col" className="px-6 py-3 font-bold text-[1rem]">
-                  FECHA VENCIMIENTO
-                </th>
-                <th scope="col" className="px-6 py-3 font-bold text-[1rem]">
-                  ESTADO
-                </th>
-                <th scope="col" className="px-6 py-3 font-bold text-[1rem]">
-                  ACCIÓN
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="px-6 py-4">245</td>
-                <td className="px-6 py-4">28-11-2022</td>
-                <td className="px-6 py-4">20-12-2022</td>
-                <td className="px-6 py-4">Repertorio controvertido</td>
-                <DropdownButton />
-              </tr>
-            </tbody>
-          </table>
-        </div>
       </div>
     );
   };
@@ -127,7 +101,41 @@ const PendingResolutionView: FC = () => {
             Buscar
           </button>
         </div>
-        <Table />
+
+        <div className="w-[100%]">
+          <CustomTable
+            columnNames={[
+              "#",
+              "FECHA INICIO",
+              "FECHA VENCIMIENTO",
+              "ESTADO",
+              "ACCIÓN",
+            ]}
+            columnValues={[
+              [
+                "245",
+                "28-11-2022",
+                "20-12-2022",
+                "Repertorio controvertido",
+                <DropdownButton />,
+              ],
+              [
+                "245",
+                "28-11-2022",
+                "20-12-2022",
+                "Repertorio controvertido",
+                <DropdownButton />,
+              ],
+              [
+                "245",
+                "28-11-2022",
+                "20-12-2022",
+                "Repertorio controvertido",
+                <DropdownButton />,
+              ],
+            ]}
+          />
+        </div>
       </div>
     </CustomLayout>
   );

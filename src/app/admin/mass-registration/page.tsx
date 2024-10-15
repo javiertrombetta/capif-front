@@ -2,6 +2,7 @@ import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
+import Link from "next/link";
 import React, { FC } from "react";
 import { FaEdit } from "react-icons/fa";
 
@@ -60,7 +61,9 @@ export default function page() {
       <Header title="Alta Masiva" />
 
       <div className="w-[100%] pr-[2rem] flex justify-end mt-[2rem]">
-        <CustomButton>Nuevo Archivo</CustomButton>
+        <Link href={"/admin/mass-registration/new-file"}>
+          <CustomButton>Nuevo Archivo</CustomButton>
+        </Link>
       </div>
 
       <div className="w-[100%] pl-[2rem] pr-[2rem] flex justify-start mt-[2rem]">

@@ -1,6 +1,8 @@
+"use client";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
+import { useRouter } from "next/navigation";
 import React, { FC } from "react";
 import { FaEye, FaRegFileExcel, FaSearch } from "react-icons/fa";
 
@@ -86,6 +88,7 @@ export default function page() {
   };
 
   const Table: FC = () => {
+    const router = useRouter();
     return (
       <div className="w-[100%] pl-[1rem] pr-[1rem]">
         <div className="relative mt-[2rem]">
@@ -116,7 +119,10 @@ export default function page() {
                 <td className="px-6 py-4">20-12-2022</td>
                 <td className="px-6 py-4">Resuelto</td>
                 <td className="px-6 py-4">
-                  <button className="flex items-center gap-[0.4rem] border-[#c8c8c8] border-[1px] pl-[1rem] pr-[1rem] pt-[0.2rem] pb-[0.2rem]">
+                  <button
+                    onClick={() => router.push("/admin/conflict")}
+                    className="flex items-center gap-[0.4rem] border-[#c8c8c8] border-[1px] pl-[1rem] pr-[1rem] pt-[0.2rem] pb-[0.2rem]"
+                  >
                     <FaEye size={16} /> Visualizar
                   </button>
                 </td>
