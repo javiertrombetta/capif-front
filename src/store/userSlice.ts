@@ -1,7 +1,7 @@
 import { FakeUserProps, ROLES } from "@/types/auth.types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const defaultUser: FakeUserProps = {
+export const defaultUser: FakeUserProps = {
   names: "Admin",
   email: "superadmin@gmail.com",
   phone: "+54 11-234567",

@@ -3,7 +3,7 @@ import { PT_Sans } from "next/font/google";
 import Navbar from "@/components/Navbar/Navbar";
 import StoreProvider from "./StoreProvider";
 import AuthProvider from "@/components/AuthProvider/AuthProvider";
-import { initialStateUser } from "@/store/userSlice";
+import { defaultUser } from "@/store/userSlice";
 import ModalProvider from "@/components/ModalProvider/ModalProvider";
 import { initialStateModal } from "@/store/modalSlice";
 import "../styles/globals.css";
@@ -25,7 +25,7 @@ export default function RootLayout({
       <body className={ptSans.className}>
         <StoreProvider
           initialModal={initialStateModal}
-          initialUser={initialStateUser}
+          initialUser={defaultUser}
           initialSignup={initialStateSignup}
         >
           <AuthProvider>

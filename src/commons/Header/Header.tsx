@@ -1,3 +1,4 @@
+"use client";
 import React, { FC } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import "./Header.css";
