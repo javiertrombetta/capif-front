@@ -61,7 +61,7 @@ const PendingResolutionView: FC = () => {
 
   return (
     <CustomLayout>
-      <Header title="Conflictos Pendientes de Resolución" />
+      <Header back title="Conflictos Pendientes de Resolución" />
       <div className="mt-[2rem] w-[100%] flex justify-center items-center gap-[2rem] pl-[2rem] pr-[2rem]">
         <CustomInput
           className="w-[100%]"
@@ -105,11 +105,11 @@ const PendingResolutionView: FC = () => {
         <div className="w-[100%]">
           <CustomTable
             columnNames={[
-              "#",
-              "FECHA INICIO",
-              "FECHA VENCIMIENTO",
-              "ESTADO",
-              "ACCIÓN",
+              { name: "#", isSortable: false },
+              { name: "FECHA INICIO", isSortable: true },
+              { name: "FECHA VENCIMIENTO", isSortable: true },
+              { name: "ESTADO", isSortable: true },
+              { name: "ACCIÓN", isSortable: false },
             ]}
             columnValues={[
               [

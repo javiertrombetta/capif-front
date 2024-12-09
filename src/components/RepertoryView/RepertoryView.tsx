@@ -21,7 +21,7 @@ const RepertoryView: FC = () => {
   return (
     <CustomLayout className="relative">
       {isOpenModal && <Modal handleCloseModal={handleCloseModal} />}
-      <Header title="Repertorio Declarado" />
+      <Header back title="Repertorio Declarado" />
 
       <div className="w-[100%] pl-[2rem] pr-[2rem]">
         <CustomButton

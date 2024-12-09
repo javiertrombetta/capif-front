@@ -1,11 +1,13 @@
 "use client";
 import React, { FC, useRef, useState } from "react";
 import { IoMdSettings } from "react-icons/io";
-import { FaEdit, FaMusic, FaRegEyeSlash, FaUserAlt } from "react-icons/fa";
+import { FaEdit, FaMusic, FaUserAlt } from "react-icons/fa";
 import { usersFakeData } from "@/utils/usersFakeData";
 import dragTableFunctions from "@/hooks/dragTableFunctions";
 import { useRouter } from "next/navigation";
 import "./RegistrationsTable.css";
+import { useAppSelector } from "@/hooks/storeHooks";
+import { ROLES } from "@/types/auth.types";
 
 interface RegistrationsTableProps {
   users?: {
@@ -29,6 +31,7 @@ interface RegistrationsTableProps {
 const RegistrationsTable: FC<RegistrationsTableProps> = () => {
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  const userData = useAppSelector((state) => state.user);
   const router = useRouter();
   const {
     handleMouseDown,
@@ -69,9 +72,9 @@ const RegistrationsTable: FC<RegistrationsTableProps> = () => {
               EMAIL
             </th>
 
-            <th scope="col" className="px-6 py-3">
+            {/* <th scope="col" className="px-6 py-3">
               ESTADO
-            </th>
+            </th> */}
             <th scope="col" className="px-6 py-3">
               CUIT
             </th>
@@ -99,18 +102,21 @@ const RegistrationsTable: FC<RegistrationsTableProps> = () => {
             <th scope="col" className="px-6 py-3">
               ISRC VIDEO
             </th>
-            <th scope="col" className="px-6 py-3">
-              ACCIÓN
-            </th>
+            {userData.rol === ROLES.CAPIF_ADMIN ||
+            userData.rol === ROLES.SUPER_ADMIN ? (
+              <th scope="col" className="px-6 py-3">
+                ACCIÓN
+              </th>
+            ) : null}
           </tr>
         </thead>
         <tbody>
           {usersFakeData.map((element, index: number) => (
-            <tr key={index} className="bg-white border-b ">
-              <td scope="row" className="px-6 py-4 font-medium text-[#1280e1] ">
+            <tr key={index} className="bg-white border-b">
+              <td scope="row" className="px-6 py-4 font-medium text-[#1280e1]">
                 {element.email}
               </td>
-              <td className="px-6 py-4">{element.state}</td>
+              {/* <td className="px-6 py-4">{element.state}</td> */}
               <td className="px-7 py-4">
                 {<p className="whitespace-nowrap">{element.cuit}</p>}
               </td>
@@ -122,38 +128,38 @@ const RegistrationsTable: FC<RegistrationsTableProps> = () => {
               <td className="px-6 py-4">{element.updateDate}</td>
               <td className="px-6 py-4">{element.isrcAudio}</td>
               <td className="px-6 py-4">{element.isrcVideo}</td>
-              <td className="px-6 py-4 relative group">
-                <button
-                  onClick={() => toggleDropdown(element.id)}
-                  className="bg-[#1280e1] text-white w-[2rem] h-[2rem] flex justify-center items-center rounded-[0.3rem]"
-                >
-                  <IoMdSettings size={20} />
-                </button>
-                <ul
-                  className={`absolute right-0 mt-2 w-[8rem] bg-slate-900 border rounded-md shadow-lg z-30 overflow-hidden ${
-                    activeDropdown === element.id ? "" : "hidden"
-                  }`}
-                >
-                  <li
-                    onClick={() => redirectToOption("/admin/edit-user")}
-                    className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
+              {userData.rol === ROLES.CAPIF_ADMIN ||
+              userData.rol === ROLES.SUPER_ADMIN ? (
+                <td className="px-6 py-4 relative group">
+                  <button
+                    onClick={() => toggleDropdown(element.id)}
+                    className="bg-[#1280e1] text-white w-[2rem] h-[2rem] flex justify-center items-center rounded-[0.3rem]"
                   >
-                    <FaEdit /> <p>Editar</p>
-                  </li>
-                  <li
-                    onClick={() => redirectToOption("/admin/user-profile")}
-                    className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
+                    <IoMdSettings size={20} />
+                  </button>
+                  <ul
+                    className={`absolute right-0 mt-2 w-[8rem] bg-slate-900 border rounded-md shadow-lg z-30 overflow-hidden ${
+                      activeDropdown === element.id ? "" : "hidden"
+                    }`}
                   >
-                    <FaUserAlt /> <p>Ficha</p>
-                  </li>
-                  <li className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]">
-                    <FaMusic /> <p>Repertorio</p>
-                  </li>
-                  <li className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]">
-                    <FaRegEyeSlash /> <p>Ocultar</p>
-                  </li>
-                </ul>
-              </td>
+                    <li
+                      onClick={() => redirectToOption("/edit-user")}
+                      className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
+                    >
+                      <FaEdit /> <p>Editar</p>
+                    </li>
+                    <li
+                      onClick={() => redirectToOption("/user-profile")}
+                      className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
+                    >
+                      <FaUserAlt /> <p>Ficha</p>
+                    </li>
+                    <li className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]">
+                      <FaMusic /> <p>Repertorio</p>
+                    </li>
+                  </ul>
+                </td>
+              ) : null}
             </tr>
           ))}
         </tbody>

@@ -1,7 +1,4 @@
-import { IconType } from "react-icons";
-
-export interface AdminMenuOptions {
+export interface ItemSidebarType {
   name: string;
-  icon: IconType;
   link?: string;
 }

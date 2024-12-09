@@ -1,65 +1,22 @@
 "use client";
-import React, { FC, ReactNode, useState } from "react";
+import React, { FC, useState } from "react";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import { IoMdDownload } from "react-icons/io";
-import { PiUserCircleFill } from "react-icons/pi";
+import { setModal } from "@/store/modalSlice";
+import { ModalNames } from "@/types/modalNames";
 import "./UserProfileView.css";
-
-type Tabs = "register" | "consult" | "updates";
-
-interface ViewTabs {
-  name: Tabs;
-  title: string;
-}
+import { useAppDispatch } from "@/hooks/storeHooks";
 
 const UserProfileView: FC = () => {
-  const [currentTab, setCurrentTab] = useState<Tabs>("register");
-
-  const viewTabs: ViewTabs[] = [
-    {
-      name: "register",
-      title: "Datos Registro",
-    },
-    {
-      name: "updates",
-      title: "Actualizaciones",
-    },
-  ];
-
-  const chooseTab = (tab: Tabs): void => {
-    setCurrentTab(tab);
-  };
-
-  const renderTab = (): ReactNode => {
-    if (currentTab === "register") {
-      return <RegisterTab />;
-    }
-    if (currentTab === "updates") {
-      return <UpdatesTab />;
-    }
-  };
-
   return (
     <CustomLayout>
-      <Header hr={false} title="Ficha de Usuario" className="" />
+      <Header back title="Ficha de Usuario" className="" />
 
-      <div className="mt-[1rem] ml-[1rem]">
-        <div className="flex">
-          {viewTabs.map((tab: ViewTabs, index: number) => (
-            <button
-              key={index}
-              onClick={() => chooseTab(tab.name)}
-              className={`w-[9rem] h-[2.5rem] ${currentTab === tab.name ? "border-t-[3.5px] border-t-mainblue" : "border-t-[3.5px] border-t-inherit"} flex justify-center items-center`}
-            >
-              <p className="text-black hover:text-[#7b7b7b]">{tab.title}</p>
-            </button>
-          ))}
-        </div>
-      </div>
-      {renderTab()}
+      <div className="mt-[1rem] ml-[1rem]"></div>
+      <RegisterTab />
     </CustomLayout>
   );
 };
@@ -75,16 +32,6 @@ const RegisterTab: FC = () => {
 
   return (
     <div className="text-black mt-[1rem] ml-[2rem] mr-[2rem] mb-[3rem]">
-      <p className="font-bold">
-        Completar los siguientes datos y adjuntar una imagen o archivo PDF de su
-        documento nacional de identidad.
-      </p>
-
-      <p>
-        Cualquier duda o consulta puede realizarlas en la solapa consultas y le
-        serán respondidas a la brevedad.
-      </p>
-
       <div className="flex gap-[2rem] mt-[2rem]">
         <div className="flex gap-[0.5rem]">
           <input
@@ -96,7 +43,7 @@ const RegisterTab: FC = () => {
           <h1 className="font-bold">PERSONA FÍSICA</h1>
         </div>
 
-        <div className="flex gap-[0.5rem]">
+        {/* <div className="flex gap-[0.5rem]">
           <input
             onChange={handleCurrentEntity}
             name="legal"
@@ -104,7 +51,7 @@ const RegisterTab: FC = () => {
             type="radio"
           />
           <h1 className="font-bold">PERSONA JURÍDICA</h1>
-        </div>
+        </div> */}
       </div>
 
       <EntityForm entity={currentEntity} />
@@ -112,46 +59,31 @@ const RegisterTab: FC = () => {
   );
 };
 
-const UpdatesTab: FC = () => {
-  return (
-    <div className="w-[100%] mt-[2rem] flex flex-col justify-center items-center gap-[2rem]">
-      {[1, 2, 3, 4, 5].map((_, index: number) => (
-        <div key={index} className="w-[90%] flex items-center justify-between">
-          <div className="flex">
-            <PiUserCircleFill color="black" size={40} />
-            <div className="ml-[1rem]">
-              <p className="text-black">admin123@gmail.com</p>
-              <p className="text-black">Registro Iniciado</p>
-            </div>
-          </div>
-
-          <div className="flex flex-col items-end justify-center">
-            <p className="text-black text-[0.8rem]">19/09/2024 13:45:28 p.m.</p>
-            <div className="scale-[0.8] mt-[0.5rem] bg-[#337ab7] font-bold w-fit p-[0.3rem] rounded-[0.2rem]">
-              Automatico
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-};
-
 const EntityForm: FC<{ entity: "natural" | "legal" }> = ({ entity }) => {
+  const dispatch = useAppDispatch();
+
+  const handleRejectRegister = () => {
+    dispatch(
+      setModal({ type: ModalNames.REJECT_REGISTRATION, isActive: true })
+    );
+  };
+
   return (
     <div className="mt-[3rem] w-[100%]">
       <div className="flex w-[100%] gap-[2rem]">
-        <CustomInput
+        {/* <CustomInput
+          initialValue="Hola"
           containerClassName="w-[50%]"
           className="w-[100%]"
           type="text"
           label="ESTADO"
-        />
+        /> */}
         <CustomInput
-          containerClassName="w-[50%]"
+          containerClassName="w-[100%]"
           className="w-[100%]"
           type="text"
           label="CUIT/CUIL"
+          initialValue="20-12345678-8"
         />
       </div>
 
@@ -167,16 +99,11 @@ const EntityForm: FC<{ entity: "natural" | "legal" }> = ({ entity }) => {
       {entity === "natural" ? (
         <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
           <CustomInput
-            containerClassName="w-[50%]"
+            containerClassName="w-[100%]"
             className="w-[100%]"
             type="text"
-            label="NOMBRES"
-          />
-          <CustomInput
-            containerClassName="w-[50%]"
-            className="w-[100%]"
-            type="text"
-            label="APELLIDOS"
+            label="NOMBRES Y APELLIDOS"
+            initialValue="Javier Trombetta"
           />
         </div>
       ) : (
@@ -201,6 +128,7 @@ const EntityForm: FC<{ entity: "natural" | "legal" }> = ({ entity }) => {
           className="w-[100%]"
           type="email"
           label="EMAIL"
+          initialValue="javiertrombetta@gmail.com"
         />
       ) : (
         <CustomInput
@@ -216,6 +144,7 @@ const EntityForm: FC<{ entity: "natural" | "legal" }> = ({ entity }) => {
         className="w-[100%]"
         type="text"
         label="DENOMINACIÓN DEL SELLO Y SUBSELLOS (opcional)"
+        initialValue="SONY MUSIC ENTERTAINMENT"
       />
       <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
         <CustomInput
@@ -223,12 +152,14 @@ const EntityForm: FC<{ entity: "natural" | "legal" }> = ({ entity }) => {
           className="w-[100%]"
           type="text"
           label="CALLE"
+          initialValue="San Martin"
         />
         <CustomInput
           containerClassName="w-[50%]"
           className="w-[100%]"
           type="number"
           label="NÚMERO"
+          initialValue="67"
         />
       </div>
 
@@ -238,12 +169,14 @@ const EntityForm: FC<{ entity: "natural" | "legal" }> = ({ entity }) => {
           className="w-[100%]"
           type="text"
           label="DATOS ADICIONALES"
+          initialValue="..."
         />
         <CustomInput
           containerClassName="w-[50%]"
           className="w-[100%]"
           type="text"
           label="CUIDAD"
+          initialValue="La Plata"
         />
       </div>
       <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
@@ -252,31 +185,36 @@ const EntityForm: FC<{ entity: "natural" | "legal" }> = ({ entity }) => {
           className="w-[100%]"
           type="text"
           label="LOCALIDAD"
+          initialValue="City Bell"
         />
         <CustomInput
           containerClassName="w-full"
           className="w-[100%]"
           type="text"
           label="PROVINCIA"
+          initialValue="Buenos Aires"
         />
         <CustomInput
           containerClassName="w-full"
           className="w-[100%]"
-          type="number"
+          type="text"
           label="CÓDIGO POSTAL"
+          initialValue="B1049"
         />
       </div>
       <CustomInput
         containerClassName="w-[100%] mt-[1.5rem]"
         className="w-[100%]"
-        type="number"
+        type="text"
         label="TELÉFONO"
+        initialValue="+54 11-1234567"
       />
       <CustomInput
         containerClassName="w-[100%] mt-[1.5rem]"
         className="w-[100%]"
         type="text"
         label="NACIONALIDAD"
+        initialValue="Argentina"
       />
       <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
         <CustomInput
@@ -293,16 +231,7 @@ const EntityForm: FC<{ entity: "natural" | "legal" }> = ({ entity }) => {
         />
       </div>
 
-      <div className="mt-[1.5rem]">
-        <p className="font-bold">
-          {entity === "natural"
-            ? "CARGAR DOCUMENTO NACIONAL DE IDENTIDAD"
-            : "CARGAR ESTATUTO O CONTRATO SOCIAL"}
-        </p>
-        <input className="mt-[0.3rem]" type="file" />
-      </div>
-
-      <div className="w-[100%] flex justify-end">
+      <div className="w-[100%] flex justify-end mt-[3rem]">
         <CustomButton className="gap-[0.4rem]">
           <IoMdDownload />
           Descargar Archivo Ingresado
@@ -318,23 +247,6 @@ const EntityForm: FC<{ entity: "natural" | "legal" }> = ({ entity }) => {
         </div>
       )}
 
-      <div className="aditional-data-text mt-[4rem]">
-        <p>
-          OTROS Documento Adicionales (Cargue aquí su comprobante de pago de
-          alta de ISRC)
-        </p>
-        <p>
-          Para obtener el código de productor, el titular deberá abonar la suma
-          de $ 10.000. El pago se realiza por el alta a la siguiente cuenta
-          bancaria:
-        </p>
-        <p>BANCO GALICIA</p>
-        <p>SUCURSAL 5</p>
-        <p>CUIT: 30-52172973-9</p>
-        <p>N°: 9750252-4 005-6</p>
-        <p>CBU: 0070005430009750252469</p>
-      </div>
-
       <div className="mt-[2rem] w-[100%] h-[15rem] border-[#c5c5c5] border-[1px] rounded-[0.7rem] overflow-hidden">
         <CustomButton className="mt-[1rem] ml-[1rem]">
           Seleccione Archivos
@@ -347,11 +259,11 @@ const EntityForm: FC<{ entity: "natural" | "legal" }> = ({ entity }) => {
       </div>
 
       <div className="mt-[5rem] flex gap-[1rem]">
-        <CustomButton>Actualizar</CustomButton>
-
         <CustomButton className="bg-[#008d4c]">
           Confirmar el Registro del Usuario
         </CustomButton>
+        <CustomButton onClick={handleRejectRegister}>Rechazar</CustomButton>
+        <CustomButton>Editar</CustomButton>
       </div>
     </div>
   );

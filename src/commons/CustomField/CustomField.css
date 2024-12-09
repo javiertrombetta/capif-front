@@ -1,0 +1,10 @@
+.padding-left {
+  padding-left: 0.3rem;
+}
+.container {
+  min-height: 5.5rem;
+}
+
+.error-message {
+  color: #dc2626;
+}

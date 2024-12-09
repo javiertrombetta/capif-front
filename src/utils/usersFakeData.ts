@@ -2,7 +2,7 @@ export const usersFakeData = [
   {
     id: 1,
     email: "admin@gmail.com",
-    state: "Enviado a Capif",
+    // state: "Enviado a Capif",
     cuit: "12-34567-8",
     name: "JUAN JORGE LOPEZ",
     phone: "12345678",
@@ -18,7 +18,7 @@ export const usersFakeData = [
   {
     id: 2,
     email: "admin@gmail.com",
-    state: "Enviado a Capif",
+    // state: "Enviado a Capif",
     cuit: "12-34567-8",
     name: "JUAN JORGE LOPEZ",
     phone: "11 12345678",
@@ -34,7 +34,7 @@ export const usersFakeData = [
   {
     id: 3,
     email: "admin@gmail.com",
-    state: "Enviado a Capif",
+    // state: "Enviado a Capif",
     cuit: "12-34567-8",
     name: "JUAN JORGE LOPEZ",
     phone: "12345678",
@@ -50,7 +50,7 @@ export const usersFakeData = [
   {
     id: 4,
     email: "admin@gmail.com",
-    state: "Enviado a Capif",
+    // state: "Enviado a Capif",
     cuit: "12-34567-8",
     name: "JUAN JORGE LOPEZ",
     phone: "12345678",
@@ -66,7 +66,7 @@ export const usersFakeData = [
   {
     id: 5,
     email: "admin@gmail.com",
-    state: "Enviado a Capif",
+    // state: "Enviado a Capif",
     cuit: "12-34567-8",
     name: "JUAN JORGE LOPEZ",
     phone: "12345678",
@@ -82,7 +82,7 @@ export const usersFakeData = [
   {
     id: 6,
     email: "admin@gmail.com",
-    state: "Enviado a Capif",
+    // state: "Enviado a Capif",
     cuit: "12-34567-8",
     name: "JUAN JORGE LOPEZ",
     phone: "12345678",
@@ -98,7 +98,7 @@ export const usersFakeData = [
   {
     id: 7,
     email: "admin@gmail.com",
-    state: "Enviado a Capif",
+    // state: "Enviado a Capif",
     cuit: "12-34567-8",
     name: "JUAN JORGE LOPEZ",
     phone: "12345678",
@@ -114,7 +114,7 @@ export const usersFakeData = [
   {
     id: 8,
     email: "admin@gmail.com",
-    state: "Enviado a Capif",
+    // state: "Enviado a Capif",
     cuit: "12-34567-8",
     name: "JUAN JORGE LOPEZ",
     phone: "12345678",
@@ -130,7 +130,7 @@ export const usersFakeData = [
   {
     id: 9,
     email: "admin@gmail.com",
-    state: "Enviado a Capif",
+    // state: "Enviado a Capif",
     cuit: "12-34567-8",
     name: "JUAN JORGE LOPEZ",
     phone: "12345678",
