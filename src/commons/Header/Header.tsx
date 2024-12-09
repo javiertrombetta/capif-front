@@ -12,9 +12,10 @@ interface HeaderProps {
 
 const Header: FC<HeaderProps> = ({ className, title, back }) => {
   const router = useRouter();
+
   return (
     <div className={`hr-border pb-[1rem] flex items-center ${className}`}>
-      {back && history.length > 1 ? (
+      {typeof window !== "undefined" && back && history.length > 1 ? (
         <button onClick={() => router.back()}>
           <FaArrowLeft
             className="mt-[1rem] ml-[1rem]"
