@@ -150,7 +150,7 @@ const VerifyCuit: FC<VerifyCuitProps> = ({ onSubmit }) => {
   };
 
   return (
-    <div className="w-[25rem] h-full overflow-hidden rounded-[1rem]">
+    <div className="w-[25rem] h-full overflow-hidden ">
       {renderCuitInstance()}
     </div>
   );
@@ -181,7 +181,7 @@ const SignUpForm: FC = () => {
   };
 
   return (
-    <div className="w-[25rem] h-full overflow-hidden rounded-[1rem]">
+    <div className="w-[25rem] h-full ">
       <Formik
         initialValues={initialValues}
         validationSchema={validationSignUpForm}

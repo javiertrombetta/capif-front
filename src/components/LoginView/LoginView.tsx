@@ -31,7 +31,7 @@ function LoginView() {
 
   const LoginForm: FC = () => {
     return (
-      <div className="w-[25rem] h-full overflow-hidden rounded-[1rem]">
+      <div className="w-[25rem] h-full ">
         <Formik
           initialValues={initialValues}
           validationSchema={validationLoginForm}
@@ -40,7 +40,7 @@ function LoginView() {
           {({ isSubmitting, isValid, dirty }) => (
             <Form
               id="signup"
-              className="bg-white w-[25rem] h-[100%] pt-[1rem] flex flex-col items-center gap-[0.5rem] overflow-y-scroll pr-[2rem] pl-[2rem] pt-[1rem] pb-[1rem]"
+              className="bg-white w-[25rem] flex flex-col justify-center items-center gap-[0.5rem] overflow-y-scroll pr-[2rem] pl-[2rem] pb-[1rem]"
             >
               <div className="w-[100%] flex justify-center mt-[1rem] mb-[1rem]">
                 <p className="text-black font-bold text-[1.1rem] text-center">
@@ -102,7 +102,7 @@ function LoginView() {
 
   return (
     <div className="flex justify-center items-center h-[100vh] w-[100%] background">
-      <div className="flex flex-col gap-[1.3rem] justify-center items-center signup-form-container max-h-[110vh]">
+      <div className="flex flex-col gap-[1.3rem] justify-center items-center signup-form-container ">
         <Image
           className="w-[25rem]"
           height={2000}
