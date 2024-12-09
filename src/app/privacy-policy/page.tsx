@@ -1,5 +1,5 @@
 import React from "react";
-import TycPrivacyPolicy from "@/components/TycPrivacyPolicy/TycPrivacyPolicy";
+//  import TycPrivacyPolicy from "@/components/TycPrivacyPolicy/TycPrivacyPolicy";
 export default function page() {
-  return <TycPrivacyPolicy />;
+  return <div></div>;
 }
