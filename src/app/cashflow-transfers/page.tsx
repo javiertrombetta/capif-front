@@ -17,7 +17,7 @@ function page() {
 
   return (
     <CustomLayout>
-      <Header back title="Traspasos" />
+      <Header title="Traspasos" />
       <div className="w-[100%] pr-[2rem] pl-[2rem] flex justify-between mt-[2rem]">
         <div className="flex gap-[2rem]">
           <CustomInput type="text" label="Buscar Productora" />
@@ -25,6 +25,7 @@ function page() {
         </div>
         <div className="flex gap-[2rem]">
           <CustomButton onClick={openModal}>Importar Traspaso</CustomButton>
+          <CustomButton onClick={openModal}>Exportar Traspasos</CustomButton>
         </div>
       </div>
       <div className="w-[100%] mt-[3rem]">

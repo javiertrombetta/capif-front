@@ -16,16 +16,22 @@ function page() {
     dispatch(setModal({ type: ModalNames.GARDEL_AWARDS, isActive: true }));
   };
 
+  const openPurgeModal = () => {
+    dispatch(
+      setModal({ type: ModalNames.GARDEL_AWARDS_PURGE, isActive: true })
+    );
+  };
+
   return (
     <CustomLayout>
-      <Header back title="Premios Gardel" />
+      <Header title="Premios Gardel" />
 
       <div className="w-[100%] mt-[2rem] pr-[2rem] pl-[2rem] flex justify-between">
         <CustomInput type="text" label="Buscar Productora" />
 
         <div className="flex gap-[2rem]">
           <CustomButton onClick={openModal}>Generar Códigos</CustomButton>
-          <CustomButton>Depurar Códigos</CustomButton>
+          <CustomButton onClick={openPurgeModal}>Depurar Códigos</CustomButton>
         </div>
       </div>
 

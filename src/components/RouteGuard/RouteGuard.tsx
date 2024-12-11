@@ -41,6 +41,8 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/user-profile",
       "/cashflow-account-statement/history",
       "/audit-phonogram",
+      "/edit-phonogram",
+      "/edit-user",
     ],
     [ROLES.CAPIF_ADMIN]: [
       "/",
@@ -69,6 +71,8 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/user-profile",
       "/cashflow-account-statement/history",
       "/audit-phonogram",
+      "/edit-phonogram",
+      "/edit-user",
     ],
     [ROLES.USER_PRODUCER]: [
       "/",
@@ -79,6 +83,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/records",
       "/territoriality-phonogram",
       "/cashflow-account-statement",
+      "/edit-phonogram",
     ],
     [ROLES.EMPLOYEE]: [
       "/",
@@ -88,6 +93,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/records",
       "/territoriality-phonogram",
       "/cashflow-account-statement",
+      "/edit-phonogram",
     ],
   };
 

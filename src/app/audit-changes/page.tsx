@@ -8,7 +8,7 @@ import CustomTable from "@/commons/CustomTable/CustomTable";
 function page() {
   return (
     <CustomLayout>
-      <Header back title="Cambios Realizados" />
+      <Header title="Cambios Realizados" />
 
       <div className="w-[100%] flex justify-between pr-[1rem] pl-[2rem] mt-[2rem]">
         <CustomInput type="date" label="FECHA" />

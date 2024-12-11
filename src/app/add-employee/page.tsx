@@ -22,7 +22,7 @@ function page() {
 
   return (
     <CustomLayout>
-      <Header back title="Alta de Usuarios" />
+      <Header title="Alta de Productor Secundario" />
 
       <div className="w-[100%] pr-[2rem] pl-[2rem] mt-[2rem] flex flex-col gap-[1rem]">
         <p className="text-black">

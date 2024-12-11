@@ -24,7 +24,7 @@ function page() {
   // };
   return (
     <CustomLayout>
-      <Header back title="Envio Archivo de Audio" />
+      <Header title="Envio Archivo de Audio" />
 
       <div className="w-[100%] pr-[2rem] pl-[2rem] mt-[2rem] flex items-center justify-start gap-[1rem]">
         <CustomInput type="text" label="Buscar" />

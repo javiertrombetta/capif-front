@@ -17,7 +17,7 @@ function page() {
   };
   return (
     <CustomLayout>
-      <Header back title="Completar Registro" />
+      <Header title="Completar Registro" />
 
       <div className="pr-[2rem] pl-[2rem] w-[100%]">
         <div className="w-[100%] mt-[2rem] flex gap-[0.5rem]">

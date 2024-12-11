@@ -31,6 +31,8 @@ import {
   CashflowRejectionsExportRejections,
   CashflowRejectionsReversePayment,
 } from "../Modals/CashflowRejectionsModals/CashflowRejectionsModals";
+import FinishNewPhonogram from "../Modals/FinishNewPhonogram/FinishNewPhonogram";
+import GardelAwardsPurge from "../Modals/GardelAwardsPurge/GardelAwardsPurge";
 interface ModalProvderProps {
   children: ReactNode;
 }
@@ -95,6 +97,10 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
         );
       case ModalNames.CASHFLOW_EXPORT_REJECTIONS_REVERSE_PAYMENT:
         return <CashflowRejectionsReversePayment onCloseModal={onCloseModal} />;
+      case ModalNames.FINISH_NEW_PHONOGRAM:
+        return <FinishNewPhonogram onCloseModal={onCloseModal} />;
+      case ModalNames.GARDEL_AWARDS_PURGE:
+        return <GardelAwardsPurge onCloseModal={onCloseModal} />;
     }
     <></>;
   };

@@ -19,7 +19,7 @@ function page() {
 
   return (
     <CustomLayout>
-      <Header back title="Titulares de Conflicto" />
+      <Header title="Titulares de Conflicto" />
 
       <div className="w-[100%] flex items-center pr-[2rem] pl-[2rem] mt-[2rem] gap-[1rem]">
         <CustomInput type="text" label="Buscar Productora" />

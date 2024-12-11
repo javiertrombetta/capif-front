@@ -30,9 +30,9 @@ function page() {
   };
   return (
     <CustomLayout>
-      <Header back title="Liquidaciones" />
+      <Header title="Liquidaciones" />
 
-      <div className="w-[100%] pr-[2rem] pl-[2rem] flex justify-between mt-[2rem]">
+      <div className="w-[100%] pr-[2rem] pl-[2rem] flex justify-between items-end mt-[2rem]">
         <div className="flex gap-[2rem]">
           <CustomInput type="text" label="Buscar Productora" />
           <CustomInput className="w-[13rem]" type="date" label="Fecha" />
@@ -44,6 +44,9 @@ function page() {
           </CustomButton>
           <CustomButton onClick={openImportPayoutsModal}>
             Importar Liquidaciones
+          </CustomButton>
+          <CustomButton onClick={openImportPayoutsModal}>
+            Exportar Liquidaciones
           </CustomButton>
         </div>
       </div>

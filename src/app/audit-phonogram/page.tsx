@@ -8,7 +8,7 @@ import CustomTable from "@/commons/CustomTable/CustomTable";
 function page() {
   return (
     <CustomLayout>
-      <Header back title="Cambios en Repertorios" />
+      <Header title="Cambios en Repertorios" />
 
       <div className="w-[100%] flex justify-center pr-[1rem] pl-[2rem] mt-[2rem]">
         <div className="w-[100%] flex flex-col justify-between">

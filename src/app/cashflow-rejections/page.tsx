@@ -39,7 +39,7 @@ function page() {
 
   return (
     <CustomLayout>
-      <Header back title="Rechazos" />
+      <Header title="Rechazos" />
       <div className="w-[100%] pr-[2rem] pl-[2rem] flex justify-between mt-[2rem]">
         <div className="flex gap-[2rem]">
           <CustomInput type="text" label="Buscar Productora" />

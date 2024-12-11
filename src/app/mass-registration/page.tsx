@@ -58,7 +58,7 @@ export default function page() {
 
   return (
     <CustomLayout>
-      <Header back title="Declaración Repertorio" />
+      <Header title="Declaración Repertorio" />
 
       <div className="w-[100%] pr-[2rem] flex justify-end mt-[2rem]">
         <Link href={"/mass-registration/new-file"}>

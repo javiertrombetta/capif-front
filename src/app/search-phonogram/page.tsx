@@ -32,7 +32,7 @@ function page() {
 
   return (
     <CustomLayout>
-      <Header back title="Buscar Repertorio" />
+      <Header title="Buscar Repertorio" />
 
       <div className="w-[100%] pr-[2rem] flex justify-end mt-[2rem]">
         <CustomButton onClick={openModal}>Exportar Modificaciones</CustomButton>

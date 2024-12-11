@@ -9,19 +9,47 @@ function page() {
   return (
     <CustomLayout>
       <Header back title="Editar Territorialidad" />
-      <div className="w-[100%] flex justify-center items-start gap-[5rem]">
-        <div className=" mt-[1rem] flex flex-col justify-center items-center">
-          <p className="text-black font-bold text-[1.2rem]">Productora:</p>
-          <p className="text-black mt-[0.6rem]">Sony Music</p>
-          <p className="text-black">sonymusic@gmail.com</p>
-          <p className="text-black">12-932871-02</p>
-          <p className="text-black">+54 11234689</p>
+      <div className="w-[100%] mt-[1rem] flex flex-col justify-center items-center">
+        <p className="mb-[1rem] font-bold text-[1.2rem] text-black w-[100%] text-center pl-[2rem]">
+          PRODUCTORA:
+        </p>
+        <div className="w-[60%]">
+          <CustomTable
+            columnNames={[
+              { name: "NOMBRE", isSortable: false },
+              { name: "EMAIL", isSortable: false },
+              { name: "CUIT", isSortable: false },
+              { name: "TELÉFONO", isSortable: false },
+            ]}
+            columnValues={[
+              [
+                "Sony Music",
+                "sonymusic@gmail.com",
+                "12-932871-02",
+                "+54 11234689",
+              ],
+            ]}
+          />
         </div>
-        <div className=" mt-[1rem] flex flex-col justify-center items-center">
-          <p className="text-black font-bold text-[1.2rem]">Fonograma:</p>
-          <p className="text-black mt-[0.6rem]">Cae el Sol</p>
-          <p className="text-black">Airbag</p>
-          <p className="text-black">AR12315</p>
+      </div>
+
+      <div className="w-[100%] mt-[1rem] flex flex-col justify-center items-center">
+        <p className="mb-[1rem] font-bold text-[1.2rem] text-black w-[100%] text-center pl-[2rem]">
+          FONOGRAMA:
+        </p>
+        <div className="w-[60%]">
+          <CustomTable
+            columnNames={[
+              { name: "Nombre Fonograma", isSortable: false },
+              { name: "Artista", isSortable: false },
+              { name: "Año de Lanzamiento", isSortable: false },
+              { name: "ISRC", isSortable: false },
+              { name: "Total Acumulado", isSortable: false },
+            ]}
+            columnValues={[
+              ["Cae el Sol", "Airbag", "2011", "SEBGA2100115", "100%"],
+            ]}
+          />
         </div>
       </div>
 

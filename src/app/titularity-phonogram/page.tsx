@@ -29,24 +29,31 @@ function page() {
       <div className="w-[100%] mt-[1rem] flex justify-end items-center pr-[2rem]">
         <CustomButton>Agregar Titular</CustomButton>
       </div>
-      <div className="w-[100%] mt-[1rem] flex flex-col justify-center items-center">
-        <p className="text-black font-bold text-[1.3rem]">Cae el Sol</p>
-        <p className="text-black font-bold text-[1.3rem]">Airbag</p>
-        <p className="text-black font-bold text-[1.3rem]">2011</p>
-        <p className="text-black font-bold text-[1.3rem]">SEBGA2100115</p>
-      </div>
 
       <div className="w-[100%] mt-[1rem] flex flex-col justify-center items-center">
-        <p className="text-black font-bold text-[1.3rem]">
-          Total Acumulado: 100%
+        <p className="mb-[1rem] font-bold text-[1.2rem] text-black w-[100%] text-start pl-[2rem]">
+          INFORMACIÓN DEL FONOGRAMA:
         </p>
+
+        <CustomTable
+          columnNames={[
+            { name: "Nombre Fonograma", isSortable: false },
+            { name: "Artista", isSortable: false },
+            { name: "Año de Lanzamiento", isSortable: false },
+            { name: "ISRC", isSortable: false },
+            { name: "Total Acumulado", isSortable: false },
+          ]}
+          columnValues={[
+            ["Cae el Sol", "Airbag", "2011", "SEBGA2100115", "100%"],
+          ]}
+        />
       </div>
 
-      <div className="w-[100%] mt-[1rem] flex justify-start items-center pl-[2rem]">
+      <div className="w-[100%] mt-[2rem] mb-[1rem] flex justify-start items-center pl-[2rem]">
         <CustomInput label="Buscar Titular" type="text" />
       </div>
 
-      <div className="mt-[1rem] w-[100%] flex flex-col justify-center items-center gap-[3rem] mb-[3rem]">
+      <div className="w-[100%] flex flex-col justify-center items-center gap-[3rem] mb-[3rem]">
         <CustomTable
           columnNames={[
             { name: "PRODUCTORA", isSortable: true },

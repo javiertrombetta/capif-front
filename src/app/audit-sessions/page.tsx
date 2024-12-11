@@ -9,7 +9,7 @@ import CustomTable from "@/commons/CustomTable/CustomTable";
 function page() {
   return (
     <CustomLayout>
-      <Header back title="Sesiones Iniciadas" />
+      <Header title="Sesiones Iniciadas" />
 
       <div className="w-[100%] flex items-end justify-between pr-[1rem] pl-[2rem] mt-[2rem]">
         <div className="flex gap-[2rem]">

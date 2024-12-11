@@ -22,7 +22,7 @@ function page() {
 
   return (
     <CustomLayout>
-      <Header back title="Resumen de Cuenta" />
+      <Header title="Resumen de Cuenta" />
       <div className="w-[100%] pr-[2rem] pl-[2rem] mt-[2rem]">
         <CustomInput type="text" label="Buscar Productora" />
       </div>

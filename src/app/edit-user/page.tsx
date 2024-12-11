@@ -1,14 +1,20 @@
+"use client";
 import React from "react";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
 import { MdEdit } from "react-icons/md";
+import { useRouter } from "next/navigation";
 export default function page() {
+  const router = useRouter();
   return (
     <CustomLayout>
       <Header back title="Editar Usuario" />
       <div className="flex justify-end mr-[1rem] mt-[1rem]">
-        <button className="flex items-center justify-center bg-mainblue w-fit h-[2rem] pl-[1rem] pr-[1rem] pt-[0.5rem] pb-[0.5rem] rounded-[0.2rem]">
+        <button
+          onClick={() => router.push("/records")}
+          className="flex items-center justify-center bg-mainblue w-fit h-[2rem] pl-[1rem] pr-[1rem] pt-[0.5rem] pb-[0.5rem] rounded-[0.2rem]"
+        >
           Volver a la lista
         </button>
       </div>

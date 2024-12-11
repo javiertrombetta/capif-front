@@ -7,10 +7,11 @@ import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomField from "@/commons/CustomField/CustomField";
 import { IoIosArrowForward } from "react-icons/io";
 import TimerInput from "@/components/TimerInput/TimerInput";
-import { useAppSelector } from "@/hooks/storeHooks";
-import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomTable from "@/commons/CustomTable/CustomTable";
+import { setModal } from "@/store/modalSlice";
+import { ModalNames } from "@/types/modalNames";
 function page() {
   const [isNewPhonogram, setIsNewPhonogram] = useState<boolean>(true);
 
@@ -84,7 +85,7 @@ function page() {
 
   return (
     <CustomLayout>
-      <Header back title="Declaración de Repertorio" />
+      <Header title="Declaración de Repertorio" />
 
       {flowState === "start" && (
         <div className="w-[100%] pr-[2rem] pl-[2rem] flex justify-end items-center mt-[0.5rem] gap-[0.6rem] relative">
@@ -221,7 +222,6 @@ const NewPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
       <p className="text-black font-bold">
         Complete los campos para crear el fonograma.
       </p>
-
       <Formik onSubmit={onSubmit} initialValues={initialValues}>
         {({ isSubmitting, isValid, dirty }) => (
           <Form className="w-[60%] flex flex-col justify-center items-center">
@@ -468,7 +468,7 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
                 </span>
               </div>
             </div>
-            <CustomButton type="submit">Aceptar</CustomButton>
+            <CustomButton type="submit">Continuar</CustomButton>
           </Form>
         )}
       </Formik>
@@ -477,30 +477,20 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
 };
 
 const EditTerritoriality: FC = () => {
-  const router = useRouter();
+  const dispatch = useAppDispatch();
+
+  const handleFinishNewPhonogram = () => {
+    dispatch(
+      setModal({ type: ModalNames.FINISH_NEW_PHONOGRAM, isActive: true })
+    );
+  };
 
   return (
     <div className="w-[100%] flex flex-col justify-center items-center mt-[3rem] pl-[3rem] pr-[3rem]">
-      <div className="w-[100%] flex justify-center items-start gap-[5rem]">
-        <div className=" mt-[1rem] flex flex-col justify-center items-center">
-          <p className="text-black font-bold text-[1.2rem]">Productora:</p>
-          <p className="text-black mt-[0.6rem]">Sony Music</p>
-          <p className="text-black">sonymusic@gmail.com</p>
-          <p className="text-black">12-932871-02</p>
-          <p className="text-black">+54 11234689</p>
-        </div>
-        <div className=" mt-[1rem] flex flex-col justify-center items-center">
-          <p className="text-black font-bold text-[1.2rem]">Fonograma:</p>
-          <p className="text-black mt-[0.6rem]">Cae el Sol</p>
-          <p className="text-black">Airbag</p>
-          <p className="text-black">AR12315</p>
-        </div>
-      </div>
-
-      <div className="w-[100%] pr-[2rem] pl-[2rem] justify-between flex mt-[1rem]">
+      <div className="w-[100%] pr-[2rem] pl-[2rem] justify-between items-end flex mt-[1rem] mb-[1rem]">
         <CustomInput type="text" label="Buscar Países" />
         <div className="flex gap-[1.5rem]">
-          <CustomButton onClick={() => router.push("/new-phonogram")}>
+          <CustomButton onClick={handleFinishNewPhonogram}>
             Guardar y Terminar
           </CustomButton>
         </div>

@@ -1,8 +1,8 @@
 "use client";
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
-import "./Header.css";
 import { useRouter } from "next/navigation";
+import "./Header.css";
 
 interface HeaderProps {
   title: string;
@@ -12,10 +12,17 @@ interface HeaderProps {
 
 const Header: FC<HeaderProps> = ({ className, title, back }) => {
   const router = useRouter();
+  const [canGoBack, setCanGoBack] = useState(false);
+
+  useEffect(() => {
+    if (back && history.length > 1) {
+      setCanGoBack(true);
+    }
+  }, [back]);
 
   return (
     <div className={`hr-border pb-[1rem] flex items-center ${className}`}>
-      {typeof window !== "undefined" && back && history.length > 1 ? (
+      {canGoBack ? (
         <button onClick={() => router.back()}>
           <FaArrowLeft
             className="mt-[1rem] ml-[1rem]"

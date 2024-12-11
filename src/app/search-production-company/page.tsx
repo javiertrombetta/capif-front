@@ -12,7 +12,7 @@ export default function page() {
 
   return (
     <div className="h-[100vh] w-[100%] bg-[white] overflow-y-scroll overflow-x-hidden pb-[4rem]">
-      <Header back title="Buscar Productora" />
+      <Header title="Buscar Productora" />
 
       <div className="h-[4rem] w-[100%] flex items-end mt-[1rem] gap-[2rem] pl-[1rem] pr-[2rem]">
         <CustomInput label="Buscar:" type="text" />

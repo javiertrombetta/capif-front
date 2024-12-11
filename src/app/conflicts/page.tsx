@@ -23,7 +23,7 @@ function page() {
 
   return (
     <CustomLayout>
-      <Header back title="Conflictos" />
+      <Header title="Conflictos" />
 
       <SearchConflictForm />
 
@@ -189,21 +189,21 @@ const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
         <IoMdSettings size={20} />
       </button>
       <ul
-        className={`absolute right-0 mt-2 w-[8rem] bg-slate-900 border rounded-md shadow-lg z-30 overflow-hidden ${
+        className={`absolute right-0 mt-2 w-[9rem] bg-slate-900 border rounded-md shadow-lg z-30 overflow-hidden ${
           activeDropdown === id ? "" : "hidden"
         }`}
       >
         {userData.rol === ROLES.SUPER_ADMIN ||
         userData.rol === ROLES.CAPIF_ADMIN ? (
           <>
-            <li className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]">
-              <p>Otorgar Prórroga</p>
+            <li className="text-center px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]">
+              <p className="text-center">Otorgar Prórroga</p>
             </li>
             <li
               onClick={() => router.push("/conflicts-history")}
-              className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]"
+              className="text-center px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]"
             >
-              <p>Ver Titulares</p>
+              <p className="text-center">Ver Titulares</p>
             </li>
           </>
         ) : null}
@@ -211,17 +211,17 @@ const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
         {userData.rol === ROLES.USER_PRODUCER ||
         userData.rol === ROLES.EMPLOYEE ? (
           <>
-            <li className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]">
-              <p>Confirmar Porcentaje</p>
+            <li className="text-center px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]">
+              <p className="text-center">Confirmar Porcentaje</p>
             </li>
-            <li className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]">
-              <p>Enviar Documentación</p>
+            <li className="text-center px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]">
+              <p className="text-center">Enviar Documentación</p>
             </li>
           </>
         ) : null}
 
-        <li className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]">
-          <p>Desistir conflicto</p>
+        <li className="text-center px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]">
+          <p className="text-center">Desistir conflicto</p>
         </li>
       </ul>
     </div>

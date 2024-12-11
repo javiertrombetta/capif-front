@@ -51,7 +51,7 @@ export default function page() {
 
   return (
     <div className="h-[100vh] w-[100%] bg-[white] overflow-y-scroll overflow-x-hidden pb-[4rem]">
-      <Header back title="Registros" />
+      <Header title="Registros" />
 
       <div className="h-[4rem] w-[100%] flex items-end mt-[1rem] gap-[2rem] pl-[1rem] pr-[2rem]">
         <CustomInput label="Buscar:" type="text" />
@@ -167,7 +167,10 @@ const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
           activeDropdown === id ? "" : "hidden"
         }`}
       >
-        <li className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]">
+        <li
+          onClick={() => redirectToOption("/edit-user")}
+          className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
+        >
           <FaEdit /> <p>Editar</p>
         </li>
         <li

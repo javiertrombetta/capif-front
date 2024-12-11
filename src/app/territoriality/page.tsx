@@ -17,7 +17,7 @@ function page() {
 
   return (
     <CustomLayout>
-      <Header back title="Gestionar Territorialidad" />
+      <Header title="Gestionar Territorialidad" />
 
       <div className="w-[100%] pl-[3rem] pr-[3rem] mt-[2rem]">
         <CustomTable
