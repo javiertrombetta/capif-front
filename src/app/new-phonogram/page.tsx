@@ -104,46 +104,50 @@ function page() {
         </div>
       )}
       {flowState === "start" ? null : (
-        <div className="w-[100%] pr-[2rem] pl-[2rem] flex justify-center items-center mt-[2rem] gap-[0.6rem] relative">
-          <div className="absolute left-[3%]">
-            <button
-              onClick={handleGoBack}
-              className="text-mainblue text-[1.1rem] decoration-underline"
+        <>
+          <div className="w-[100%] pr-[2rem] pl-[2rem] flex justify-center items-center mt-[2rem] gap-[0.6rem] relative">
+            <p className="text-[#a6acaf] font-bold">Ingresar ISRC</p>
+            <IoIosArrowForward color="#a6acaf" size={20} />
+            <p
+              className={`${flowState === "existing_phonogram" || flowState === "new_phonogram" ? "text-black" : "text-[#a6acaf]"} font-bold`}
             >
-              <p className="text-mainblue">Ir al paso anterior</p>
-            </button>
-          </div>
-          <p className="text-[#a6acaf] font-bold">Ingresar ISRC</p>
-          <IoIosArrowForward color="#a6acaf" size={20} />
-          <p
-            className={`${flowState === "existing_phonogram" || flowState === "new_phonogram" ? "text-black" : "text-[#a6acaf]"} font-bold`}
-          >
-            Crear/Verificar Fonograma
-          </p>
-          <IoIosArrowForward color="#a6acaf" size={20} />
-          {isNewPhonogram && (
-            <>
-              <p
-                className={`${flowState === "load_audio" ? "text-black" : "text-[#a6acaf]"} font-bold`}
-              >
-                Cargar Audio
-              </p>
-              <IoIosArrowForward color="#a6acaf" size={20} />
-            </>
-          )}
+              Crear/Verificar Fonograma
+            </p>
+            <IoIosArrowForward color="#a6acaf" size={20} />
+            {isNewPhonogram && (
+              <>
+                <p
+                  className={`${flowState === "load_audio" ? "text-black" : "text-[#a6acaf]"} font-bold`}
+                >
+                  Cargar Audio
+                </p>
+                <IoIosArrowForward color="#a6acaf" size={20} />
+              </>
+            )}
 
-          <p
-            className={`${flowState === "add_participation" ? "text-black" : "text-[#a6acaf]"} font-bold`}
-          >
-            Agregar Titularidad
-          </p>
-          <IoIosArrowForward color="#a6acaf" size={20} />
-          <p
-            className={`${flowState === "edit_territoriality" ? "text-black" : "text-[#a6acaf]"} font-bold`}
-          >
-            Territorialidad
-          </p>
-        </div>
+            <p
+              className={`${flowState === "add_participation" ? "text-black" : "text-[#a6acaf]"} font-bold`}
+            >
+              Agregar Titularidad
+            </p>
+            <IoIosArrowForward color="#a6acaf" size={20} />
+            <p
+              className={`${flowState === "edit_territoriality" ? "text-black" : "text-[#a6acaf]"} font-bold`}
+            >
+              Territorialidad
+            </p>
+          </div>
+          <div className="relative mt-[0.5rem]">
+            <div className="absolute left-[3%] top-[20%]">
+              <button
+                onClick={handleGoBack}
+                className="text-mainblue text-[1.1rem] decoration-underline"
+              >
+                <p className="text-mainblue">Ir al paso anterior</p>
+              </button>
+            </div>
+          </div>
+        </>
       )}
 
       {flowState === "start" ? (
