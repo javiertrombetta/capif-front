@@ -4,16 +4,16 @@ import { UserProps } from "@/types/auth.types";
 interface AuthSignUpRequest {
   email: string;
   password: string;
-  nombre: string;
-  apellido: string;
-  cuit: string;
-  tipo_persona_descripcion: string;
-  domicilio: string;
-  ciudad: string;
-  provincia: string;
-  pais: string;
-  codigo_postal: string;
-  telefono: string;
+  // nombre: string;
+  // apellido: string;
+  // cuit: string;
+  // tipo_persona_descripcion: string;
+  // domicilio: string;
+  // ciudad: string;
+  // provincia: string;
+  // pais: string;
+  // codigo_postal: string;
+  // telefono: string;
 }
 
 interface AuthLoginRequest {
@@ -23,7 +23,10 @@ interface AuthLoginRequest {
 
 export const authSignUp = async (authSignUpData: AuthSignUpRequest) => {
   try {
-    const { data } = await axiosInstance.post("auth/register", authSignUpData);
+    const { data } = await axiosInstance.post(
+      "auth/registro/primario",
+      authSignUpData
+    );
     return data;
   } catch (error: unknown) {
     throw new Error(`${error}`);

@@ -41,6 +41,12 @@ const CashflowRejectionsImportRejection: FC<{ onCloseModal: () => void }> = ({
 const CashflowRejectionsExportRejections: FC<{ onCloseModal: () => void }> = ({
   onCloseModal,
 }) => {
+  const router = useRouter();
+  const handleGoToRoute = () => {
+    router.push("/cashflow-rejections/export");
+    onCloseModal();
+  };
+
   return (
     <div
       className={
@@ -55,7 +61,7 @@ const CashflowRejectionsExportRejections: FC<{ onCloseModal: () => void }> = ({
 
         <CustomInput type="date" label="FECHA DESDE" className="w-[13rem]" />
         <CustomInput type="date" label="FECHA HASTA" className="w-[13rem]" />
-        <CustomButton>Aceptar</CustomButton>
+        <CustomButton onClick={handleGoToRoute}>Aceptar</CustomButton>
       </div>
     </div>
   );

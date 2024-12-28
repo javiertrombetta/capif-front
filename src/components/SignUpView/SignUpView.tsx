@@ -14,6 +14,7 @@ import "../../styles/globals.css";
 import { setSignupData } from "@/store/signupSlice";
 import Spinner from "@/commons/Spinner/Spinner";
 import { FaCheckCircle } from "react-icons/fa";
+import { authSignUp } from "@/services/auth";
 
 interface RegisterFormValues {
   // name: string;
@@ -94,13 +95,21 @@ const VerifyCuit: FC<VerifyCuitProps> = ({ onSubmit }) => {
             {({ isSubmitting, isValid, dirty }) => (
               <Form
                 id="cuit_request"
-                className="bg-white w-[25rem] h-[100%] pt-[1rem] flex flex-col items-center gap-[0.5rem] overflow-y-scroll pr-[2rem] pl-[2rem] pt-[1rem] pb-[1rem]"
+                className="bg-white w-[25rem] h-[100%] pt-[1rem] flex flex-col items-center overflow-y-scroll pr-[2rem] pl-[2rem] pt-[1rem] pb-[2rem]"
               >
-                <div className="w-[100%] flex justify-center mt-[1rem] mb-[1rem]">
+                <div className="w-[100%] flex flex-col justify-center mt-[1rem] mb-[1rem]">
                   <p className="text-black font-bold text-[1.1rem] text-center">
-                    Ingrese el cuit de la productora
+                    Ingrese el CUIT/CUIL del productor fonográfico
+                  </p>
+
+                  <p className="text-[#7b7d7d] font-bold text-[0.9rem] text-center mt-[1rem]">
+                    Si Ud. Es una persona física consigne su CUIT, si se ha
+                    registrado en representación de una persona jurídica
+                    (sociedad anónima, fundación, etc.) consigne el CUIT de la
+                    persona jurídica.
                   </p>
                 </div>
+
                 <CustomField
                   type="text"
                   id="cuit"
@@ -108,7 +117,7 @@ const VerifyCuit: FC<VerifyCuitProps> = ({ onSubmit }) => {
                   labelText="Cuit"
                 />
 
-                <div className="w-[100%] flex justify-center mt-[1rem]">
+                <div className="w-[100%] flex justify-center ">
                   <CustomButton
                     type="submit"
                     disabled={isSubmitting || !isValid || !dirty}
@@ -168,7 +177,14 @@ const SignUpForm: FC = () => {
     repeat_password: "",
     accept_terms: false,
   };
-  const goToVerifyEmail = (values: RegisterFormValues) => {
+  const goToVerifyEmail = async (values: RegisterFormValues): Promise<void> => {
+    const response = await authSignUp({
+      email: values.email,
+      password: values.password,
+    });
+
+    console.log(response);
+
     dispatch(
       setSignupData({
         // name: values.name,

@@ -143,7 +143,9 @@ const RegistrationsTable: FC<RegistrationsTableProps> = () => {
                     }`}
                   >
                     <li
-                      onClick={() => redirectToOption("/edit-user")}
+                      onClick={() =>
+                        redirectToOption("/edit-production-company")
+                      }
                       className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
                     >
                       <FaEdit /> <p>Editar</p>
@@ -154,7 +156,10 @@ const RegistrationsTable: FC<RegistrationsTableProps> = () => {
                     >
                       <FaUserAlt /> <p>Ficha</p>
                     </li>
-                    <li className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]">
+                    <li
+                      onClick={() => redirectToOption("/search-phonogram")}
+                      className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
+                    >
                       <FaMusic /> <p>Repertorio</p>
                     </li>
                   </ul>

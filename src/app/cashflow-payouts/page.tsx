@@ -28,6 +28,16 @@ function page() {
       })
     );
   };
+
+  const openExportPayoutsModal = () => {
+    dispatch(
+      setModal({
+        isActive: true,
+        type: ModalNames.CASHFLOW_PAYOUTS_EXPORT_PAYOUTS,
+      })
+    );
+  };
+
   return (
     <CustomLayout>
       <Header title="Liquidaciones" />
@@ -45,7 +55,7 @@ function page() {
           <CustomButton onClick={openImportPayoutsModal}>
             Importar Liquidaciones
           </CustomButton>
-          <CustomButton onClick={openImportPayoutsModal}>
+          <CustomButton onClick={openExportPayoutsModal}>
             Exportar Liquidaciones
           </CustomButton>
         </div>
@@ -54,13 +64,14 @@ function page() {
       <div className="mt-[2rem] w-[100%]">
         <CustomTable
           columnNames={[
+            { name: "NRO. LIQUIDACIÓN", isSortable: true },
+            { name: "FECHA", isSortable: true },
             { name: "CUIT", isSortable: true },
             { name: "ISRC", isSortable: true },
             { name: "PASADAS LIQUIDACIÓN", isSortable: true },
             { name: "NOMBRE FONOGRAMA", isSortable: true },
             { name: "ARTISTA", isSortable: true },
             { name: "SELLO", isSortable: true },
-            { name: "FECHA", isSortable: true },
             { name: "CUENTA CORRIENTE", isSortable: true },
             { name: "CONCEPTO", isSortable: true },
             { name: "RETENCIÓN IVA", isSortable: false },
@@ -68,39 +79,42 @@ function page() {
           ]}
           columnValues={[
             [
+              "9379018",
+              "13/05/24",
               "15659665",
               "AR651654",
               "-",
               "Cae el Sol",
               "Airbag",
               "Sony Music",
-              "13/05/24",
               "98237423",
               "Pago",
               "SI",
               "-",
             ],
             [
+              "9379018",
+              "13/05/24",
               "15659665",
               "AR651654",
               "-",
               "Cae el Sol",
               "Airbag",
               "Sony Music",
-              "13/05/24",
               "98237423",
               "Pago",
               "SI",
               "-",
             ],
             [
+              "9379018",
+              "13/05/24",
               "15659665",
               "AR651654",
               "-",
               "Cae el Sol",
               "Airbag",
               "Sony Music",
-              "13/05/24",
               "98237423",
               "Pago",
               "SI",

@@ -18,10 +18,13 @@ import {
 import {
   CashflowPayoutsImportPayoutsModal,
   CashflowPayoutsMatchReportModal,
+  CashflowPayoutsExportPayoutsModal,
 } from "../Modals/CashflowPayoutsModals/CashflowPayoutsModals";
 import GardelAwardsModal from "../Modals/GardelAwardsModal/GardelAwardsModal";
 import SearchPhonogramsExportModal from "../Modals/SearchPhonogramsExportModal/SearchPhonogramsExportModal";
-import CashflowTransfersImportModal from "../Modals/CashflowTransfersImportModal/CashflowTransfersImportModal";
+import CashflowTransfersImportModal, {
+  CashflowTransfersExportModal,
+} from "../Modals/CashflowTransfersImportModal/CashflowTransfersImportModal";
 import {
   CashflowPaymentsImportPayment,
   CashflowPaymentsExportPayments,
@@ -33,6 +36,31 @@ import {
 } from "../Modals/CashflowRejectionsModals/CashflowRejectionsModals";
 import FinishNewPhonogram from "../Modals/FinishNewPhonogram/FinishNewPhonogram";
 import GardelAwardsPurge from "../Modals/GardelAwardsPurge/GardelAwardsPurge";
+import {
+  SaveEditPhonogramModal,
+  CancelEditPhonogramModal,
+} from "../Modals/EditPhonogramModals/EditPhonogramModals";
+import {
+  TitularityPhonogramEdit,
+  TitularityPhonogramRemove,
+} from "../Modals/TitularityPhonogramActionModal/TitularityPhonogramActionModal";
+import TerritorialitySaveModal from "../Modals/TerritorialitySaveModal/TerritorialitySaveModal";
+import {
+  SendAudioFile,
+  SetSendError,
+  RejectAudio,
+} from "../Modals/SendAudioFileModals/SendAudioFileModals";
+import TerritorialityUnableModal from "../Modals/TerritorialityUnableModal/TerritorialityUnableModal";
+
+import {
+  GrantExtension,
+  ConfirmPercentage,
+  SendDocumentation,
+  Desist,
+  Accept,
+} from "../Modals/Conflicts/ConflictsActions";
+import AuditSessionsPurgeModal from "../Modals/AuditSessionsPurgeModal/AuditSessionsPurgeModal";
+
 interface ModalProvderProps {
   children: ReactNode;
 }
@@ -74,6 +102,10 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
         return (
           <CashflowPayoutsImportPayoutsModal onCloseModal={onCloseModal} />
         );
+      case ModalNames.CASHFLOW_PAYOUTS_EXPORT_PAYOUTS:
+        return (
+          <CashflowPayoutsExportPayoutsModal onCloseModal={onCloseModal} />
+        );
       case ModalNames.GARDEL_AWARDS:
         return <GardelAwardsModal onCloseModal={onCloseModal} />;
       case ModalNames.EXPORT_CHANGES_LIST:
@@ -101,6 +133,39 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
         return <FinishNewPhonogram onCloseModal={onCloseModal} />;
       case ModalNames.GARDEL_AWARDS_PURGE:
         return <GardelAwardsPurge onCloseModal={onCloseModal} />;
+      case ModalNames.EDIT_PHONOGRAM_SAVE:
+        return <SaveEditPhonogramModal onCloseModal={onCloseModal} />;
+      case ModalNames.EDIT_PHONOGRAM_CANCEL:
+        return <CancelEditPhonogramModal onCloseModal={onCloseModal} />;
+      case ModalNames.TITULARITY_PHOGRAM_EDIT:
+        return <TitularityPhonogramEdit onCloseModal={onCloseModal} />;
+      case ModalNames.TITULARITY_PHOGRAM_REMOVE:
+        return <TitularityPhonogramRemove onCloseModal={onCloseModal} />;
+      case ModalNames.TERRITORIALITY_SAVE:
+        return <TerritorialitySaveModal onCloseModal={onCloseModal} />;
+      case ModalNames.SEND_AUDIO_FILE:
+        return <SendAudioFile onCloseModal={onCloseModal} />;
+      case ModalNames.SEND_AUDIO_REJECT:
+        return <RejectAudio onCloseModal={onCloseModal} />;
+      case ModalNames.SEND_AUDIO_SET_ERROR_SEND:
+        return <SetSendError onCloseModal={onCloseModal} />;
+      case ModalNames.TERRITORIALITY_UNABLE:
+        return <TerritorialityUnableModal onCloseModal={onCloseModal} />;
+      case ModalNames.CASHFLOW_TRANSFERS_EXPORT:
+        return <CashflowTransfersExportModal onCloseModal={onCloseModal} />;
+
+      case ModalNames.CONFLICTS_GRANT_EXTENSION:
+        return <GrantExtension onCloseModal={onCloseModal} />;
+      case ModalNames.CONFLICTS_CONFIRM_PERCENTAGE:
+        return <ConfirmPercentage onCloseModal={onCloseModal} />;
+      case ModalNames.CONFLICTS_ACCEPT:
+        return <Accept onCloseModal={onCloseModal} />;
+      case ModalNames.CONFLICTS_SEND_DOCUMENTATION:
+        return <SendDocumentation onCloseModal={onCloseModal} />;
+      case ModalNames.CONFLICTS_DESIST:
+        return <Desist onCloseModal={onCloseModal} />;
+      case ModalNames.AUDIT_SESSIONS_PURGE:
+        return <AuditSessionsPurgeModal onCloseModal={onCloseModal} />;
     }
     <></>;
   };

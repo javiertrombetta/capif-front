@@ -4,11 +4,13 @@ import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
 import CustomTable from "@/commons/CustomTable/CustomTable";
 import { IoMdSettings } from "react-icons/io";
-import { useAppSelector } from "@/hooks/storeHooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { ROLES } from "@/types/auth.types";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import { FaSearch } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+import { setModal } from "@/store/modalSlice";
+import { ModalNames } from "@/types/modalNames";
 
 function page() {
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
@@ -176,9 +178,10 @@ const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
 }) => {
   const userData = useAppSelector((state) => state.user);
   const router = useRouter();
-  // const handleOpenModal = (modalType: ModalNames) => {
-  //   dispatch(setModal({ isActive: true, type: modalType }));
-  // };
+  const dispatch = useAppDispatch();
+  const handleOpenModal = (modalType: ModalNames) => {
+    dispatch(setModal({ isActive: true, type: modalType }));
+  };
 
   return (
     <div className="px-6 py-4 relative group">
@@ -189,21 +192,26 @@ const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
         <IoMdSettings size={20} />
       </button>
       <ul
-        className={`absolute right-0 mt-2 w-[9rem] bg-slate-900 border rounded-md shadow-lg z-30 overflow-hidden ${
+        className={`absolute right-0 mt-2 ${userData.rol === ROLES.SUPER_ADMIN || userData.rol === ROLES.CAPIF_ADMIN ? "w-[8.5rem]" : "w-[11rem]"} bg-slate-900 border rounded-md shadow-lg z-30 overflow-hidden ${
           activeDropdown === id ? "" : "hidden"
         }`}
       >
         {userData.rol === ROLES.SUPER_ADMIN ||
         userData.rol === ROLES.CAPIF_ADMIN ? (
           <>
-            <li className="text-center px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]">
-              <p className="text-center">Otorgar Prórroga</p>
+            <li
+              onClick={() =>
+                handleOpenModal(ModalNames.CONFLICTS_GRANT_EXTENSION)
+              }
+              className="text-start px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
+            >
+              <p className="text-start">Otorgar Prórroga</p>
             </li>
             <li
               onClick={() => router.push("/conflicts-history")}
-              className="text-center px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]"
+              className="text-start px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
             >
-              <p className="text-center">Ver Titulares</p>
+              <p className="text-start">Ver Titulares</p>
             </li>
           </>
         ) : null}
@@ -211,17 +219,30 @@ const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
         {userData.rol === ROLES.USER_PRODUCER ||
         userData.rol === ROLES.EMPLOYEE ? (
           <>
-            <li className="text-center px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]">
-              <p className="text-center">Confirmar Porcentaje</p>
+            <li
+              onClick={() =>
+                handleOpenModal(ModalNames.CONFLICTS_CONFIRM_PERCENTAGE)
+              }
+              className="text-start px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
+            >
+              <p className="text-start">Confirmar Porcentaje</p>
             </li>
-            <li className="text-center px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]">
-              <p className="text-center">Enviar Documentación</p>
+            <li
+              onClick={() =>
+                handleOpenModal(ModalNames.CONFLICTS_SEND_DOCUMENTATION)
+              }
+              className="text-start px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
+            >
+              <p className="text-start">Enviar Documentación</p>
             </li>
           </>
         ) : null}
 
-        <li className="text-center px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]">
-          <p className="text-center">Desistir conflicto</p>
+        <li
+          onClick={() => handleOpenModal(ModalNames.CONFLICTS_DESIST)}
+          className="text-start px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
+        >
+          <p className="text-start">Desistir conflicto</p>
         </li>
       </ul>
     </div>

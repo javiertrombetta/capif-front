@@ -25,9 +25,12 @@ const page: FC = () => {
           Verifica tu correo electrónico
         </h2>
         <p className="text-black text-[1.2rem] text-center">
-          Hola, por favor, verifica tu dirección de correo electrónico haciendo
-          clic en el enlace enviado a{" "}
-          {<label className="font-bold">{signupData.email}</label>}.
+          Verifica tu dirección de correo electrónico haciendo clic en el enlace
+          enviado a {<label className="font-bold">{signupData.email}</label>}.
+        </p>
+        <p className="text-black text-[1.1rem] text-center">
+          Si existe un error en la dirección de correo electrónico indicada,
+          contáctese con derechos@capif.org.ar.
         </p>
         <div>
           <CustomButton>Reenviar Email</CustomButton>

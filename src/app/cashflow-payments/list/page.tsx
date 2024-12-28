@@ -12,56 +12,57 @@ function page() {
   return (
     <CustomLayout>
       <Header back title="Lista de Pagos Importados" />
-      <div className="w-[100%] pr-[2rem] pl-[2rem] flex justify-end mt-[2rem]">
+      <div className="w-[100%] pr-[2rem] pl-[2rem] flex justify-end mt-[2rem] gap-[1rem]">
         <CustomButton onClick={() => router.push("/cashflow-payments")}>
           Aceptar
         </CustomButton>
+        <CustomButton background="warn">Cancelar</CustomButton>
       </div>
       <div className="w-[100%] mt-[2rem]">
         <CustomTable
           columnNames={[
+            { name: "FECHA", isSortable: true },
             { name: "CUIT", isSortable: true },
             { name: "ISRC", isSortable: true },
             { name: "CUENTA CORRIENTE", isSortable: true },
             { name: "PAGO", isSortable: true },
-            { name: "FECHA", isSortable: true },
             { name: "RETENCIÓN", isSortable: false },
             { name: "CONCEPTO", isSortable: true },
           ]}
           columnValues={[
             [
+              "22/08/24",
               "12-12345-98",
               "AR645732",
               "123465789",
               "$3.500",
-              "22/08/24",
               "SI",
               "Pagado",
             ],
             [
+              "22/08/24",
               "12-12345-98",
               "AR645732",
               "123465789",
               "$3.500",
-              "22/08/24",
               "SI",
               "Pagado",
             ],
             [
+              "22/08/24",
               "12-12345-98",
               "AR645732",
               "123465789",
               "$3.500",
-              "22/08/24",
               "SI",
               "Pagado",
             ],
             [
+              "22/08/24",
               "12-12345-98",
               "AR645732",
               "123465789",
               "$3.500",
-              "22/08/24",
               "SI",
               "Pagado",
             ],

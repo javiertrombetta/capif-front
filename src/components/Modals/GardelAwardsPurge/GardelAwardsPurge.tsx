@@ -1,5 +1,5 @@
-import CustomButton from "@/commons/CustomButton/CustomButton";
 import React, { FC } from "react";
+import CustomButton from "@/commons/CustomButton/CustomButton";
 import { IoCloseSharp } from "react-icons/io5";
 
 const GardelAwardsPurge: FC<{ onCloseModal: () => void }> = ({
@@ -21,7 +21,7 @@ const GardelAwardsPurge: FC<{ onCloseModal: () => void }> = ({
         </p>
 
         <div className="flex gap-[3rem] w-[100%] justify-center">
-          <CustomButton>Aceptar</CustomButton>
+          <CustomButton background="delete">Depurar</CustomButton>
           <CustomButton onClick={onCloseModal}>Cancelar</CustomButton>
         </div>
       </div>

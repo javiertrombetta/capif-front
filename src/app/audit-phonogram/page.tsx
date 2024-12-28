@@ -4,32 +4,67 @@ import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomTable from "@/commons/CustomTable/CustomTable";
+import CustomButton from "@/commons/CustomButton/CustomButton";
+import { FaSearch } from "react-icons/fa";
 
 function page() {
   return (
     <CustomLayout>
       <Header title="Cambios en Repertorios" />
 
-      <div className="w-[100%] flex justify-center pr-[1rem] pl-[2rem] mt-[2rem]">
+      <div className="w-[100%] flex justify-center pr-[1rem] pl-[2rem] ">
         <div className="w-[100%] flex flex-col justify-between">
-          <div className="w-[100%] mt-[2rem] flex gap-[2rem] items-center">
-            <CustomInput className="w-[11rem]" type="date" label="FECHA" />
-            <CustomInput className="w-[11rem]" type="text" label="ISRC" />
-            <CustomInput
-              className="w-[11rem]"
-              type="email"
-              label="EMAIL USUARIO"
-            />
-            <CustomInput className="w-[11rem]" type="text" label="PRODUCTORA" />
-            <CustomInput
-              className="w-[11rem]"
-              type="text"
-              label="TIPO DE CAMBIO"
-            />
-            <CustomInput className="w-[11rem]" type="text" label="DETALLE" />
+          <div className="w-[100%] mt-[2rem] flex flex-col  items-center">
+            <div className="w-[100%] flex justify-center gap-[1rem]">
+              <CustomInput
+                containerClassName="w-[100%]"
+                className="w-[100%]"
+                type="date"
+                label="FECHA"
+              />
+              <CustomInput
+                containerClassName="w-[100%]"
+                className="w-[100%]"
+                type="text"
+                label="ISRC"
+              />
+              <CustomInput
+                containerClassName="w-[100%]"
+                className="w-[100%]"
+                type="email"
+                label="EMAIL USUARIO"
+              />
+            </div>
+            <div className="w-[100%] flex justify-center gap-[1rem] mt-[1rem]">
+              <CustomInput
+                containerClassName="w-[100%]"
+                className="w-[100%]"
+                type="text"
+                label="PRODUCTORA"
+              />
+              <CustomInput
+                containerClassName="w-[100%]"
+                className="w-[100%]"
+                type="text"
+                label="TIPO DE CAMBIO"
+              />
+              <CustomInput
+                containerClassName="w-[100%]"
+                className="w-[100%]"
+                type="text"
+                label="DETALLE"
+              />
+            </div>
+            <div className="w-[100%] mt-[1rem]">
+              <CustomButton className="w-full h-[2.5rem] pt-[1.2rem] pb-[1.2rem] text-[1rem] font-bold gap-[0.3rem]">
+                <FaSearch />
+                Buscar
+              </CustomButton>
+            </div>
           </div>
         </div>
       </div>
+
       <div className="w-[100%] mt-[2rem]">
         <CustomTable
           columnNames={[
