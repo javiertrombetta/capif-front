@@ -45,18 +45,18 @@ const Sidebar: FC = () => {
       userData.rol === ROLES.EMPLOYEE
         ? [
             {
-              name: "Registros",
+              name: "Buscar",
               link: "/records",
             },
           ]
         : [
             {
-              name: "Alta Usuario",
+              name: "Altas",
               link: "/add-employee",
             },
 
             {
-              name: "Registros",
+              name: "Buscar",
               link: "/records",
             },
           ],
@@ -98,14 +98,14 @@ const Sidebar: FC = () => {
       userData.rol === ROLES.SUPER_ADMIN
         ? [
             {
+              name: "Buscar",
+              link: "/search-phonogram",
+            },
+            {
               name: "Declaración Repertorio",
               link: "/new-phonogram",
             },
 
-            {
-              name: "Buscar",
-              link: "/search-phonogram",
-            },
             {
               name: "Conflictos",
               link: "/conflicts",
@@ -121,12 +121,12 @@ const Sidebar: FC = () => {
           ]
         : [
             {
-              name: "Declaración Repertorio",
-              link: "/new-phonogram",
-            },
-            {
               name: "Buscar",
               link: "/search-phonogram",
+            },
+            {
+              name: "Declaración Repertorio",
+              link: "/new-phonogram",
             },
             {
               name: "Conflictos",
@@ -154,12 +154,12 @@ const Sidebar: FC = () => {
     ],
     usersOptions: [
       {
-        name: "Alta Usuario",
-        link: "/add-employee",
+        name: "Buscar",
+        link: "/records",
       },
       {
-        name: "Registros",
-        link: "/records",
+        name: "Altas",
+        link: "/add-employee",
       },
     ],
     cashFlowOptions: [
@@ -176,7 +176,7 @@ const Sidebar: FC = () => {
         link: "/cashflow-transfers",
       },
       {
-        name: "Rechazos",
+        name: "Pagos Rechazados",
         link: "/cashflow-rejections",
       },
       {
@@ -210,7 +210,7 @@ const Sidebar: FC = () => {
     },
     {
       id: 2,
-      title: "PRODUCTORAS",
+      title: "PRODUCTORES",
       items: adminMenuOptions.producersOptions,
       icon: FaBuilding,
       height: "4",
@@ -304,11 +304,13 @@ const GenericMenu: FC<GenericMenuProps> = ({
     <div className="w-[100%]">
       <button
         onClick={() => onToggle(id)}
-        className="h-[2.5rem] w-[100%] flex items-center hover:bg-[#1E282C] section pl-[1rem] pr-[1rem] justify-between cursor-pointer"
+        className="h-[2.5rem] w-[100%] flex items-center hover:bg-[#1E282C] section pl-[0.2rem] pr-[1rem] justify-between cursor-pointer"
       >
         <div className="flex items-center">
           <Icon size={15} />
-          <p className="text-[1rem] ml-[0.5rem] text-white">{title}</p>
+          <p className="text-[1rem] ml-[0.5rem] text-white whitespace-nowrap">
+            {title}
+          </p>
         </div>
 
         <div>

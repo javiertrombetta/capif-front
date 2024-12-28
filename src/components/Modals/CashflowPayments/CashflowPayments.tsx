@@ -51,6 +51,13 @@ const CashflowPaymentsImportPayment: FC<{ onCloseModal: () => void }> = ({
 const CashflowPaymentsExportPayments: FC<{ onCloseModal: () => void }> = ({
   onCloseModal,
 }) => {
+  const router = useRouter();
+
+  const handleExport = () => {
+    router.push("/cashflow-payments/export");
+    onCloseModal();
+  };
+
   return (
     <div
       className={
@@ -62,10 +69,9 @@ const CashflowPaymentsExportPayments: FC<{ onCloseModal: () => void }> = ({
       </button>
       <div className="w-[100%] pr-[1rem] pl-[1rem] flex flex-col items-center gap-[2rem] justify-center">
         <p className="text-black font-bold text-[1.4rem]">Exportar Pagos</p>
-
-        <CustomInput type="date" label="FECHA DESDE" className="w-[13rem]" />
-        <CustomInput type="date" label="FECHA HASTA" className="w-[13rem]" />
-        <CustomButton>Aceptar</CustomButton>
+        <CustomInput type="date" label="FECHA DESDE" className="w-[20rem]" />
+        <CustomInput type="date" label="FECHA HASTA" className="w-[20rem]" />
+        <CustomButton onClick={handleExport}>Aceptar</CustomButton>
       </div>
     </div>
   );

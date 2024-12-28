@@ -50,7 +50,7 @@ function page() {
             { name: "TEMA", isSortable: true },
             { name: "ARTISTA", isSortable: true },
             { name: "ISRC", isSortable: true },
-            { name: "SELLO", isSortable: true },
+            { name: "PRODUCTOR", isSortable: true },
             { name: "AÑO DE PUBLICACIÓN", isSortable: true },
             { name: "ÁLBUM", isSortable: true },
             { name: "ESTADO", isSortable: true },

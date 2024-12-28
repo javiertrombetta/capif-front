@@ -4,26 +4,54 @@ import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomTable from "@/commons/CustomTable/CustomTable";
+import CustomButton from "@/commons/CustomButton/CustomButton";
+import { FaSearch } from "react-icons/fa";
 
 function page() {
   return (
     <CustomLayout>
       <Header title="Cambios Realizados" />
 
-      <div className="w-[100%] flex justify-between pr-[1rem] pl-[2rem] mt-[2rem]">
-        <CustomInput type="date" label="FECHA" />
-        <CustomInput type="email" label="EMAIL DE USUARIO" />
-        <CustomInput type="text" label="TABLA DB" />
-        <div className="w-[12rem]">
-          <p className="text-black font-bold">TIPO DE AUDITORIA</p>
-          <select className="w-[100%] text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black">
-            <option>ALTA</option>
-            <option>PRIMERA PRORROGA</option>
-            <option>BAJA</option>
-            <option>CAMBIO</option>
-            <option>ERROR</option>
-            <option>SISTEMA</option>
-          </select>
+      <div className="w-[100%] flex flex-col  justify-between pr-[2rem] pl-[2rem] mt-[2rem] ">
+        <div className="w-[100%] flex gap-[1rem]">
+          <CustomInput
+            containerClassName="w-[100%]"
+            className="w-[100%]"
+            type="date"
+            label="FECHA"
+          />
+          <CustomInput
+            containerClassName="w-[100%]"
+            className="w-[100%]"
+            type="email"
+            label="EMAIL DE USUARIO"
+          />
+        </div>
+
+        <div className="w-[100%] flex gap-[1rem] mt-[1rem]">
+          <CustomInput
+            containerClassName="w-[100%]"
+            className="w-[100%]"
+            type="text"
+            label="TABLA DB"
+          />
+          <div className="w-[100%]">
+            <p className="text-black font-bold">TIPO DE AUDITORIA</p>
+            <select className="w-[100%] text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black">
+              <option>ALTA</option>
+              <option>PRIMERA PRORROGA</option>
+              <option>BAJA</option>
+              <option>CAMBIO</option>
+              <option>ERROR</option>
+              <option>SISTEMA</option>
+            </select>
+          </div>
+        </div>
+        <div className="w-[100%] mt-[1rem]">
+          <CustomButton className="w-full h-[2.5rem] pt-[1.2rem] pb-[1.2rem] text-[1rem] font-bold gap-[0.3rem]">
+            <FaSearch />
+            Buscar
+          </CustomButton>
         </div>
       </div>
       <div className="w-[100%] mt-[2rem]">

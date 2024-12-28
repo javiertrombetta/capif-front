@@ -2,11 +2,13 @@
 import React, { useState } from "react";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
-import { useAppSelector } from "@/hooks/storeHooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { Form, Formik } from "formik";
 import CustomField from "@/commons/CustomField/CustomField";
 import TimerInput from "@/components/TimerInput/TimerInput";
 import CustomButton from "@/commons/CustomButton/CustomButton";
+import { setModal } from "@/store/modalSlice";
+import { ModalNames } from "@/types/modalNames";
 
 function page() {
   const userData = useAppSelector((state) => state.user);
@@ -18,7 +20,7 @@ function page() {
     productor_originario: userData.activeProduction,
     año_lanzamiento: "2011",
   };
-
+  const dispatch = useAppDispatch();
   const [year, setYear] = useState("2011");
   const currentYear = new Date().getFullYear();
 
@@ -33,6 +35,10 @@ function page() {
   };
 
   const handleSubmit = () => {};
+
+  const handleOpenModal = (type: ModalNames) => {
+    dispatch(setModal({ type, isActive: true }));
+  };
 
   return (
     <CustomLayout>
@@ -88,8 +94,11 @@ function page() {
                   }
                 />
               </div>
-              <div className="w-[100%] flex justify-center gap-[1rem]">
+              <div className="w-[100%] flex justify-center gap-[1rem] mb-[2rem]">
                 <CustomButton
+                  onClick={() =>
+                    handleOpenModal(ModalNames.EDIT_PHONOGRAM_SAVE)
+                  }
                   type="submit"
                   disabled={isSubmitting || !isValid || !dirty}
                   className="mt-[3rem]"
@@ -97,7 +106,13 @@ function page() {
                   Guardar
                 </CustomButton>
 
-                <CustomButton type="button" className="mt-[3rem]">
+                <CustomButton
+                  onClick={() =>
+                    handleOpenModal(ModalNames.EDIT_PHONOGRAM_CANCEL)
+                  }
+                  type="button"
+                  className="mt-[3rem]"
+                >
                   Cancelar
                 </CustomButton>
               </div>

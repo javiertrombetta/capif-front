@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import CustomTable from "@/commons/CustomTable/CustomTable";
@@ -6,13 +7,16 @@ import Header from "@/commons/Header/Header";
 import { useAppDispatch } from "@/hooks/storeHooks";
 import { setModal } from "@/store/modalSlice";
 import { ModalNames } from "@/types/modalNames";
-import React from "react";
 
 function page() {
   const dispatch = useAppDispatch();
 
   const handleAddTerritoriality = () => {
     dispatch(setModal({ type: ModalNames.ADD_TERRITORIALITY, isActive: true }));
+  };
+
+  const handleOpenModal = (type: ModalNames) => {
+    dispatch(setModal({ type, isActive: true }));
   };
 
   return (
@@ -45,19 +49,40 @@ function page() {
               "UK",
               "Reino Unido",
               "ACTIVO",
-              <CustomButton>Desactivar</CustomButton>,
+              <CustomButton
+                onClick={() =>
+                  handleOpenModal(ModalNames.TERRITORIALITY_UNABLE)
+                }
+                background="warn"
+              >
+                Desactivar
+              </CustomButton>,
             ],
             [
               "AR",
               "Argentina",
               "ACTIVO",
-              <CustomButton>Desactivar</CustomButton>,
+              <CustomButton
+                onClick={() =>
+                  handleOpenModal(ModalNames.TERRITORIALITY_UNABLE)
+                }
+                background="warn"
+              >
+                Desactivar
+              </CustomButton>,
             ],
             [
               "UR",
               "Uruguay",
               "ACTIVO",
-              <CustomButton>Desactivar</CustomButton>,
+              <CustomButton
+                onClick={() =>
+                  handleOpenModal(ModalNames.TERRITORIALITY_UNABLE)
+                }
+                background="warn"
+              >
+                Desactivar
+              </CustomButton>,
             ],
           ]}
         />

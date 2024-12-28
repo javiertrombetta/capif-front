@@ -3,6 +3,10 @@ import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import CustomTable from "@/commons/CustomTable/CustomTable";
 import Header from "@/commons/Header/Header";
+import { useAppDispatch } from "@/hooks/storeHooks";
+import { setModal } from "@/store/modalSlice";
+import { ModalNames } from "@/types/modalNames";
+import { useRouter } from "next/navigation";
 import React, { FC, useState } from "react";
 import { IoMdSettings } from "react-icons/io";
 
@@ -19,7 +23,7 @@ function page() {
 
   return (
     <CustomLayout>
-      <Header title="Titulares de Conflicto" />
+      <Header back title="Titulares de Conflicto" />
 
       <div className="w-[100%] flex items-center pr-[2rem] pl-[2rem] mt-[2rem] gap-[1rem]">
         <CustomInput type="text" label="Buscar Productora" />
@@ -42,20 +46,20 @@ function page() {
               isSortable: true,
             },
             { name: "ISRC", isSortable: true },
-            { name: "ESTADO", isSortable: true },
-            { name: "DOCUMENTACIÓN ENVIADA", isSortable: true },
             { name: "PORCENTAJE DECLARADO", isSortable: true },
+            { name: "DOCUMENTACIÓN ENVIADA", isSortable: true },
             { name: "PORCENTAJE DEFINITIVO", isSortable: true },
+            { name: "ESTADO", isSortable: true },
             { name: "ACCIÓN", isSortable: false },
           ]}
           columnValues={[
             [
               "Sony Music",
               "AR6548646",
-              "PENDIENTE DE RESPUESTA",
+              "50%",
               "NO",
               "50%",
-              "50%",
+              "PENDIENTE DE RESPUESTA",
               <ActionDropdownButton
                 toggleDropdown={toggleDropdown}
                 id={1}
@@ -65,10 +69,36 @@ function page() {
             [
               "Sony Music",
               "AR6548646",
-              "PENDIENTE DE RESPUESTA",
+              "50%",
               "NO",
               "50%",
+              "PENDIENTE DE RESPUESTA",
+              <ActionDropdownButton
+                toggleDropdown={toggleDropdown}
+                id={2}
+                activeDropdown={activeDropdown}
+              />,
+            ],
+            [
+              "Sony Music",
+              "AR6548646",
               "50%",
+              "NO",
+              "50%",
+              "PENDIENTE DE RESPUESTA",
+              <ActionDropdownButton
+                toggleDropdown={toggleDropdown}
+                id={2}
+                activeDropdown={activeDropdown}
+              />,
+            ],
+            [
+              "Sony Music",
+              "AR6548646",
+              "50%",
+              "NO",
+              "50%",
+              "PENDIENTE DE RESPUESTA",
               <ActionDropdownButton
                 toggleDropdown={toggleDropdown}
                 id={2}
@@ -95,6 +125,13 @@ const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
   id,
   activeDropdown,
 }) => {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+
+  const handleOpenModal = (type: ModalNames) => {
+    dispatch(setModal({ type, isActive: true }));
+  };
+
   return (
     <div className="px-6 py-4 relative group">
       <button
@@ -108,15 +145,29 @@ const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
           activeDropdown === id ? "" : "hidden"
         }`}
       >
-        <li className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]">
+        <li
+          onClick={() => router.push("/titularity-phonogram/edit-titular")}
+          className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]"
+        >
           <p>Modificar</p>
         </li>
-        <li className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]">
+        <li
+          onClick={() =>
+            handleOpenModal(ModalNames.CONFLICTS_CONFIRM_PERCENTAGE)
+          }
+          className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]"
+        >
+          <p>Fijar Porcentaje</p>
+        </li>
+        <li
+          onClick={() => handleOpenModal(ModalNames.CONFLICTS_ACCEPT)}
+          className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]"
+        >
           <p>Aceptar</p>
         </li>
-        <li className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]">
+        {/* <li className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]">
           <p>Quitar</p>
-        </li>
+        </li> */}
       </ul>
     </div>
   );

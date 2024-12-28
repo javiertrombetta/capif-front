@@ -4,24 +4,19 @@ import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomTable from "@/commons/CustomTable/CustomTable";
-import { useAppSelector } from "@/hooks/storeHooks";
+import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { ROLES } from "@/types/auth.types";
 import CustomButton from "@/commons/CustomButton/CustomButton";
+import { ModalNames } from "@/types/modalNames";
+import { setModal } from "@/store/modalSlice";
 
 function page() {
   const userData = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+  const handleOpenModal = (type: ModalNames) => {
+    dispatch(setModal({ type, isActive: true }));
+  };
 
-  // const toggleDropdown = (id: number) => {
-  //   if (activeDropdown === id) {
-  //     setActiveDropdown(null);
-  //   } else {
-  //     setActiveDropdown(id);
-  //   }
-  // };
-
-  // const redirectToOption = (route: string): void => {
-  //   router.push(route);
-  // };
   return (
     <CustomLayout>
       <Header title="Envio Archivo de Audio" />
@@ -106,54 +101,26 @@ function page() {
         />
       </div>
       <div className="w-[100%] pr-[3rem] pl-[3rem] flex justify-end gap-[1rem] items-center mt-[2rem]">
-        <CustomButton>ENVIAR</CustomButton>
-        <CustomButton>RECHAZADO</CustomButton>
-        <CustomButton>ERROR EN EL ENVIO</CustomButton>
+        <CustomButton
+          onClick={() => handleOpenModal(ModalNames.SEND_AUDIO_FILE)}
+        >
+          ENVIAR
+        </CustomButton>
+        <CustomButton
+          onClick={() => handleOpenModal(ModalNames.SEND_AUDIO_REJECT)}
+          background="warn"
+        >
+          RECHAZAR
+        </CustomButton>
+        <CustomButton
+          onClick={() => handleOpenModal(ModalNames.SEND_AUDIO_SET_ERROR_SEND)}
+          background="warn"
+        >
+          ERROR EN EL ENVIO
+        </CustomButton>
       </div>
     </CustomLayout>
   );
 }
 
 export default page;
-// interface ActionDropdownButtonProps {
-//   toggleDropdown: (id: number) => void;
-//   id: number;
-//   activeDropdown: number | null;
-//   redirectToOption: (route: string) => void;
-// }
-
-// const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
-//   toggleDropdown,
-//   id,
-//   activeDropdown,
-//   redirectToOption,
-// }) => {
-//   return (
-//     <div className="px-6 py-4 relative group">
-//       <button
-//         onClick={() => toggleDropdown(id)}
-//         className="bg-[#1280e1] text-white w-[2rem] h-[2rem] flex justify-center items-center rounded-[0.3rem]"
-//       >
-//         <IoMdSettings size={20} />
-//       </button>
-//       <ul
-//         className={`absolute right-0 mt-2 w-[8rem] bg-slate-900 border rounded-md shadow-lg z-30 overflow-hidden ${
-//           activeDropdown === id ? "" : "hidden"
-//         }`}
-//       >
-//         <li
-//           onClick={() => redirectToOption("/edit-user")}
-//           className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
-//         >
-//           <p>Titularidad</p>
-//         </li>
-//         <li
-//           onClick={() => redirectToOption("/user-profile")}
-//           className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
-//         >
-//           <p>Territorialidad</p>
-//         </li>
-//       </ul>
-//     </div>
-//   );
-// };

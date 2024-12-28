@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
@@ -7,7 +8,6 @@ import Header from "@/commons/Header/Header";
 import { useAppDispatch } from "@/hooks/storeHooks";
 import { setModal } from "@/store/modalSlice";
 import { ModalNames } from "@/types/modalNames";
-import React from "react";
 
 function page() {
   const dispatch = useAppDispatch();
@@ -28,10 +28,11 @@ function page() {
 
       <div className="w-[100%] mt-[2rem] pr-[2rem] pl-[2rem] flex justify-between">
         <CustomInput type="text" label="Buscar Productora" />
-
         <div className="flex gap-[2rem]">
           <CustomButton onClick={openModal}>Generar Códigos</CustomButton>
-          <CustomButton onClick={openPurgeModal}>Depurar Códigos</CustomButton>
+          <CustomButton background="warn" onClick={openPurgeModal}>
+            Depurar Códigos
+          </CustomButton>
         </div>
       </div>
 
