@@ -39,7 +39,9 @@ function page() {
       <div className="w-[100%] mt-[1rem] flex justify-end items-center justify-between pl-[2rem] pr-[2rem]">
         <CustomInput label="Buscar Titular" type="text" />
         <CustomButton
-          onClick={() => redirectToOption("/titularity-phonogram/add-titular")}
+          onClick={() =>
+            redirectToOption("/titularity-phonogram/10/add-titular")
+          }
         >
           Agregar Titular
         </CustomButton>
@@ -158,7 +160,7 @@ const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
         }`}
       >
         <li
-          onClick={() => router.push("/titularity-phonogram/edit-titular")}
+          onClick={() => router.push("/titularity-phonogram/10/edit-titular")}
           className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
         >
           <MdEdit />
