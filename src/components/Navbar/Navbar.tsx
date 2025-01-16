@@ -54,7 +54,9 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
   const openProductionCompanySelection = () => {
     if (window && window.localStorage) {
       const company = localStorage.getItem("company");
-      if (!company) {
+      const isLoged = localStorage.getItem("isLoged");
+
+      if (!company && isLoged) {
         dispatch(
           setModal({ type: ModalNames.CHANGE_PRODUCER, isActive: true })
         );

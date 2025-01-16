@@ -25,11 +25,14 @@ const initialValues: LoginFormValues = {
 };
 
 function LoginView() {
-  localStorage.removeItem("isLoged");
-  localStorage.removeItem("company");
   const router = useRouter();
   const dispatch = useAppDispatch();
+
   const handleSubmit = async (values: { email: string; password: string }) => {
+    if (window && window.localStorage) {
+      localStorage.removeItem("isLoged");
+      localStorage.removeItem("company");
+    }
     const { email, password } = values;
     await authLogin({ email, password });
     const data = await getUserData();
