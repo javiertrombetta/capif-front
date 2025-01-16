@@ -87,6 +87,11 @@ const VerifyCuit: FC<VerifyCuitProps> = ({ onSubmit }) => {
     }, 3000);
   };
 
+  const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    verifiyCuitMock();
+  };
+
   const renderCuitInstance = () => {
     switch (verificationCuitState) {
       case "request":
@@ -94,6 +99,7 @@ const VerifyCuit: FC<VerifyCuitProps> = ({ onSubmit }) => {
           <Formik initialValues={initialValues} onSubmit={verifiyCuitMock}>
             {({ isSubmitting, isValid, dirty }) => (
               <Form
+                onSubmit={submitForm}
                 id="cuit_request"
                 className="bg-white w-[25rem] h-[100%] pt-[1rem] flex flex-col items-center overflow-y-scroll pr-[2rem] pl-[2rem] pt-[1rem] pb-[2rem]"
               >
@@ -254,14 +260,26 @@ const SignUpForm: FC = () => {
             </div>
 
             <div className="w-[100%] flex justify-center mt-[1rem]">
-              <CustomButton
-                type="submit"
-                disabled={isSubmitting || !isValid || !dirty}
-                width="w-[100%]"
-                className="h-[2.5rem]"
-              >
-                Registrarse
-              </CustomButton>
+              {isSubmitting || !isValid || !dirty ? (
+                <CustomButton
+                  type="submit"
+                  disabled={isSubmitting || !isValid || !dirty}
+                  background={"disabled"}
+                  width="w-[100%]"
+                  className="h-[2.5rem]"
+                >
+                  Registrarse
+                </CustomButton>
+              ) : (
+                <CustomButton
+                  type="submit"
+                  disabled={isSubmitting || !isValid || !dirty}
+                  width="w-[100%]"
+                  className="h-[2.5rem]"
+                >
+                  Registrarse
+                </CustomButton>
+              )}
             </div>
 
             <Link className="w-[100%]" href={"/login"}>

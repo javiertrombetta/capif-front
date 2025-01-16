@@ -146,7 +146,7 @@ const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
         }`}
       >
         <li
-          onClick={() => router.push("/titularity-phonogram/edit-titular")}
+          onClick={() => router.push("/titularity-phonogram/10/edit-titular")}
           className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]"
         >
           <p>Modificar</p>

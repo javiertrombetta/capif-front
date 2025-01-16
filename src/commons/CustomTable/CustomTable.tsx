@@ -3,7 +3,7 @@ import { IoMdArrowDropdown, IoMdArrowDropup } from "react-icons/io";
 import dragTableFunctions from "@/hooks/dragTableFunctions";
 import "./CustomTable.css";
 
-type columnValueType = string | number | ReactNode;
+type columnValueType = string | number | Date | ReactNode;
 
 interface CustomTableProps {
   columnNames: { name: string; isSortable: boolean; selectBox?: boolean }[];
@@ -118,7 +118,7 @@ const CustomTable: FC<CustomTableProps> = ({ columnNames, columnValues }) => {
                       {isValidElement(record) ? (
                         record
                       ) : (
-                        <p className="text-center text-black">{record}</p>
+                        <p className="text-center text-black">{`${record}`}</p>
                       )}
                     </div>
                   </td>
