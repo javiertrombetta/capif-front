@@ -2,6 +2,7 @@ import React, { FC, ReactNode, useEffect } from "react";
 import { useAppSelector } from "@/hooks/storeHooks";
 import { usePathname, useRouter } from "next/navigation";
 import { ROLES } from "@/types/auth.types";
+import { match } from "path-to-regexp";
 
 interface RouteGuardProps {
   children: ReactNode;
@@ -9,6 +10,7 @@ interface RouteGuardProps {
 
 const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
   const { rol } = useAppSelector((state) => state.user);
+  const auth = useAppSelector((state) => state.auth);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -25,10 +27,10 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/search-production-company",
       "/conflicts-history",
       "/gardel-awards",
-      "/territoriality-phonogram",
-      "/titularity-phonogram",
-      "/titularity-phonogram/add-titular",
-      "/titularity-phonogram/edit-titular",
+      "/territoriality-phonogram/:id",
+      "/titularity-phonogram/:id",
+      "/titularity-phonogram/:id/add-titular",
+      "/titularity-phonogram/:id/edit-titular",
       "/audit-changes",
       "/audit-sessions",
       "/cashflow-payouts",
@@ -44,12 +46,15 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/cashflow-rejections",
       "/cashflow-rejections/list",
       "/cashflow-rejections/export",
-      "/user-profile",
+      "/user-profile/:id",
       "/cashflow-account-statement/history",
       "/audit-phonogram",
-      "/edit-phonogram",
-      "/edit-user",
+      "/edit-phonogram/:id",
+      "/edit-user/:id",
       "/edit-production-company",
+      "/register-production-company",
+      "/my-profile",
+      "/change-password",
     ],
     [ROLES.CAPIF_ADMIN]: [
       "/",
@@ -63,7 +68,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/search-production-company",
       "/conflicts-history",
       "/gardel-awards",
-      "/territoriality-phonogram",
+      "/territoriality-phonogram/:id",
       "/audit-changes",
       "/audit-sessions",
       "/cashflow-payouts",
@@ -79,12 +84,15 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/cashflow-rejections",
       "/cashflow-rejections/list",
       "/cashflow-rejections/export",
-      "/user-profile",
+      "/user-profile/:id",
       "/cashflow-account-statement/history",
       "/audit-phonogram",
-      "/edit-phonogram",
-      "/edit-user",
+      "/edit-phonogram/:id",
+      "/edit-user/:id",
       "/edit-production-company",
+      "/register-production-company",
+      "/my-profile",
+      "/change-password",
     ],
     [ROLES.USER_PRODUCER]: [
       "/",
@@ -93,9 +101,12 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/conflicts",
       "/add-employee",
       "/records",
-      "/territoriality-phonogram",
+      "/territoriality-phonogram/:id",
       "/cashflow-account-statement",
-      "/edit-phonogram",
+      "/edit-phonogram/:id",
+      "/register-production-company",
+      "/my-profile",
+      "/change-password",
     ],
     [ROLES.EMPLOYEE]: [
       "/",
@@ -103,21 +114,40 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/search-phonogram",
       "/conflicts",
       "/records",
-      "/territoriality-phonogram",
+      "/territoriality-phonogram/:id",
       "/cashflow-account-statement",
-      "/edit-phonogram",
+      "/edit-phonogram/:id",
+      "/register-production-company",
+      "/my-profile",
+      "/change-password",
     ],
+  };
+  const isRouteAllowed = (path: string, routes: string[]) => {
+    return routes.some((route) => match(route)(path));
   };
 
   useEffect(() => {
-    if (rol && !allowedRoutes[rol]?.includes(pathname)) {
+    let isLoged;
+    if (window && window.localStorage) {
+      isLoged = localStorage.getItem("isLoged");
+    }
+    if (!isLoged) {
+      router.push("/login");
+      return;
+    }
+    if (auth.tipo_registro && auth.tipo_registro !== "HABILITADO") {
+      router.push("/register-production-company");
+      return;
+    }
+    if (rol && !isRouteAllowed(pathname, allowedRoutes[rol] || [])) {
       router.push("/records");
     }
-  }, [rol, pathname, router]);
+  }, [rol, pathname, router, auth]);
 
-  if (!rol || !allowedRoutes[rol]?.includes(pathname)) {
+  if (!rol || !isRouteAllowed(pathname, allowedRoutes[rol] || [])) {
     return null;
   }
+
   return <>{children}</>;
 };
 

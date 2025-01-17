@@ -10,6 +10,9 @@ import { validationLoginForm } from "@/utils/formValidations";
 import "./LoginView.css";
 import "../../styles/globals.css";
 import { useRouter } from "next/navigation";
+import { authLogin, getUserData, getUserRol } from "@/services/auth";
+import { useAppDispatch } from "@/hooks/storeHooks";
+import { setAuthData } from "@/store/authSlice";
 
 interface LoginFormValues {
   email: string;
@@ -23,9 +26,24 @@ const initialValues: LoginFormValues = {
 
 function LoginView() {
   const router = useRouter();
-  const handleSubmit = async () => {
-    // const { email, password } = values;
-    // await authLogin({ email, password });
+  const dispatch = useAppDispatch();
+
+  const handleSubmit = async (values: { email: string; password: string }) => {
+    if (window && window.localStorage) {
+      localStorage.removeItem("isLoged");
+      localStorage.removeItem("company");
+    }
+    const { email, password } = values;
+    await authLogin({ email, password });
+    const data = await getUserData();
+    let dataToSet = data;
+    dispatch(setAuthData(data));
+    if (data.rol_id) {
+      const rol_nombre = await getUserRol();
+      dataToSet = { ...data, rol_nombre };
+    }
+    dispatch(setAuthData(dataToSet));
+    localStorage.setItem("isLoged", "true");
     router.push("/records");
   };
 
@@ -79,15 +97,27 @@ function LoginView() {
               <Link className="w-[100%] mt-[1rem]" href="/forgot-password">
                 <p className="text-[#1280e1]">Olvide mi contraseña</p>
               </Link>
+
               <div className="w-[100%] flex justify-center mt-[1rem]">
-                <CustomButton
-                  onClick={handleSubmit}
-                  disabled={isSubmitting || !isValid || !dirty}
-                  width="w-[100%]"
-                  className="h-[2.5rem]"
-                >
-                  Ingresar
-                </CustomButton>
+                {isSubmitting || !isValid || !dirty ? (
+                  <CustomButton
+                    type="submit"
+                    disabled={isSubmitting || !isValid || !dirty}
+                    background="disabled"
+                    width="w-[100%]"
+                    className="h-[2.5rem]"
+                  >
+                    Ingresar
+                  </CustomButton>
+                ) : (
+                  <CustomButton
+                    type="submit"
+                    width="w-[100%]"
+                    className="h-[2.5rem]"
+                  >
+                    Ingresar
+                  </CustomButton>
+                )}
               </div>
 
               <Link className="w-[100%]" href={"/signup"}>

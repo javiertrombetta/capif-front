@@ -1,26 +1,34 @@
 "use client";
-// import { getUserData } from "@/services/auth";
-import React, { FC, ReactNode } from "react";
+import React, { FC, ReactNode, useEffect } from "react";
+import { useAppDispatch } from "@/hooks/storeHooks";
+import { getUserData, getUserRol } from "@/services/auth";
+import { setAuthData } from "@/store/authSlice";
 
 interface AuthProvider {
   children: ReactNode;
 }
 
 const AuthProvider: FC<AuthProvider> = ({ children }) => {
-  // const [cookies] = useCookies(["auth_token"]);
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
-  // const handleGetUserData = async () => {
-  //   const authToken = cookies.auth_token;
-  //   if (authToken) {
-  //     const data = await getUserData(authToken);
-  //     dispatch(setUser(data));
-  //   }
-  // };
+  const handleGetUserData = async () => {
+    try {
+      const data = await getUserData();
+      let dataToSet = data;
+      dispatch(setAuthData(data));
+      if (data.rol_id) {
+        const rol_nombre = await getUserRol();
+        dataToSet = { ...data, rol_nombre };
+      }
+      dispatch(setAuthData(dataToSet));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  // useEffect(() => {
-  //   handleGetUserData();
-  // }, [cookies]);
+  useEffect(() => {
+    handleGetUserData();
+  }, []);
 
   return <>{children}</>;
 };

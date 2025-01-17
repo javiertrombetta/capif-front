@@ -8,7 +8,7 @@ interface CustomFieldProps {
   name: string;
   fieldClassName?: string;
   labelText: string;
-  containerClassName?: string;
+  width?: string;
   disabled?: boolean;
 }
 
@@ -19,9 +19,10 @@ const CustomField: FC<CustomFieldProps> = ({
   id,
   name,
   disabled,
+  width = "w-[100%]",
 }) => {
   return (
-    <div className={" w-[100%] container flex flex-col"}>
+    <div className={`${width} container flex flex-col`}>
       <label
         style={{ color: disabled ? "#a6acaf" : "black" }}
         className="font-bold"
@@ -36,7 +37,7 @@ const CustomField: FC<CustomFieldProps> = ({
         name={name}
         className={`${fieldClassName} padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-[black]`}
       />
-      <div className="w-[100%] mt-[0.4rem] border-[2px] border-[red]">
+      <div className="w-[100%] mt-[0.4rem]">
         <ErrorMessage name={name} component="div" className="error-message " />
       </div>
     </div>
