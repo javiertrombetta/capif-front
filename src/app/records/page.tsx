@@ -1,14 +1,11 @@
 "use client";
-import React, { FC, useState } from "react";
+import React, { useState } from "react";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import Header from "@/commons/Header/Header";
 import { useAppSelector } from "@/hooks/storeHooks";
 import { ROLES } from "@/types/auth.types";
 import CustomTable from "@/commons/CustomTable/CustomTable";
-import { IoMdSettings } from "react-icons/io";
-import { FaEdit } from "react-icons/fa";
-import { useRouter } from "next/navigation";
-
+import ActionDropdownButton from "@/commons/ActionDropdownButton/ActionDropdownButton";
 export default function page() {
   const userData = useAppSelector((state) => state.user);
 
@@ -39,7 +36,138 @@ export default function page() {
       isrcAudio: "0XX",
       isrcVideo: "WG5",
     },
+    {
+      id: 3,
+      email: "admin@gmail.com",
+      cuit: "12-34567-8",
+      name: "JUAN JORGE LOPEZ",
+      phone: "12345678",
+      stamp: "GALAXIAS CREATIVAS",
+      phonograms: 0,
+      creationDate: "2024/09/10",
+      updateDate: "2024/09/11",
+      isrcAudio: "0XX",
+      isrcVideo: "WG5",
+    },
+    {
+      id: 4,
+      email: "admin@gmail.com",
+      cuit: "12-34567-8",
+      name: "JUAN JORGE LOPEZ",
+      phone: "12345678",
+      stamp: "GALAXIAS CREATIVAS",
+      phonograms: 0,
+      creationDate: "2024/09/10",
+      updateDate: "2024/09/11",
+      isrcAudio: "0XX",
+      isrcVideo: "WG5",
+    },
+    {
+      id: 5,
+      email: "admin@gmail.com",
+      cuit: "12-34567-8",
+      name: "JUAN JORGE LOPEZ",
+      phone: "12345678",
+      stamp: "GALAXIAS CREATIVAS",
+      phonograms: 0,
+      creationDate: "2024/09/10",
+      updateDate: "2024/09/11",
+      isrcAudio: "0XX",
+      isrcVideo: "WG5",
+    },
+    {
+      id: 6,
+      email: "admin@gmail.com",
+      cuit: "12-34567-8",
+      name: "JUAN JORGE LOPEZ",
+      phone: "12345678",
+      stamp: "GALAXIAS CREATIVAS",
+      phonograms: 0,
+      creationDate: "2024/09/10",
+      updateDate: "2024/09/11",
+      isrcAudio: "0XX",
+      isrcVideo: "WG5",
+    },
+    {
+      id: 7,
+      email: "admin@gmail.com",
+      cuit: "12-34567-8",
+      name: "JUAN JORGE LOPEZ",
+      phone: "12345678",
+      stamp: "GALAXIAS CREATIVAS",
+      phonograms: 0,
+      creationDate: "2024/09/10",
+      updateDate: "2024/09/11",
+      isrcAudio: "0XX",
+      isrcVideo: "WG5",
+    },
+    {
+      id: 8,
+      email: "admin@gmail.com",
+      cuit: "12-34567-8",
+      name: "JUAN JORGE LOPEZ",
+      phone: "12345678",
+      stamp: "GALAXIAS CREATIVAS",
+      phonograms: 0,
+      creationDate: "2024/09/10",
+      updateDate: "2024/09/11",
+      isrcAudio: "0XX",
+      isrcVideo: "WG5",
+    },
+    {
+      id: 9,
+      email: "admin@gmail.com",
+      cuit: "12-34567-8",
+      name: "JUAN JORGE LOPEZ",
+      phone: "12345678",
+      stamp: "GALAXIAS CREATIVAS",
+      phonograms: 0,
+      creationDate: "2024/09/10",
+      updateDate: "2024/09/11",
+      isrcAudio: "0XX",
+      isrcVideo: "WG5",
+    },
+    {
+      id: 10,
+      email: "admin@gmail.com",
+      cuit: "12-34567-8",
+      name: "JUAN JORGE LOPEZ",
+      phone: "12345678",
+      stamp: "GALAXIAS CREATIVAS",
+      phonograms: 0,
+      creationDate: "2024/09/10",
+      updateDate: "2024/09/11",
+      isrcAudio: "0XX",
+      isrcVideo: "WG5",
+    },
+    {
+      id: 11,
+      email: "admin@gmail.com",
+      cuit: "12-34567-8",
+      name: "JUAN JORGE LOPEZ",
+      phone: "12345678",
+      stamp: "GALAXIAS CREATIVAS",
+      phonograms: 0,
+      creationDate: "2024/09/10",
+      updateDate: "2024/09/11",
+      isrcAudio: "0XX",
+      isrcVideo: "WG5",
+    },
+    {
+      id: 12,
+      email: "admin@gmail.com",
+      cuit: "12-34567-8",
+      name: "JUAN JORGE LOPEZ",
+      phone: "12345678",
+      stamp: "GALAXIAS CREATIVAS",
+      phonograms: 0,
+      creationDate: "2024/09/10",
+      updateDate: "2024/09/11",
+      isrcAudio: "0XX",
+      isrcVideo: "WG5",
+    },
   ];
+
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
   const toggleDropdown = (id: number) => {
     if (activeDropdown === id) {
@@ -50,7 +178,7 @@ export default function page() {
   };
 
   return (
-    <div className="h-[100vh] w-[100%] bg-[white] overflow-y-scroll overflow-x-hidden pb-[4rem]">
+    <div className="h-[100vh] w-[100%] flex flex-col bg-[white] overflow-x-hidden pb-[4rem]">
       <Header title="Registros" />
 
       <div className="h-[4rem] w-[100%] flex items-end mt-[1rem] gap-[2rem] pl-[1rem] pr-[2rem]">
@@ -58,7 +186,7 @@ export default function page() {
         {userData.rol === ROLES.SUPER_ADMIN ||
         userData.rol === ROLES.CAPIF_ADMIN ? (
           <>
-            <select className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black">
+            <select className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem]">
               <option>Registrados</option>
               <option>Pendientes de Registro</option>
               <option>Incompleto</option>
@@ -79,7 +207,7 @@ export default function page() {
           <></>
         )}
       </div>
-      <div className="w-[100%] mt-[2rem]">
+      <div className="w-[100%] mt-[2rem] flex-1 overflow-y-auto">
         <CustomTable
           columnNames={
             userData.rol === ROLES.SUPER_ADMIN ||
@@ -136,44 +264,3 @@ export default function page() {
     </div>
   );
 }
-
-interface ActionDropdownButtonProps {
-  toggleDropdown: (id: number) => void;
-  id: number;
-  activeDropdown: number | null;
-}
-
-const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
-  toggleDropdown,
-  id,
-  activeDropdown,
-}) => {
-  const router = useRouter();
-
-  const redirectToOption = (route: string): void => {
-    router.push(route);
-  };
-
-  return (
-    <div className="px-6 py-4 relative group">
-      <button
-        onClick={() => toggleDropdown(id)}
-        className="bg-[#1280e1] text-white w-[2rem] h-[2rem] flex justify-center items-center rounded-[0.3rem]"
-      >
-        <IoMdSettings size={20} />
-      </button>
-      <ul
-        className={`absolute right-0 mt-2 w-[8rem] bg-slate-900 border rounded-md shadow-lg z-30 overflow-hidden ${
-          activeDropdown === id ? "" : "hidden"
-        }`}
-      >
-        <li
-          onClick={() => redirectToOption("/edit-user")}
-          className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
-        >
-          <FaEdit /> <p>Editar</p>
-        </li>
-      </ul>
-    </div>
-  );
-};
