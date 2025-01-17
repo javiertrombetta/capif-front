@@ -1,6 +1,7 @@
 export enum ModalNames {
   COMPLETE_REGISTRATION = "CompleteRegistration",
   REJECT_REGISTRATION = "RejectRegistration",
+  ACCEPT_APPLICATION = "AcceptApplication",
   CHANGE_PRODUCER = "ChangeProducer",
   ACCEPT_REGISTRATION = "AcceptRegistration",
   CHANGE_USER = "ChangeUser",
@@ -40,4 +41,5 @@ export enum ModalNames {
   SEND_AUDIO_SET_ERROR_SEND = "SendAudioSetErrorSend",
   TERRITORIALITY_UNABLE = "TerritorialityUnable",
   AUDIT_SESSIONS_PURGE = "AuditSessionsPurge",
+  SUBMIT_SEND_APPILICATION = "SubmitSendApplication",
 }

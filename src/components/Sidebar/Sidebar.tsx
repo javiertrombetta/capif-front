@@ -9,6 +9,7 @@ import { useAppSelector } from "@/hooks/storeHooks";
 import { ROLES } from "@/types/auth.types";
 import { FaBuilding, FaMusic, FaPercentage, FaUsers } from "react-icons/fa";
 import { IoDocumentText } from "react-icons/io5";
+import { usePathname } from "next/navigation";
 
 interface DropdownMenusProps {
   id: number;
@@ -20,6 +21,7 @@ interface DropdownMenusProps {
 
 const Sidebar: FC = () => {
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
+  const pathname = usePathname();
   const userData = useAppSelector((state) => state.user);
   const handleToggle = (id: number) => {
     setOpenDropdownId((prev) => (prev === id ? null : id));
@@ -241,34 +243,40 @@ const Sidebar: FC = () => {
   return (
     <div className="w-[100%]">
       <div className="w-[100%] h-[3rem] bg-[#1a2226] flex items-center pl-[1rem]">
-        <p className="text-[#4b646f] text-[0.8rem]">MENU</p>
+        {pathname === "/register-production-company" ? null : (
+          <p className="text-[#4b646f] text-[0.8rem]">MENU</p>
+        )}
       </div>
-
-      {userData.rol === ROLES.USER_PRODUCER || userData.rol === ROLES.EMPLOYEE
-        ? UserProducerDropdownMenus.map((item, key) => (
-            <GenericMenu
-              icon={item.icon}
-              isOpen={openDropdownId === item.id}
-              key={key}
-              id={item.id}
-              title={item.title}
-              onToggle={handleToggle}
-              items={item.items}
-              height={item.height}
-            />
-          ))
-        : AdminSidebarDropdownMenus.map((item, key) => (
-            <GenericMenu
-              icon={item.icon}
-              isOpen={openDropdownId === item.id}
-              key={key}
-              id={item.id}
-              title={item.title}
-              onToggle={handleToggle}
-              items={item.items}
-              height={item.height}
-            />
-          ))}
+      {pathname === "/register-production-company" ? null : (
+        <>
+          {userData.rol === ROLES.USER_PRODUCER ||
+          userData.rol === ROLES.EMPLOYEE
+            ? UserProducerDropdownMenus.map((item, key) => (
+                <GenericMenu
+                  icon={item.icon}
+                  isOpen={openDropdownId === item.id}
+                  key={key}
+                  id={item.id}
+                  title={item.title}
+                  onToggle={handleToggle}
+                  items={item.items}
+                  height={item.height}
+                />
+              ))
+            : AdminSidebarDropdownMenus.map((item, key) => (
+                <GenericMenu
+                  icon={item.icon}
+                  isOpen={openDropdownId === item.id}
+                  key={key}
+                  id={item.id}
+                  title={item.title}
+                  onToggle={handleToggle}
+                  items={item.items}
+                  height={item.height}
+                />
+              ))}
+        </>
+      )}
       <div className="w-[100%] h-[3rem] bg-[#1a2226] flex flex-col items-center justify-center absolute bottom-0">
         <p className="text-[#4b646f] text-[0.8rem]">GIT 2.0</p>
         <p className="text-[#4b646f] text-[0.8rem]">
@@ -308,7 +316,7 @@ const GenericMenu: FC<GenericMenuProps> = ({
       >
         <div className="flex items-center">
           <Icon size={15} />
-          <p className="text-[1rem] ml-[0.5rem] text-white whitespace-nowrap">
+          <p className="text-[1rem] ml-[1rem] text-white whitespace-nowrap">
             {title}
           </p>
         </div>

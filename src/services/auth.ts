@@ -1,5 +1,9 @@
 import { axiosInstance } from "./axiosInstance";
-import { UserProps } from "@/types/auth.types";
+import {
+  AuthProps,
+  AuthSecondarySignUpRequest,
+  GetProductorasResponse,
+} from "@/types/auth.types";
 
 interface AuthSignUpRequest {
   email: string;
@@ -33,6 +37,12 @@ export const authSignUp = async (authSignUpData: AuthSignUpRequest) => {
   }
 };
 
+export const authSecondarySignup = async (
+  formValues: AuthSecondarySignUpRequest
+) => {
+  await axiosInstance.post("auth/registro/secundario", formValues);
+};
+
 export const authLogin = async (authLoginData: AuthLoginRequest) => {
   try {
     const { data } = await axiosInstance.post("auth/login", authLoginData);
@@ -41,16 +51,19 @@ export const authLogin = async (authLoginData: AuthLoginRequest) => {
     throw new Error(`${error}`);
   }
 };
-
-export const getUserData = async (token: string): Promise<UserProps> => {
+export const authLogout = async () => {
   try {
-    const { data } = (await axiosInstance.get("auth/user", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })) as {
+    await axiosInstance.post("auth/logout");
+  } catch (error: unknown) {
+    throw new Error(`${error}`);
+  }
+};
+
+export const getUserData = async (): Promise<AuthProps> => {
+  try {
+    const { data } = (await axiosInstance.get("auth/me")) as {
       data: {
-        user: UserProps;
+        user: AuthProps;
       };
     };
     return data.user;
@@ -65,4 +78,69 @@ export const validateEmail = async (token: string) => {
   } catch (error: unknown) {
     throw new Error(`${error}`);
   }
+};
+
+export const resetPasswordRequest = async (email: string) => {
+  try {
+    const { data } = await axiosInstance.post("auth/clave/mail/reseteo", {
+      email,
+    });
+    return data;
+  } catch (error: unknown) {
+    throw new Error(`${error}`);
+  }
+};
+
+export const passwordRecovery = async (token: string, newPassword: string) => {
+  try {
+    await axiosInstance.post("auth/clave/mail/cambio", {
+      token,
+      newPassword,
+    });
+  } catch (error: unknown) {
+    throw new Error(`${error}`);
+  }
+};
+
+export const verifyAccount = async (token: string) => {
+  try {
+    await axiosInstance.put(`auth/clave/mail/validacion/${token}`);
+  } catch (error: unknown) {
+    throw new Error(`${error}`);
+  }
+};
+
+export const changePassword = async (data_request: {
+  id_usuario: string;
+  newPassword: string;
+  confirmPassword: string;
+}) => {
+  try {
+    await axiosInstance.post("auth/clave/cambio", {
+      id_usuario: data_request.id_usuario,
+      newPassword: data_request.newPassword,
+      confirmPassword: data_request.confirmPassword,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getUserRol = async (_rol_id?: string) => {
+  try {
+    const rol = await axiosInstance.get("auth/rol");
+    return rol.data.role;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getAssociatedProductionCompanies =
+  async (): Promise<GetProductorasResponse> => {
+    const productoras = await axiosInstance.get("auth/productora");
+    return productoras.data;
+  };
+
+export const selectProductionCompany = async (productoraId: string) => {
+  await axiosInstance.post("auth/productora/activa", { productoraId });
 };

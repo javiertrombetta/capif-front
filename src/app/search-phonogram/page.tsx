@@ -130,19 +130,19 @@ const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
           return (
             <>
               <li
-                onClick={() => router.push("/edit-phonogram")}
+                onClick={() => router.push("/edit-phonogram/10")}
                 className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
               >
                 <p>Editar</p>
               </li>
               <li
-                onClick={() => router.push("/titularity-phonogram")}
+                onClick={() => router.push("/titularity-phonogram/10")}
                 className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
               >
                 <p>Titularidad</p>
               </li>
               <li
-                onClick={() => router.push("/territoriality-phonogram")}
+                onClick={() => router.push("/territoriality-phonogram/10")}
                 className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
               >
                 <p>Territorialidad</p>
@@ -154,14 +154,14 @@ const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
           return (
             <>
               <li
-                onClick={() => router.push("/edit-phonogram")}
+                onClick={() => router.push("/edit-phonogram/10")}
                 className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
               >
                 <p>Editar</p>
               </li>
 
               <li
-                onClick={() => router.push("/territoriality-phonogram")}
+                onClick={() => router.push("/territoriality-phonogram/10")}
                 className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
               >
                 <p>Territorialidad</p>
@@ -172,7 +172,7 @@ const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
         case ROLES.USER_PRODUCER:
           return (
             <li
-              onClick={() => router.push("/edit-phonogram")}
+              onClick={() => router.push("/edit-phonogram/10")}
               className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
             >
               <p>Editar</p>
@@ -182,7 +182,7 @@ const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
         case ROLES.EMPLOYEE:
           return (
             <li
-              onClick={() => router.push("/edit-phonogram")}
+              onClick={() => router.push("/edit-phonogram/10")}
               className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
             >
               <p>Editar</p>

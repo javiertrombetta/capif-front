@@ -1,25 +1,178 @@
 "use client";
+import React, { FC, useState } from "react";
 import CustomButton from "@/commons/CustomButton/CustomButton";
-import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
-import { useAppDispatch } from "@/hooks/storeHooks";
+import { validationRegisterApplication } from "@/utils/formValidations";
+import { Field, Form, Formik, FormikErrors } from "formik";
+import CustomField from "@/commons/CustomField/CustomField";
+import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
+import { sendApplication } from "@/services/users";
 import { setModal } from "@/store/modalSlice";
 import { ModalNames } from "@/types/modalNames";
-import React, { FC, useState } from "react";
 
-function page() {
+export interface ApplicationValues {
+  nombre_productora: string;
+  nombre: string;
+  apellido: string;
+  telefono_usuario: string;
+  nombre_productor: string;
+  apellido_productor: string;
+  tipo_persona: "FISICA" | "JURIDICA";
+  cuit_cuil: string;
+  email: string;
+  calle: string;
+  numero: string;
+  ciudad: string;
+  localidad: string;
+  provincia: string;
+  codigo_postal: string;
+  telefono: string;
+  nacionalidad: string;
+  alias_cbu: string;
+  cbu: string;
+  datos_adicionales?: string;
+  denominacion_sello?: string;
+  razon_social?: string;
+  apellidos_representante?: string;
+  nombres_representante?: string;
+  cuit_representante?: string;
+}
+
+const page: FC = () => {
   const [currentEntity, setCurrentEntity] = useState<"natural" | "legal">(
     "natural"
   );
-  const handleCurrentEntity = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentEntity(e.target.name as "natural" | "legal");
+  const dispatch = useAppDispatch();
+  const [_uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const authUser = useAppSelector((state) => state.auth);
+  const handleCurrentEntity = (value: "natural" | "legal") => {
+    setCurrentEntity(value);
   };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setUploadedFiles(Array.from(e.target.files));
+    }
+  };
+
+  const onRadioFieldChange = (
+    entity: "natural" | "legal",
+    values: ApplicationValues,
+    setValues: (
+      values: React.SetStateAction<ApplicationValues>,
+      shouldValidate?: boolean
+    ) => Promise<void | FormikErrors<ApplicationValues>>
+  ) => {
+    handleCurrentEntity(entity);
+    setValues({
+      ...values,
+      tipo_persona: entity === "natural" ? "FISICA" : "JURIDICA",
+    });
+  };
+  const initialValues: ApplicationValues = {
+    nombre_productora: "",
+    nombre: "",
+    apellido: "",
+    telefono_usuario: "",
+    nombre_productor: "",
+    apellido_productor: "",
+    tipo_persona: "FISICA",
+    cuit_cuil: "",
+    email: "",
+    calle: "",
+    numero: "",
+    ciudad: "",
+    localidad: "",
+    provincia: "",
+    codigo_postal: "",
+    telefono: "",
+    nacionalidad: "",
+    alias_cbu: "",
+    cbu: "",
+    datos_adicionales: "",
+    denominacion_sello: "",
+    razon_social: "",
+    apellidos_representante: "",
+    nombres_representante: "",
+    cuit_representante: "",
+  };
+
+  const onOpenModal = () => {
+    dispatch(
+      setModal({ isActive: true, type: ModalNames.SUBMIT_SEND_APPILICATION })
+    );
+  };
+
+  const onSubmit = (
+    e: React.FormEvent<HTMLFormElement>,
+    values: ApplicationValues
+  ) => {
+    e.preventDefault();
+    ((values: ApplicationValues) => {
+      if (authUser.id_usuario) {
+        const requestData = {
+          id_usuario: authUser.id_usuario,
+          nombre: values.nombre,
+          apellido: values.apellido,
+          telefono: values.telefono,
+          productoraData:
+            currentEntity === "natural"
+              ? {
+                  nombres: values.nombre_productor,
+                  apellidos: values.apellido_productor,
+                  nombre_productora: "Rodri",
+                  tipo_persona: "FISICA",
+                  cuit_cuil: values.cuit_cuil,
+                  email: values.email,
+                  calle: values.calle,
+                  numero: values.numero,
+                  ciudad: values.ciudad,
+                  localidad: values.localidad,
+                  provincia: values.provincia,
+                  codigo_postal: values.codigo_postal,
+                  telefono: values.telefono,
+                  nacionalidad: values.nacionalidad,
+                  alias_cbu: values.alias_cbu,
+                  cbu: values.cbu,
+                  denominacion_sello: values.denominacion_sello,
+                  datos_adicionales: values.datos_adicionales,
+                }
+              : {
+                  nombre_productora: "Rodri",
+                  razon_social: values.razon_social,
+                  apellidos_representante: values.apellidos_representante,
+                  nombres_representante: values.nombres_representante,
+                  cuit_representante: values.cuit_representante,
+                  tipo_persona: "FISICA",
+                  cuit_cuil: values.cuit_cuil,
+                  email: values.email,
+                  calle: values.calle,
+                  numero: values.numero,
+                  ciudad: values.ciudad,
+                  localidad: values.localidad,
+                  provincia: values.provincia,
+                  codigo_postal: values.codigo_postal,
+                  telefono: values.telefono,
+                  nacionalidad: values.nacionalidad,
+                  alias_cbu: values.alias_cbu,
+                  cbu: values.cbu,
+                  denominacion_sello: values.denominacion_sello,
+                  datos_adicionales: values.datos_adicionales,
+                },
+        };
+
+        sendApplication(requestData);
+        onOpenModal();
+      }
+    })(values);
+  };
+
   return (
     <CustomLayout>
       <Header title="Completar Registro" />
-
       <div className="pr-[2rem] pl-[2rem] w-[100%]">
+        {/*
         <div className="w-[100%] mt-[2rem] flex gap-[0.5rem]">
           <p className="text-black text-[1.2rem]">Estado de Solicitud:</p>
 
@@ -29,7 +182,7 @@ function page() {
           >
             PENDIENTE
           </p>
-          {/* <p
+           <p
            style={{ color: "#2ecc71" }}
           className="font-bold text-black text-[1.2rem]">
             APROBADO
@@ -38,221 +191,295 @@ function page() {
            style={{ color: "#e74c3c" }}
           className="font-bold text-black text-[1.2rem]">
             RECHAZADO
-          </p> */}
-        </div>
-
-        <div className="w-[100%] flex flex-col justify-start mt-[2rem]">
-          <p className="text-black font-bold text-[1.3rem]">
-            Datos del Usuario Principal
           </p>
-
-          <div className="flex flex w-[100%] gap-[2rem] mt-[1.5rem]">
-            <CustomInput
-              containerClassName="w-[100%]"
-              className="w-[100%]"
-              type="text"
-              label="NOMBRES"
-            />
-            <CustomInput
-              containerClassName="w-[100%]"
-              className="w-[100%]"
-              type="text"
-              label="APELLIDOS"
-            />
-          </div>
-          <div className="flex flex w-[100%] gap-[2rem] mt-[1.5rem]">
-            <CustomInput
-              containerClassName="w-[100%]"
-              className="w-[100%]"
-              type="text"
-              label="TELÉFONO"
-            />
-          </div>
         </div>
+*/}
 
-        <div className="flex gap-[2rem] mt-[2rem]">
-          <div className="flex gap-[0.5rem]">
-            <input
-              onChange={handleCurrentEntity}
-              name="natural"
-              checked={currentEntity === "natural"}
-              type="radio"
-            />
-            <h1 className="font-bold text-black">PERSONA FÍSICA</h1>
-          </div>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationRegisterApplication}
+          onSubmit={() => {}}
+        >
+          {({ isSubmitting, isValid, dirty, values, setValues }) => (
+            <Form
+              onSubmit={(e: React.FormEvent<HTMLFormElement>) =>
+                onSubmit(e, values)
+              }
+              id="form"
+              className="w-[100%]"
+            >
+              <div className="w-[100%] flex flex-col justify-start mt-[2rem]">
+                <p className="text-black font-bold text-[1.3rem]">
+                  Datos del Usuario Principal
+                </p>
 
-          <div className="flex gap-[0.5rem]">
-            <input
-              onChange={handleCurrentEntity}
-              name="legal"
-              checked={currentEntity === "legal"}
-              type="radio"
-            />
-            <h1 className="font-bold text-black">PERSONA JURÍDICA</h1>
-          </div>
-        </div>
-        <EntityForm entity={currentEntity} />
+                <div className="flex flex w-[100%] gap-[2rem] mt-[1.5rem]">
+                  <CustomField
+                    width="w-[100%]"
+                    type="text"
+                    id="nombre"
+                    name="nombre"
+                    labelText="NOMBRES"
+                  />
+
+                  <CustomField
+                    width="w-[100%]"
+                    type="text"
+                    id="apellido"
+                    name="apellido"
+                    labelText="APELLIDOS"
+                  />
+                </div>
+                <div className="flex flex w-[100%] gap-[2rem]">
+                  <CustomField
+                    width="w-[100%]"
+                    type="text"
+                    id="telefono_usuario"
+                    name="telefono_usuario"
+                    labelText="TELÉFONO"
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-[2rem] mt-[2rem]">
+                <div className="flex gap-[0.5rem]">
+                  <Field
+                    onChange={() => {
+                      onRadioFieldChange("natural", values, setValues);
+                    }}
+                    name="tipo_persona"
+                    id="tipo_persona"
+                    checked={currentEntity === "natural"}
+                    value="FISICA"
+                    type="radio"
+                  />
+                  <h1 className="font-bold text-black">PERSONA FÍSICA</h1>
+                </div>
+
+                <div className="flex gap-[0.5rem]">
+                  <Field
+                    onChange={() => {
+                      onRadioFieldChange("legal", values, setValues);
+                    }}
+                    name="tipo_persona"
+                    id="tipo_persona"
+                    checked={currentEntity === "legal"}
+                    value="JURIDICA"
+                    type="radio"
+                  />
+                  <h1 className="font-bold text-black">PERSONA JURÍDICA</h1>
+                </div>
+              </div>
+
+              <EntityForm
+                handleFileChange={handleFileChange}
+                dirty={dirty}
+                isValid={isValid}
+                isSubmitting={isSubmitting}
+                entity={currentEntity}
+              />
+              {/* <CustomButton onClick={onOpenModal} className="bg-[#008d4c]">
+                PROBAR
+              </CustomButton> */}
+            </Form>
+          )}
+        </Formik>
       </div>
     </CustomLayout>
   );
-}
+};
 
 export default page;
 
-const EntityForm: FC<{ entity: "natural" | "legal" }> = ({ entity }) => {
-  const dispatch = useAppDispatch();
-
-  const handleRejectRegister = () => {
-    dispatch(
-      setModal({ type: ModalNames.REJECT_REGISTRATION, isActive: true })
-    );
-  };
-
+const EntityForm: FC<{
+  entity: "natural" | "legal";
+  isSubmitting: boolean;
+  isValid: boolean;
+  dirty: boolean;
+  handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}> = ({ entity, isSubmitting, isValid, dirty, handleFileChange }) => {
   return (
     <div className="mt-[3rem] w-[100%]">
       <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
-        <CustomInput
-          containerClassName="w-[100%]"
-          className="w-[100%]"
+        <CustomField
+          width="w-[100%]"
+          id="nombre_productora"
+          name="nombre_productora"
           type="text"
-          label="CUIT/CUIL"
+          labelText="NOMBRE PRODUCTORA"
+        />
+        <CustomField
+          width="w-[100%]"
+          id="cuit_cuil"
+          name="cuit_cuil"
+          type="text"
+          labelText="CUIT/CUIL"
         />
       </div>
       {entity === "legal" && (
-        <CustomInput
-          containerClassName="w-[100%] mt-[1.5rem]"
-          className="w-[100%]"
+        <CustomField
+          width="w-[100%]"
+          id="razon_social"
+          name="razon_social"
           type="text"
-          label="RAZON SOCIAL"
+          labelText="RAZON SOCIAL"
         />
       )}
+
       {entity === "natural" ? (
-        <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
-          <CustomInput
-            containerClassName="w-[100%]"
-            className="w-[100%]"
+        <div className="flex w-[100%] gap-[2rem] mt-[1rem]">
+          <CustomField
+            width="w-[100%]"
+            id="nombre_productor"
+            name="nombre_productor"
             type="text"
-            label="NOMBRES"
+            labelText="NOMBRES"
           />
-          <CustomInput
-            containerClassName="w-[100%]"
-            className="w-[100%]"
+          <CustomField
+            width="w-[100%]"
+            id="apellido_productor"
+            name="apellido_productor"
             type="text"
-            label="APELLIDOS"
+            labelText="APELLIDOS"
           />
         </div>
       ) : (
         <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
-          <CustomInput
-            containerClassName="w-[50%]"
-            className="w-[100%]"
+          <CustomField
+            width="w-[100%]"
+            id="apellidos_representante"
+            name="apellidos_representante"
             type="text"
-            label="APELLIDOS REPRESENTANTE LEGAL"
+            labelText="APELLIDOS REPRESENTANTE LEGAL"
           />
-          <CustomInput
-            containerClassName="w-[50%]"
-            className="w-[100%]"
+          <CustomField
+            width="w-[100%]"
+            id="nombres_representante"
+            name="nombres_representante"
             type="text"
-            label="NOMBRES REPRESENTANTE LEGAL"
+            labelText="NOMBRES REPRESENTANTE LEGAL"
           />
         </div>
       )}
 
       {entity === "natural" ? (
-        <CustomInput
-          containerClassName="w-[100%] mt-[1.5rem]"
-          className="w-[100%]"
+        <CustomField
+          width="w-[100%]"
+          id="email"
+          name="email"
           type="email"
-          label="EMAIL"
+          labelText="EMAIL"
         />
       ) : (
-        <CustomInput
-          containerClassName="w-[100%] mt-[1.5rem]"
-          className="w-[100%]"
-          type="text"
-          label="CUIT REPRESENTANTE LEGAL"
-        />
+        <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
+          <CustomField
+            width="w-[100%]"
+            id="email"
+            name="email"
+            type="email"
+            labelText="EMAIL"
+          />
+
+          <CustomField
+            width="w-[100%]"
+            id="cuit_representante"
+            name="cuit_representante"
+            type="text"
+            labelText="CUIT REPRESENTANTE LEGAL"
+          />
+        </div>
       )}
-
-      <CustomInput
-        containerClassName="w-[100%] mt-[1.5rem]"
-        className="w-[100%]"
+      <CustomField
+        width="w-[100%]"
+        id="denominacion_sello"
+        name="denominacion_sello"
         type="text"
-        label="DENOMINACIÓN DEL SELLO Y SUBSELLOS (opcional)"
+        labelText="DENOMINACIÓN DEL SELLO Y SUBSELLOS (opcional)"
       />
       <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
-        <CustomInput
-          containerClassName="w-[50%]"
-          className="w-[100%]"
+        <CustomField
+          width="w-[100%]"
+          id="calle"
+          name="calle"
           type="text"
-          label="CALLE"
+          labelText="CALLE"
         />
-        <CustomInput
-          containerClassName="w-[50%]"
-          className="w-[100%]"
-          type="number"
-          label="NÚMERO"
+        <CustomField
+          width="w-[100%]"
+          id="numero"
+          name="numero"
+          type="text"
+          labelText="NÚMERO"
         />
       </div>
 
       <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
-        <CustomInput
-          containerClassName="w-[50%]"
-          className="w-[100%]"
+        <CustomField
+          width="w-[100%]"
+          id="datos_adicionales"
+          name="datos_adicionales"
           type="text"
-          label="DATOS ADICIONALES"
+          labelText="DATOS ADICIONALES"
         />
-        <CustomInput
-          containerClassName="w-[50%]"
-          className="w-[100%]"
+        <CustomField
+          width="w-[100%]"
+          id="ciudad"
+          name="ciudad"
           type="text"
-          label="CUIDAD"
+          labelText="CUIDAD"
         />
       </div>
       <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
-        <CustomInput
-          containerClassName="w-full"
-          className="w-[100%]"
+        <CustomField
+          width="w-[100%]"
+          id="localidad"
+          name="localidad"
           type="text"
-          label="LOCALIDAD"
+          labelText="LOCALIDAD"
         />
-        <CustomInput
-          containerClassName="w-full"
-          className="w-[100%]"
+        <CustomField
+          width="w-[100%]"
+          id="provincia"
+          name="provincia"
           type="text"
-          label="PROVINCIA"
+          labelText="PROVINCIA"
         />
-        <CustomInput
-          containerClassName="w-full"
-          className="w-[100%]"
-          type="number"
-          label="CÓDIGO POSTAL"
+        <CustomField
+          width="w-[100%]"
+          id="codigo_postal"
+          name="codigo_postal"
+          type="text"
+          labelText="CÓDIGO POSTAL"
         />
       </div>
-      <CustomInput
-        containerClassName="w-[100%] mt-[1.5rem]"
-        className="w-[100%]"
-        type="number"
-        label="TELÉFONO"
-      />
-      <CustomInput
-        containerClassName="w-[100%] mt-[1.5rem]"
-        className="w-[100%]"
+      <CustomField
+        width="w-[100%]"
+        id="telefono"
+        name="telefono"
         type="text"
-        label="NACIONALIDAD"
+        labelText="TELÉFONO"
+      />
+      <CustomField
+        width="w-[100%]"
+        id="nacionalidad"
+        name="nacionalidad"
+        type="text"
+        labelText="NACIONALIDAD"
       />
       <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
-        <CustomInput
-          containerClassName="w-[50%]"
-          className="w-[100%]"
-          type="number"
-          label="CBU (opcional)"
+        <CustomField
+          width="w-[100%]"
+          id="cbu"
+          name="cbu"
+          type="text"
+          labelText="CBU (opcional)"
         />
-        <CustomInput
-          containerClassName="w-[50%]"
-          className="w-[100%]"
-          type="number"
-          label="ALIAS (opcional)"
+        <CustomField
+          width="w-[100%]"
+          id="alias_cbu"
+          name="alias_cbu"
+          type="text"
+          labelText="ALIAS (opcional)"
         />
       </div>
 
@@ -262,7 +489,13 @@ const EntityForm: FC<{ entity: "natural" | "legal" }> = ({ entity }) => {
             ? "CARGAR DOCUMENTO NACIONAL DE IDENTIDAD"
             : "CARGAR ESTATUTO O CONTRATO SOCIAL"}
         </p>
-        <input className="mt-[0.3rem]" type="file" />
+        <input
+          className="mt-[0.3rem]"
+          type="file"
+          accept="application/pdf"
+          multiple
+          onChange={handleFileChange}
+        />
       </div>
 
       {entity === "legal" && (
@@ -270,7 +503,13 @@ const EntityForm: FC<{ entity: "natural" | "legal" }> = ({ entity }) => {
           <p className="font-bold text-black">
             CARGAR DOCUMENTO NACIONAL DE IDENTIDAD DEL REPRESENTANTE LEGAL
           </p>
-          <input className="mt-[0.3rem]" type="file" />
+          <input
+            className="mt-[0.3rem]"
+            type="file"
+            accept="application/pdf"
+            multiple
+            onChange={handleFileChange}
+          />
         </div>
       )}
 
@@ -309,9 +548,114 @@ const EntityForm: FC<{ entity: "natural" | "legal" }> = ({ entity }) => {
       </div>
 
       <div className="mt-[5rem] flex gap-[1rem] ">
-        <CustomButton className="bg-[#008d4c]">Aceptar</CustomButton>
-        <CustomButton onClick={handleRejectRegister}>Cancelar</CustomButton>
+        {isSubmitting || !isValid || !dirty ? (
+          <CustomButton
+            disabled={isSubmitting || !isValid || !dirty}
+            background={"disabled"}
+            type="submit"
+            className="bg-[#008d4c]"
+          >
+            Aceptar
+          </CustomButton>
+        ) : (
+          <CustomButton
+            disabled={isSubmitting || !isValid || !dirty}
+            type="submit"
+            className="bg-[#008d4c]"
+          >
+            Aceptar
+          </CustomButton>
+        )}
+
+        {/* <CustomButton onClick={handleRejectRegister}>Cancelar</CustomButton> */}
       </div>
     </div>
   );
 };
+
+/*
+
+ const onSubmit = (
+    e: React.FormEvent<HTMLFormElement>,
+    values: ApplicationValues
+  ) => {
+    e.preventDefault();
+    ((values: ApplicationValues) => {
+      if (authUser.id_usuario) {
+        const formData = new FormData();
+        formData.append("id_usuario", authUser.id_usuario);
+        formData.append("nombre", values.nombre);
+        formData.append("apellido", values.apellido);
+        formData.append("telefono", values.telefono_usuario);
+
+        if (currentEntity === "natural") {
+          formData.append(
+            "productoraData",
+            JSON.stringify({
+              nombres: values.nombre_productor,
+              apellidos: values.apellido_productor,
+              nombre_productora: "Rodri",
+              tipo_persona: "FISICA",
+              cuit_cuil: values.cuit_cuil,
+              email: values.email,
+              calle: values.calle,
+              numero: values.numero,
+              ciudad: values.ciudad,
+              localidad: values.localidad,
+              provincia: values.provincia,
+              codigo_postal: values.codigo_postal,
+              telefono: values.telefono,
+              nacionalidad: values.nacionalidad,
+              alias_cbu: values.alias_cbu,
+              cbu: values.cbu,
+              denominacion_sello: values.denominacion_sello,
+              datos_adicionales: values.datos_adicionales,
+            })
+          );
+        }
+        if (currentEntity === "legal") {
+          formData.append(
+            "productoraData",
+            JSON.stringify({
+              nombre_productora: "Rodri",
+              razon_social: values.razon_social,
+              apellidos_representante: values.apellidos_representante,
+              nombres_representante: values.nombres_representante,
+              cuit_representante: values.cuit_representante,
+              tipo_persona: "FISICA",
+              cuit_cuil: values.cuit_cuil,
+              email: values.email,
+              calle: values.calle,
+              numero: values.numero,
+              ciudad: values.ciudad,
+              localidad: values.localidad,
+              provincia: values.provincia,
+              codigo_postal: values.codigo_postal,
+              telefono: values.telefono,
+              nacionalidad: values.nacionalidad,
+              alias_cbu: values.alias_cbu,
+              cbu: values.cbu,
+              denominacion_sello: values.denominacion_sello,
+              datos_adicionales: values.datos_adicionales,
+            })
+          );
+        }
+
+        uploadedFiles.forEach((file, index) => {
+          formData.append(
+            `documentos[${index}]`,
+            JSON.stringify({
+              nombre_documento: `documento_${index + 1}`,
+              ruta_archivo_documento: `/uploads/${file.name}`,
+            })
+          );
+          formData.append(`archivo_${index}`, file);
+        });
+
+        sendApplication(formData);
+        // onOpenModal();
+      }
+    })(values);
+  };
+
+*/

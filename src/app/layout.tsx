@@ -8,6 +8,7 @@ import ModalProvider from "@/components/ModalProvider/ModalProvider";
 import { initialStateModal } from "@/store/modalSlice";
 import "../styles/globals.css";
 import { initialStateSignup } from "@/store/signupSlice";
+import { authDefaultState } from "@/store/authSlice";
 
 const ptSans = PT_Sans({ weight: "400", subsets: ["latin"] });
 export const metadata: Metadata = {
@@ -24,6 +25,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={ptSans.className}>
         <StoreProvider
+          initialAuth={authDefaultState}
           initialModal={initialStateModal}
           initialUser={defaultUser}
           initialSignup={initialStateSignup}
