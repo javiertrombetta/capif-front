@@ -12,10 +12,6 @@ import { ModalNames } from "@/types/modalNames";
 
 export interface ApplicationValues {
   nombre_productora: string;
-  nombre: string;
-  apellido: string;
-  telefono_usuario: string;
-  nombre_productor: string;
   apellido_productor: string;
   tipo_persona: "FISICA" | "JURIDICA";
   cuit_cuil: string;
@@ -73,10 +69,6 @@ const UserProfileView: FC = () => {
   };
   const initialValues: ApplicationValues = {
     nombre_productora: "",
-    nombre: "",
-    apellido: "",
-    telefono_usuario: "",
-    nombre_productor: "",
     apellido_productor: "",
     tipo_persona: "FISICA",
     cuit_cuil: "",
@@ -98,72 +90,6 @@ const UserProfileView: FC = () => {
     nombres_representante: "",
     cuit_representante: "",
   };
-
-  /*
-const onSubmit = (
-  e: React.FormEvent<HTMLFormElement>,
-  values: ApplicationValues
-) => {
-  e.preventDefault();
-  ((values: ApplicationValues) => {
-    if (authUser.id_usuario) {
-      const requestData = {
-        id_usuario: authUser.id_usuario,
-        nombre: values.nombre,
-        apellido: values.apellido,
-        telefono: values.telefono,
-        productoraData:
-          currentEntity === "natural"
-            ? {
-                nombres: values.nombre_productor,
-                apellidos: values.apellido_productor,
-                nombre_productora: "Rodri",
-                tipo_persona: "FISICA",
-                cuit_cuil: values.cuit_cuil,
-                email: values.email,
-                calle: values.calle,
-                numero: values.numero,
-                ciudad: values.ciudad,
-                localidad: values.localidad,
-                provincia: values.provincia,
-                codigo_postal: values.codigo_postal,
-                telefono: values.telefono,
-                nacionalidad: values.nacionalidad,
-                alias_cbu: values.alias_cbu,
-                cbu: values.cbu,
-                denominacion_sello: values.denominacion_sello,
-                datos_adicionales: values.datos_adicionales,
-              }
-            : {
-                nombre_productora: "Rodri",
-                razon_social: values.razon_social,
-                apellidos_representante: values.apellidos_representante,
-                nombres_representante: values.nombres_representante,
-                cuit_representante: values.cuit_representante,
-                tipo_persona: "FISICA",
-                cuit_cuil: values.cuit_cuil,
-                email: values.email,
-                calle: values.calle,
-                numero: values.numero,
-                ciudad: values.ciudad,
-                localidad: values.localidad,
-                provincia: values.provincia,
-                codigo_postal: values.codigo_postal,
-                telefono: values.telefono,
-                nacionalidad: values.nacionalidad,
-                alias_cbu: values.alias_cbu,
-                cbu: values.cbu,
-                denominacion_sello: values.denominacion_sello,
-                datos_adicionales: values.datos_adicionales,
-              },
-      };
-
-      sendApplication(requestData);
-      onOpenModal();
-    }
-  })(values);
-};
-*/
 
   return (
     <CustomLayout>
@@ -199,39 +125,6 @@ const onSubmit = (
         >
           {({ isSubmitting, isValid, dirty, values, setValues }) => (
             <Form id="form" className="w-[100%]">
-              <div className="w-[100%] flex flex-col justify-start mt-[2rem]">
-                <p className="text-black font-bold text-[1.3rem]">
-                  Datos del Usuario Principal
-                </p>
-
-                <div className="flex flex w-[100%] gap-[2rem] mt-[1.5rem]">
-                  <CustomField
-                    width="w-[100%]"
-                    type="text"
-                    id="nombre"
-                    name="nombre"
-                    labelText="NOMBRES"
-                  />
-
-                  <CustomField
-                    width="w-[100%]"
-                    type="text"
-                    id="apellido"
-                    name="apellido"
-                    labelText="APELLIDOS"
-                  />
-                </div>
-                <div className="flex flex w-[100%] gap-[2rem]">
-                  <CustomField
-                    width="w-[100%]"
-                    type="text"
-                    id="telefono_usuario"
-                    name="telefono_usuario"
-                    labelText="TELÉFONO"
-                  />
-                </div>
-              </div>
-
               <div className="flex gap-[2rem] mt-[2rem]">
                 <div className="flex gap-[0.5rem]">
                   <Field
@@ -269,9 +162,6 @@ const onSubmit = (
                 isSubmitting={isSubmitting}
                 entity={currentEntity}
               />
-              {/* <CustomButton onClick={onOpenModal} className="bg-[#008d4c]">
-                PROBAR
-              </CustomButton> */}
             </Form>
           )}
         </Formik>
@@ -595,4 +485,70 @@ const EntityForm: FC<{
         <CustomButton>Editar</CustomButton>
       </div>
 
+*/
+
+/*
+const onSubmit = (
+  e: React.FormEvent<HTMLFormElement>,
+  values: ApplicationValues
+) => {
+  e.preventDefault();
+  ((values: ApplicationValues) => {
+    if (authUser.id_usuario) {
+      const requestData = {
+        id_usuario: authUser.id_usuario,
+        nombre: values.nombre,
+        apellido: values.apellido,
+        telefono: values.telefono,
+        productoraData:
+          currentEntity === "natural"
+            ? {
+                nombres: values.nombre_productor,
+                apellidos: values.apellido_productor,
+                nombre_productora: "Rodri",
+                tipo_persona: "FISICA",
+                cuit_cuil: values.cuit_cuil,
+                email: values.email,
+                calle: values.calle,
+                numero: values.numero,
+                ciudad: values.ciudad,
+                localidad: values.localidad,
+                provincia: values.provincia,
+                codigo_postal: values.codigo_postal,
+                telefono: values.telefono,
+                nacionalidad: values.nacionalidad,
+                alias_cbu: values.alias_cbu,
+                cbu: values.cbu,
+                denominacion_sello: values.denominacion_sello,
+                datos_adicionales: values.datos_adicionales,
+              }
+            : {
+                nombre_productora: "Rodri",
+                razon_social: values.razon_social,
+                apellidos_representante: values.apellidos_representante,
+                nombres_representante: values.nombres_representante,
+                cuit_representante: values.cuit_representante,
+                tipo_persona: "FISICA",
+                cuit_cuil: values.cuit_cuil,
+                email: values.email,
+                calle: values.calle,
+                numero: values.numero,
+                ciudad: values.ciudad,
+                localidad: values.localidad,
+                provincia: values.provincia,
+                codigo_postal: values.codigo_postal,
+                telefono: values.telefono,
+                nacionalidad: values.nacionalidad,
+                alias_cbu: values.alias_cbu,
+                cbu: values.cbu,
+                denominacion_sello: values.denominacion_sello,
+                datos_adicionales: values.datos_adicionales,
+              },
+      };
+
+      sendApplication(requestData);
+      onOpenModal();
+    }
+  })(values);
+};
 */
