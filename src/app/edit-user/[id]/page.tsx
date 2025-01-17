@@ -7,7 +7,11 @@ import { useParams, useRouter } from "next/navigation";
 import NewUserMenusCheckbox from "@/commons/NewUserMenusCheckbox/NewUserMenusCheckbox";
 import { ROLES } from "@/types/auth.types";
 import { useAppSelector } from "@/hooks/storeHooks";
-import { getUserById, updateUserById } from "@/services/users";
+import {
+  blockOrUnlockUser,
+  getUserById,
+  updateUserById,
+} from "@/services/users";
 import { User } from "@/types/user.types";
 import { Form, Formik } from "formik";
 import CustomButton from "@/commons/CustomButton/CustomButton";
@@ -77,6 +81,14 @@ export default function page() {
       }
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const handleBlockUser = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const isBlocked = e.target.value === "true" ? true : false;
+    if (userData?.id_usuario) {
+      await blockOrUnlockUser(userData.id_usuario, isBlocked);
+      alert("Se cambio el estado del usuario");
     }
   };
 
@@ -163,9 +175,13 @@ export default function page() {
 
               <div className="w-[100%] gap-[0.5rem] flex flex-col mb-[2rem]">
                 <p className="font-bold text-black">BLOQUEADO</p>
-                <select className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black">
-                  <option>NO</option>
-                  <option>SI</option>
+                <select
+                  onChange={handleBlockUser}
+                  value={values.bloqueado ? "true" : "false"}
+                  className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black"
+                >
+                  <option value={"false"}>NO</option>
+                  <option value={"true"}>SI</option>
                 </select>
               </div>
 
