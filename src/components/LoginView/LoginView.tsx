@@ -13,6 +13,8 @@ import { useRouter } from "next/navigation";
 import { authLogin, getUserData, getUserRol } from "@/services/auth";
 import { useAppDispatch } from "@/hooks/storeHooks";
 import { setAuthData } from "@/store/authSlice";
+import { setModal } from "@/store/modalSlice";
+import { ModalNames } from "@/types/modalNames";
 
 interface LoginFormValues {
   email: string;
@@ -45,6 +47,7 @@ function LoginView() {
     dispatch(setAuthData(dataToSet));
     localStorage.setItem("isLoged", "true");
     router.push("/records");
+    dispatch(setModal({ type: ModalNames.CHANGE_PRODUCER, isActive: true }));
   };
 
   const LoginForm: FC = () => {
