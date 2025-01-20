@@ -87,3 +87,10 @@ export const blockOrUnlockUser = async (
     isBlocked,
   });
 };
+
+export const changeRole = async (id_usuario: string, newRole: string) => {
+  await axiosInstance.put("usuarios/rol", {
+    id_usuario,
+    newRole,
+  });
+};
