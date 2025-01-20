@@ -49,7 +49,7 @@ function page() {
   ) => {
     e.preventDefault();
     try {
-      const { email, nombre, apellido, telefono, password } = values;
+      const { email, nombre, apellido, telefono } = values;
 
       await authSecondarySignup({
         email,
