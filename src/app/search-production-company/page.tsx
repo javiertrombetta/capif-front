@@ -37,7 +37,7 @@ export default function page() {
   };
 
   return (
-    <div className="h-[100vh] w-[100%] bg-[white] overflow-y-scroll overflow-x-hidden pb-[4rem]">
+    <div className="h-[100vh] w-[100%] bg-[white] pb-[4rem]">
       <Header title="Buscar Productora" />
 
       <div className="h-[4rem] w-[100%] flex items-end mt-[1rem] gap-[2rem] pl-[1rem] pr-[2rem]">
@@ -47,7 +47,7 @@ export default function page() {
           <>
             <select
               onChange={handleSelectChange}
-              className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black"
+              className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem]"
             >
               <option value={"registrados"}>Registrados</option>
               <option value={"pendientes_registro"}>
