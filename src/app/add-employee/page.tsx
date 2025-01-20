@@ -56,7 +56,7 @@ function page() {
         nombre,
         apellido,
         telefono,
-        password,
+        // password,
       });
       alert("Usuario secundario registrado exitosamente");
     } catch (error) {
@@ -118,7 +118,7 @@ function page() {
               type="text"
               labelText="Teléfono"
             />
-            <CustomField
+            {/* <CustomField
               id="password"
               name="password"
               width="w-[28rem]"
@@ -131,7 +131,7 @@ function page() {
               width="w-[28rem]"
               type="password"
               labelText="Confirmar Contraseña"
-            />
+            /> */}
             <div>
               <p className="font-bold text-black">Menu</p>
             </div>

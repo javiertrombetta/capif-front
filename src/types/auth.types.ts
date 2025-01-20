@@ -5,7 +5,7 @@ export interface AuthSecondarySignUpRequest {
   nombre: string;
   apellido: string;
   telefono: string;
-  password: string;
+  // password: string;
 }
 
 export interface UserProps {
