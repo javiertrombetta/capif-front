@@ -17,8 +17,6 @@ interface secondaryRegisterValues {
   email: string;
   confirm_email: string;
   telefono: string;
-  password: string;
-  confirm_password: string;
 }
 
 function page() {
@@ -39,8 +37,6 @@ function page() {
     email: "",
     confirm_email: "",
     telefono: "",
-    password: "",
-    confirm_password: "",
   };
 
   const onSubmit = async (
@@ -56,7 +52,6 @@ function page() {
         nombre,
         apellido,
         telefono,
-        // password,
       });
       alert("Usuario secundario registrado exitosamente");
     } catch (error) {
@@ -119,20 +114,6 @@ function page() {
                 type="text"
                 labelText="Teléfono"
               />
-              {/* <CustomField
-                id="password"
-                name="password"
-                width="w-[28rem]"
-                type="password"
-                labelText="Contraseña"
-              />
-              <CustomField
-                id="confirm_password"
-                name="confirm_password"
-                width="w-[28rem]"
-                type="password"
-                labelText="Confirmar Contraseña"
-              /> */}
               <div>
                 <p className="font-bold text-black">Menu</p>
               </div>
