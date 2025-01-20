@@ -54,7 +54,7 @@ export const getPendingApplications = async () => {
 
 export const getAllUsers = async () => {
   const users: { data: UsersResponse[] } = await axiosInstance.get("usuarios/");
-  return users.data[0].user;
+  return users.data.map((user) => user.user);
 };
 
 export const getUserById = async (id_usuario: string) => {

@@ -70,6 +70,7 @@ const page: FC = () => {
       tipo_persona: entity === "natural" ? "FISICA" : "JURIDICA",
     });
   };
+
   const initialValues: ApplicationValues = {
     nombre_productora: "",
     nombre: "",
@@ -213,7 +214,7 @@ const page: FC = () => {
                   Datos del Usuario Principal
                 </p>
 
-                <div className="flex flex w-[100%] gap-[2rem] mt-[1.5rem]">
+                <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
                   <CustomField
                     width="w-[100%]"
                     type="text"
@@ -230,7 +231,7 @@ const page: FC = () => {
                     labelText="APELLIDOS"
                   />
                 </div>
-                <div className="flex flex w-[100%] gap-[2rem]">
+                <div className="flex w-[100%] gap-[2rem]">
                   <CustomField
                     width="w-[100%]"
                     type="text"
