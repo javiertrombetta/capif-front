@@ -77,3 +77,20 @@ export const updateUserById = async (
     throw new Error(`${error}`);
   }
 };
+
+export const blockOrUnlockUser = async (
+  id_usuario: string,
+  isBlocked: boolean
+) => {
+  await axiosInstance.put("usuarios/estado/habilitacion", {
+    id_usuario,
+    isBlocked,
+  });
+};
+
+export const changeRole = async (id_usuario: string, newRole: string) => {
+  await axiosInstance.put("usuarios/rol", {
+    id_usuario,
+    newRole,
+  });
+};
