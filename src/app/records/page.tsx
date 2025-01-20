@@ -19,7 +19,6 @@ export default function page() {
   const getUsersData = async () => {
     try {
       const users = await getAllUsers();
-      for (let i = 0; i < 15; i++) users.push(users[0]); // Remove after tests
       setUsers(users);
     } catch (error) {
       console.log("🔴", error);

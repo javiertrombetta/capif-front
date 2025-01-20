@@ -144,6 +144,16 @@ export const validationChangePassword = Yup.object({
 
 export const validationSecondaryRegister = Yup.object({
   email: Yup.string().email("Email inválido").required("El email es requerido"),
+  confirm_email: Yup.string()
+    .email("Email inválido")
+    .test({
+      name: "email-match",
+      message: "Los emails no coinciden",
+      test: function (value) {
+        return value === this.parent.email;
+      },
+    })
+    .required("El email de confirmación es requerido"),
   nombre: Yup.string()
     .min(2, "El nombre debe tener al menos 2 caracteres.")
     .max(100, "No puedes escribir más de 100 caracteres en este campo.")
