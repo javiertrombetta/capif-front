@@ -43,6 +43,10 @@ export interface User {
   tipo_registro: string;
   createdAt: Date;
   updatedAt: Date;
+  rol?: {
+    id_rol: string;
+    nombre_rol: string;
+  };
 }
 
 export interface UsersResponse {
