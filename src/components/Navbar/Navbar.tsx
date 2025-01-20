@@ -24,6 +24,7 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
   const dispatch = useAppDispatch();
   const pathname = usePathname();
   const userData = useAppSelector((state) => state.user);
+  const authData = useAppSelector((state) => state.auth);
   const noUserPathnames: string[] = [
     "/",
     "/login",
@@ -56,7 +57,7 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
       const company = localStorage.getItem("company");
       const isLoged = localStorage.getItem("isLoged");
 
-      if (!company && isLoged) {
+      if (!company && isLoged && authData.id_usuario) {
         dispatch(
           setModal({ type: ModalNames.CHANGE_PRODUCER, isActive: true })
         );
