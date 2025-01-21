@@ -70,6 +70,7 @@ const page: FC = () => {
       tipo_persona: entity === "natural" ? "FISICA" : "JURIDICA",
     });
   };
+
   const initialValues: ApplicationValues = {
     nombre_productora: "",
     nombre: "",
@@ -119,9 +120,9 @@ const page: FC = () => {
           productoraData:
             currentEntity === "natural"
               ? {
+                  nombre_productora: values.nombre_productora,
                   nombres: values.nombre_productor,
                   apellidos: values.apellido_productor,
-                  nombre_productora: "Rodri",
                   tipo_persona: "FISICA",
                   cuit_cuil: values.cuit_cuil,
                   email: values.email,
@@ -139,12 +140,12 @@ const page: FC = () => {
                   datos_adicionales: values.datos_adicionales,
                 }
               : {
-                  nombre_productora: "Rodri",
+                  nombre_productora: values.nombre_productora,
                   razon_social: values.razon_social,
                   apellidos_representante: values.apellidos_representante,
                   nombres_representante: values.nombres_representante,
                   cuit_representante: values.cuit_representante,
-                  tipo_persona: "FISICA",
+                  tipo_persona: "JURIDICA",
                   cuit_cuil: values.cuit_cuil,
                   email: values.email,
                   calle: values.calle,

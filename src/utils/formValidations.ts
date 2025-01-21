@@ -94,8 +94,12 @@ export const validationRecoveryPassword = Yup.object({
 });
 
 export const validationRegisterApplication = Yup.object().shape({
-  nombre: Yup.string().required("El nombre es requerido"),
-  apellido: Yup.string().required("El apellido es requerido"),
+  nombre: Yup.string()
+    .min(3, "Debe contener al menos 3 caracteres")
+    .required("El nombre es requerido"),
+  apellido: Yup.string()
+    .min(3, "Debe contener al menos 3 caracteres")
+    .required("El apellido es requerido"),
   telefono_usuario: Yup.string()
     .required("El teléfono del usuario es requerido")
     .matches(/^\d+$/, "El teléfono debe contener solo números"),
