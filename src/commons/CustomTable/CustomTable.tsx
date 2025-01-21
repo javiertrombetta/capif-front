@@ -61,7 +61,7 @@ const CustomTable: FC<CustomTableProps> = ({ columnNames, columnValues }) => {
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-      className="w-[100%] relative overflow-x-auto cursor-grab table-container mb-[5rem]"
+      className="w-[100%] h-[100%] relative overflow-x-auto cursor-grab table-container mb-[5rem]"
     >
       <table className="w-full text-sm text-left rtl:text-right text-gray-500">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 border-l-2 border-r-2">

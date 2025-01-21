@@ -50,9 +50,9 @@ export interface User {
 }
 
 export interface UsersResponse {
-  isSingleUser: number;
+  hasSingleMaestro: boolean;
   maestros: [];
-  user: User[];
+  user: User;
   vistas: { id_vista: string; is_habilitado: boolean }[];
 }
 export interface UpdateUserById {
