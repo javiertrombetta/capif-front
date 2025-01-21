@@ -103,15 +103,14 @@ export const validationRegisterApplication = Yup.object().shape({
   telefono_usuario: Yup.string()
     .required("El teléfono del usuario es requerido")
     .matches(/^\d+$/, "El teléfono debe contener solo números"),
-  nombre_productor: Yup.string().required(
-    "El nombre del productor es requerido"
-  ),
-  apellido_productor: Yup.string().required(
-    "El apellido del productor es requerido"
-  ),
+  nombres_representante: Yup.string().required("El nombre es requerido"),
+  apellidos_representante: Yup.string().required("El apellido es requerido"),
   tipo_persona: Yup.mixed<"FISICA" | "JURIDICA">()
     .oneOf(["FISICA", "JURIDICA"], "Debe ser FISICA o JURIDICA")
     .required("El tipo de persona es requerido"),
+  nombre_productora: Yup.string()
+    .min(3, "Debe contener al menos 3 caracteres")
+    .required("El nombre de la productora es requerido"),
   cuit_cuil: Yup.string()
     .required("El CUIT/CUIL es requerido")
     .matches(/^\d{11}$/, "El CUIT/CUIL debe contener exactamente 11 dígitos"),
@@ -133,8 +132,25 @@ export const validationRegisterApplication = Yup.object().shape({
     .matches(/^\d+$/, "El teléfono debe contener solo números"),
   nacionalidad: Yup.string().required("La nacionalidad es requerida"),
   alias_cbu: Yup.string().required("El alias del CBU es requerido"),
-  cbu: Yup.string().required("El CBU es requerido"),
-  // .matches(/^\d{22}$/, "El CBU debe contener exactamente 22 dígitos"),
+  cbu: Yup.string()
+    .required("El CBU es requerido")
+    .matches(/^\d{22}$/, "El CBU debe contener exactamente 22 dígitos"),
+  cuit_representante: Yup.string()
+    .test(
+      "cuit-cuil",
+      "El CUIT/CUIL del representante es requerido",
+      function (value) {
+        return this.parent.tipo_persona === "JURIDICA" ? Boolean(value) : true;
+      }
+    )
+    .matches(/^\d{11}$/, "El CUIT/CUIL debe contener exactamente 11 dígitos"),
+  razon_social: Yup.string().test(
+    "razon-social",
+    "La razón social es requerida",
+    function (value) {
+      return this.parent.tipo_persona === "JURIDICA" ? Boolean(value) : true;
+    }
+  ),
 });
 
 export const validationChangePassword = Yup.object({

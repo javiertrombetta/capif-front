@@ -10,14 +10,13 @@ import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { sendApplication } from "@/services/users";
 import { setModal } from "@/store/modalSlice";
 import { ModalNames } from "@/types/modalNames";
+import { SendApplication } from "@/types/user.types";
 
 export interface ApplicationValues {
   nombre_productora: string;
   nombre: string;
   apellido: string;
   telefono_usuario: string;
-  nombre_productor: string;
-  apellido_productor: string;
   tipo_persona: "FISICA" | "JURIDICA";
   cuit_cuil: string;
   email: string;
@@ -76,8 +75,6 @@ const page: FC = () => {
     nombre: "",
     apellido: "",
     telefono_usuario: "",
-    nombre_productor: "",
-    apellido_productor: "",
     tipo_persona: "FISICA",
     cuit_cuil: "",
     email: "",
@@ -112,55 +109,42 @@ const page: FC = () => {
     e.preventDefault();
     ((values: ApplicationValues) => {
       if (authUser.id_usuario) {
-        const requestData = {
+        const requestData: SendApplication = {
           id_usuario: authUser.id_usuario,
           nombre: values.nombre,
           apellido: values.apellido,
           telefono: values.telefono,
-          productoraData:
-            currentEntity === "natural"
+          documentos: [],
+          productoraData: {
+            nombre_productora: values.nombre_productora,
+            cuit_cuil: values.cuit_cuil,
+            email: values.email,
+            calle: values.calle,
+            numero: values.numero,
+            ciudad: values.ciudad,
+            localidad: values.localidad,
+            provincia: values.provincia,
+            codigo_postal: values.codigo_postal,
+            telefono: values.telefono,
+            nacionalidad: values.nacionalidad,
+            alias_cbu: values.alias_cbu,
+            cbu: values.cbu,
+            denominacion_sello: values.denominacion_sello,
+            datos_adicionales: values.datos_adicionales,
+            ...(currentEntity === "natural"
               ? {
-                  nombre_productora: values.nombre_productora,
-                  nombres: values.nombre_productor,
-                  apellidos: values.apellido_productor,
                   tipo_persona: "FISICA",
-                  cuit_cuil: values.cuit_cuil,
-                  email: values.email,
-                  calle: values.calle,
-                  numero: values.numero,
-                  ciudad: values.ciudad,
-                  localidad: values.localidad,
-                  provincia: values.provincia,
-                  codigo_postal: values.codigo_postal,
-                  telefono: values.telefono,
-                  nacionalidad: values.nacionalidad,
-                  alias_cbu: values.alias_cbu,
-                  cbu: values.cbu,
-                  denominacion_sello: values.denominacion_sello,
-                  datos_adicionales: values.datos_adicionales,
+                  nombres: values.nombres_representante,
+                  apellidos: values.apellidos_representante,
                 }
               : {
-                  nombre_productora: values.nombre_productora,
-                  razon_social: values.razon_social,
-                  apellidos_representante: values.apellidos_representante,
-                  nombres_representante: values.nombres_representante,
-                  cuit_representante: values.cuit_representante,
                   tipo_persona: "JURIDICA",
-                  cuit_cuil: values.cuit_cuil,
-                  email: values.email,
-                  calle: values.calle,
-                  numero: values.numero,
-                  ciudad: values.ciudad,
-                  localidad: values.localidad,
-                  provincia: values.provincia,
-                  codigo_postal: values.codigo_postal,
-                  telefono: values.telefono,
-                  nacionalidad: values.nacionalidad,
-                  alias_cbu: values.alias_cbu,
-                  cbu: values.cbu,
-                  denominacion_sello: values.denominacion_sello,
-                  datos_adicionales: values.datos_adicionales,
-                },
+                  razon_social: values.razon_social,
+                  nombres_representante: values.nombres_representante,
+                  apellidos_representante: values.apellidos_representante,
+                  cuit_representante: values.cuit_representante,
+                }),
+          },
         };
 
         sendApplication(requestData);
@@ -172,7 +156,7 @@ const page: FC = () => {
   return (
     <CustomLayout>
       <Header title="Completar Registro" />
-      <div className="pr-[2rem] pl-[2rem] w-[100%]">
+      <div className="flex flex-1 flex-col pr-[2rem] pl-[2rem] w-[100%] overflow-auto">
         {/*
         <div className="w-[100%] mt-[2rem] flex gap-[0.5rem]">
           <p className="text-black text-[1.2rem]">Estado de Solicitud:</p>
@@ -299,6 +283,7 @@ const EntityForm: FC<{
   dirty: boolean;
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }> = ({ entity, isSubmitting, isValid, dirty, handleFileChange }) => {
+  console.log(isSubmitting, dirty, isValid);
   return (
     <div className="mt-[3rem] w-[100%]">
       <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
@@ -331,15 +316,15 @@ const EntityForm: FC<{
         <div className="flex w-[100%] gap-[2rem] mt-[1rem]">
           <CustomField
             width="w-[100%]"
-            id="nombre_productor"
-            name="nombre_productor"
+            id="nombres_representante"
+            name="nombres_representante"
             type="text"
             labelText="NOMBRES"
           />
           <CustomField
             width="w-[100%]"
-            id="apellido_productor"
-            name="apellido_productor"
+            id="apellidos_representante"
+            name="apellidos_representante"
             type="text"
             labelText="APELLIDOS"
           />
@@ -348,17 +333,17 @@ const EntityForm: FC<{
         <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
           <CustomField
             width="w-[100%]"
-            id="apellidos_representante"
-            name="apellidos_representante"
-            type="text"
-            labelText="APELLIDOS REPRESENTANTE LEGAL"
-          />
-          <CustomField
-            width="w-[100%]"
             id="nombres_representante"
             name="nombres_representante"
             type="text"
             labelText="NOMBRES REPRESENTANTE LEGAL"
+          />
+          <CustomField
+            width="w-[100%]"
+            id="apellidos_representante"
+            name="apellidos_representante"
+            type="text"
+            labelText="APELLIDOS REPRESENTANTE LEGAL"
           />
         </div>
       )}
@@ -473,14 +458,14 @@ const EntityForm: FC<{
           id="cbu"
           name="cbu"
           type="text"
-          labelText="CBU (opcional)"
+          labelText="CBU"
         />
         <CustomField
           width="w-[100%]"
           id="alias_cbu"
           name="alias_cbu"
           type="text"
-          labelText="ALIAS (opcional)"
+          labelText="ALIAS"
         />
       </div>
 

@@ -1,16 +1,18 @@
-/*
-interface SendApplication {
+interface Document {
+  nombre_documento: string;
+  ruta_archivo_documento: string;
+}
+
+export interface SendApplication {
   id_usuario: string;
   nombre: string;
   apellido: string;
   telefono: string;
+  documentos: Document[];
   productoraData: {
-    nombre: string;
-    apellido: string;
-    telefono_usuario: string;
-    nombre_productor: string;
-    apellido_productor: string;
+    id_productora?: string;
     tipo_persona: "FISICA" | "JURIDICA";
+    nombre_productora: string;
     cuit_cuil: string;
     email: string;
     calle: string;
@@ -23,15 +25,17 @@ interface SendApplication {
     nacionalidad: string;
     alias_cbu: string;
     cbu: string;
-    datos_adicionales?: string;
     denominacion_sello?: string;
+    datos_adicionales?: string;
+    nombres?: string;
+    apellidos?: string;
     razon_social?: string;
-    apellidos_representante?: string;
     nombres_representante?: string;
+    apellidos_representante?: string;
     cuit_representante?: string;
   };
 }
-*/
+
 export interface User {
   apellido: string;
   email: string;
