@@ -283,7 +283,6 @@ const EntityForm: FC<{
   dirty: boolean;
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }> = ({ entity, isSubmitting, isValid, dirty, handleFileChange }) => {
-  console.log(isSubmitting, dirty, isValid);
   return (
     <div className="mt-[3rem] w-[100%]">
       <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
