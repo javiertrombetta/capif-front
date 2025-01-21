@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import Header from "@/commons/Header/Header";
 import { useAppSelector } from "@/hooks/storeHooks";
@@ -11,6 +11,8 @@ import { useRouter } from "next/navigation";
 import { IoMdSettings } from "react-icons/io";
 import { getPendingApplications } from "@/services/users";
 import { ProductionCompanyResponse } from "@/types/productionCompany.types";
+import { getAllCompanies } from "@/services/productionCompanies";
+import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 
 export default function page() {
   const userData = useAppSelector((state) => state.auth);
@@ -36,14 +38,23 @@ export default function page() {
     }
   };
 
+  const getProductionCompanies = async () => {
+    const companies = await getAllCompanies();
+    setProductionCompanies(companies);
+  };
+
+  useEffect(() => {
+    getProductionCompanies();
+  }, []);
+
   return (
-    <div className="h-[100vh] w-[100%] bg-[white] pb-[4rem]">
+    <CustomLayout>
       <Header title="Buscar Productora" />
 
       <div className="h-[4rem] w-[100%] flex items-end mt-[1rem] gap-[2rem] pl-[1rem] pr-[2rem]">
         <CustomInput label="Buscar:" type="text" />
-        {userData.rol_nombre === ROLES_NOMBRES.SUPER_ADMIN ||
-        userData.rol_nombre === ROLES_NOMBRES.CAPIF_ADMIN ? (
+        {userData.rol === ROLES_NOMBRES.SUPER_ADMIN ||
+        userData.rol === ROLES_NOMBRES.CAPIF_ADMIN ? (
           <>
             <select
               onChange={handleSelectChange}
@@ -89,8 +100,8 @@ export default function page() {
           columnValues={productionCompanies?.map((element) => {
             return [
               element.email,
-              "",
-              "",
+              element.cuit_cuil,
+              element.razon_social || "",
               element.telefono,
               "",
               "",
@@ -100,7 +111,7 @@ export default function page() {
               "",
               <ActionDropdownButton
                 toggleDropdown={toggleDropdown}
-                id={element.id_usuario}
+                id={element.id_usuario || element.id_productora || ""}
                 activeDropdown={activeDropdown}
               />,
             ];
@@ -111,7 +122,7 @@ export default function page() {
       <div className="w-[100%] mt-[2rem] mb-[2rem] pr-[2rem] pl-[2rem] flex justify-end">
         <CustomButton>Descargar CVS</CustomButton>
       </div>
-    </div>
+    </CustomLayout>
   );
 }
 
@@ -146,7 +157,7 @@ const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
         }`}
       >
         <li
-          onClick={() => redirectToOption("/edit-user")}
+          onClick={() => redirectToOption(`/edit-user/${id}`)}
           className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
         >
           <FaEdit /> <p>Editar</p>
@@ -158,7 +169,7 @@ const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
           <FaUserAlt /> <p>Ficha</p>
         </li>
         <li
-          onClick={() => redirectToOption("/edit-user")}
+          onClick={() => redirectToOption(`/edit-user/${id}`)}
           className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
         >
           <FaMusic /> <p>Repertorio</p>

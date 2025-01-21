@@ -1,9 +1,12 @@
 export interface ProductionCompanyResponse {
+  id_usuario: string | null;
+  id_productora: string | null;
+  cuit_cuil: string;
   apellido: string;
+  razon_social: string | null;
   createdAt: Date;
   email: string;
   fecha_ultimo_cambio_registro: Date;
-  id_usuario: string;
   intentos_fallidos: number;
   is_bloqueado: boolean;
   nombre: string;

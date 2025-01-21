@@ -9,7 +9,7 @@ export const authDefaultState: AuthProps = {
   apellido: null,
   tipo_registro: null,
   rol_id: null,
-  rol_nombre: null,
+  rol: null,
 };
 
 const authSlice = createSlice({

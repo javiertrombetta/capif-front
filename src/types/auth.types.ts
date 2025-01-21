@@ -66,8 +66,8 @@ export interface AuthProps {
   nombre: string | null;
   apellido: string | null;
   tipo_registro: string | null;
+  rol: ROLES_NOMBRES | null;
   rol_id: string | null;
-  rol_nombre: ROLES_NOMBRES | null;
   productionCompany?: {
     id: string;
     nombre: string;
