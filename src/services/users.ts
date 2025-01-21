@@ -1,8 +1,13 @@
-import { UpdateUserById, User, UsersResponse } from "@/types/user.types";
+import {
+  SendApplication,
+  UpdateUserById,
+  User,
+  UsersResponse,
+} from "@/types/user.types";
 import { axiosInstance } from "./axiosInstance";
 import { ProductionCompanyResponse } from "@/types/productionCompany.types";
 
-export const sendApplication = async (requestData: unknown) => {
+export const sendApplication = async (requestData: SendApplication) => {
   try {
     await axiosInstance.post("usuarios/aplicaciones/enviar", requestData);
   } catch (error: unknown) {
