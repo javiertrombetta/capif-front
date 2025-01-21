@@ -41,8 +41,8 @@ function LoginView() {
     let dataToSet = data;
     dispatch(setAuthData(data));
     if (data.rol_id) {
-      const rol_nombre = await getUserRol();
-      dataToSet = { ...data, rol_nombre };
+      const rol = await getUserRol();
+      dataToSet = { ...data, rol };
     }
     dispatch(setAuthData(dataToSet));
     localStorage.setItem("isLoged", "true");
