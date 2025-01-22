@@ -9,7 +9,6 @@ interface RouteGuardProps {
 }
 
 const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
-  const { rol } = useAppSelector((state) => state.user);
   const auth = useAppSelector((state) => state.auth);
   const pathname = usePathname();
   const router = useRouter();
@@ -122,6 +121,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/change-password",
     ],
   };
+
   const isRouteAllowed = (path: string, routes: string[]) => {
     return routes.some((route) => match(route)(path));
   };
@@ -139,12 +139,12 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       router.push("/register-production-company");
       return;
     }
-    if (rol && !isRouteAllowed(pathname, allowedRoutes[rol] || [])) {
+    if (auth.rol && !isRouteAllowed(pathname, allowedRoutes[auth.rol] || [])) {
       router.push("/records");
     }
-  }, [rol, pathname, router, auth]);
+  }, [auth.rol, pathname, router, auth]);
 
-  if (!rol || !isRouteAllowed(pathname, allowedRoutes[rol] || [])) {
+  if (!auth.rol || !isRouteAllowed(pathname, allowedRoutes[auth.rol] || [])) {
     return null;
   }
 

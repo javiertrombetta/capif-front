@@ -3,7 +3,7 @@ import React, { FC, useEffect, useState } from "react";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import Header from "@/commons/Header/Header";
 import { useAppSelector } from "@/hooks/storeHooks";
-import { ROLES_NOMBRES } from "@/types/auth.types";
+import { ROLES } from "@/types/auth.types";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomTable from "@/commons/CustomTable/CustomTable";
 import { FaEdit, FaMusic, FaUserAlt } from "react-icons/fa";
@@ -53,8 +53,8 @@ export default function page() {
 
       <div className="h-[4rem] w-[100%] flex items-end mt-[1rem] gap-[2rem] pl-[1rem] pr-[2rem]">
         <CustomInput label="Buscar:" type="text" />
-        {userData.rol === ROLES_NOMBRES.SUPER_ADMIN ||
-        userData.rol === ROLES_NOMBRES.CAPIF_ADMIN ? (
+        {userData.rol === ROLES.SUPER_ADMIN ||
+        userData.rol === ROLES.CAPIF_ADMIN ? (
           <>
             <select
               onChange={handleSelectChange}

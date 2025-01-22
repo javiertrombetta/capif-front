@@ -8,8 +8,10 @@ export const authDefaultState: AuthProps = {
   telefono: null,
   apellido: null,
   tipo_registro: null,
-  rol_id: null,
   rol: null,
+  productoras: [],
+  vistas: [],
+  productoraActiva: null,
 };
 
 const authSlice = createSlice({

@@ -4,7 +4,6 @@ export enum ModalNames {
   ACCEPT_APPLICATION = "AcceptApplication",
   CHANGE_PRODUCER = "ChangeProducer",
   ACCEPT_REGISTRATION = "AcceptRegistration",
-  CHANGE_USER = "ChangeUser",
   ADD_TERRITORIALITY = "AddTerritoriality",
   SEARCH_CONFLICTS_FILTERS = "SearchConflictsFilters",
 
