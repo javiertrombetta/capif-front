@@ -136,15 +136,6 @@ export const changePassword = async (data_request: {
   }
 };
 
-export const getUserRol = async (_rol_id?: string) => {
-  try {
-    const rol = await axiosInstance.get("auth/rol");
-    return rol.data.role;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 export const getAssociatedProductionCompanies =
   async (): Promise<GetProductorasResponse> => {
     const productoras = await axiosInstance.get("auth/productora");

@@ -15,7 +15,7 @@ import { getAllCompanies } from "@/services/productionCompanies";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 
 export default function page() {
-  const userData = useAppSelector((state) => state.auth);
+  const authData = useAppSelector((state) => state.auth);
 
   const [productionCompanies, setProductionCompanies] = useState<
     ProductionCompanyResponse[] | null
@@ -53,8 +53,8 @@ export default function page() {
 
       <div className="h-[4rem] w-[100%] flex items-end mt-[1rem] gap-[2rem] pl-[1rem] pr-[2rem]">
         <CustomInput label="Buscar:" type="text" />
-        {userData.rol === ROLES.SUPER_ADMIN ||
-        userData.rol === ROLES.CAPIF_ADMIN ? (
+        {authData.rol === ROLES.SUPER_ADMIN ||
+        authData.rol === ROLES.CAPIF_ADMIN ? (
           <>
             <select
               onChange={handleSelectChange}

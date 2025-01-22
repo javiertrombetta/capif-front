@@ -211,7 +211,7 @@ const ChangeProducerModal: FC<{ onCloseModal: () => void }> = ({
   onCloseModal,
 }) => {
   const dispatch = useAppDispatch();
-  const userData = useAppSelector((state) => state.auth);
+  const authData = useAppSelector((state) => state.auth);
   const [productoras, setProductoras] = useState<GetProductorasResponse | null>(
     null
   );
@@ -232,7 +232,7 @@ const ChangeProducerModal: FC<{ onCloseModal: () => void }> = ({
       if (window && window.localStorage) {
         localStorage.setItem("company", JSON.stringify(element));
       }
-      dispatch(setAuthData({ ...userData, productoraActiva: element }));
+      dispatch(setAuthData({ ...authData, productoraActiva: element }));
     } catch (error) {
       console.log(error);
     } finally {

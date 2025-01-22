@@ -23,7 +23,6 @@ interface NavbarProps {
 const Navbar: FC<NavbarProps> = ({ children }) => {
   const dispatch = useAppDispatch();
   const pathname = usePathname();
-  // const userData = useAppSelector((state) => state.user);
   const authData = useAppSelector((state) => state.auth);
   const noUserPathnames: string[] = [
     "/",
@@ -44,8 +43,6 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
       return isMatch(pathname) !== false;
     });
   };
-
-  console.log(authData);
 
   const [isChangingProducingCompany, setIsChangingProducingCompany] =
     useState<boolean>(false);

@@ -10,7 +10,7 @@ import { validationLoginForm } from "@/utils/formValidations";
 import "./LoginView.css";
 import "../../styles/globals.css";
 import { useRouter } from "next/navigation";
-import { authLogin, getAuthData, getUserRol } from "@/services/auth";
+import { authLogin, getAuthData } from "@/services/auth";
 import { useAppDispatch } from "@/hooks/storeHooks";
 import { setAuthData } from "@/store/authSlice";
 import { setModal } from "@/store/modalSlice";
