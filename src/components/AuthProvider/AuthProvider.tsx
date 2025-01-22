@@ -1,7 +1,7 @@
 "use client";
 import React, { FC, ReactNode, useEffect } from "react";
 import { useAppDispatch } from "@/hooks/storeHooks";
-import { getUserData, getUserRol } from "@/services/auth";
+import { getAuthData, getUserRol } from "@/services/auth";
 import { setAuthData } from "@/store/authSlice";
 
 interface AuthProvider {
@@ -13,7 +13,7 @@ const AuthProvider: FC<AuthProvider> = ({ children }) => {
 
   const handleGetUserData = async () => {
     try {
-      const data = await getUserData();
+      const data = await getAuthData();
       let dataToSet = data;
       dispatch(setAuthData(data));
       if (data.rol_id) {

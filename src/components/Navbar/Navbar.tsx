@@ -23,7 +23,7 @@ interface NavbarProps {
 const Navbar: FC<NavbarProps> = ({ children }) => {
   const dispatch = useAppDispatch();
   const pathname = usePathname();
-  const userData = useAppSelector((state) => state.user);
+  // const userData = useAppSelector((state) => state.user);
   const authData = useAppSelector((state) => state.auth);
   const noUserPathnames: string[] = [
     "/",
@@ -96,7 +96,7 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
                     className="h-[1.8rem] w-[1.8rem]"
                     color="white"
                   />
-                  <p className="text-white">{userData?.email}</p>
+                  <p className="text-white">{authData?.email}</p>
                 </button>
                 {isChangingProducingCompany && (
                   <NavbarMenu
@@ -107,12 +107,14 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
               </div>
             ) : (
               <div className="h-[100%] flex-grow flex justify-end items-center pr-[2rem]">
-                {userData.rol === ROLES.EMPLOYEE ||
-                userData.rol === ROLES.USER_PRODUCER ? (
+                {authData.rol === ROLES.EMPLOYEE ||
+                authData.rol === ROLES.USER_PRODUCER ? (
                   <div className="flex gap-[0.5rem] mr-[1rem]">
                     <p className="">Productora Activa:</p>
 
-                    <p className="font-bold">{userData.activeProduction}</p>
+                    <p className="font-bold">
+                      {authData?.productoras?.[0]?.nombre}
+                    </p>
                   </div>
                 ) : null}
 
@@ -127,7 +129,7 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
                     className="h-[1.8rem] w-[1.8rem]"
                     color="white"
                   />
-                  <p className="text-white">{userData.email}</p>
+                  <p className="text-white">{authData.email}</p>
                 </button>
                 {isChangingProducingCompany && (
                   <NavbarMenu
@@ -165,11 +167,6 @@ const NavbarMenu: FC<{ closeMenu: () => void; isEnabledUser: boolean }> = ({
     closeMenu();
   };
 
-  const handleChangeUser = () => {
-    dispatch(setModal({ type: ModalNames.CHANGE_USER, isActive: true }));
-    closeMenu();
-  };
-
   const handleGoToProfile = () => {
     router.push("/my-profile");
   };
@@ -203,13 +200,6 @@ const NavbarMenu: FC<{ closeMenu: () => void; isEnabledUser: boolean }> = ({
           >
             <FaBuilding size={13} />
             <p>Cambiar de Productora </p>
-          </div>
-          <div
-            onClick={handleChangeUser}
-            className="w-[100%] hover:bg-[#29395e] pl-[0.4rem] cursor-pointer flex items-center gap-[0.4rem]"
-          >
-            <FaUser size={13} />
-            <p>Cambiar de Usuario</p>
           </div>
         </>
       )}
