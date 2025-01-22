@@ -11,7 +11,7 @@ import { ModalNames } from "@/types/modalNames";
 import { setModal } from "@/store/modalSlice";
 
 function page() {
-  const userData = useAppSelector((state) => state.user);
+  const authData = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const handleOpenModal = (type: ModalNames) => {
     dispatch(setModal({ type, isActive: true }));
@@ -23,10 +23,10 @@ function page() {
 
       <div className="w-[100%] pr-[2rem] pl-[2rem] mt-[2rem] flex items-center justify-start gap-[1rem]">
         <CustomInput type="text" label="Buscar" />
-        {userData.rol === ROLES.SUPER_ADMIN ||
-        userData.rol === ROLES.CAPIF_ADMIN ? (
+        {authData.rol === ROLES.SUPER_ADMIN ||
+        authData.rol === ROLES.CAPIF_ADMIN ? (
           <>
-            <select className="text-black border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] w-[15rem] text-black mt-[1.4rem]">
+            <select className="border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] w-[15rem] text-black mt-[1.4rem]">
               <option>Pendientes de Envio</option>
               <option>Enviado Sin Audio</option>
               <option>Enviado Con Audio</option>

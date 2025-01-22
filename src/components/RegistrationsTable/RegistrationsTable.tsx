@@ -31,7 +31,7 @@ interface RegistrationsTableProps {
 const RegistrationsTable: FC<RegistrationsTableProps> = () => {
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
-  const userData = useAppSelector((state) => state.user);
+  const authData = useAppSelector((state) => state.auth);
   const router = useRouter();
   const {
     handleMouseDown,
@@ -102,8 +102,8 @@ const RegistrationsTable: FC<RegistrationsTableProps> = () => {
             <th scope="col" className="px-6 py-3">
               ISRC VIDEO
             </th>
-            {userData.rol === ROLES.CAPIF_ADMIN ||
-            userData.rol === ROLES.SUPER_ADMIN ? (
+            {authData.rol === ROLES.CAPIF_ADMIN ||
+            authData.rol === ROLES.SUPER_ADMIN ? (
               <th scope="col" className="px-6 py-3">
                 ACCIÓN
               </th>
@@ -128,8 +128,8 @@ const RegistrationsTable: FC<RegistrationsTableProps> = () => {
               <td className="px-6 py-4">{element.updateDate}</td>
               <td className="px-6 py-4">{element.isrcAudio}</td>
               <td className="px-6 py-4">{element.isrcVideo}</td>
-              {userData.rol === ROLES.CAPIF_ADMIN ||
-              userData.rol === ROLES.SUPER_ADMIN ? (
+              {authData.rol === ROLES.CAPIF_ADMIN ||
+              authData.rol === ROLES.SUPER_ADMIN ? (
                 <td className="px-6 py-4 relative group">
                   <button
                     onClick={() => toggleDropdown(element.id)}

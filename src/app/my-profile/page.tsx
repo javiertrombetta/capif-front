@@ -9,7 +9,7 @@ import { useAppSelector } from "@/hooks/storeHooks";
 import { useRouter } from "next/navigation";
 
 function page() {
-  const userData = useAppSelector((state) => state.auth);
+  const authData = useAppSelector((state) => state.auth);
 
   const router = useRouter();
 
@@ -19,7 +19,7 @@ function page() {
 
   return (
     <CustomLayout>
-      {!userData.id_usuario ? null : (
+      {!authData.id_usuario ? null : (
         <>
           <div className="relative w-[100%] h-[12rem] flex justify-center">
             <div className="w-[100%] h-[8rem] bg-[#34495e]" />
@@ -30,7 +30,7 @@ function page() {
 
           <div className="w-[100%] justify-center items-center flex flex-col gap-[0.3rem]">
             <p className="font-bold text-black text-[1.5rem]">
-              {userData.nombre} {userData.apellido}
+              {authData.nombre} {authData.apellido}
             </p>
             <div className="flex flex-col items-center justify-center gap-[0.5rem] w-[100%] mt-[0.2rem]">
               <CustomButton onClick={goToChangePassword} className="font-bold">
@@ -56,13 +56,13 @@ function page() {
 export default page;
 
 const UserDataForm: FC = () => {
-  const userData = useAppSelector((state) => state.auth);
+  const authData = useAppSelector((state) => state.auth);
 
   const initialValues = {
-    nombre: userData.nombre,
-    apellido: userData.apellido,
-    telefono: userData.telefono,
-    email: userData.email,
+    nombre: authData.nombre,
+    apellido: authData.apellido,
+    telefono: authData.telefono,
+    email: authData.email,
   };
 
   return (

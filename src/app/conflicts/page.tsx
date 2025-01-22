@@ -91,7 +91,7 @@ interface ActionDropdownButtonProps {
 }
 
 const SearchConflictForm: FC = () => {
-  const userData = useAppSelector((state) => state.user);
+  const authData = useAppSelector((state) => state.auth);
 
   // const handleSearchButton = () => {
   //   dispatch(
@@ -101,8 +101,8 @@ const SearchConflictForm: FC = () => {
 
   return (
     <div className="w-[100%]  mt-[2rem] flex flex-col gap-[1rem]">
-      {userData.rol === ROLES.CAPIF_ADMIN ||
-      userData.rol === ROLES.SUPER_ADMIN ? (
+      {authData.rol === ROLES.CAPIF_ADMIN ||
+      authData.rol === ROLES.SUPER_ADMIN ? (
         <>
           <div className="w-[100%] flex justify-center items-center pl-[2rem] pr-[2rem] gap-[2rem]">
             <CustomInput
@@ -176,7 +176,7 @@ const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
   id,
   activeDropdown,
 }) => {
-  const userData = useAppSelector((state) => state.user);
+  const authData = useAppSelector((state) => state.auth);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const handleOpenModal = (modalType: ModalNames) => {
@@ -192,12 +192,12 @@ const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
         <IoMdSettings size={20} />
       </button>
       <ul
-        className={`absolute right-0 mt-2 ${userData.rol === ROLES.SUPER_ADMIN || userData.rol === ROLES.CAPIF_ADMIN ? "w-[8.5rem]" : "w-[11rem]"} bg-slate-900 border rounded-md shadow-lg z-30 overflow-hidden ${
+        className={`absolute right-0 mt-2 ${authData.rol === ROLES.SUPER_ADMIN || authData.rol === ROLES.CAPIF_ADMIN ? "w-[8.5rem]" : "w-[11rem]"} bg-slate-900 border rounded-md shadow-lg z-30 overflow-hidden ${
           activeDropdown === id ? "" : "hidden"
         }`}
       >
-        {userData.rol === ROLES.SUPER_ADMIN ||
-        userData.rol === ROLES.CAPIF_ADMIN ? (
+        {authData.rol === ROLES.SUPER_ADMIN ||
+        authData.rol === ROLES.CAPIF_ADMIN ? (
           <>
             <li
               onClick={() =>
@@ -216,8 +216,8 @@ const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
           </>
         ) : null}
 
-        {userData.rol === ROLES.USER_PRODUCER ||
-        userData.rol === ROLES.EMPLOYEE ? (
+        {authData.rol === ROLES.USER_PRODUCER ||
+        authData.rol === ROLES.EMPLOYEE ? (
           <>
             <li
               onClick={() =>

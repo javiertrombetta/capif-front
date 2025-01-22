@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { PT_Sans } from "next/font/google";
 import Navbar from "@/components/Navbar/Navbar";
 import StoreProvider from "./StoreProvider";
-import AuthProvider from "@/components/AuthProvider/AuthProvider";
 import ModalProvider from "@/components/ModalProvider/ModalProvider";
 import { initialStateModal } from "@/store/modalSlice";
 import "../styles/globals.css";
@@ -28,11 +27,9 @@ export default function RootLayout({
           initialModal={initialStateModal}
           initialSignup={initialStateSignup}
         >
-          <AuthProvider>
-            <Navbar>
-              <ModalProvider>{children}</ModalProvider>
-            </Navbar>
-          </AuthProvider>
+          <Navbar>
+            <ModalProvider>{children}</ModalProvider>
+          </Navbar>
         </StoreProvider>
       </body>
     </html>
