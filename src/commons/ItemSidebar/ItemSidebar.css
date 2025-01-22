@@ -1,0 +1,13 @@
+.menu-option-selected {
+  color: white;
+  cursor: pointer;
+}
+
+.menu-option {
+  color: #8aa4af;
+  cursor: pointer;
+}
+
+.menu-option:hover {
+  color: white;
+}

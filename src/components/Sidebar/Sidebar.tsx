@@ -1,158 +1,342 @@
-import React, { FC, ReactNode, useState } from "react";
-import { IoIosSpeedometer, IoIosArrowBack, IoIosWarning } from "react-icons/io";
-import Link from "next/link";
-import { MenuOptions } from "@/types/types";
-import menuOptions from "@/utils/menuOptions";
-import { usePathname } from "next/navigation";
-import { FaRegCircle, FaCircle } from "react-icons/fa";
+import React, { FC, useState } from "react";
+import { IoIosArrowBack } from "react-icons/io";
+import { ItemSidebarType } from "@/types/types";
+import ItemSidebar from "@/commons/ItemSidebar/ItemSidebar";
+// import { AdminSidebarDropdownMenus } from "@/utils/sidebarDropdownMenus";
 import "./Sidebar.css";
+import { IconType } from "react-icons";
+import { useAppSelector } from "@/hooks/storeHooks";
+import { ROLES } from "@/types/auth.types";
+import { FaBuilding, FaMusic, FaPercentage, FaUsers } from "react-icons/fa";
+import { IoDocumentText } from "react-icons/io5";
+import { usePathname } from "next/navigation";
+
+interface DropdownMenusProps {
+  id: number;
+  title: string;
+  items: ItemSidebarType[];
+  icon: IconType;
+  height: string;
+}
 
 const Sidebar: FC = () => {
-  const [showAdminMenu, setShowAdminMenu] = useState<boolean>(false);
-  const [showRepertorynMenu, setShowRepertorynMenu] = useState<boolean>(false);
+  const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
   const pathname = usePathname();
-
-  const handleShowAdminMenu = (): void => {
-    setShowAdminMenu((prevState: boolean) => !prevState);
-    setShowRepertorynMenu(false);
+  const userData = useAppSelector((state) => state.user);
+  const handleToggle = (id: number) => {
+    setOpenDropdownId((prev) => (prev === id ? null : id));
   };
 
-  const handleShowRepertoryMenu = (): void => {
-    setShowRepertorynMenu((prevState: boolean) => !prevState);
-    setShowAdminMenu(false);
+  const userProducerMenuOptions = {
+    fonogramsOptions: [
+      {
+        name: "Declaración Repertorio",
+        link: "/new-phonogram",
+      },
+      {
+        name: "Buscar",
+        link: "/search-phonogram",
+      },
+      {
+        name: "Conflictos",
+        link: "/conflicts",
+      },
+    ],
+
+    usersOptions:
+      userData.rol === ROLES.EMPLOYEE
+        ? [
+            {
+              name: "Buscar",
+              link: "/records",
+            },
+          ]
+        : [
+            {
+              name: "Altas",
+              link: "/add-employee",
+            },
+
+            {
+              name: "Buscar",
+              link: "/records",
+            },
+          ],
+
+    cashFlowOptions: [
+      {
+        name: "Estado de Cuenta",
+        link: "/cashflow-account-statement",
+      },
+    ],
   };
 
-  const renderMenuOption = (element: MenuOptions, key: number): ReactNode => {
-    if (element.link) {
-      return (
-        <Link
-          href={element.link}
-          key={key}
-          className={`flex items-center gap-[0.5rem] ${element.link === pathname ? "menu-option-selected" : "menu-option"}`}
-        >
-          <element.icon size={17} />
-          <p>{element.name}</p>
-        </Link>
-      );
-    }
-    return (
-      <div key={key} className="flex items-center gap-[0.5rem] menu-option">
-        <element.icon size={17} />
-        <p>{element.name}</p>
-      </div>
-    );
+  const UserProducerDropdownMenus: DropdownMenusProps[] = [
+    {
+      id: 1,
+      title: "REPERTORIO",
+      items: userProducerMenuOptions.fonogramsOptions,
+      icon: FaMusic,
+      height: "6",
+    },
+    {
+      id: 3,
+      title: "USUARIOS",
+      items: userProducerMenuOptions.usersOptions,
+      icon: FaUsers,
+      height: userData.rol === ROLES.USER_PRODUCER ? "4" : "2",
+    },
+    {
+      id: 4,
+      title: "CUENTAS CORRIENTES",
+      items: userProducerMenuOptions.cashFlowOptions,
+      icon: FaPercentage,
+      height: "2",
+    },
+  ];
+
+  const adminMenuOptions = {
+    fonogramsOptions:
+      userData.rol === ROLES.SUPER_ADMIN
+        ? [
+            {
+              name: "Buscar",
+              link: "/search-phonogram",
+            },
+            {
+              name: "Declaración Repertorio",
+              link: "/new-phonogram",
+            },
+
+            {
+              name: "Conflictos",
+              link: "/conflicts",
+            },
+            {
+              name: "Envio Archivo Audio",
+              link: "/send-audio-file",
+            },
+            {
+              name: "Territorialidad",
+              link: "/territoriality",
+            },
+          ]
+        : [
+            {
+              name: "Buscar",
+              link: "/search-phonogram",
+            },
+            {
+              name: "Declaración Repertorio",
+              link: "/new-phonogram",
+            },
+            {
+              name: "Conflictos",
+              link: "/conflicts",
+            },
+            {
+              name: "Envio Archivo Audio",
+              link: "/send-audio-file",
+            },
+            {
+              name: "Territorialidad",
+              link: "/territoriality",
+            },
+          ],
+
+    producersOptions: [
+      {
+        name: "Buscar",
+        link: "/search-production-company",
+      },
+      {
+        name: "Permios Gardel",
+        link: "/gardel-awards",
+      },
+    ],
+    usersOptions: [
+      {
+        name: "Buscar",
+        link: "/records",
+      },
+      {
+        name: "Altas",
+        link: "/add-employee",
+      },
+    ],
+    cashFlowOptions: [
+      {
+        name: "Liquidaciones",
+        link: "/cashflow-payouts",
+      },
+      {
+        name: "Pagos",
+        link: "/cashflow-payments",
+      },
+      {
+        name: "Traspasos",
+        link: "/cashflow-transfers",
+      },
+      {
+        name: "Pagos Rechazados",
+        link: "/cashflow-rejections",
+      },
+      {
+        name: "Estado de Cuenta",
+        link: "/cashflow-account-statement",
+      },
+    ],
+    auditoryOptions: [
+      {
+        name: "Historial de Cambios",
+        link: "/audit-changes",
+      },
+      {
+        name: "Cambios en Repertorios",
+        link: "/audit-phonogram",
+      },
+      {
+        name: "Sesiones",
+        link: "/audit-sessions",
+      },
+    ],
   };
 
-  const renderConflictsResolution: FC = () => {
-    return (
-      <>
-        <div className="flex items-center gap-[0.5rem] menu-option relative">
-          <div className="flex items-center gap-[0.5rem]">
-            <IoIosWarning size={17} />
-            <p>Resolución de conflictos</p>
-          </div>
-        </div>
-
-        <div className="solve-conflicts-slide-visible">
-          <Link href={"/start-conflict"}>
-            <p
-              className={`${pathname === "/start-conflict" && "text-white"} text-#8aa4af hover:text-white cursor-pointer flex items-center gap-[0.3rem]`}
-            >
-              {pathname === "/start-conflict" ? (
-                <FaCircle size={10} />
-              ) : (
-                <FaRegCircle size={10} />
-              )}
-              Iniciar Conflicto
-            </p>
-          </Link>
-          <Link href={"/pending-resolution"}>
-            <p
-              className={`${pathname === "/pending-resolution" && "text-white"} text-#8aa4af hover:text-white cursor-pointer flex items-center gap-[0.3rem]`}
-            >
-              {pathname === "/pending-resolution" ? (
-                <FaCircle size={10} />
-              ) : (
-                <FaRegCircle size={10} />
-              )}
-              Pendientes de resolución
-            </p>
-          </Link>
-          <Link href={"/solved"}>
-            <p
-              className={`${pathname === "/solved" && "text-white"} text-#8aa4af hover:text-white cursor-pointer flex items-center gap-[0.3rem]`}
-            >
-              {pathname === "/solved" ? (
-                <FaCircle size={10} />
-              ) : (
-                <FaRegCircle size={10} />
-              )}
-              Resueltos
-            </p>
-          </Link>
-        </div>
-      </>
-    );
-  };
+  const AdminSidebarDropdownMenus: DropdownMenusProps[] = [
+    {
+      id: 1,
+      title: "REPERTORIO",
+      items: adminMenuOptions.fonogramsOptions,
+      icon: FaMusic,
+      height: userData.rol === ROLES.SUPER_ADMIN ? "10" : "10",
+    },
+    {
+      id: 2,
+      title: "PRODUCTORES",
+      items: adminMenuOptions.producersOptions,
+      icon: FaBuilding,
+      height: "4",
+    },
+    {
+      id: 3,
+      title: "USUARIOS",
+      items: adminMenuOptions.usersOptions,
+      icon: FaUsers,
+      height: "4",
+    },
+    {
+      id: 4,
+      title: "CUENTAS CORRIENTES",
+      items: adminMenuOptions.cashFlowOptions,
+      icon: FaPercentage,
+      height: "10",
+    },
+    {
+      id: 5,
+      title: "AUDITORIA",
+      items: adminMenuOptions.auditoryOptions,
+      icon: IoDocumentText,
+      height: "6",
+    },
+  ];
 
   return (
     <div className="w-[100%]">
       <div className="w-[100%] h-[3rem] bg-[#1a2226] flex items-center pl-[1rem]">
-        <p className="text-[#4b646f] text-[0.8rem]">MENU</p>
+        {pathname === "/register-production-company" ? null : (
+          <p className="text-[#4b646f] text-[0.8rem]">MENU</p>
+        )}
       </div>
-      <div className="w-[100%]">
-        <button
-          onClick={handleShowAdminMenu}
-          className="h-[2.5rem] w-[100%] flex items-center hover:bg-[#1E282C] section pl-[1rem] pr-[1rem] justify-between cursor-pointer"
-        >
-          <div className="flex items-center">
-            <IoIosSpeedometer />
-            <p className="text-[1rem] ml-[0.5rem] text-white">Administración</p>
-          </div>
-
-          <div>
-            <IoIosArrowBack />
-          </div>
-        </button>
-
-        <div
-          className={`mt-[0.5rem] ${showAdminMenu ? "admin-slide-visible" : "admin-slide"}`}
-        >
-          {menuOptions.adminMenuOptions.map(
-            (element: MenuOptions, index: number) =>
-              renderMenuOption(element, index)
-          )}
-        </div>
-      </div>
-
-      <div className="w-[100%]">
-        <button
-          onClick={handleShowRepertoryMenu}
-          className="h-[2.5rem] w-[100%] flex items-center hover:bg-[#1E282C] section pl-[1rem] pr-[1rem] justify-between cursor-pointer"
-        >
-          <div className="flex items-center">
-            <IoIosSpeedometer />
-            <p className="text-[1rem] ml-[0.5rem] text-white">Repertorio</p>
-          </div>
-
-          <div>
-            <IoIosArrowBack />
-          </div>
-        </button>
-
-        <div
-          className={`mt-[0.5rem] ${showRepertorynMenu ? "repertory-slide-visible" : "repertory-slide"}`}
-        >
-          {renderConflictsResolution({})}
-
-          {menuOptions.repertoryMenuOptions.map(
-            (element: MenuOptions, index: number) =>
-              renderMenuOption(element, index)
-          )}
-        </div>
+      {pathname === "/register-production-company" ? null : (
+        <>
+          {userData.rol === ROLES.USER_PRODUCER ||
+          userData.rol === ROLES.EMPLOYEE
+            ? UserProducerDropdownMenus.map((item, key) => (
+                <GenericMenu
+                  icon={item.icon}
+                  isOpen={openDropdownId === item.id}
+                  key={key}
+                  id={item.id}
+                  title={item.title}
+                  onToggle={handleToggle}
+                  items={item.items}
+                  height={item.height}
+                />
+              ))
+            : AdminSidebarDropdownMenus.map((item, key) => (
+                <GenericMenu
+                  icon={item.icon}
+                  isOpen={openDropdownId === item.id}
+                  key={key}
+                  id={item.id}
+                  title={item.title}
+                  onToggle={handleToggle}
+                  items={item.items}
+                  height={item.height}
+                />
+              ))}
+        </>
+      )}
+      <div className="w-[100%] h-[3rem] bg-[#1a2226] flex flex-col items-center justify-center absolute bottom-0">
+        <p className="text-[#4b646f] text-[0.8rem]">GIT 2.0</p>
+        <p className="text-[#4b646f] text-[0.8rem]">
+          Developed by KEIRETSU 2024
+        </p>
       </div>
     </div>
   );
 };
 
 export default Sidebar;
+
+interface GenericMenuProps {
+  id: number;
+  isOpen: boolean;
+  title: string;
+  onToggle: (id: number) => void;
+  items: ItemSidebarType[];
+  icon: IconType;
+  height: string;
+}
+
+const GenericMenu: FC<GenericMenuProps> = ({
+  id,
+  isOpen,
+  title,
+  onToggle,
+  items,
+  icon: Icon,
+  height,
+}) => {
+  return (
+    <div className="w-[100%]">
+      <button
+        onClick={() => onToggle(id)}
+        className="h-[2.5rem] w-[100%] flex items-center hover:bg-[#1E282C] section pl-[0.2rem] pr-[1rem] justify-between cursor-pointer"
+      >
+        <div className="flex items-center">
+          <Icon size={15} />
+          <p className="text-[1rem] ml-[1rem] text-white whitespace-nowrap">
+            {title}
+          </p>
+        </div>
+
+        <div>
+          <IoIosArrowBack />
+        </div>
+      </button>
+      <div
+        style={{
+          height: isOpen ? `${height}rem` : "0rem",
+          transition: "height 0.3s ease-in-out",
+          overflow: "hidden",
+        }}
+        className={"pl-[1.2rem] mt-1 mb-2 flex flex-col gap-[0.5rem]"}
+      >
+        {items.map((element: ItemSidebarType, index: number) => (
+          <ItemSidebar element={element} key={index} />
+        ))}
+      </div>
+    </div>
+  );
+};

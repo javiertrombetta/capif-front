@@ -1,0 +1,7 @@
+.table-container {
+  color: black;
+  padding-right: 2rem;
+  padding-left: 2rem;
+  max-height: 30rem;
+  overflow-y: scroll;
+}

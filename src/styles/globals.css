@@ -1,4 +1,8 @@
+html {
+  @apply text-black;
+}
 @tailwind base;
+
 @tailwind components;
 @tailwind utilities;
 
@@ -33,5 +37,11 @@ body {
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+@layer base {
+  html {
+    @apply text-black;
   }
 }

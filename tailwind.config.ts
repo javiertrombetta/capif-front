@@ -6,8 +6,13 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+
   theme: {
     extend: {
+      transitionProperty: {
+        height: "height",
+        spacing: "margin, padding",
+      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
@@ -16,9 +21,12 @@ const config: Config = {
       colors: {
         customtext: "#737373",
         mainblue: "#1280e1",
+        disabled: "#8a8a8a",
       },
     },
   },
+  darkMode: "class",
+
   plugins: [],
 };
 export default config;

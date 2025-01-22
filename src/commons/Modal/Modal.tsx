@@ -19,6 +19,7 @@ const Modal: FC<ModalProps> = ({ handleCloseModal }) => {
           <CustomInput className="w-[100%]" type="text" label="VER" />
           <CustomInput className="w-[100%]" type="text" label="PRODUCTOR" />
           <CustomInput className="w-[100%]" type="text" label="TITULAR" />
+          <CustomInput className="w-[100%]" type="text" label="CUIT" />
           <CustomInput className="w-[100%]" type="text" label="AGENTE" />
           <CustomInput className="w-[100%]" type="text" label="ARTISTA" />
           <CustomInput className="w-[100%]" type="text" label="ALBUM" />
