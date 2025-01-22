@@ -1,6 +1,6 @@
 import { axiosInstance } from "./axiosInstance";
 import {
-  AuthDataResponse,
+  GetAuthDataResponse,
   AuthProps,
   AuthSecondarySignUpRequest,
   GetProductorasResponse,
@@ -62,7 +62,7 @@ export const authLogout = async () => {
 
 export const getAuthData = async (): Promise<AuthProps> => {
   try {
-    const { data } = await axiosInstance.get<AuthDataResponse>("auth/me");
+    const { data } = await axiosInstance.get<GetAuthDataResponse>("auth/me");
     return {
       ...data.user,
       productoras: data.maestros.map(

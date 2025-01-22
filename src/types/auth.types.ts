@@ -36,13 +36,6 @@ export interface UserProps {
   tipo_persona_id: string;
 }
 
-// export enum ROLES {
-//   SUPER_ADMIN = "SuperAdmin",
-//   CAPIF_ADMIN = "CapifAdming",
-//   USER_PRODUCER = "UserProducer",
-//   EMPLOYEE = "Employee",
-// }
-
 export enum ROLES {
   SUPER_ADMIN = "admin_principal",
   CAPIF_ADMIN = "admin_secundario",
@@ -50,7 +43,7 @@ export enum ROLES {
   EMPLOYEE = "productor_secundario",
   // USER = "usuario",
 }
-export interface AuthDataResponse {
+export interface GetAuthDataResponse {
   user: {
     id_usuario: string;
     rol: ROLES;
