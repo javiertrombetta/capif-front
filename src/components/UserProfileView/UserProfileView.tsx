@@ -1,364 +1,440 @@
 "use client";
-import React, { FC, ReactNode, useState } from "react";
+import React, { FC, useState } from "react";
+import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
-import CustomInput from "@/commons/CustomInput/CustomInput";
-import CustomButton from "@/commons/CustomButton/CustomButton";
-import { IoMdDownload } from "react-icons/io";
-import { PiUserCircleFill } from "react-icons/pi";
-import "./UserProfileView.css";
+import { validationRegisterApplication } from "@/utils/formValidations";
+import { Field, Form, Formik, FormikErrors } from "formik";
+import CustomField from "@/commons/CustomField/CustomField";
+import { useAppDispatch } from "@/hooks/storeHooks";
+import { setModal } from "@/store/modalSlice";
+import { ModalNames } from "@/types/modalNames";
 
-type Tabs = "register" | "consult" | "updates";
-
-interface ViewTabs {
-  name: Tabs;
-  title: string;
+export interface ApplicationValues {
+  nombre_productora: string;
+  apellido_productor: string;
+  tipo_persona: "FISICA" | "JURIDICA";
+  cuit_cuil: string;
+  email: string;
+  calle: string;
+  numero: string;
+  ciudad: string;
+  localidad: string;
+  provincia: string;
+  codigo_postal: string;
+  telefono: string;
+  nacionalidad: string;
+  alias_cbu: string;
+  cbu: string;
+  datos_adicionales?: string;
+  denominacion_sello?: string;
+  razon_social?: string;
+  apellidos_representante?: string;
+  nombres_representante?: string;
+  cuit_representante?: string;
 }
 
 const UserProfileView: FC = () => {
-  const [currentTab, setCurrentTab] = useState<Tabs>("register");
-
-  const viewTabs: ViewTabs[] = [
-    {
-      name: "register",
-      title: "Datos Registro",
-    },
-    {
-      name: "consult",
-      title: "Consultas",
-    },
-    {
-      name: "updates",
-      title: "Actualizaciones",
-    },
-  ];
-
-  const chooseTab = (tab: Tabs): void => {
-    setCurrentTab(tab);
+  const [currentEntity, setCurrentEntity] = useState<"natural" | "legal">(
+    "natural"
+  );
+  const [_uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  /*
+  const dispatch = useAppDispatch();
+  const authUser = useAppSelector((state) => state.auth);
+  */
+  const handleCurrentEntity = (value: "natural" | "legal") => {
+    setCurrentEntity(value);
   };
 
-  const renderTab = (): ReactNode => {
-    if (currentTab === "register") {
-      return <RegisterTab />;
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setUploadedFiles(Array.from(e.target.files));
     }
-    if (currentTab === "consult") {
-      return <ConsultTab />;
-    }
-    if (currentTab === "updates") {
-      return <UpdatesTab />;
-    }
+  };
+
+  const onRadioFieldChange = (
+    entity: "natural" | "legal",
+    values: ApplicationValues,
+    setValues: (
+      values: React.SetStateAction<ApplicationValues>,
+      shouldValidate?: boolean
+    ) => Promise<void | FormikErrors<ApplicationValues>>
+  ) => {
+    handleCurrentEntity(entity);
+    setValues({
+      ...values,
+      tipo_persona: entity === "natural" ? "FISICA" : "JURIDICA",
+    });
+  };
+  const initialValues: ApplicationValues = {
+    nombre_productora: "",
+    apellido_productor: "",
+    tipo_persona: "FISICA",
+    cuit_cuil: "",
+    email: "",
+    calle: "",
+    numero: "",
+    ciudad: "",
+    localidad: "",
+    provincia: "",
+    codigo_postal: "",
+    telefono: "",
+    nacionalidad: "",
+    alias_cbu: "",
+    cbu: "",
+    datos_adicionales: "",
+    denominacion_sello: "",
+    razon_social: "",
+    apellidos_representante: "",
+    nombres_representante: "",
+    cuit_representante: "",
   };
 
   return (
     <CustomLayout>
-      <Header hr={false} title="Ficha de Usuario" className="" />
+      <Header back title="Ficha de Usuario" className="" />
+      <div className="pr-[2rem] pl-[2rem] w-[100%]">
+        {/*
+        <div className="w-[100%] mt-[2rem] flex gap-[0.5rem]">
+          <p className="text-black text-[1.2rem]">Estado de Solicitud:</p>
 
-      <div className="mt-[1rem] ml-[1rem]">
-        <div className="flex">
-          {viewTabs.map((tab: ViewTabs, index: number) => (
-            <button
-              key={index}
-              onClick={() => chooseTab(tab.name)}
-              className={`w-[9rem] h-[2.5rem] ${currentTab === tab.name ? "border-t-[3.5px] border-t-mainblue" : "border-t-[3.5px] border-t-inherit"} flex justify-center items-center`}
-            >
-              <p className="text-black hover:text-[#7b7b7b]">{tab.title}</p>
-            </button>
-          ))}
+          <p
+            style={{ color: "#f1c40f" }}
+            className="font-bold text-black text-[1.2rem]"
+          >
+            PENDIENTE
+          </p>
+           <p
+           style={{ color: "#2ecc71" }}
+          className="font-bold text-black text-[1.2rem]">
+            APROBADO
+          </p>
+          <p
+           style={{ color: "#e74c3c" }}
+          className="font-bold text-black text-[1.2rem]">
+            RECHAZADO
+          </p>
         </div>
+*/}
+
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationRegisterApplication}
+          onSubmit={() => {}}
+        >
+          {({ isSubmitting, isValid, dirty, values, setValues }) => (
+            <Form id="form" className="w-[100%]">
+              <div className="flex gap-[2rem] mt-[2rem]">
+                <div className="flex gap-[0.5rem]">
+                  <Field
+                    onChange={() => {
+                      onRadioFieldChange("natural", values, setValues);
+                    }}
+                    name="tipo_persona"
+                    id="tipo_persona"
+                    checked={currentEntity === "natural"}
+                    value="FISICA"
+                    type="radio"
+                  />
+                  <h1 className="font-bold text-black">PERSONA FÍSICA</h1>
+                </div>
+
+                <div className="flex gap-[0.5rem]">
+                  <Field
+                    onChange={() => {
+                      onRadioFieldChange("legal", values, setValues);
+                    }}
+                    name="tipo_persona"
+                    id="tipo_persona"
+                    checked={currentEntity === "legal"}
+                    value="JURIDICA"
+                    type="radio"
+                  />
+                  <h1 className="font-bold text-black">PERSONA JURÍDICA</h1>
+                </div>
+              </div>
+
+              <EntityForm
+                handleFileChange={handleFileChange}
+                dirty={dirty}
+                isValid={isValid}
+                isSubmitting={isSubmitting}
+                entity={currentEntity}
+              />
+            </Form>
+          )}
+        </Formik>
       </div>
-      {renderTab()}
     </CustomLayout>
   );
 };
 
-const RegisterTab: FC = () => {
-  const [currentEntity, setCurrentEntity] = useState<"natural" | "legal">(
-    "natural"
-  );
+export default UserProfileView;
 
-  const handleCurrentEntity = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentEntity(e.target.name as "natural" | "legal");
+const EntityForm: FC<{
+  entity: "natural" | "legal";
+  isSubmitting: boolean;
+  isValid: boolean;
+  dirty: boolean;
+  handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}> = ({ entity, handleFileChange }) => {
+  const dispatch = useAppDispatch();
+
+  const rejectApplication = () => {
+    dispatch(
+      setModal({
+        type: ModalNames.REJECT_REGISTRATION,
+        isActive: true,
+      })
+    );
+  };
+
+  const acceptApplication = () => {
+    dispatch(
+      setModal({
+        type: ModalNames.ACCEPT_APPLICATION,
+        isActive: true,
+      })
+    );
   };
 
   return (
-    <div className="text-black mt-[1rem] ml-[2rem] mr-[2rem] mb-[3rem]">
-      <p className="font-bold">
-        Completar los siguientes datos y adjuntar una imagen o archivo PDF de su
-        documento nacional de identidad.
-      </p>
-
-      <p>
-        Cualquier duda o consulta puede realizarlas en la solapa consultas y le
-        serán respondidas a la brevedad.
-      </p>
-
-      <div className="flex gap-[2rem] mt-[2rem]">
-        <div className="flex gap-[0.5rem]">
-          <input
-            onChange={handleCurrentEntity}
-            name="natural"
-            checked={currentEntity === "natural"}
-            type="radio"
-          />
-          <h1 className="font-bold">PERSONA FÍSICA</h1>
-        </div>
-
-        <div className="flex gap-[0.5rem]">
-          <input
-            onChange={handleCurrentEntity}
-            name="legal"
-            checked={currentEntity === "legal"}
-            type="radio"
-          />
-          <h1 className="font-bold">PERSONA JURÍDICA</h1>
-        </div>
-      </div>
-
-      <EntityForm entity={currentEntity} />
-    </div>
-  );
-};
-
-const ConsultTab: FC = () => {
-  return (
-    <div className="w-[100%]">
-      <CustomButton className="mt-[2rem] ml-[2rem] mr-[2rem]">
-        Marcar Notificaciones Como Leídas
-      </CustomButton>
-      <div className="max-w-[96%] flex mt-[2rem] ml-[2rem] w-[100%] mr-[2rem] gap-[0.5rem]">
-        <PiUserCircleFill color="black" size={40} />
-        <CustomInput
-          className="grow"
-          placeholder="Ingresar comentario adicional"
-          type="text"
-        />
-        <CustomButton>Enviar</CustomButton>
-      </div>
-    </div>
-  );
-};
-
-const UpdatesTab: FC = () => {
-  return (
-    <div className="w-[100%] mt-[2rem] flex flex-col justify-center items-center gap-[2rem]">
-      {[1, 2, 3, 4, 5].map((_, index: number) => (
-        <div key={index} className="w-[90%] flex items-center justify-between">
-          <div className="flex">
-            <PiUserCircleFill color="black" size={40} />
-            <div className="ml-[1rem]">
-              <p className="text-black">admin123@gmail.com</p>
-              <p className="text-black">Registro Iniciado</p>
-            </div>
-          </div>
-
-          <div className="flex flex-col items-end justify-center">
-            <p className="text-black text-[0.8rem]">19/09/2024 13:45:28 p.m.</p>
-            <div className="scale-[0.8] mt-[0.5rem] bg-[#337ab7] font-bold w-fit p-[0.3rem] rounded-[0.2rem]">
-              Automatico
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-};
-
-const EntityForm: FC<{ entity: "natural" | "legal" }> = ({ entity }) => {
-  return (
     <div className="mt-[3rem] w-[100%]">
-      <div className="flex w-[100%] gap-[2rem]">
-        <CustomInput
-          containerClassName="w-[50%]"
-          className="w-[100%]"
+      <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
+        <CustomField
+          width="w-[100%]"
+          id="nombre_productora"
+          name="nombre_productora"
           type="text"
-          label="ESTADO"
+          labelText="NOMBRE PRODUCTORA"
         />
-        <CustomInput
-          containerClassName="w-[50%]"
-          className="w-[100%]"
+        <CustomField
+          width="w-[100%]"
+          id="cuit_cuil"
+          name="cuit_cuil"
           type="text"
-          label="CUIT/CUIL"
+          labelText="CUIT/CUIL"
         />
       </div>
-
       {entity === "legal" && (
-        <CustomInput
-          containerClassName="w-[100%] mt-[1.5rem]"
-          className="w-[100%]"
+        <CustomField
+          width="w-[100%]"
+          id="razon_social"
+          name="razon_social"
           type="text"
-          label="RAZON SOCIAL"
+          labelText="RAZON SOCIAL"
         />
       )}
 
       {entity === "natural" ? (
-        <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
-          <CustomInput
-            containerClassName="w-[50%]"
-            className="w-[100%]"
+        <div className="flex w-[100%] gap-[2rem] mt-[1rem]">
+          <CustomField
+            width="w-[100%]"
+            id="nombre_productor"
+            name="nombre_productor"
             type="text"
-            label="NOMBRES"
+            labelText="NOMBRES"
           />
-          <CustomInput
-            containerClassName="w-[50%]"
-            className="w-[100%]"
+          <CustomField
+            width="w-[100%]"
+            id="apellido_productor"
+            name="apellido_productor"
             type="text"
-            label="APELLIDOS"
+            labelText="APELLIDOS"
           />
         </div>
       ) : (
         <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
-          <CustomInput
-            containerClassName="w-[50%]"
-            className="w-[100%]"
+          <CustomField
+            width="w-[100%]"
+            id="apellidos_representante"
+            name="apellidos_representante"
             type="text"
-            label="APELLIDOS REPRESENTANTE LEGAL"
+            labelText="APELLIDOS REPRESENTANTE LEGAL"
           />
-          <CustomInput
-            containerClassName="w-[50%]"
-            className="w-[100%]"
+          <CustomField
+            width="w-[100%]"
+            id="nombres_representante"
+            name="nombres_representante"
             type="text"
-            label="NOMBRES REPRESENTANTE LEGAL"
+            labelText="NOMBRES REPRESENTANTE LEGAL"
           />
         </div>
       )}
+
       {entity === "natural" ? (
-        <CustomInput
-          containerClassName="w-[100%] mt-[1.5rem]"
-          className="w-[100%]"
+        <CustomField
+          width="w-[100%]"
+          id="email"
+          name="email"
           type="email"
-          label="EMAIL"
+          labelText="EMAIL"
         />
       ) : (
-        <CustomInput
-          containerClassName="w-[100%] mt-[1.5rem]"
-          className="w-[100%]"
-          type="text"
-          label="CUIT REPRESENTANTE LEGAL"
-        />
+        <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
+          <CustomField
+            width="w-[100%]"
+            id="email"
+            name="email"
+            type="email"
+            labelText="EMAIL"
+          />
+
+          <CustomField
+            width="w-[100%]"
+            id="cuit_representante"
+            name="cuit_representante"
+            type="text"
+            labelText="CUIT REPRESENTANTE LEGAL"
+          />
+        </div>
       )}
-
-      <CustomInput
-        containerClassName="w-[100%] mt-[1.5rem]"
-        className="w-[100%]"
+      <CustomField
+        width="w-[100%]"
+        id="denominacion_sello"
+        name="denominacion_sello"
         type="text"
-        label="DENOMINACIÓN DEL SELLO Y SUBSELLOS (opcional)"
+        labelText="DENOMINACIÓN DEL SELLO Y SUBSELLOS (opcional)"
       />
       <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
-        <CustomInput
-          containerClassName="w-[50%]"
-          className="w-[100%]"
+        <CustomField
+          width="w-[100%]"
+          id="calle"
+          name="calle"
           type="text"
-          label="CALLE"
+          labelText="CALLE"
         />
-        <CustomInput
-          containerClassName="w-[50%]"
-          className="w-[100%]"
-          type="number"
-          label="NÚMERO"
+        <CustomField
+          width="w-[100%]"
+          id="numero"
+          name="numero"
+          type="text"
+          labelText="NÚMERO"
         />
       </div>
 
       <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
-        <CustomInput
-          containerClassName="w-[50%]"
-          className="w-[100%]"
+        <CustomField
+          width="w-[100%]"
+          id="datos_adicionales"
+          name="datos_adicionales"
           type="text"
-          label="DATOS ADICIONALES"
+          labelText="DATOS ADICIONALES"
         />
-        <CustomInput
-          containerClassName="w-[50%]"
-          className="w-[100%]"
+        <CustomField
+          width="w-[100%]"
+          id="ciudad"
+          name="ciudad"
           type="text"
-          label="CUIDAD"
+          labelText="CUIDAD"
         />
       </div>
       <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
-        <CustomInput
-          containerClassName="w-full"
-          className="w-[100%]"
+        <CustomField
+          width="w-[100%]"
+          id="localidad"
+          name="localidad"
           type="text"
-          label="LOCALIDAD"
+          labelText="LOCALIDAD"
         />
-        <CustomInput
-          containerClassName="w-full"
-          className="w-[100%]"
+        <CustomField
+          width="w-[100%]"
+          id="provincia"
+          name="provincia"
           type="text"
-          label="PROVINCIA"
+          labelText="PROVINCIA"
         />
-        <CustomInput
-          containerClassName="w-full"
-          className="w-[100%]"
-          type="number"
-          label="CÓDIGO POSTAL"
+        <CustomField
+          width="w-[100%]"
+          id="codigo_postal"
+          name="codigo_postal"
+          type="text"
+          labelText="CÓDIGO POSTAL"
         />
       </div>
-      <CustomInput
-        containerClassName="w-[100%] mt-[1.5rem]"
-        className="w-[100%]"
-        type="number"
-        label="TELÉFONO"
-      />
-      <CustomInput
-        containerClassName="w-[100%] mt-[1.5rem]"
-        className="w-[100%]"
+      <CustomField
+        width="w-[100%]"
+        id="telefono"
+        name="telefono"
         type="text"
-        label="NACIONALIDAD"
+        labelText="TELÉFONO"
+      />
+      <CustomField
+        width="w-[100%]"
+        id="nacionalidad"
+        name="nacionalidad"
+        type="text"
+        labelText="NACIONALIDAD"
       />
       <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
-        <CustomInput
-          containerClassName="w-[50%]"
-          className="w-[100%]"
-          type="number"
-          label="CBU (opcional)"
+        <CustomField
+          width="w-[100%]"
+          id="cbu"
+          name="cbu"
+          type="text"
+          labelText="CBU (opcional)"
         />
-        <CustomInput
-          containerClassName="w-[50%]"
-          className="w-[100%]"
-          type="number"
-          label="ALIAS (opcional)"
+        <CustomField
+          width="w-[100%]"
+          id="alias_cbu"
+          name="alias_cbu"
+          type="text"
+          labelText="ALIAS (opcional)"
         />
       </div>
 
       <div className="mt-[1.5rem]">
-        <p className="font-bold">
+        <p className="font-bold text-black">
           {entity === "natural"
             ? "CARGAR DOCUMENTO NACIONAL DE IDENTIDAD"
             : "CARGAR ESTATUTO O CONTRATO SOCIAL"}
         </p>
-        <input className="mt-[0.3rem]" type="file" />
-      </div>
-
-      <div className="w-[100%] flex justify-end">
-        <CustomButton className="gap-[0.4rem]">
-          <IoMdDownload />
-          Descargar Archivo Ingresado
-        </CustomButton>
+        <input
+          className="mt-[0.3rem]"
+          type="file"
+          accept="application/pdf"
+          multiple
+          onChange={handleFileChange}
+        />
       </div>
 
       {entity === "legal" && (
         <div className="mt-[1.5rem]">
-          <p className="font-bold">
+          <p className="font-bold text-black">
             CARGAR DOCUMENTO NACIONAL DE IDENTIDAD DEL REPRESENTANTE LEGAL
           </p>
-          <input className="mt-[0.3rem]" type="file" />
+          <input
+            className="mt-[0.3rem]"
+            type="file"
+            accept="application/pdf"
+            multiple
+            onChange={handleFileChange}
+          />
         </div>
       )}
 
-      <div className="aditional-data-text mt-[4rem]">
-        <p>
+      {/* <div className="w-[100%] flex justify-end">
+        <CustomButton className="gap-[0.4rem]">
+          <IoMdDownload />
+          Descargar Archivo Ingresado
+        </CustomButton>
+      </div> */}
+      <div>
+        <p className="font-bold text-black mt-[2rem]">
           OTROS Documento Adicionales (Cargue aquí su comprobante de pago de
           alta de ISRC)
         </p>
-        <p>
+        <p className="font-bold text-black">
           Para obtener el código de productor, el titular deberá abonar la suma
           de $ 10.000. El pago se realiza por el alta a la siguiente cuenta
           bancaria:
         </p>
-        <p>BANCO GALICIA</p>
-        <p>SUCURSAL 5</p>
-        <p>CUIT: 30-52172973-9</p>
-        <p>N°: 9750252-4 005-6</p>
-        <p>CBU: 0070005430009750252469</p>
+        <p className="font-bold text-black">BANCO GALICIA</p>
+        <p className="font-bold text-black">SUCURSAL 5</p>
+        <p className="font-bold text-black">CUIT: 30-52172973-9</p>
+        <p className="font-bold text-black">N°: 9750252-4 005-6</p>
+        <p className="font-bold text-black">CBU: 0070005430009750252469</p>
       </div>
 
       <div className="mt-[2rem] w-[100%] h-[15rem] border-[#c5c5c5] border-[1px] rounded-[0.7rem] overflow-hidden">
@@ -372,15 +448,107 @@ const EntityForm: FC<{ entity: "natural" | "legal" }> = ({ entity }) => {
         </div>
       </div>
 
-      <div className="mt-[5rem] flex gap-[1rem]">
-        <CustomButton>Actualizar</CustomButton>
+      <div className="mt-[5rem] flex gap-[1rem] ">
+        <div className="flex gap-[1rem]">
+          <CustomButton onClick={acceptApplication} className="bg-[#008d4c]">
+            Confirmar el Registro del Usuario
+          </CustomButton>
+          <CustomButton background="delete" onClick={rejectApplication}>
+            Rechazar
+          </CustomButton>
+          <CustomButton background="warn">Editar</CustomButton>
+        </div>
 
-        <CustomButton className="bg-[#008d4c]">
-          Confirmar el Registro del Usuario
-        </CustomButton>
+        {/* <CustomButton onClick={handleRejectRegister}>Cancelar</CustomButton> */}
       </div>
     </div>
   );
 };
 
-export default UserProfileView;
+/*
+
+  const dispatch = useAppDispatch();
+
+  const handleRejectRegister = () => {
+    dispatch(
+      setModal({ type: ModalNames.REJECT_REGISTRATION, isActive: true })
+    );
+  };
+
+
+
+ <div className="mt-[5rem] flex gap-[1rem]">
+        <CustomButton className="bg-[#008d4c]">
+          Confirmar el Registro del Usuario
+        </CustomButton>
+        <CustomButton onClick={handleRejectRegister}>Rechazar</CustomButton>
+        <CustomButton>Editar</CustomButton>
+      </div>
+
+*/
+
+/*
+const onSubmit = (
+  e: React.FormEvent<HTMLFormElement>,
+  values: ApplicationValues
+) => {
+  e.preventDefault();
+  ((values: ApplicationValues) => {
+    if (authUser.id_usuario) {
+      const requestData = {
+        id_usuario: authUser.id_usuario,
+        nombre: values.nombre,
+        apellido: values.apellido,
+        telefono: values.telefono,
+        productoraData:
+          currentEntity === "natural"
+            ? {
+                nombres: values.nombre_productor,
+                apellidos: values.apellido_productor,
+                nombre_productora: "Rodri",
+                tipo_persona: "FISICA",
+                cuit_cuil: values.cuit_cuil,
+                email: values.email,
+                calle: values.calle,
+                numero: values.numero,
+                ciudad: values.ciudad,
+                localidad: values.localidad,
+                provincia: values.provincia,
+                codigo_postal: values.codigo_postal,
+                telefono: values.telefono,
+                nacionalidad: values.nacionalidad,
+                alias_cbu: values.alias_cbu,
+                cbu: values.cbu,
+                denominacion_sello: values.denominacion_sello,
+                datos_adicionales: values.datos_adicionales,
+              }
+            : {
+                nombre_productora: "Rodri",
+                razon_social: values.razon_social,
+                apellidos_representante: values.apellidos_representante,
+                nombres_representante: values.nombres_representante,
+                cuit_representante: values.cuit_representante,
+                tipo_persona: "FISICA",
+                cuit_cuil: values.cuit_cuil,
+                email: values.email,
+                calle: values.calle,
+                numero: values.numero,
+                ciudad: values.ciudad,
+                localidad: values.localidad,
+                provincia: values.provincia,
+                codigo_postal: values.codigo_postal,
+                telefono: values.telefono,
+                nacionalidad: values.nacionalidad,
+                alias_cbu: values.alias_cbu,
+                cbu: values.cbu,
+                denominacion_sello: values.denominacion_sello,
+                datos_adicionales: values.datos_adicionales,
+              },
+      };
+
+      sendApplication(requestData);
+      onOpenModal();
+    }
+  })(values);
+};
+*/
