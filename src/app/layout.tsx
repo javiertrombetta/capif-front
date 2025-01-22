@@ -7,6 +7,7 @@ import { initialStateModal } from "@/store/modalSlice";
 import "../styles/globals.css";
 import { initialStateSignup } from "@/store/signupSlice";
 import { authDefaultState } from "@/store/authSlice";
+import AuthProvider from "@/components/AuthProvider/AuthProvider";
 
 const ptSans = PT_Sans({ weight: "400", subsets: ["latin"] });
 export const metadata: Metadata = {
@@ -27,9 +28,11 @@ export default function RootLayout({
           initialModal={initialStateModal}
           initialSignup={initialStateSignup}
         >
-          <Navbar>
-            <ModalProvider>{children}</ModalProvider>
-          </Navbar>
+          <AuthProvider>
+            <Navbar>
+              <ModalProvider>{children}</ModalProvider>
+            </Navbar>
+          </AuthProvider>
         </StoreProvider>
       </body>
     </html>
