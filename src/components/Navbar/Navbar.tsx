@@ -45,6 +45,8 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
     });
   };
 
+  console.log(authData);
+
   const [isChangingProducingCompany, setIsChangingProducingCompany] =
     useState<boolean>(false);
 
