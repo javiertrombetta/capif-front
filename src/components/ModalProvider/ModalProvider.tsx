@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { ModalNames } from "@/types/modalNames";
 import { IoClose } from "react-icons/io5";
 import { setModal } from "@/store/modalSlice";
-import { GetProductorasResponse, ROLES } from "@/types/auth.types";
+import { GetProductorasResponse } from "@/types/auth.types";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import SearchConflictsFilters from "../Modals/Conflicts/SearchConflictsFilters";
 import {
