@@ -21,3 +21,29 @@ export interface ProductionCompanyResponse {
   // reset_password_token: null;
   // reset_password_token_expires: null;
 }
+
+export interface ProductionCompanyByIdResponse {
+  id_productora?: string;
+  tipo_persona: "FISICA" | "JURIDICA";
+  nombre_productora: string;
+  cuit_cuil: string;
+  email: string;
+  calle: string;
+  numero: string;
+  ciudad: string;
+  localidad: string;
+  provincia: string;
+  codigo_postal: string;
+  telefono: string;
+  nacionalidad: string;
+  alias_cbu: string;
+  cbu: string;
+  denominacion_sello?: string;
+  datos_adicionales?: string;
+  nombres?: string;
+  apellidos?: string;
+  razon_social?: string;
+  nombres_representante?: string;
+  apellidos_representante?: string;
+  cuit_representante?: string;
+}

@@ -6,7 +6,7 @@ import { useAppSelector } from "@/hooks/storeHooks";
 import { ROLES } from "@/types/auth.types";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomTable from "@/commons/CustomTable/CustomTable";
-import { FaEdit, FaMusic, FaUserAlt } from "react-icons/fa";
+import { FaMusic, FaUserAlt } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { IoMdSettings } from "react-icons/io";
 import { ProductionCompanyResponse } from "@/types/productionCompany.types";
@@ -157,19 +157,13 @@ const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
         }`}
       >
         <li
-          onClick={() => redirectToOption(`/edit-user/${id}`)}
-          className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
-        >
-          <FaEdit /> <p>Editar</p>
-        </li>
-        <li
           onClick={() => redirectToOption(`/user-profile/${id}`)}
           className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
         >
           <FaUserAlt /> <p>Ficha</p>
         </li>
         <li
-          onClick={() => redirectToOption(`/edit-user/${id}`)}
+          onClick={() => redirectToOption("/")}
           className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
         >
           <FaMusic /> <p>Repertorio</p>
