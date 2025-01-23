@@ -1,9 +1,9 @@
 "use client";
 import React, { FC, ReactNode, useEffect } from "react";
 import { useAppDispatch } from "@/hooks/storeHooks";
-import { getUserData, getUserRol } from "@/services/auth";
+import { getUserRol } from "@/services/auth";
 import { setAuthData } from "@/store/authSlice";
-
+import { getUserData } from "@/services/users";
 interface AuthProvider {
   children: ReactNode;
 }
