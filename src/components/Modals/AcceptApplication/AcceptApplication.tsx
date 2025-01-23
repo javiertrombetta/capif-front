@@ -3,7 +3,7 @@ import React, { FC } from "react";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import { IoClose } from "react-icons/io5";
 import { useParams } from "next/navigation";
-import { acceptApplication } from "@/services/users";
+import { acceptApplication } from "@/services/auth";
 
 const AcceptApplication: FC<{ onCloseModal: () => void }> = ({
   onCloseModal,
