@@ -10,7 +10,7 @@ export const getUserById = async (id_usuario: string) => {
   const users: { data: { user: User } } = await axiosInstance.get(
     `users?usuarioId=${id_usuario}`
   );
-  return users.data.user;
+  return users.data;
 };
 
 export const updateUserById = async (

@@ -55,7 +55,7 @@ export default function page() {
   const handleGetUser = async () => {
     try {
       const user = await getUserById(userId as string);
-      setUserData(user);
+      setUserData(user.user);
     } catch (error) {
       console.log(error);
     }
