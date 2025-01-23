@@ -6,6 +6,20 @@ import {
 } from "@/types/user.types";
 import { axiosInstance } from "./axiosInstance";
 import { ProductionCompanyResponse } from "@/types/productionCompany.types";
+import { AuthProps } from "@/types/auth.types";
+
+export const getUserData = async (): Promise<AuthProps> => {
+  try {
+    const { data } = (await axiosInstance.get("usuarios/me")) as {
+      data: {
+        usuario: AuthProps;
+      };
+    };
+    return data.usuario;
+  } catch (error: unknown) {
+    throw new Error(`${error}`);
+  }
+};
 
 export const sendApplication = async (requestData: SendApplication) => {
   try {
@@ -63,10 +77,10 @@ export const getAllUsers = async () => {
 };
 
 export const getUserById = async (id_usuario: string) => {
-  const users: { data: { user: User } } = await axiosInstance.get(
+  const user: { data: User } = await axiosInstance.get(
     `usuarios/?id_usuario=${id_usuario}`
   );
-  return users.data.user;
+  return user.data;
 };
 
 export const updateUserById = async (
