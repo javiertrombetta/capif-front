@@ -44,7 +44,7 @@ export enum ROLES {
   // USER = "usuario",
 }
 export interface GetAuthDataResponse {
-  user: {
+  usuario: {
     id_usuario: string;
     rol: ROLES;
     tipo_registro: string;
@@ -53,7 +53,7 @@ export interface GetAuthDataResponse {
     apellido: string;
     telefono: string;
   };
-  maestros: [
+  productoras: [
     {
       productora: {
         id_productora: string;

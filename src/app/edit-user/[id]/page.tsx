@@ -9,7 +9,6 @@ import { ROLES } from "@/types/auth.types";
 import { useAppSelector } from "@/hooks/storeHooks";
 import {
   blockOrUnlockUser,
-  changeRole,
   getUserById,
   updateUserById,
 } from "@/services/users";
@@ -90,18 +89,6 @@ export default function page() {
     if (userData?.id_usuario) {
       await blockOrUnlockUser(userData.id_usuario, isBlocked);
       alert("Se cambio el estado del usuario");
-    }
-  };
-
-  const handleChangeRole = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    try {
-      e.preventDefault();
-      if (userData?.id_usuario) {
-        await changeRole(userData?.id_usuario, e.target.value as string);
-        alert("se cambio el rol.");
-      }
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -196,37 +183,6 @@ export default function page() {
                   <option value={"false"}>NO</option>
                   <option value={"true"}>SI</option>
                 </select>
-              </div>
-
-              <div className="w-[100%] gap-[0.5rem] flex flex-col mb-[2rem]">
-                <CustomField
-                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                    handleChangeRole(e);
-                  }}
-                  type="select"
-                  name="rol"
-                  id="rol"
-                  labelText="ROL"
-                  defaultSelectedValue={userData.rol?.nombre_rol}
-                  options={[
-                    {
-                      name: "Administrador Principal",
-                      value: "admin_principal",
-                    },
-                    {
-                      name: "Administrador Secundario",
-                      value: "admin_secundario",
-                    },
-                    {
-                      name: "Productor Principal",
-                      value: "productor_principal",
-                    },
-                    {
-                      name: "Productor Secundario",
-                      value: "productor_secundario",
-                    },
-                  ]}
-                />
               </div>
 
               {rol === ROLES.EMPLOYEE ? null : (
