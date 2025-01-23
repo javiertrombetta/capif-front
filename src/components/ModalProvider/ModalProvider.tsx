@@ -1,11 +1,10 @@
 "use client";
-import React, { FC, ReactNode, useEffect, useState } from "react";
+import React, { FC, ReactNode } from "react";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { ModalNames } from "@/types/modalNames";
 import { IoClose } from "react-icons/io5";
 import { setModal } from "@/store/modalSlice";
-import { GetProductorasResponse } from "@/types/auth.types";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import SearchConflictsFilters from "../Modals/Conflicts/SearchConflictsFilters";
 import {
@@ -62,10 +61,7 @@ import AuditSessionsPurgeModal from "../Modals/AuditSessionsPurgeModal/AuditSess
 import SubmitSendApplication from "../Modals/SubmitSendApplication/SubmitSendApplication";
 import RejectApplication from "../Modals/RejectApplication/RejectApplication";
 import AcceptApplication from "../Modals/AcceptApplication/AcceptApplication";
-import {
-  getAssociatedProductionCompanies,
-  selectProductionCompany,
-} from "@/services/auth";
+import { selectProductionCompany } from "@/services/auth";
 import { setAuthData } from "@/store/authSlice";
 
 interface ModalProvderProps {
@@ -212,19 +208,6 @@ const ChangeProducerModal: FC<{ onCloseModal: () => void }> = ({
 }) => {
   const dispatch = useAppDispatch();
   const authData = useAppSelector((state) => state.auth);
-  const [productoras, setProductoras] = useState<GetProductorasResponse | null>(
-    null
-  );
-  const getProductoras = async () => {
-    try {
-      const response = await getAssociatedProductionCompanies();
-      if (response) {
-        setProductoras(response);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const selectProductora = async (element: { id: string; nombre: string }) => {
     try {
@@ -244,9 +227,6 @@ const ChangeProducerModal: FC<{ onCloseModal: () => void }> = ({
   //   dispatch(setUser({ ...userData, activeProduction: production }));
   //   onCloseModal();
   // };
-  useEffect(() => {
-    getProductoras();
-  }, []);
 
   return (
     <div className="relative bg-white h-[13rem] w-[30rem] mb-[6rem] rounded-[2rem] gap-[0.5rem] flex flex-col justify-center items-center">
@@ -257,8 +237,8 @@ const ChangeProducerModal: FC<{ onCloseModal: () => void }> = ({
       <p className="text-black font-bold text-[1.2rem] text-center w-[95%]">
         Selecciona una productora.
       </p>
-      {productoras?.productoras && productoras.productoras.length > 0
-        ? productoras.productoras.map((element) => (
+      {authData.productoras && authData.productoras.length > 0
+        ? authData.productoras.map((element) => (
             <div
               className="w-[100%] cursor-pointer"
               onClick={() => selectProductora(element)}

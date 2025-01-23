@@ -9,10 +9,10 @@ import CustomTable from "@/commons/CustomTable/CustomTable";
 import { FaEdit, FaMusic, FaUserAlt } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { IoMdSettings } from "react-icons/io";
-import { getPendingApplications } from "@/services/users";
 import { ProductionCompanyResponse } from "@/types/productionCompany.types";
 import { getAllCompanies } from "@/services/productionCompanies";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
+import { getPendingApplications } from "@/services/auth";
 
 export default function page() {
   const authData = useAppSelector((state) => state.auth);
