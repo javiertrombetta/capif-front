@@ -5,7 +5,7 @@ interface CustomButtonProps {
   children: ReactNode;
   width?: string;
   className?: string;
-  onClick?: () => void;
+  onClick?: (e?: unknown) => void;
   disabled?: boolean;
   background?: "warn" | "delete" | "disabled";
 }

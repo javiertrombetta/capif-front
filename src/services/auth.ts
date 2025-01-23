@@ -1,6 +1,5 @@
 import { axiosInstance } from "./axiosInstance";
 import {
-  AuthProps,
   AuthSecondarySignUpRequest,
   GetProductorasResponse,
 } from "@/types/auth.types";
@@ -54,19 +53,6 @@ export const authLogin = async (authLoginData: AuthLoginRequest) => {
 export const authLogout = async () => {
   try {
     await axiosInstance.post("auth/logout");
-  } catch (error: unknown) {
-    throw new Error(`${error}`);
-  }
-};
-
-export const getUserData = async (): Promise<AuthProps> => {
-  try {
-    const { data } = (await axiosInstance.get("auth/me")) as {
-      data: {
-        user: AuthProps;
-      };
-    };
-    return data.user;
   } catch (error: unknown) {
     throw new Error(`${error}`);
   }
