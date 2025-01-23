@@ -196,13 +196,13 @@ const SearchForISRC: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
 };
 
 const NewPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
-  const userData = useAppSelector((state) => state.user);
+  const authData = useAppSelector((state) => state.auth);
   const initialValues = {
     titulo: "",
     artista: "",
     album: "",
     duracion: "",
-    productor_originario: userData.activeProduction,
+    productor_originario: authData.productoraActiva,
     año_lanzamiento: "",
     registro_desde: "",
     registro_hasta: "",

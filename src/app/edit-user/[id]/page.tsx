@@ -30,7 +30,7 @@ interface UserInitialValue {
 export default function page() {
   const router = useRouter();
   const userId = useParams().id;
-  const { rol } = useAppSelector((state) => state.user);
+  const { rol } = useAppSelector((state) => state.auth);
   const [userData, setUserData] = useState<User | null>(null);
 
   const initialValues: UserInitialValue = userData
@@ -161,7 +161,7 @@ export default function page() {
                 <p className="font-bold text-black">ESTADO</p>
                 <select
                   disabled
-                  className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black"
+                  className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem]"
                 >
                   <option>Confirmado</option>
                   <option>Nuevo</option>
@@ -191,7 +191,7 @@ export default function page() {
                 <select
                   onChange={handleBlockUser}
                   value={values.bloqueado ? "true" : "false"}
-                  className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black"
+                  className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem]"
                 >
                   <option value={"false"}>NO</option>
                   <option value={"true"}>SI</option>

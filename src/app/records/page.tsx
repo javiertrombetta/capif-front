@@ -13,7 +13,7 @@ import { User } from "@/types/user.types";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 
 export default function page() {
-  const userData = useAppSelector((state) => state.user);
+  const authData = useAppSelector((state) => state.auth);
   const [users, setUsers] = useState<User[]>([]);
 
   const getUsersData = async () => {
@@ -44,8 +44,8 @@ export default function page() {
       <div className="w-[100%] flex-1 flex flex-col overflow-y-auto">
         <div className="h-[4rem] w-[100%] flex items-end mt-[1rem] gap-[2rem] pl-[1rem] pr-[2rem]">
           <CustomInput label="Buscar:" type="text" />
-          {userData.rol === ROLES.SUPER_ADMIN ||
-          userData.rol === ROLES.CAPIF_ADMIN ? (
+          {authData.rol === ROLES.SUPER_ADMIN ||
+          authData.rol === ROLES.CAPIF_ADMIN ? (
             <>
               <select className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem]">
                 <option>Registrados</option>
@@ -71,8 +71,8 @@ export default function page() {
           {users.length > 0 && (
             <CustomTable
               columnNames={
-                userData.rol === ROLES.SUPER_ADMIN ||
-                userData.rol === ROLES.CAPIF_ADMIN
+                authData.rol === ROLES.SUPER_ADMIN ||
+                authData.rol === ROLES.CAPIF_ADMIN
                   ? [
                       { name: "EMAIL", isSortable: true },
                       { name: "TIPO REGISTRO", isSortable: true },
@@ -97,8 +97,8 @@ export default function page() {
                     ]
               }
               columnValues={users.map((element) => {
-                return userData.rol === ROLES.SUPER_ADMIN ||
-                  userData.rol === ROLES.CAPIF_ADMIN
+                return authData.rol === ROLES.SUPER_ADMIN ||
+                  authData.rol === ROLES.CAPIF_ADMIN
                   ? [
                       element.email,
                       element.tipo_registro,

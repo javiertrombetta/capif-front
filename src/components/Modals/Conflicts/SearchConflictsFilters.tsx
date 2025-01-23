@@ -8,12 +8,12 @@ import { IoClose } from "react-icons/io5";
 const SearchConflictsFilters: FC<{ onCloseModal: () => void }> = ({
   onCloseModal,
 }) => {
-  const userData = useAppSelector((state) => state.user);
+  const authData = useAppSelector((state) => state.auth);
 
   return (
     <div
       className={`relative bg-white ${
-        userData.rol === ROLES.SUPER_ADMIN || userData.rol === ROLES.CAPIF_ADMIN
+        authData.rol === ROLES.SUPER_ADMIN || authData.rol === ROLES.CAPIF_ADMIN
           ? "h-[27rem] w-[25rem]"
           : "h-[20rem] w-[30rem]"
       } mb-[6rem] rounded-[2rem] gap-[0.5rem] flex flex-col justify-center items-center`}
@@ -25,8 +25,8 @@ const SearchConflictsFilters: FC<{ onCloseModal: () => void }> = ({
       <div className="w-[100%] pr-[1rem] pl-[1rem] flex flex-col justify-center items-center gap-[0.7rem]">
         <CustomInput className="w-[13.5rem]" type="text" label="FONOGRAMA" />
         <CustomInput className="w-[13.5rem]" type="date" label="FECHA" />
-        {userData.rol === ROLES.SUPER_ADMIN ||
-        userData.rol === ROLES.CAPIF_ADMIN ? (
+        {authData.rol === ROLES.SUPER_ADMIN ||
+        authData.rol === ROLES.CAPIF_ADMIN ? (
           <>
             <CustomInput
               className="w-[13.5rem]"
@@ -36,7 +36,7 @@ const SearchConflictsFilters: FC<{ onCloseModal: () => void }> = ({
             <CustomInput className="w-[13.5rem]" type="text" label="USUARIO" />
           </>
         ) : null}
-        <select className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2.1rem] text-black mt-[1rem]">
+        <select className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2.1rem] mt-[1rem]">
           <option>PRIMERA INSTANCIA</option>
           <option>PRIMERA PRORROGA</option>
           <option>SEGUNDA INSTANCIA</option>

@@ -1,5 +1,6 @@
 import { axiosInstance } from "./axiosInstance";
 import {
+  GetAuthDataResponse,
   AuthProps,
   AuthSecondarySignUpRequest,
   GetProductorasResponse,
@@ -59,14 +60,23 @@ export const authLogout = async () => {
   }
 };
 
-export const getUserData = async (): Promise<AuthProps> => {
+export const getAuthData = async (): Promise<AuthProps> => {
   try {
-    const { data } = (await axiosInstance.get("auth/me")) as {
-      data: {
-        user: AuthProps;
-      };
+    const { data } = await axiosInstance.get<GetAuthDataResponse>("auth/me");
+    return {
+      ...data.user,
+      productoras: data.maestros.map(
+        ({ productora: { nombre_productora: nombre, id_productora: id } }) => ({
+          id,
+          nombre,
+        })
+      ),
+      vistas: data.vistas.map((vista) => ({
+        nombre: vista.nombre_vista,
+        nombre_vista_superior: vista.nombre_vista_superior,
+      })),
+      productoraActiva: null, //ToDo: traer productora activa eventualmente
     };
-    return data.user;
   } catch (error: unknown) {
     throw new Error(`${error}`);
   }
@@ -121,15 +131,6 @@ export const changePassword = async (data_request: {
       newPassword: data_request.newPassword,
       confirmPassword: data_request.confirmPassword,
     });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const getUserRol = async (_rol_id?: string) => {
-  try {
-    const rol = await axiosInstance.get("auth/rol");
-    return rol.data.role;
   } catch (error) {
     console.log(error);
   }

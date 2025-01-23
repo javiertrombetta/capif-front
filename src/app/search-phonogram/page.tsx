@@ -119,8 +119,8 @@ const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
   id,
   activeDropdown,
 }) => {
-  const userData = useAppSelector((state) => state.user);
-  const userRol = userData.rol;
+  const authData = useAppSelector((state) => state.auth);
+  const userRol = authData.rol;
   const router = useRouter();
 
   const renderDropdownMenuItems = () => {
