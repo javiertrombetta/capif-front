@@ -9,7 +9,6 @@ import { ROLES } from "@/types/auth.types";
 import { useAppSelector } from "@/hooks/storeHooks";
 import {
   blockOrUnlockUser,
-  changeRole,
   getUserById,
   updateUserById,
 } from "@/services/users";
@@ -30,7 +29,7 @@ interface UserInitialValue {
 export default function page() {
   const router = useRouter();
   const userId = useParams().id;
-  const { rol } = useAppSelector((state) => state.user);
+  const { rol } = useAppSelector((state) => state.auth);
   const [userData, setUserData] = useState<User | null>(null);
 
   const initialValues: UserInitialValue = userData
@@ -56,7 +55,7 @@ export default function page() {
   const handleGetUser = async () => {
     try {
       const user = await getUserById(userId as string);
-      setUserData(user);
+      setUserData(user.user);
     } catch (error) {
       console.log(error);
     }
@@ -90,18 +89,6 @@ export default function page() {
     if (userData?.id_usuario) {
       await blockOrUnlockUser(userData.id_usuario, isBlocked);
       alert("Se cambio el estado del usuario");
-    }
-  };
-
-  const handleChangeRole = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    try {
-      e.preventDefault();
-      if (userData?.id_usuario) {
-        await changeRole(userData?.id_usuario, e.target.value as string);
-        alert("se cambio el rol.");
-      }
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -161,7 +148,7 @@ export default function page() {
                 <p className="font-bold text-black">ESTADO</p>
                 <select
                   disabled
-                  className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black"
+                  className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem]"
                 >
                   <option>Confirmado</option>
                   <option>Nuevo</option>
@@ -191,42 +178,11 @@ export default function page() {
                 <select
                   onChange={handleBlockUser}
                   value={values.bloqueado ? "true" : "false"}
-                  className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black"
+                  className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem]"
                 >
                   <option value={"false"}>NO</option>
                   <option value={"true"}>SI</option>
                 </select>
-              </div>
-
-              <div className="w-[100%] gap-[0.5rem] flex flex-col mb-[2rem]">
-                <CustomField
-                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                    handleChangeRole(e);
-                  }}
-                  type="select"
-                  name="rol"
-                  id="rol"
-                  labelText="ROL"
-                  defaultSelectedValue={userData.rol?.nombre_rol}
-                  options={[
-                    {
-                      name: "Administrador Principal",
-                      value: "admin_principal",
-                    },
-                    {
-                      name: "Administrador Secundario",
-                      value: "admin_secundario",
-                    },
-                    {
-                      name: "Productor Principal",
-                      value: "productor_principal",
-                    },
-                    {
-                      name: "Productor Secundario",
-                      value: "productor_secundario",
-                    },
-                  ]}
-                />
               </div>
 
               {rol === ROLES.EMPLOYEE ? null : (

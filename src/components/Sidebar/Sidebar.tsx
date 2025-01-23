@@ -22,7 +22,7 @@ interface DropdownMenusProps {
 const Sidebar: FC = () => {
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
   const pathname = usePathname();
-  const userData = useAppSelector((state) => state.user);
+  const authData = useAppSelector((state) => state.auth);
   const handleToggle = (id: number) => {
     setOpenDropdownId((prev) => (prev === id ? null : id));
   };
@@ -44,7 +44,7 @@ const Sidebar: FC = () => {
     ],
 
     usersOptions:
-      userData.rol === ROLES.EMPLOYEE
+      authData.rol === ROLES.EMPLOYEE
         ? [
             {
               name: "Buscar",
@@ -84,7 +84,7 @@ const Sidebar: FC = () => {
       title: "USUARIOS",
       items: userProducerMenuOptions.usersOptions,
       icon: FaUsers,
-      height: userData.rol === ROLES.USER_PRODUCER ? "4" : "2",
+      height: authData.rol === ROLES.USER_PRODUCER ? "4" : "2",
     },
     {
       id: 4,
@@ -97,7 +97,7 @@ const Sidebar: FC = () => {
 
   const adminMenuOptions = {
     fonogramsOptions:
-      userData.rol === ROLES.SUPER_ADMIN
+      authData.rol === ROLES.SUPER_ADMIN
         ? [
             {
               name: "Buscar",
@@ -208,7 +208,7 @@ const Sidebar: FC = () => {
       title: "REPERTORIO",
       items: adminMenuOptions.fonogramsOptions,
       icon: FaMusic,
-      height: userData.rol === ROLES.SUPER_ADMIN ? "10" : "10",
+      height: authData.rol === ROLES.SUPER_ADMIN ? "10" : "10",
     },
     {
       id: 2,
@@ -249,8 +249,8 @@ const Sidebar: FC = () => {
       </div>
       {pathname === "/register-production-company" ? null : (
         <>
-          {userData.rol === ROLES.USER_PRODUCER ||
-          userData.rol === ROLES.EMPLOYEE
+          {authData.rol === ROLES.USER_PRODUCER ||
+          authData.rol === ROLES.EMPLOYEE
             ? UserProducerDropdownMenus.map((item, key) => (
                 <GenericMenu
                   icon={item.icon}

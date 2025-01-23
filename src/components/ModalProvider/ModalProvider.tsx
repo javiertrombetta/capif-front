@@ -1,12 +1,10 @@
 "use client";
-import React, { FC, ReactNode, useEffect, useState } from "react";
+import React, { FC, ReactNode } from "react";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { ModalNames } from "@/types/modalNames";
 import { IoClose } from "react-icons/io5";
 import { setModal } from "@/store/modalSlice";
-import { setUser } from "@/store/userSlice";
-import { GetProductorasResponse, ROLES } from "@/types/auth.types";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import SearchConflictsFilters from "../Modals/Conflicts/SearchConflictsFilters";
 import {
@@ -63,10 +61,7 @@ import AuditSessionsPurgeModal from "../Modals/AuditSessionsPurgeModal/AuditSess
 import SubmitSendApplication from "../Modals/SubmitSendApplication/SubmitSendApplication";
 import RejectApplication from "../Modals/RejectApplication/RejectApplication";
 import AcceptApplication from "../Modals/AcceptApplication/AcceptApplication";
-import {
-  getAssociatedProductionCompanies,
-  selectProductionCompany,
-} from "@/services/auth";
+import { selectProductionCompany } from "@/services/auth";
 import { setAuthData } from "@/store/authSlice";
 
 interface ModalProvderProps {
@@ -92,8 +87,6 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
         return <ChangeProducerModal onCloseModal={onCloseModal} />;
       case ModalNames.ACCEPT_REGISTRATION:
         return <AcceptRegistrationModal onCloseModal={onCloseModal} />;
-      case ModalNames.CHANGE_USER:
-        return <ChangeUserModal onCloseModal={onCloseModal} />;
       case ModalNames.ADD_TERRITORIALITY:
         return <AddTerritorialityModal onCloseModal={onCloseModal} />;
       case ModalNames.SEARCH_CONFLICTS_FILTERS:
@@ -214,20 +207,7 @@ const ChangeProducerModal: FC<{ onCloseModal: () => void }> = ({
   onCloseModal,
 }) => {
   const dispatch = useAppDispatch();
-  const userData = useAppSelector((state) => state.auth);
-  const [productoras, setProductoras] = useState<GetProductorasResponse | null>(
-    null
-  );
-  const getProductoras = async () => {
-    try {
-      const response = await getAssociatedProductionCompanies();
-      if (response) {
-        setProductoras(response);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const authData = useAppSelector((state) => state.auth);
 
   const selectProductora = async (element: { id: string; nombre: string }) => {
     try {
@@ -235,7 +215,7 @@ const ChangeProducerModal: FC<{ onCloseModal: () => void }> = ({
       if (window && window.localStorage) {
         localStorage.setItem("company", JSON.stringify(element));
       }
-      dispatch(setAuthData({ ...userData, productionCompany: element }));
+      dispatch(setAuthData({ ...authData, productoraActiva: element }));
     } catch (error) {
       console.log(error);
     } finally {
@@ -247,9 +227,6 @@ const ChangeProducerModal: FC<{ onCloseModal: () => void }> = ({
   //   dispatch(setUser({ ...userData, activeProduction: production }));
   //   onCloseModal();
   // };
-  useEffect(() => {
-    getProductoras();
-  }, []);
 
   return (
     <div className="relative bg-white h-[13rem] w-[30rem] mb-[6rem] rounded-[2rem] gap-[0.5rem] flex flex-col justify-center items-center">
@@ -260,8 +237,8 @@ const ChangeProducerModal: FC<{ onCloseModal: () => void }> = ({
       <p className="text-black font-bold text-[1.2rem] text-center w-[95%]">
         Selecciona una productora.
       </p>
-      {productoras?.productoras && productoras.productoras.length > 0
-        ? productoras.productoras.map((element) => (
+      {authData.productoras && authData.productoras.length > 0
+        ? authData.productoras.map((element) => (
             <div
               className="w-[100%] cursor-pointer"
               onClick={() => selectProductora(element)}
@@ -284,116 +261,6 @@ const ChangeProducerModal: FC<{ onCloseModal: () => void }> = ({
       >
         <p className="text-center text-black hover:bg-[#d8d8d8]">Goldstein</p>
       </div> */}
-    </div>
-  );
-};
-
-const ChangeUserModal: FC<{ onCloseModal: () => void }> = ({
-  onCloseModal,
-}) => {
-  const dispatch = useAppDispatch();
-  const userData = useAppSelector((state) => state.user);
-
-  const usersType = [
-    {
-      names: "Admin",
-      email: "superadmin@gmail.com",
-      phone: "+54 11-234567",
-      rol: ROLES.SUPER_ADMIN,
-      activeProduction: userData.activeProduction,
-    },
-    {
-      names: "Capif Admin",
-      phone: "+54 11-234567",
-      email: "admin@gmail.com",
-      rol: ROLES.CAPIF_ADMIN,
-      activeProduction: userData.activeProduction,
-    },
-    {
-      names: "Rodrigo Escalera",
-      email: "rodrigo@gmail.com",
-      phone: "+54 11-234567",
-      rol: ROLES.USER_PRODUCER,
-      activeProduction: userData.activeProduction,
-    },
-    {
-      names: "Javier Trombetta",
-      email: "javiert@gmail.com",
-      phone: "+54 11-234567",
-      rol: ROLES.EMPLOYEE,
-      activeProduction: userData.activeProduction,
-    },
-  ];
-
-  const handleChangeUser = (userType: ROLES) => {
-    switch (userType) {
-      case ROLES.SUPER_ADMIN:
-        dispatch(setUser(usersType[0]));
-        onCloseModal();
-        break;
-      case ROLES.CAPIF_ADMIN:
-        dispatch(setUser(usersType[1]));
-        onCloseModal();
-        break;
-
-      case ROLES.USER_PRODUCER:
-        dispatch(setUser(usersType[2]));
-        onCloseModal();
-        break;
-
-      case ROLES.EMPLOYEE:
-        dispatch(setUser(usersType[3]));
-        onCloseModal();
-        break;
-    }
-  };
-
-  return (
-    <div className="relative bg-white h-[13rem] w-[30rem] mb-[6rem] rounded-[2rem] gap-[0.5rem] flex flex-col justify-center items-center">
-      <button onClick={onCloseModal} className="absolute top-[5%] right-[5%]">
-        <IoClose size={25} color="black" />
-      </button>
-
-      <p className="text-black font-bold text-[1.2rem] text-center w-[95%]">
-        Usuarios:
-      </p>
-
-      <div
-        onClick={() => {
-          handleChangeUser(ROLES.SUPER_ADMIN);
-        }}
-        className="w-[100%] cursor-pointer"
-      >
-        <p className="text-center text-black hover:bg-[#d8d8d8]">Super Admin</p>
-      </div>
-      <div
-        onClick={() => {
-          handleChangeUser(ROLES.CAPIF_ADMIN);
-        }}
-        className="w-[100%] cursor-pointer"
-      >
-        <p className="text-center text-black hover:bg-[#d8d8d8]">Capif Admin</p>
-      </div>
-      <div
-        onClick={() => {
-          handleChangeUser(ROLES.USER_PRODUCER);
-        }}
-        className="w-[100%] cursor-pointer"
-      >
-        <p className="text-center text-black hover:bg-[#d8d8d8]">
-          Usuario Productor Principal
-        </p>
-      </div>
-      <div
-        onClick={() => {
-          handleChangeUser(ROLES.EMPLOYEE);
-        }}
-        className="w-[100%] cursor-pointer"
-      >
-        <p className="text-center text-black hover:bg-[#d8d8d8]">
-          Usuario Productor Secundario
-        </p>
-      </div>
     </div>
   );
 };

@@ -10,8 +10,7 @@ import { validationLoginForm } from "@/utils/formValidations";
 import "./LoginView.css";
 import "../../styles/globals.css";
 import { useRouter } from "next/navigation";
-import { authLogin, getUserRol } from "@/services/auth";
-import { getUserData } from "@/services/users";
+import { authLogin, getAuthData } from "@/services/auth";
 import { useAppDispatch } from "@/hooks/storeHooks";
 import { setAuthData } from "@/store/authSlice";
 import { setModal } from "@/store/modalSlice";
@@ -38,14 +37,9 @@ function LoginView() {
     }
     const { email, password } = values;
     await authLogin({ email, password });
-    const data = await getUserData();
-    let dataToSet = data;
+    const data = await getAuthData();
     dispatch(setAuthData(data));
-    if (data.rol_id) {
-      const rol = await getUserRol();
-      dataToSet = { ...data, rol };
-    }
-    dispatch(setAuthData(dataToSet));
+
     localStorage.setItem("isLoged", "true");
     router.push("/records");
     dispatch(setModal({ type: ModalNames.CHANGE_PRODUCER, isActive: true }));

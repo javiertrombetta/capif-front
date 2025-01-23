@@ -11,13 +11,13 @@ import { setModal } from "@/store/modalSlice";
 import { ModalNames } from "@/types/modalNames";
 
 function page() {
-  const userData = useAppSelector((state) => state.user);
+  const authData = useAppSelector((state) => state.auth);
   const initialValues = {
     titulo: "Cae el Sol",
     artista: "Airbag",
     album: "Voragine",
     duracion: "00:03:57",
-    productor_originario: userData.activeProduction,
+    productor_originario: authData.productoraActiva,
     año_lanzamiento: "2011",
   };
   const dispatch = useAppDispatch();

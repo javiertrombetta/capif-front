@@ -37,26 +37,36 @@ export interface UserProps {
 }
 
 export enum ROLES {
-  SUPER_ADMIN = "SuperAdmin",
-  CAPIF_ADMIN = "CapifAdming",
-  USER_PRODUCER = "UserProducer",
-  EMPLOYEE = "Employee",
-}
-
-export enum ROLES_NOMBRES {
   SUPER_ADMIN = "admin_principal",
   CAPIF_ADMIN = "admin_secundario",
   USER_PRODUCER = "productor_principal",
   EMPLOYEE = "productor_secundario",
-  USER = "usuario",
+  // USER = "usuario",
 }
-
-export interface FakeUserProps {
-  names: string;
-  phone: string;
-  email: string;
-  activeProduction: string;
-  rol: ROLES;
+export interface GetAuthDataResponse {
+  usuario: {
+    id_usuario: string;
+    rol: ROLES;
+    tipo_registro: string;
+    email: string;
+    nombre: string;
+    apellido: string;
+    telefono: string;
+  };
+  productoras: [
+    {
+      productora: {
+        id_productora: string;
+        nombre_productora: string;
+      };
+    },
+  ];
+  vistas: [
+    {
+      nombre_vista: string;
+      nombre_vista_superior: string;
+    },
+  ];
 }
 
 export interface AuthProps {
@@ -66,12 +76,13 @@ export interface AuthProps {
   nombre: string | null;
   apellido: string | null;
   tipo_registro: string | null;
-  rol: ROLES_NOMBRES | null;
-  rol_id: string | null;
-  productionCompany?: {
+  rol: ROLES | null;
+  productoras?: {
     id: string;
     nombre: string;
-  };
+  }[];
+  vistas: { nombre: string; nombre_vista_superior: string }[];
+  productoraActiva: { id: string; nombre: string } | null;
 }
 
 export interface GetProductorasResponse {
