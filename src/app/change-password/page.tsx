@@ -6,8 +6,8 @@ import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
 import { validationChangePassword } from "@/utils/formValidations";
 import { Form, Formik } from "formik";
-import { changePassword } from "@/services/auth";
 import { useAppSelector } from "@/hooks/storeHooks";
+import { changePassword } from "@/services/users";
 
 export default function page() {
   const initialValues = {
