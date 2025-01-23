@@ -103,11 +103,7 @@ const UserProfileView: FC = () => {
     }
   };
 
-  const handleEditCompany = async (
-    e: React.MouseEvent<HTMLButtonElement>,
-    values: CompanyValues
-  ) => {
-    e.preventDefault();
+  const handleEditCompany = async (values: CompanyValues) => {
     await updateCompany(id as string, values);
   };
 
@@ -139,8 +135,8 @@ const UserProfileView: FC = () => {
                     <div className="flex gap-[1rem]">
                       <CustomButton
                         type="button"
-                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                          handleEditCompany(e, values);
+                        onClick={() => {
+                          handleEditCompany(values);
                         }}
                       >
                         Guardar
