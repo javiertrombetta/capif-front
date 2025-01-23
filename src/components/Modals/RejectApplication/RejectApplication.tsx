@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import { IoClose } from "react-icons/io5";
 import { useParams } from "next/navigation";
-import { rejectApplication } from "@/services/users";
+import { rejectApplication } from "@/services/auth";
 
 const RejectApplication: FC<{ onCloseModal: () => void }> = ({
   onCloseModal,

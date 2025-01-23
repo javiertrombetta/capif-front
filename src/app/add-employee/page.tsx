@@ -20,7 +20,7 @@ interface secondaryRegisterValues {
 }
 
 function page() {
-  const { rol } = useAppSelector((state) => state.user);
+  const { rol } = useAppSelector((state) => state.auth);
   const headerTitle = (() => {
     switch (rol) {
       case ROLES.USER_PRODUCER:
