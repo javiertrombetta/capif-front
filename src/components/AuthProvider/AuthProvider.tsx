@@ -3,7 +3,6 @@ import React, { FC, ReactNode, useEffect } from "react";
 import { useAppDispatch } from "@/hooks/storeHooks";
 import { getAuthData } from "@/services/auth";
 import { setAuthData } from "@/store/authSlice";
-
 interface AuthProvider {
   children: ReactNode;
 }
