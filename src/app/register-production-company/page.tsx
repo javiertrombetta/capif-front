@@ -7,10 +7,10 @@ import { validationRegisterApplication } from "@/utils/formValidations";
 import { Field, Form, Formik, FormikErrors } from "formik";
 import CustomField from "@/commons/CustomField/CustomField";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
-import { sendApplication } from "@/services/users";
 import { setModal } from "@/store/modalSlice";
 import { ModalNames } from "@/types/modalNames";
 import { SendApplication } from "@/types/user.types";
+import { sendApplication } from "@/services/auth";
 
 export interface ApplicationValues {
   nombre_productora: string;
