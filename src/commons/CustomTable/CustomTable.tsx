@@ -61,11 +61,11 @@ const CustomTable: FC<CustomTableProps> = ({ columnNames, columnValues }) => {
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
-      className="w-[100%] h-[100%] relative overflow-x-auto cursor-grab table-container mb-[5rem]"
+      className="w-[100%] h-[100%] relative overflow-x-auto cursor-grab table-container"
     >
       <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 border-l-2 border-r-2">
-          <tr className="border-l-2 border-r-2">
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+          <tr className="">
             {columnNames.map(
               (
                 element: {
@@ -78,7 +78,7 @@ const CustomTable: FC<CustomTableProps> = ({ columnNames, columnValues }) => {
                 <th
                   key={index}
                   scope="col"
-                  className={`${element.selectBox ? "px-1 py-3" : "px-1 py-3"} font-bold cursor-pointer border-l-2 border-r-2`}
+                  className={`${element.selectBox ? "px-1 py-3" : "px-1 py-3"} font-bold cursor-pointer`}
                   onClick={() => handleSort(index)}
                 >
                   <div className="flex justify-center items-center gap-[0.3rem] relative h-[100%] w-[100%] pr-[2rem]">
