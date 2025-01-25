@@ -14,6 +14,14 @@ export interface ProductionCompanyResponse {
   telefono: string;
   tipo_registro: string;
   updatedAt: Date;
+  codigosDeLaProductora?: {
+    codigo_productora: string;
+    createdAt: string;
+    id_productora_isrc: string;
+    productora_id: string;
+    tipo: string;
+    updatedAt: Date;
+  }[];
   // email_verification_token: null;
   // email_verification_token_expires: null;
   // fecha_ultimo_cambio_rol: null;
