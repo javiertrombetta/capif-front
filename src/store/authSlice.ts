@@ -12,6 +12,7 @@ export const authDefaultState: AuthProps = {
   productoras: [],
   vistas: [],
   productoraActiva: null,
+  loading: true,
 };
 
 const authSlice = createSlice({

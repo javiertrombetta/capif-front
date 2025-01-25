@@ -6,6 +6,7 @@ import {
   AuthProps,
   AuthSecondarySignUpRequest,
 } from "@/types/auth.types";
+import { AxiosError } from "axios";
 
 interface AuthSignUpRequest {
   email: string;
@@ -49,7 +50,10 @@ export const authLogin = async (authLoginData: AuthLoginRequest) => {
   try {
     const { data } = await axiosInstance.post("auth/login", authLoginData);
     return data;
-  } catch (error: unknown) {
+  } catch (error) {
+    if (error instanceof AxiosError && error.status === 409) {
+      return true;
+    }
     throw new Error(`${error}`);
   }
 };
@@ -67,6 +71,7 @@ export const getAuthData = async (): Promise<AuthProps> => {
     const { data } = await axiosInstance.get<GetAuthDataResponse>("users/me");
     return {
       ...data.usuario,
+      id_usuario: data.usuario.id,
       productoras: data.productoras.map(
         ({ productora: { nombre_productora: nombre, id_productora: id } }) => ({
           id,
@@ -78,6 +83,7 @@ export const getAuthData = async (): Promise<AuthProps> => {
         nombre_vista_superior: vista.nombre_vista_superior,
       })),
       productoraActiva: null, //ToDo: traer productora activa eventualmente
+      loading: false,
     };
   } catch (error: unknown) {
     console.error(error);
