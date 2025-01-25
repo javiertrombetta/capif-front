@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -130,14 +130,6 @@ const LoginForm: FC = () => {
 
 function LoginView() {
   const authData = useAppSelector((state) => state.auth);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (authData.id_usuario) {
-      router.push("/users");
-      return;
-    }
-  }, [authData]);
 
   return (
     <div className="flex justify-center items-center h-[100vh] w-[100%] background">
