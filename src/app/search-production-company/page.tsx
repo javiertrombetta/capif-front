@@ -95,6 +95,22 @@ export default function page() {
             { name: "ACCIÓN", isSortable: false },
           ]}
           columnValues={productionCompanies?.map((element) => {
+            let ISRCAudio: string | undefined = "";
+            let ISRCVideo: string | undefined = "";
+            if (
+              element.codigosDeLaProductora &&
+              element.codigosDeLaProductora.length > 0
+            ) {
+              ISRCAudio =
+                element?.codigosDeLaProductora?.find(
+                  (item) => item?.tipo === "AUDIO"
+                )?.codigo_productora || "";
+              ISRCVideo =
+                element?.codigosDeLaProductora?.find(
+                  (item) => item?.tipo === "VIDEO"
+                )?.codigo_productora || "";
+            }
+
             return [
               element.email,
               element.cuit_cuil,
@@ -104,8 +120,8 @@ export default function page() {
               "",
               `${element.createdAt}`,
               `${element.updatedAt}`,
-              "",
-              "",
+              ISRCAudio || "",
+              ISRCVideo || "",
               <ActionDropdownButton
                 menuOptions={[
                   {

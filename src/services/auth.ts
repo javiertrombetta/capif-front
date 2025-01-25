@@ -150,7 +150,9 @@ export const rejectApplication = async (
 
 export const acceptApplication = async (id_usuario: string) => {
   try {
-    await axiosInstance.post(`auth/prods/primary/${id_usuario}/authorize`, {});
+    await axiosInstance.post(`auth/prods/primary/${id_usuario}/authorize`, {
+      usuarioId: id_usuario,
+    });
   } catch (error: unknown) {
     throw new Error(`${error}`);
   }
