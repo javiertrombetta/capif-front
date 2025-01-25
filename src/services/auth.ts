@@ -52,9 +52,7 @@ export const authLogin = async (authLoginData: AuthLoginRequest) => {
     const { data } = await axiosInstance.post("auth/login", authLoginData);
     return data;
   } catch (error) {
-    if (error instanceof AxiosError && error.status === 409) {
-      return true;
-    }
+    console.error(error);
     throw new Error(`${error}`);
   }
 };
