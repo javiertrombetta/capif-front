@@ -16,13 +16,10 @@ const AuthProvider: FC<AuthProvider> = ({ children }) => {
     const data = await getAuthData();
     dispatch(setAuthData(data));
 
-    if (data.id_usuario) {
-      localStorage.setItem("isLoged", "true");
-    } else {
-      localStorage.removeItem("isLoged");
+    if (!data.id_usuario) {
       router.push("/login");
     }
-    return data;
+    return;
   };
 
   useEffect(() => {

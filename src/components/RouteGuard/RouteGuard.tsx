@@ -20,7 +20,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/search-phonogram",
       "/conflicts",
       "/add-employee",
-      "/records",
+      "/users",
       "/send-audio-file",
       "/territoriality",
       "/search-production-company",
@@ -61,7 +61,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/search-phonogram",
       "/conflicts",
       "/add-employee",
-      "/records",
+      "/users",
       "/send-audio-file",
       "/territoriality",
       "/search-production-company",
@@ -99,7 +99,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/search-phonogram",
       "/conflicts",
       "/add-employee",
-      "/records",
+      "/users",
       "/territoriality-phonogram/:id",
       "/cashflow-account-statement",
       "/edit-phonogram/:id",
@@ -112,7 +112,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/new-phonogram",
       "/search-phonogram",
       "/conflicts",
-      "/records",
+      "/users",
       "/territoriality-phonogram/:id",
       "/cashflow-account-statement",
       "/edit-phonogram/:id",
@@ -132,7 +132,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       return;
     }
     if (auth.rol && !isRouteAllowed(pathname, allowedRoutes[auth.rol] || [])) {
-      router.push("/records");
+      router.push("/users");
     }
   }, [auth.rol, pathname, router, auth]);
 

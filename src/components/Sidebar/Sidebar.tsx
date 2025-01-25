@@ -48,7 +48,7 @@ const Sidebar: FC = () => {
         ? [
             {
               name: "Buscar",
-              link: "/records",
+              link: "/users",
             },
           ]
         : [
@@ -59,7 +59,7 @@ const Sidebar: FC = () => {
 
             {
               name: "Buscar",
-              link: "/records",
+              link: "/users",
             },
           ],
 
@@ -157,7 +157,7 @@ const Sidebar: FC = () => {
     usersOptions: [
       {
         name: "Buscar",
-        link: "/records",
+        link: "/users",
       },
       {
         name: "Altas",
