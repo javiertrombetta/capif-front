@@ -6,7 +6,6 @@ import {
   AuthProps,
   AuthSecondarySignUpRequest,
 } from "@/types/auth.types";
-import { AxiosError } from "axios";
 import { authDefaultState } from "@/store/authSlice";
 
 interface AuthSignUpRequest {
