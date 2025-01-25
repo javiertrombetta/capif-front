@@ -44,11 +44,10 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
     });
   };
 
-  const [isChangingProducingCompany, setIsChangingProducingCompany] =
-    useState<boolean>(false);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
-  const handleIsChangingProducingCompany = () => {
-    setIsChangingProducingCompany((prevState: boolean) => !prevState);
+  const handleMenuOpen = () => {
+    setIsMenuOpen((prevState: boolean) => !prevState);
   };
 
   const openProductionCompanySelection = () => {
@@ -86,7 +85,7 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
             {pathname === "/register-production-company" ? (
               <div className="h-[100%] flex-grow flex justify-end items-center pr-[2rem]">
                 <button
-                  onClick={handleIsChangingProducingCompany}
+                  onClick={handleMenuOpen}
                   className="flex items-center gap-[0.5rem] cursor-pointer"
                 >
                   <PiUserCircleFill
@@ -95,10 +94,10 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
                   />
                   <p className="text-white">{authData?.email}</p>
                 </button>
-                {isChangingProducingCompany && (
+                {isMenuOpen && (
                   <NavbarMenu
                     isEnabledUser={false}
-                    closeMenu={handleIsChangingProducingCompany}
+                    closeMenu={handleMenuOpen}
                   />
                 )}
               </div>
@@ -119,7 +118,7 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
                 <IoMenuSharp className="w-[1.3rem] h-[1.3rem]" />
               </button> */}
                 <button
-                  onClick={handleIsChangingProducingCompany}
+                  onClick={handleMenuOpen}
                   className="flex items-center gap-[0.5rem] cursor-pointer"
                 >
                   <PiUserCircleFill
@@ -128,11 +127,8 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
                   />
                   <p className="text-white">{authData.email}</p>
                 </button>
-                {isChangingProducingCompany && (
-                  <NavbarMenu
-                    isEnabledUser={true}
-                    closeMenu={handleIsChangingProducingCompany}
-                  />
+                {isMenuOpen && (
+                  <NavbarMenu isEnabledUser={true} closeMenu={handleMenuOpen} />
                 )}
               </div>
             )}
@@ -141,7 +137,7 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
           <div className="w-[15rem] navbar-background fixed h-[100vh] z-10 pt-[3rem]">
             <Sidebar />
           </div>
-          <div className="flex flex-col h-[100%] pl-[15rem] pt-[3.2rem]">
+          <div className="flex flex-col h-[100vh] pl-[15rem] pt-[3.2rem]">
             <RouteGuard>{children}</RouteGuard>
           </div>
         </div>

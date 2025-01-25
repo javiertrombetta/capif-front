@@ -1,20 +1,21 @@
 "use client";
-import React, { FC, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import Header from "@/commons/Header/Header";
 import { useAppSelector } from "@/hooks/storeHooks";
 import { ROLES } from "@/types/auth.types";
 import CustomTable from "@/commons/CustomTable/CustomTable";
-import { IoMdSettings } from "react-icons/io";
-import { FaEdit } from "react-icons/fa";
-import { useRouter } from "next/navigation";
 import { getAllUsers } from "@/services/users";
 import { User } from "@/types/user.types";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
+import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
+import { FaEdit } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 export default function page() {
   const authData = useAppSelector((state) => state.auth);
   const [users, setUsers] = useState<User[]>([]);
+  const router = useRouter();
 
   const getUsersData = async () => {
     try {
@@ -29,13 +30,8 @@ export default function page() {
     getUsersData();
   }, []);
 
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const toggleDropdown = (id: string) => {
-    if (activeDropdown === id) {
-      setActiveDropdown(null);
-    } else {
-      setActiveDropdown(id);
-    }
+  const redirectToOption = (route: string): void => {
+    router.push(route);
   };
 
   return (
@@ -110,9 +106,17 @@ export default function page() {
                       element.createdAt,
                       element.updatedAt,
                       <ActionDropdownButton
-                        toggleDropdown={toggleDropdown}
-                        id={element.id_usuario}
-                        activeDropdown={activeDropdown}
+                        menuOptions={[
+                          {
+                            label: "Editar",
+                            icon: <FaEdit />,
+                            onClick: () => {
+                              redirectToOption(
+                                `/edit-user/${element.id_usuario}`
+                              );
+                            },
+                          },
+                        ]}
                       />,
                     ]
                   : [
@@ -133,44 +137,3 @@ export default function page() {
     </CustomLayout>
   );
 }
-
-interface ActionDropdownButtonProps {
-  toggleDropdown: (id: string) => void;
-  id: string;
-  activeDropdown: string | null;
-}
-
-const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
-  toggleDropdown,
-  id,
-  activeDropdown,
-}) => {
-  const router = useRouter();
-
-  const redirectToOption = (route: string): void => {
-    router.push(route);
-  };
-
-  return (
-    <div className="px-6 py-4 relative group">
-      <button
-        onClick={() => toggleDropdown(id)}
-        className="bg-[#1280e1] text-white w-[2rem] h-[2rem] flex justify-center items-center rounded-[0.3rem]"
-      >
-        <IoMdSettings size={20} />
-      </button>
-      <ul
-        className={`absolute right-0 mt-2 w-[8rem] bg-slate-900 border rounded-md shadow-lg z-30 overflow-hidden ${
-          activeDropdown === id ? "" : "hidden"
-        }`}
-      >
-        <li
-          onClick={() => redirectToOption(`/edit-user/${id}`)}
-          className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
-        >
-          <FaEdit /> <p>Editar</p>
-        </li>
-      </ul>
-    </div>
-  );
-};
