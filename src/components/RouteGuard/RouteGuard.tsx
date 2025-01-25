@@ -127,14 +127,6 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    let isLoged;
-    if (window && window.localStorage) {
-      isLoged = localStorage.getItem("isLoged");
-    }
-    if (!isLoged) {
-      router.push("/login");
-      return;
-    }
     if (auth.tipo_registro && auth.tipo_registro !== "HABILITADO") {
       router.push("/register-production-company");
       return;

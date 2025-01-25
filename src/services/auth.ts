@@ -7,6 +7,7 @@ import {
   AuthSecondarySignUpRequest,
 } from "@/types/auth.types";
 import { AxiosError } from "axios";
+import { authDefaultState } from "@/store/authSlice";
 
 interface AuthSignUpRequest {
   email: string;
@@ -87,7 +88,7 @@ export const getAuthData = async (): Promise<AuthProps> => {
     };
   } catch (error: unknown) {
     console.error(error);
-    throw new Error(`${error}`);
+    return { ...authDefaultState, loading: false };
   }
 };
 
