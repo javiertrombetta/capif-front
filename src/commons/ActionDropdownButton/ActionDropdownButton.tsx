@@ -2,7 +2,7 @@ import { FC, ReactElement, useEffect, useRef, useState } from "react";
 import { IoMdSettings } from "react-icons/io";
 
 interface ActionDropdownButtonProps {
-  menuOptions: { label: string; icon: ReactElement; onClick: () => void }[];
+  menuOptions: { label: string; icon?: ReactElement; onClick: () => void }[];
 }
 
 export const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
@@ -36,7 +36,7 @@ export const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
         <IoMdSettings size={20} />
       </button>
       <ul
-        className={`absolute right-0 mt-2 w-[8rem] bg-slate-900 border rounded-md shadow-lg z-30 overflow-hidden ${
+        className={`absolute right-0 mt-2 w-max bg-slate-900 border rounded-md shadow-lg z-30 overflow-hidden ${
           activeDropdown ? "" : "hidden"
         }`}
       >

@@ -34,15 +34,6 @@ export default function page() {
     router.push(route);
   };
 
-  // const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  // const toggleDropdown = (id: string) => {
-  //   if (activeDropdown === id) {
-  //     setActiveDropdown(null);
-  //   } else {
-  //     setActiveDropdown(id);
-  //   }
-  // };
-
   return (
     <CustomLayout>
       <Header title="Registros" />

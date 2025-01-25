@@ -1,9 +1,8 @@
 "use client";
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
 import CustomTable from "@/commons/CustomTable/CustomTable";
-import { IoMdSettings } from "react-icons/io";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { ROLES } from "@/types/auth.types";
 import CustomInput from "@/commons/CustomInput/CustomInput";
@@ -11,17 +10,50 @@ import { FaSearch } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { setModal } from "@/store/modalSlice";
 import { ModalNames } from "@/types/modalNames";
+import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
 
 function page() {
-  const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
+  const dispatch = useAppDispatch();
+  const authData = useAppSelector((state) => state.auth);
+  const router = useRouter();
 
-  const toggleDropdown = (id: number) => {
-    if (activeDropdown === id) {
-      setActiveDropdown(null);
-    } else {
-      setActiveDropdown(id);
-    }
+  const handleOpenModal = (modalType: ModalNames) => {
+    dispatch(setModal({ isActive: true, type: modalType }));
   };
+
+  const menuOptions = [
+    ...(authData.rol === ROLES.SUPER_ADMIN || authData.rol === ROLES.CAPIF_ADMIN
+      ? [
+          {
+            label: "Otorgar Prórroga",
+            onClick: () =>
+              handleOpenModal(ModalNames.CONFLICTS_GRANT_EXTENSION),
+          },
+          {
+            label: "Ver Titulares",
+            onClick: () => router.push("/conflicts-history"),
+          },
+        ]
+      : []),
+    ...(authData.rol === ROLES.USER_PRODUCER || authData.rol === ROLES.EMPLOYEE
+      ? [
+          {
+            label: "Confirmar Porcentaje",
+            onClick: () =>
+              handleOpenModal(ModalNames.CONFLICTS_CONFIRM_PERCENTAGE),
+          },
+          {
+            label: "Enviar Documentación",
+            onClick: () =>
+              handleOpenModal(ModalNames.CONFLICTS_SEND_DOCUMENTATION),
+          },
+        ]
+      : []),
+    {
+      label: "Desistir conflicto",
+      onClick: () => handleOpenModal(ModalNames.CONFLICTS_DESIST),
+    },
+  ];
 
   return (
     <CustomLayout>
@@ -29,7 +61,7 @@ function page() {
 
       <SearchConflictForm />
 
-      <div className="w-[100%] mt-[2rem] pr-[2rem] pl-[2rem]">
+      <div className="w-[100%] mt-[2rem] pr-[2rem] pl-[2rem] overflow-y-auto">
         <CustomTable
           columnNames={[
             { name: "Productora", isSortable: true },
@@ -46,11 +78,7 @@ function page() {
               "21/11/24",
               "21/11/24",
               "Resuelto",
-              <ActionDropdownButton
-                toggleDropdown={toggleDropdown}
-                id={1}
-                activeDropdown={activeDropdown}
-              />,
+              <ActionDropdownButton menuOptions={menuOptions} />,
             ],
             [
               "SONY MUSIC",
@@ -58,11 +86,7 @@ function page() {
               "21/11/24",
               "21/11/24",
               "Resuelto",
-              <ActionDropdownButton
-                toggleDropdown={toggleDropdown}
-                id={2}
-                activeDropdown={activeDropdown}
-              />,
+              <ActionDropdownButton menuOptions={menuOptions} />,
             ],
             [
               "SONY MUSIC",
@@ -70,11 +94,7 @@ function page() {
               "21/11/24",
               "21/11/24",
               "Resuelto",
-              <ActionDropdownButton
-                toggleDropdown={toggleDropdown}
-                id={3}
-                activeDropdown={activeDropdown}
-              />,
+              <ActionDropdownButton menuOptions={menuOptions} />,
             ],
           ]}
         />
@@ -84,11 +104,6 @@ function page() {
 }
 
 export default page;
-interface ActionDropdownButtonProps {
-  toggleDropdown: (id: number) => void;
-  id: number;
-  activeDropdown: number | null;
-}
 
 const SearchConflictForm: FC = () => {
   const authData = useAppSelector((state) => state.auth);
@@ -150,7 +165,7 @@ const SearchConflictForm: FC = () => {
       <div className="w-[100%] flex justify-center items-center pl-[2rem] pr-[2rem] gap-[2rem]">
         <div className="w-[100%]">
           <p className="text-black font-bold">ESTADO</p>
-          <select className="w-[100%] text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black">
+          <select className="w-[100%] text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem]">
             <option>PRIMERA INSTANCIA</option>
             <option>PRIMERA PRORROGA</option>
             <option>SEGUNDA INSTANCIA</option>
@@ -167,84 +182,6 @@ const SearchConflictForm: FC = () => {
           Buscar
         </button>
       </div>
-    </div>
-  );
-};
-
-const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
-  toggleDropdown,
-  id,
-  activeDropdown,
-}) => {
-  const authData = useAppSelector((state) => state.auth);
-  const router = useRouter();
-  const dispatch = useAppDispatch();
-  const handleOpenModal = (modalType: ModalNames) => {
-    dispatch(setModal({ isActive: true, type: modalType }));
-  };
-
-  return (
-    <div className="px-6 py-4 relative group">
-      <button
-        onClick={() => toggleDropdown(id)}
-        className="bg-[#1280e1] text-white w-[2rem] h-[2rem] flex justify-center items-center rounded-[0.3rem]"
-      >
-        <IoMdSettings size={20} />
-      </button>
-      <ul
-        className={`absolute right-0 mt-2 ${authData.rol === ROLES.SUPER_ADMIN || authData.rol === ROLES.CAPIF_ADMIN ? "w-[8.5rem]" : "w-[11rem]"} bg-slate-900 border rounded-md shadow-lg z-30 overflow-hidden ${
-          activeDropdown === id ? "" : "hidden"
-        }`}
-      >
-        {authData.rol === ROLES.SUPER_ADMIN ||
-        authData.rol === ROLES.CAPIF_ADMIN ? (
-          <>
-            <li
-              onClick={() =>
-                handleOpenModal(ModalNames.CONFLICTS_GRANT_EXTENSION)
-              }
-              className="text-start px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
-            >
-              <p className="text-start">Otorgar Prórroga</p>
-            </li>
-            <li
-              onClick={() => router.push("/conflicts-history")}
-              className="text-start px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
-            >
-              <p className="text-start">Ver Titulares</p>
-            </li>
-          </>
-        ) : null}
-
-        {authData.rol === ROLES.USER_PRODUCER ||
-        authData.rol === ROLES.EMPLOYEE ? (
-          <>
-            <li
-              onClick={() =>
-                handleOpenModal(ModalNames.CONFLICTS_CONFIRM_PERCENTAGE)
-              }
-              className="text-start px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
-            >
-              <p className="text-start">Confirmar Porcentaje</p>
-            </li>
-            <li
-              onClick={() =>
-                handleOpenModal(ModalNames.CONFLICTS_SEND_DOCUMENTATION)
-              }
-              className="text-start px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
-            >
-              <p className="text-start">Enviar Documentación</p>
-            </li>
-          </>
-        ) : null}
-
-        <li
-          onClick={() => handleOpenModal(ModalNames.CONFLICTS_DESIST)}
-          className="text-start px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
-        >
-          <p className="text-start">Desistir conflicto</p>
-        </li>
-      </ul>
     </div>
   );
 };

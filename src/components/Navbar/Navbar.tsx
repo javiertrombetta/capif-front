@@ -137,7 +137,7 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
           <div className="w-[15rem] navbar-background fixed h-[100vh] z-10 pt-[3rem]">
             <Sidebar />
           </div>
-          <div className="flex flex-col h-[100%] pl-[15rem] pt-[3.2rem]">
+          <div className="flex flex-col h-[100vh] pl-[15rem] pt-[3.2rem]">
             <RouteGuard>{children}</RouteGuard>
           </div>
         </div>
