@@ -114,7 +114,7 @@ const UserProfileView: FC = () => {
   return (
     <CustomLayout>
       <Header back title="Ficha de Usuario" className="" />
-      <div className="pr-[2rem] pl-[2rem] w-[100%]">
+      <div className="pr-[2rem] pl-[2rem] w-[100%] mb-[2rem]">
         {companyData ? (
           <Formik
             initialValues={initialValues}
@@ -125,7 +125,10 @@ const UserProfileView: FC = () => {
               <Form id="form" className="w-[100%]">
                 <div className="mt-[1rem] pr-[2rem] pl-[2rem] w-[100%] flex justify-end items-center">
                   {fieldsDisabled ? (
-                    <CustomButton onClick={() => setFieldsDisabled(false)}>
+                    <CustomButton
+                      background="warn"
+                      onClick={() => setFieldsDisabled(false)}
+                    >
                       Editar
                     </CustomButton>
                   ) : (
@@ -138,7 +141,10 @@ const UserProfileView: FC = () => {
                       >
                         Guardar
                       </CustomButton>
-                      <CustomButton onClick={() => setFieldsDisabled(true)}>
+                      <CustomButton
+                        background="delete"
+                        onClick={() => setFieldsDisabled(true)}
+                      >
                         Cancelar
                       </CustomButton>
                     </div>
@@ -502,7 +508,7 @@ const EntityForm: FC<{
           <CustomButton background="delete" onClick={rejectApplication}>
             Rechazar
           </CustomButton>
-          <CustomButton background="warn">Editar</CustomButton>
+          {/* <CustomButton background="warn">Editar</CustomButton> */}
         </div>
 
         {/* <CustomButton onClick={handleRejectRegister}>Cancelar</CustomButton> */}
