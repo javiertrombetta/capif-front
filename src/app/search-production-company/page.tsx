@@ -128,7 +128,9 @@ export default function page() {
                     label: "Ficha",
                     icon: <FaUserAlt />,
                     onClick: () =>
-                      redirectToOption(`/user-profile/${element.id_usuario}`),
+                      redirectToOption(
+                        `/user-profile/${element.id_usuario ? element.id_usuario : element.id_productora}`
+                      ),
                   },
                   {
                     label: "Repertorio",
