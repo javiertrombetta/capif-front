@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import Header from "@/commons/Header/Header";
 import { useAppSelector } from "@/hooks/storeHooks";
@@ -8,11 +8,11 @@ import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomTable from "@/commons/CustomTable/CustomTable";
 import { FaMusic, FaUserAlt } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { IoMdSettings } from "react-icons/io";
 import { ProductionCompanyResponse } from "@/types/productionCompany.types";
 import { getAllCompanies } from "@/services/productionCompanies";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import { getPendingApplications } from "@/services/auth";
+import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
 
 export default function page() {
   const authData = useAppSelector((state) => state.auth);
@@ -20,13 +20,10 @@ export default function page() {
   const [productionCompanies, setProductionCompanies] = useState<
     ProductionCompanyResponse[] | null
   >(null);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const toggleDropdown = (id: string) => {
-    if (activeDropdown === id) {
-      setActiveDropdown(null);
-    } else {
-      setActiveDropdown(id);
-    }
+  const router = useRouter();
+
+  const redirectToOption = (route: string): void => {
+    router.push(route);
   };
 
   const handleSelectChange = async (
@@ -110,65 +107,27 @@ export default function page() {
               "",
               "",
               <ActionDropdownButton
-                toggleDropdown={toggleDropdown}
-                id={element.id_usuario || element.id_productora || ""}
-                activeDropdown={activeDropdown}
+                menuOptions={[
+                  {
+                    label: "Ficha",
+                    icon: <FaUserAlt />,
+                    onClick: () =>
+                      redirectToOption(`/user-profile/${element.id_usuario}`),
+                  },
+                  {
+                    label: "Repertorio",
+                    icon: <FaMusic />,
+                    onClick: () => redirectToOption("/"),
+                  },
+                ]}
               />,
             ];
           })}
         />
       ) : null}
-
       <div className="w-[100%] mt-[2rem] mb-[2rem] pr-[2rem] pl-[2rem] flex justify-end">
         <CustomButton>Descargar CVS</CustomButton>
       </div>
     </CustomLayout>
   );
 }
-
-interface ActionDropdownButtonProps {
-  toggleDropdown: (id: string) => void;
-  id: string;
-  activeDropdown: string | null;
-}
-
-const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
-  toggleDropdown,
-  id,
-  activeDropdown,
-}) => {
-  const router = useRouter();
-
-  const redirectToOption = (route: string): void => {
-    router.push(route);
-  };
-
-  return (
-    <div className="px-6 py-4 relative group">
-      <button
-        onClick={() => toggleDropdown(id)}
-        className="bg-[#1280e1] text-white w-[2rem] h-[2rem] flex justify-center items-center rounded-[0.3rem]"
-      >
-        <IoMdSettings size={20} />
-      </button>
-      <ul
-        className={`absolute right-0 mt-2 w-[8rem] bg-slate-900 border rounded-md shadow-lg z-30 overflow-hidden ${
-          activeDropdown === id ? "" : "hidden"
-        }`}
-      >
-        <li
-          onClick={() => redirectToOption(`/user-profile/${id}`)}
-          className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
-        >
-          <FaUserAlt /> <p>Ficha</p>
-        </li>
-        <li
-          onClick={() => redirectToOption("/")}
-          className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
-        >
-          <FaMusic /> <p>Repertorio</p>
-        </li>
-      </ul>
-    </div>
-  );
-};

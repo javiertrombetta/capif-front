@@ -1,4 +1,5 @@
 "use client";
+import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
@@ -9,25 +10,47 @@ import { setModal } from "@/store/modalSlice";
 import { ROLES } from "@/types/auth.types";
 import { ModalNames } from "@/types/modalNames";
 import { useRouter } from "next/navigation";
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import { FaSearch } from "react-icons/fa";
-import { IoMdSettings } from "react-icons/io";
 
 function page() {
   const dispatch = useAppDispatch();
-  const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
-  const toggleDropdown = (id: number) => {
-    if (activeDropdown === id) {
-      setActiveDropdown(null);
-    } else {
-      setActiveDropdown(id);
-    }
-  };
+  const router = useRouter();
+  const { rol } = useAppSelector((state) => state.auth);
 
   const openModal = () => {
     dispatch(
       setModal({ isActive: true, type: ModalNames.EXPORT_CHANGES_LIST })
     );
+  };
+
+  const menuOptions = (id: string) => {
+    return [
+      {
+        label: "Editar",
+        onClick: () => {
+          router.push("/edit-phonogram/" + id);
+        },
+      },
+      ...(rol === ROLES.SUPER_ADMIN || rol === ROLES.CAPIF_ADMIN
+        ? [
+            {
+              label: "Territorialidad",
+              onClick: () => {
+                router.push("/territoriality-phonogram/" + id);
+              },
+            },
+          ]
+        : []),
+      ...(rol === ROLES.SUPER_ADMIN
+        ? [
+            {
+              label: "Titularidad",
+              onClick: () => router.push("/titularity-phonogram/" + id),
+            },
+          ]
+        : []),
+    ];
   };
 
   return (
@@ -65,11 +88,7 @@ function page() {
               "2003",
               "Argentina",
               "Enviado",
-              <ActionDropdownButton
-                toggleDropdown={toggleDropdown}
-                id={1}
-                activeDropdown={activeDropdown}
-              />,
+              <ActionDropdownButton menuOptions={menuOptions("1")} />,
             ],
             [
               "Himno Nacional Argentino",
@@ -79,11 +98,7 @@ function page() {
               "2003",
               "Argentina",
               "Enviado",
-              <ActionDropdownButton
-                toggleDropdown={toggleDropdown}
-                id={2}
-                activeDropdown={activeDropdown}
-              />,
+              <ActionDropdownButton menuOptions={menuOptions("2")} />,
             ],
             [
               "Himno Nacional Argentino",
@@ -93,11 +108,7 @@ function page() {
               "2003",
               "Argentina",
               "Enviado",
-              <ActionDropdownButton
-                toggleDropdown={toggleDropdown}
-                id={3}
-                activeDropdown={activeDropdown}
-              />,
+              <ActionDropdownButton menuOptions={menuOptions("3")} />,
             ],
           ]}
         />
@@ -107,111 +118,6 @@ function page() {
 }
 
 export default page;
-
-interface ActionDropdownButtonProps {
-  toggleDropdown: (id: number) => void;
-  id: number;
-  activeDropdown: number | null;
-}
-
-const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
-  toggleDropdown,
-  id,
-  activeDropdown,
-}) => {
-  const authData = useAppSelector((state) => state.auth);
-  const userRol = authData.rol;
-  const router = useRouter();
-
-  const renderDropdownMenuItems = () => {
-    if (userRol) {
-      switch (userRol) {
-        case ROLES.SUPER_ADMIN:
-          return (
-            <>
-              <li
-                onClick={() => router.push("/edit-phonogram/10")}
-                className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
-              >
-                <p>Editar</p>
-              </li>
-              <li
-                onClick={() => router.push("/titularity-phonogram/10")}
-                className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
-              >
-                <p>Titularidad</p>
-              </li>
-              <li
-                onClick={() => router.push("/territoriality-phonogram/10")}
-                className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
-              >
-                <p>Territorialidad</p>
-              </li>
-            </>
-          );
-
-        case ROLES.CAPIF_ADMIN:
-          return (
-            <>
-              <li
-                onClick={() => router.push("/edit-phonogram/10")}
-                className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
-              >
-                <p>Editar</p>
-              </li>
-
-              <li
-                onClick={() => router.push("/territoriality-phonogram/10")}
-                className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
-              >
-                <p>Territorialidad</p>
-              </li>
-            </>
-          );
-
-        case ROLES.USER_PRODUCER:
-          return (
-            <li
-              onClick={() => router.push("/edit-phonogram/10")}
-              className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
-            >
-              <p>Editar</p>
-            </li>
-          );
-
-        case ROLES.EMPLOYEE:
-          return (
-            <li
-              onClick={() => router.push("/edit-phonogram/10")}
-              className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
-            >
-              <p>Editar</p>
-            </li>
-          );
-      }
-    } else {
-      <></>;
-    }
-  };
-
-  return (
-    <div className="px-6 py-4 relative group">
-      <button
-        onClick={() => toggleDropdown(id)}
-        className="bg-[#1280e1] text-white w-[2rem] h-[2rem] flex justify-center items-center rounded-[0.3rem]"
-      >
-        <IoMdSettings size={20} />
-      </button>
-      <ul
-        className={`absolute right-0 mt-2 w-[8rem] bg-slate-900 border rounded-md shadow-lg z-30 overflow-hidden ${
-          activeDropdown === id ? "" : "hidden"
-        }`}
-      >
-        {renderDropdownMenuItems()}
-      </ul>
-    </div>
-  );
-};
 
 const SearchPhonogramForm: FC = () => {
   return (

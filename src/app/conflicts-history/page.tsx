@@ -1,4 +1,6 @@
 "use client";
+import { useRouter } from "next/navigation";
+import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import CustomTable from "@/commons/CustomTable/CustomTable";
@@ -6,19 +8,30 @@ import Header from "@/commons/Header/Header";
 import { useAppDispatch } from "@/hooks/storeHooks";
 import { setModal } from "@/store/modalSlice";
 import { ModalNames } from "@/types/modalNames";
-import { useRouter } from "next/navigation";
-import React, { FC, useState } from "react";
-import { IoMdSettings } from "react-icons/io";
 
 function page() {
-  const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
+  const router = useRouter();
+  const dispatch = useAppDispatch();
 
-  const toggleDropdown = (id: number) => {
-    if (activeDropdown === id) {
-      setActiveDropdown(null);
-    } else {
-      setActiveDropdown(id);
-    }
+  const handleOpenModal = (type: ModalNames) => {
+    dispatch(setModal({ type, isActive: true }));
+  };
+
+  const menuOptions = (id: string) => {
+    return [
+      {
+        label: "Modificar",
+        onClick: () => router.push(`/titularity-phonogram/${id}/edit-titular`),
+      },
+      {
+        label: "Fijar Porcentaje",
+        onClick: () => handleOpenModal(ModalNames.CONFLICTS_CONFIRM_PERCENTAGE),
+      },
+      {
+        label: "Aceptar",
+        onClick: () => handleOpenModal(ModalNames.CONFLICTS_ACCEPT),
+      },
+    ];
   };
 
   return (
@@ -28,7 +41,7 @@ function page() {
       <div className="w-[100%] flex items-center pr-[2rem] pl-[2rem] mt-[2rem] gap-[1rem]">
         <CustomInput type="text" label="Buscar Productora" />
 
-        <select className="w-[13rem] mt-[1.5rem] text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black">
+        <select className="w-[13rem] mt-[1.5rem] text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem]">
           <option>PENDIENTE </option>
           <option>RESPONDIDO</option>
           <option>DESISTIDO</option>
@@ -52,60 +65,15 @@ function page() {
             { name: "ESTADO", isSortable: true },
             { name: "ACCIÓN", isSortable: false },
           ]}
-          columnValues={[
-            [
-              "Sony Music",
-              "AR6548646",
-              "50%",
-              "NO",
-              "50%",
-              "PENDIENTE DE RESPUESTA",
-              <ActionDropdownButton
-                toggleDropdown={toggleDropdown}
-                id={1}
-                activeDropdown={activeDropdown}
-              />,
-            ],
-            [
-              "Sony Music",
-              "AR6548646",
-              "50%",
-              "NO",
-              "50%",
-              "PENDIENTE DE RESPUESTA",
-              <ActionDropdownButton
-                toggleDropdown={toggleDropdown}
-                id={2}
-                activeDropdown={activeDropdown}
-              />,
-            ],
-            [
-              "Sony Music",
-              "AR6548646",
-              "50%",
-              "NO",
-              "50%",
-              "PENDIENTE DE RESPUESTA",
-              <ActionDropdownButton
-                toggleDropdown={toggleDropdown}
-                id={2}
-                activeDropdown={activeDropdown}
-              />,
-            ],
-            [
-              "Sony Music",
-              "AR6548646",
-              "50%",
-              "NO",
-              "50%",
-              "PENDIENTE DE RESPUESTA",
-              <ActionDropdownButton
-                toggleDropdown={toggleDropdown}
-                id={2}
-                activeDropdown={activeDropdown}
-              />,
-            ],
-          ]}
+          columnValues={Array(4).fill([
+            "Sony Music",
+            "AR6548646",
+            "50%",
+            "NO",
+            "50%",
+            "PENDIENTE DE RESPUESTA",
+            <ActionDropdownButton menuOptions={menuOptions("1")} />,
+          ])}
         />
       </div>
     </CustomLayout>
@@ -113,62 +81,3 @@ function page() {
 }
 
 export default page;
-
-interface ActionDropdownButtonProps {
-  toggleDropdown: (id: number) => void;
-  id: number;
-  activeDropdown: number | null;
-}
-
-const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
-  toggleDropdown,
-  id,
-  activeDropdown,
-}) => {
-  const router = useRouter();
-  const dispatch = useAppDispatch();
-
-  const handleOpenModal = (type: ModalNames) => {
-    dispatch(setModal({ type, isActive: true }));
-  };
-
-  return (
-    <div className="px-6 py-4 relative group">
-      <button
-        onClick={() => toggleDropdown(id)}
-        className="bg-[#1280e1] text-white w-[2rem] h-[2rem] flex justify-center items-center rounded-[0.3rem]"
-      >
-        <IoMdSettings size={20} />
-      </button>
-      <ul
-        className={`absolute right-0 mt-2 w-[8rem] bg-slate-900 border rounded-md shadow-lg z-30 overflow-hidden ${
-          activeDropdown === id ? "" : "hidden"
-        }`}
-      >
-        <li
-          onClick={() => router.push("/titularity-phonogram/10/edit-titular")}
-          className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]"
-        >
-          <p>Modificar</p>
-        </li>
-        <li
-          onClick={() =>
-            handleOpenModal(ModalNames.CONFLICTS_CONFIRM_PERCENTAGE)
-          }
-          className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]"
-        >
-          <p>Fijar Porcentaje</p>
-        </li>
-        <li
-          onClick={() => handleOpenModal(ModalNames.CONFLICTS_ACCEPT)}
-          className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]"
-        >
-          <p>Aceptar</p>
-        </li>
-        {/* <li className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]">
-          <p>Quitar</p>
-        </li> */}
-      </ul>
-    </div>
-  );
-};
