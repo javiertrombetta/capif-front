@@ -16,6 +16,7 @@ import "../../styles/globals.css";
 import "./Navbar.css";
 import RouteGuard from "../RouteGuard/RouteGuard";
 import { authLogout } from "@/services/auth";
+import { authDefaultState, setAuthData } from "@/store/authSlice";
 
 interface NavbarProps {
   children: ReactNode;
@@ -53,9 +54,8 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
   const openProductionCompanySelection = () => {
     if (window && window.localStorage) {
       const company = localStorage.getItem("company");
-      const isLoged = localStorage.getItem("isLoged");
 
-      if (!company && isLoged && authData.id_usuario) {
+      if (!company && authData.id_usuario) {
         dispatch(
           setModal({ type: ModalNames.CHANGE_PRODUCER, isActive: true })
         );
@@ -170,8 +170,8 @@ const NavbarMenu: FC<{ closeMenu: () => void; isEnabledUser: boolean }> = ({
     } catch (error) {
       console.log(error);
     } finally {
-      localStorage.removeItem("isLoged");
       localStorage.removeItem("company");
+      dispatch(setAuthData({ ...authDefaultState, loading: false }));
       router.push("/login");
     }
   };
