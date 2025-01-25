@@ -111,12 +111,9 @@ const UserProfileView: FC = () => {
     getCompanyData();
   }, []);
 
-  console.log(initialValues);
-
   return (
     <CustomLayout>
       <Header back title="Ficha de Usuario" className="" />
-
       <div className="pr-[2rem] pl-[2rem] w-[100%]">
         {companyData ? (
           <Formik
