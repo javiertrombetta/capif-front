@@ -176,18 +176,18 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
   };
 
   return (
-    <div className="w-[100%] h-[100%] relative">
+    <>
       {modalData.isActive && (
         <>
-          <div className="absolute w-[100%] h-[100%] z-30 flex justify-center items-center">
+          <div className="absolute top-0 left-0 w-[100vw] h-[100vh] z-30 flex justify-center items-center">
             {renderModal()}
           </div>
-          <div className="z-20 absolute w-[100%] h-[100%] bg-[black] opacity-[0.4]" />
+          <div className="absolute top-0 left-0 w-[100vw] h-[100vh] z-20 bg-[black] opacity-[0.4]" />
         </>
       )}
 
       {children}
-    </div>
+    </>
   );
 };
 
