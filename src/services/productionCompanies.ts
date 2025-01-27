@@ -1,4 +1,7 @@
-import { ProductionCompanyByIdResponse } from "@/types/productionCompany.types";
+import {
+  NominationsResponse,
+  ProductionCompanyByIdResponse,
+} from "@/types/productionCompany.types";
 import { axiosInstance } from "./axiosInstance";
 import { CompanyValues } from "@/components/UserProfileView/UserProfileView";
 
@@ -22,4 +25,40 @@ export const updateCompany = async (
     companyData,
   });
   return updatedCompany.data;
+};
+
+export const getAllNominations = async () => {
+  const nominations: { data: { postulaciones: NominationsResponse[] } } =
+    await axiosInstance.get("producers/postulaciones");
+  return nominations.data.postulaciones;
+};
+
+export const getFilteredNominations = async (filters: {
+  productoraName?: string | null;
+  startDate?: Date | null;
+  endDate?: Date | null;
+}): Promise<NominationsResponse[]> => {
+  const params = new URLSearchParams();
+
+  if (filters.productoraName) {
+    params.append("productoraName", filters.productoraName);
+  }
+  if (filters.startDate) {
+    params.append("startDate", filters.startDate.toISOString());
+  }
+  if (filters.endDate) {
+    params.append("endDate", filters.endDate.toISOString());
+  }
+
+  const url = `producers/postulaciones?${params.toString()}`;
+
+  const { data } = await axiosInstance.get<{
+    postulaciones: NominationsResponse[];
+  }>(url);
+
+  return data.postulaciones;
+};
+
+export const deleteAllNominations = async () => {
+  await axiosInstance.delete("producers/postulaciones");
 };
