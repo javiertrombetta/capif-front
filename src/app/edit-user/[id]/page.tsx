@@ -97,7 +97,7 @@ export default function page() {
       <Header back title="Editar Usuario" />
       <div className="flex justify-end mr-[1rem] mt-[1rem]">
         <button
-          onClick={() => router.push("/records")}
+          onClick={() => router.push("/users")}
           className="flex items-center justify-center bg-mainblue w-fit h-[2rem] pl-[1rem] pr-[1rem] pt-[0.5rem] pb-[0.5rem] rounded-[0.2rem]"
         >
           Volver a la lista
