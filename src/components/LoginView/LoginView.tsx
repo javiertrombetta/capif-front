@@ -41,8 +41,11 @@ const LoginForm: FC = () => {
 
     const data = await getAuthData();
     dispatch(setAuthData(data));
-
-    router.push("/users");
+    if (data.tipo_registro === "HABILITADO") {
+      router.push("/users");
+    } else {
+      router.push("/register-production-company");
+    }
     dispatch(setModal({ type: ModalNames.CHANGE_PRODUCER, isActive: true }));
   };
 

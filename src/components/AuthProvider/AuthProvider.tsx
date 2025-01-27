@@ -4,6 +4,7 @@ import { useAppDispatch } from "@/hooks/storeHooks";
 import { getAuthData } from "@/services/auth";
 import { setAuthData } from "@/store/authSlice";
 import { usePathname, useRouter } from "next/navigation";
+import { AuthProps } from "@/types/auth.types";
 interface AuthProvider {
   children: ReactNode;
 }
@@ -21,10 +22,20 @@ const AuthProvider: FC<AuthProvider> = ({ children }) => {
       router.push("/login");
     } else {
       if (pathname === "/login") {
-        router.push("/users");
+        handleVerifyRegisterType(data);
+      } else {
+        handleVerifyRegisterType(data);
       }
     }
     return;
+  };
+
+  const handleVerifyRegisterType = (data: AuthProps) => {
+    if (data.tipo_registro === "HABILITADO") {
+      router.push("/users");
+    } else {
+      router.push("/register-production-company");
+    }
   };
 
   useEffect(() => {

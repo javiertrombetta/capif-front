@@ -1,10 +1,16 @@
 import React, { FC } from "react";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import { IoCloseSharp } from "react-icons/io5";
+import { deleteAllNominations } from "@/services/productionCompanies";
 
 const GardelAwardsPurge: FC<{ onCloseModal: () => void }> = ({
   onCloseModal,
 }) => {
+  const handleDeleteAllNominations = async () => {
+    await deleteAllNominations();
+    onCloseModal();
+  };
+
   return (
     <div
       className={
@@ -21,7 +27,12 @@ const GardelAwardsPurge: FC<{ onCloseModal: () => void }> = ({
         </p>
 
         <div className="flex gap-[3rem] w-[100%] justify-center">
-          <CustomButton background="delete">Depurar</CustomButton>
+          <CustomButton
+            background="delete"
+            onClick={handleDeleteAllNominations}
+          >
+            Depurar
+          </CustomButton>
           <CustomButton onClick={onCloseModal}>Cancelar</CustomButton>
         </div>
       </div>
