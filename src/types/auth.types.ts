@@ -45,7 +45,7 @@ export enum ROLES {
 }
 export interface GetAuthDataResponse {
   usuario: {
-    id_usuario: string;
+    id: string;
     rol: ROLES;
     tipo_registro: string;
     email: string;
@@ -83,6 +83,7 @@ export interface AuthProps {
   }[];
   vistas: { nombre: string; nombre_vista_superior: string }[];
   productoraActiva: { id: string; nombre: string } | null;
+  loading: boolean;
 }
 
 export interface GetProductorasResponse {
