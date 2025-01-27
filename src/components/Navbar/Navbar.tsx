@@ -73,7 +73,10 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
       ) : (
         <div className="w-[100%] border-[black] max-h-[100vh] overflow-y-hidden">
           <div className="w-[100%] h-[3.2rem] background z-20 absolute flex items-center">
-            <div className="w-[15rem] flex items-center justify-center">
+            <a
+              href="/users"
+              className="w-[15rem] flex items-center justify-center"
+            >
               <Image
                 className="w-[6.3rem]"
                 height={2000}
@@ -81,7 +84,7 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
                 alt="GIT CAPIF"
                 src={gitLogo}
               />
-            </div>
+            </a>
             {pathname === "/register-production-company" ? (
               <div className="h-[100%] flex-grow flex justify-end items-center pr-[2rem]">
                 <button
