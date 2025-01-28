@@ -31,7 +31,7 @@ const AuthProvider: FC<AuthProvider> = ({ children }) => {
   };
 
   const handleVerifyRegisterType = (data: AuthProps) => {
-    if (data.tipo_registro === "HABILITADO") {
+    if (data.estado === "HABILITADO") {
       router.push("/users");
     } else {
       router.push("/register-production-company");

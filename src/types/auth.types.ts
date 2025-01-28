@@ -47,7 +47,7 @@ export interface GetAuthDataResponse {
   usuario: {
     id: string;
     rol: ROLES;
-    tipo_registro: string;
+    estado: string;
     email: string;
     nombre: string;
     apellido: string;
@@ -75,7 +75,7 @@ export interface AuthProps {
   telefono: string | null;
   nombre: string | null;
   apellido: string | null;
-  tipo_registro: string | null;
+  estado: string | null;
   rol: ROLES | null;
   productoras?: {
     id: string;
