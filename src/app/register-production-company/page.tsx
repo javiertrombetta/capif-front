@@ -11,6 +11,7 @@ import { setModal } from "@/store/modalSlice";
 import { ModalNames } from "@/types/modalNames";
 import { SendApplication } from "@/types/user.types";
 import { sendApplication } from "@/services/auth";
+import CustomFileInput from "@/commons/CustomFileInput/CustomFileInput";
 
 export interface ApplicationValues {
   nombre_productora: string;
@@ -43,16 +44,29 @@ const page: FC = () => {
     "natural"
   );
   const dispatch = useAppDispatch();
-  const [_uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const authUser = useAppSelector((state) => state.auth);
   const handleCurrentEntity = (value: "natural" | "legal") => {
     setCurrentEntity(value);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setUploadedFiles(Array.from(e.target.files));
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      const isDuplicate = uploadedFiles.some(
+        (file) =>
+          file.name === selectedFile.name && file.size === selectedFile.size
+      );
+      if (!isDuplicate) {
+        setUploadedFiles((prevFiles) => [...prevFiles, selectedFile]);
+      } else {
+        console.log("El archivo ya fue agregado.");
+      }
     }
+    e.target.value = "";
+  };
+  const handleRemoveFile = (index: number) => {
+    setUploadedFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
 
   const onRadioFieldChange = (
@@ -156,7 +170,7 @@ const page: FC = () => {
   return (
     <CustomLayout>
       <Header title="Completar Registro" />
-      <div className="flex flex-1 flex-col pr-[2rem] pl-[2rem] w-[100%] overflow-auto">
+      <div className="flex flex-1 flex-col pr-[2rem] pl-[2rem] mb-[2rem] w-[100%] overflow-auto">
         {/*
         <div className="w-[100%] mt-[2rem] flex gap-[0.5rem]">
           <p className="text-black text-[1.2rem]">Estado de Solicitud:</p>
@@ -257,7 +271,9 @@ const page: FC = () => {
               </div>
 
               <EntityForm
+                files={uploadedFiles}
                 handleFileChange={handleFileChange}
+                handleRemoveFile={handleRemoveFile}
                 dirty={dirty}
                 isValid={isValid}
                 isSubmitting={isSubmitting}
@@ -281,8 +297,18 @@ const EntityForm: FC<{
   isSubmitting: boolean;
   isValid: boolean;
   dirty: boolean;
+  files: File[];
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}> = ({ entity, isSubmitting, isValid, dirty, handleFileChange }) => {
+  handleRemoveFile: (index: number) => void;
+}> = ({
+  entity,
+  isSubmitting,
+  isValid,
+  dirty,
+  files,
+  handleFileChange,
+  handleRemoveFile,
+}) => {
   return (
     <div className="mt-[3rem] w-[100%]">
       <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
@@ -479,7 +505,7 @@ const EntityForm: FC<{
           type="file"
           accept="application/pdf"
           multiple
-          onChange={handleFileChange}
+          // onChange={handleFileChange}
         />
       </div>
 
@@ -493,7 +519,7 @@ const EntityForm: FC<{
             type="file"
             accept="application/pdf"
             multiple
-            onChange={handleFileChange}
+            // onChange={handleFileChange}
           />
         </div>
       )}
@@ -520,18 +546,31 @@ const EntityForm: FC<{
         <p className="font-bold text-black">N°: 9750252-4 005-6</p>
         <p className="font-bold text-black">CBU: 0070005430009750252469</p>
       </div>
-
-      <div className="mt-[2rem] w-[100%] h-[15rem] border-[#c5c5c5] border-[1px] rounded-[0.7rem] overflow-hidden">
-        <CustomButton className="mt-[1rem] ml-[1rem]">
+      <div className="pt-[1rem] pb-[1rem] mt-[2rem] w-[100%] h-auto border-[#c5c5c5] border-[1px] rounded-[0.7rem] overflow-hidden">
+        {/* <CustomButton type="file" className="mt-[1rem] ml-[1rem]">
           Seleccione Archivos
-        </CustomButton>
-
-        <div className="w-[100%] h-[3rem] bg-[#EBF6E0] flex items-center justify-between pr-[1rem] pl-[1rem] mt-[1rem] shadow-sm shadow-black">
-          <p className="text-mainblue">1-comprobante pago CAPIF.jpg</p>
-          <p className="text-mainblue">Eliminar</p>
-        </div>
+        </CustomButton> */}
+        <CustomFileInput onChange={handleFileChange} className="ml-[1rem]">
+          {" "}
+          Seleccione un Archivo
+        </CustomFileInput>
+        {files.map((file: File, index: number) => (
+          <div
+            key={index}
+            className="w-[100%] h-[3rem] bg-[#EBF6E0] flex items-center justify-between pr-[1rem] pl-[1rem] mt-[1rem] shadow-sm shadow-black"
+          >
+            <p className="text-mainblue">{file.name}</p>
+            <button
+              onClick={() => {
+                handleRemoveFile(index);
+              }}
+              className="text-mainblue"
+            >
+              Eliminar
+            </button>
+          </div>
+        ))}
       </div>
-
       <div className="mt-[5rem] flex gap-[1rem] ">
         {isSubmitting || !isValid || !dirty ? (
           <CustomButton
