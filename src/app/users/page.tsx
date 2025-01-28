@@ -8,7 +8,7 @@ import { useAppSelector } from "@/hooks/storeHooks";
 import { ROLES } from "@/types/auth.types";
 import CustomTable from "@/commons/CustomTable/CustomTable";
 import { getUsers } from "@/services/users";
-import { User } from "@/types/user.types";
+import { TIPOS_REGISTRO, User } from "@/types/user.types";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
 import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
@@ -31,6 +31,7 @@ export default function page() {
       setUsers(users);
     } catch (error) {
       console.log("🔴", error);
+      setUsers([]);
     }
   };
 
@@ -63,6 +64,7 @@ export default function page() {
       setUsers(users);
     } catch (error) {
       console.log(error);
+      setUsers([]);
     }
   };
 
@@ -106,9 +108,7 @@ export default function page() {
                     type="select"
                     options={[
                       { name: "", value: "" },
-                      { name: "Registrados", value: "registrados" },
-                      { name: "Pendientes de Registro", value: "pendientes" },
-                      { name: "Incompleto", value: "incompleto" },
+                      ...TIPOS_REGISTRO.map((t) => ({ name: t, value: t })),
                     ]}
                   />
                 </>
