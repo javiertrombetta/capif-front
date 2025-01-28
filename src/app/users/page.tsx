@@ -1,25 +1,33 @@
 "use client";
+import { Form, Formik } from "formik";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import CustomInput from "@/commons/CustomInput/CustomInput";
+import { FaEdit, FaSearch } from "react-icons/fa";
 import Header from "@/commons/Header/Header";
 import { useAppSelector } from "@/hooks/storeHooks";
 import { ROLES } from "@/types/auth.types";
 import CustomTable from "@/commons/CustomTable/CustomTable";
-import { getAllUsers } from "@/services/users";
+import { getUsers } from "@/services/users";
 import { User } from "@/types/user.types";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
-import { FaEdit } from "react-icons/fa";
-import { useRouter } from "next/navigation";
+import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
 
 export default function page() {
   const authData = useAppSelector((state) => state.auth);
   const [users, setUsers] = useState<User[]>([]);
   const router = useRouter();
 
+  const initialValues = {
+    nombre: "",
+    apellido: "",
+    email: "",
+    estado: "",
+  };
+
   const getUsersData = async () => {
     try {
-      const users = await getAllUsers();
+      const users = await getUsers();
       setUsers(users);
     } catch (error) {
       console.log("🔴", error);
@@ -34,35 +42,86 @@ export default function page() {
     router.push(route);
   };
 
+  const handleOnSubmit = async (
+    e: React.FormEvent<HTMLFormElement>,
+    values: Record<string, string>
+  ) => {
+    e.preventDefault();
+    try {
+      for (const key in values) {
+        if (!values[key]) delete values[key];
+      }
+      const { email, nombre, apellido, estado } = values;
+      console.log(values);
+
+      const users = await getUsers({
+        email,
+        nombre,
+        apellido,
+        estado,
+      });
+      setUsers(users);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <CustomLayout>
       <Header title="Registros" />
       <div className="w-[100%] flex-1 flex flex-col overflow-y-auto">
-        <div className="h-[4rem] w-[100%] flex items-end mt-[1rem] gap-[2rem] pl-[1rem] pr-[2rem]">
-          <CustomInput label="Buscar:" type="text" />
-          {authData.rol === ROLES.SUPER_ADMIN ||
-          authData.rol === ROLES.CAPIF_ADMIN ? (
-            <>
-              <select className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem]">
-                <option>Registrados</option>
-                <option>Pendientes de Registro</option>
-                <option>Incompleto</option>
-              </select>
-              <CustomInput
-                className="w-[15rem]"
-                label="FECHA CREACIÓN DESDE"
-                type="date"
+        <Formik initialValues={initialValues} onSubmit={() => {}}>
+          {({ values }) => (
+            <Form
+              onSubmit={(e: React.FormEvent<HTMLFormElement>) =>
+                handleOnSubmit(e, values)
+              }
+              className="h-[4rem] w-[100%] flex items-end mt-[1rem] gap-[2rem] pl-[1rem] pr-[2rem]"
+            >
+              <CustomSearchField
+                id="email"
+                labelText="EMAIL"
+                name="email"
+                type="text"
               />
-              <CustomInput
-                className="w-[15rem]"
-                label="FECHA CREACIÓN HASTA"
-                type="date"
-              />
-            </>
-          ) : (
-            <></>
+              {authData.rol === ROLES.SUPER_ADMIN ||
+              authData.rol === ROLES.CAPIF_ADMIN ? (
+                <>
+                  <CustomSearchField
+                    id="nombre"
+                    name="nombre"
+                    labelText="NOMBRE"
+                    type="text"
+                  />
+                  <CustomSearchField
+                    id="apellido"
+                    name="apellido"
+                    labelText="APELLIDO"
+                    type="text"
+                  />
+                  <CustomSearchField
+                    id="estado"
+                    name="estado"
+                    labelText="ESTADO"
+                    type="select"
+                    options={[
+                      { name: "", value: "" },
+                      { name: "Registrados", value: "registrados" },
+                      { name: "Pendientes de Registro", value: "pendientes" },
+                      { name: "Incompleto", value: "incompleto" },
+                    ]}
+                  />
+                </>
+              ) : (
+                <></>
+              )}
+              <button className="text-white w-[100%] max-w-[6rem] bg-mainblue text-[1rem] font-bold flex justify-center items-center p-[0.5rem] space-x-2">
+                <FaSearch />
+                <p>Buscar</p>
+              </button>
+            </Form>
           )}
-        </div>
+        </Formik>
         <div className="w-[100%] mt-[2rem] flex-1 overflow-y-auto">
           {users.length > 0 && (
             <CustomTable

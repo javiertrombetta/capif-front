@@ -1,8 +1,17 @@
 import { UpdateUserById, User, UsersResponse } from "@/types/user.types";
 import { axiosInstance } from "./axiosInstance";
 
-export const getAllUsers = async () => {
-  const users: { data: UsersResponse[] } = await axiosInstance.get("users/");
+interface GetUsersParams {
+  email?: string;
+  nombre?: string;
+  apellido?: string;
+  estado?: string;
+}
+
+export const getUsers = async (params?: GetUsersParams) => {
+  const users: { data: UsersResponse[] } = await axiosInstance.get("users", {
+    params,
+  });
   return users.data.map((user) => user.user);
 };
 
