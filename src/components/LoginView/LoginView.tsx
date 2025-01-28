@@ -41,7 +41,7 @@ const LoginForm: FC = () => {
 
     const data = await getAuthData();
     dispatch(setAuthData(data));
-    if (data.tipo_registro === "HABILITADO") {
+    if (data.estado === "HABILITADO") {
       router.push("/users");
     } else {
       router.push("/register-production-company");
