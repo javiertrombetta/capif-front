@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { Field } from "formik";
 
-interface CustomFieldProps {
+interface CustomSearchFieldProps {
   containerClassName?: string;
   defaultSelectedValue?: string;
   disabled?: boolean;
@@ -9,21 +9,20 @@ interface CustomFieldProps {
   id: string;
   labelText?: string;
   name: string;
-  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   options?: { name: string; value: string }[];
   type: "text" | "password" | "email" | "date" | "number" | "select";
 }
 
-const CustomField: FC<CustomFieldProps> = ({
-  type,
-  id,
+const CustomSearchField: FC<CustomSearchFieldProps> = ({
+  containerClassName,
+  defaultSelectedValue,
+  disabled,
   fieldClassName,
+  id,
   labelText,
   name,
-  disabled,
-  containerClassName,
   options,
-  defaultSelectedValue,
+  type,
 }) => {
   return (
     <div className={`${containerClassName} w-[100%] flex flex-col`}>
@@ -33,43 +32,27 @@ const CustomField: FC<CustomFieldProps> = ({
       >
         {labelText ?? name}
       </label>
-      {type === "select" ? (
-        <>
-          <Field
-            disabled={disabled}
-            as={"select"}
-            id={id}
-            name={name}
-            className={`${fieldClassName} padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-[black]`}
-          >
-            {options && options.length > 0
-              ? options.map((element, index) => (
-                  <option
-                    defaultValue={
-                      defaultSelectedValue ? defaultSelectedValue : ""
-                    }
-                    key={index}
-                    value={element.value}
-                  >
-                    {element.name}
-                  </option>
-                ))
-              : null}
-          </Field>
-        </>
-      ) : (
-        <>
-          <Field
-            disabled={disabled}
-            type={type}
-            id={id}
-            name={name}
-            className={`${fieldClassName} padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-[black]`}
-          />
-        </>
-      )}
+      <Field
+        disabled={disabled}
+        {...(type === "select" ? { as: "select" } : {})}
+        id={id}
+        name={name}
+        className={`${fieldClassName} padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-[black]`}
+      >
+        {options && options.length > 0
+          ? options.map((element, index) => (
+              <option
+                defaultValue={defaultSelectedValue ? defaultSelectedValue : ""}
+                key={index}
+                value={element.value}
+              >
+                {element.name}
+              </option>
+            ))
+          : null}
+      </Field>
     </div>
   );
 };
 
-export default CustomField;
+export default CustomSearchField;
