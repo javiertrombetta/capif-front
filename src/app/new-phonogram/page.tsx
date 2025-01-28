@@ -1,11 +1,11 @@
 "use client";
+import { Form, Formik } from "formik";
 import React, { FC, useRef, useState } from "react";
+import { IoIosArrowForward } from "react-icons/io";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
-import { Form, Formik } from "formik";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomField from "@/commons/CustomField/CustomField";
-import { IoIosArrowForward } from "react-icons/io";
 import TimerInput from "@/components/TimerInput/TimerInput";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import CustomInput from "@/commons/CustomInput/CustomInput";
@@ -49,6 +49,7 @@ function page() {
   };
 
   const handleGoBack = () => {
+    console.log(flowState);
     switch (flowState) {
       case "existing_phonogram":
         setFlowState("start");
@@ -87,11 +88,11 @@ function page() {
     <CustomLayout>
       <Header title="Declaración de Repertorio" />
 
-      {flowState === "start" && (
+      {flowState === "start" ? (
         <div className="w-[100%] pr-[2rem] pl-[2rem] flex justify-end items-center mt-[0.5rem] gap-[0.6rem] relative">
           <select
             onChange={handleIsNewPhonogramStateChange}
-            className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black"
+            className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem]"
             defaultValue={"fonograma_nuevo"}
           >
             <option className="text-black" value={"fonograma_nuevo"}>
@@ -102,8 +103,7 @@ function page() {
             </option>
           </select>
         </div>
-      )}
-      {flowState === "start" ? null : (
+      ) : (
         <>
           <div className="w-[100%] pr-[2rem] pl-[2rem] flex justify-center items-center mt-[2rem] gap-[0.6rem] relative">
             <p className="text-[#a6acaf] font-bold">Ingresar ISRC</p>
@@ -492,10 +492,16 @@ const EditTerritoriality: FC = () => {
   return (
     <div className="w-[100%] flex flex-col justify-center items-center mt-[3rem] pl-[3rem] pr-[3rem]">
       <div className="w-[100%] pr-[2rem] pl-[2rem] justify-between items-end flex mt-[1rem] mb-[1rem]">
+        <button
+          onClick={() => {}}
+          className="text-mainblue text-[1.1rem] decoration-underline"
+        >
+          <p className="text-mainblue">Ir al paso anterior</p>
+        </button>
         <CustomInput type="text" label="Buscar Países" />
         <div className="flex gap-[1.5rem]">
           <CustomButton onClick={handleFinishNewPhonogram}>
-            Guardar y Terminar
+            Guardar y ffff
           </CustomButton>
         </div>
       </div>
