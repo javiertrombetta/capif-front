@@ -127,10 +127,6 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    if (auth.tipo_registro && auth.tipo_registro !== "HABILITADO") {
-      router.push("/register-production-company");
-      return;
-    }
     if (auth.rol && !isRouteAllowed(pathname, allowedRoutes[auth.rol] || [])) {
       router.push("/users");
     }
