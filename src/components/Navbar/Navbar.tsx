@@ -173,6 +173,7 @@ const NavbarMenu: FC<{ closeMenu: () => void; isEnabledUser: boolean }> = ({
     } catch (error) {
       console.log(error);
     } finally {
+      closeMenu();
       localStorage.removeItem("company");
       dispatch(setAuthData({ ...authDefaultState, loading: false }));
       router.push("/login");
