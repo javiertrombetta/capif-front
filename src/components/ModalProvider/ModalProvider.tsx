@@ -179,10 +179,10 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
     <>
       {modalData.isActive && (
         <>
-          <div className="absolute top-0 left-0 w-[100vw] h-[100vh] z-30 flex justify-center items-center">
+          <div className="absolute top-0 left-0 w-[100vw] h-[100vh] z-40 flex justify-center items-center">
             {renderModal()}
           </div>
-          <div className="absolute top-0 left-0 w-[100vw] h-[100vh] z-20 bg-[black] opacity-[0.4]" />
+          <div className="absolute top-0 left-0 w-[100vw] h-[100vh] z-30 bg-[black] opacity-[0.4]" />
         </>
       )}
 

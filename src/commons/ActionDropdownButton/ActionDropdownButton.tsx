@@ -36,7 +36,7 @@ export const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
         <IoMdSettings size={20} />
       </button>
       <ul
-        className={`absolute right-0 mt-2 w-max bg-slate-900 border rounded-md shadow-lg z-30 overflow-hidden ${
+        className={`absolute right-0 mt-2 w-max bg-slate-900 border rounded-md shadow-lg z-20 overflow-hidden ${
           activeDropdown ? "" : "hidden"
         }`}
       >
