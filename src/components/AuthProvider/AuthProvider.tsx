@@ -4,7 +4,7 @@ import { useAppDispatch } from "@/hooks/storeHooks";
 import { getAuthData } from "@/services/auth";
 import { setAuthData } from "@/store/authSlice";
 import { usePathname, useRouter } from "next/navigation";
-import { AuthProps } from "@/types/auth.types";
+
 interface AuthProvider {
   children: ReactNode;
 }
@@ -21,21 +21,15 @@ const AuthProvider: FC<AuthProvider> = ({ children }) => {
     if (!data.id_usuario) {
       router.push("/login");
     } else {
-      if (pathname === "/login") {
-        handleVerifyRegisterType(data);
-      } else {
-        handleVerifyRegisterType(data);
+      if (pathname === "/login" && data.estado === "HABILITADO") {
+        router.push("/users");
+        return;
+      }
+      if (data.estado !== "HABILITADO") {
+        router.push("/register-production-company");
       }
     }
     return;
-  };
-
-  const handleVerifyRegisterType = (data: AuthProps) => {
-    if (data.estado === "HABILITADO") {
-      router.push("/users");
-    } else {
-      router.push("/register-production-company");
-    }
   };
 
   useEffect(() => {
