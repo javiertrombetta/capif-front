@@ -22,7 +22,7 @@ function page() {
     | "load_audio"
     | "add_participation"
     | "edit_territoriality"
-  >("start");
+  >("add_participation");
 
   const handleGoToCreateNew = () => {
     if (isNewPhonogram) {
@@ -49,7 +49,6 @@ function page() {
   };
 
   const handleGoBack = () => {
-    console.log(flowState);
     switch (flowState) {
       case "existing_phonogram":
         setFlowState("start");
@@ -71,6 +70,9 @@ function page() {
         }
 
         break;
+
+      case "edit_territoriality":
+        setFlowState("add_participation");
     }
   };
 
@@ -222,7 +224,7 @@ const NewPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
   };
 
   return (
-    <div className="w-[100%] flex flex-col justify-center items-center mt-[3rem] pl-[3rem] pr-[3rem]">
+    <div className="w-[100%] flex flex-col justify-center items-center mt-[3rem] px-[3rem]">
       <p className="text-black font-bold">
         Complete los campos para crear el fonograma.
       </p>
@@ -278,7 +280,7 @@ const NewPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
             <CustomButton
               type="submit"
               disabled={isSubmitting || !isValid || !dirty}
-              className="mt-[3rem]"
+              className="mt-[2rem]"
             >
               Continuar
             </CustomButton>
@@ -388,8 +390,12 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
     fecha_participacion_inicio: "",
     fecha_participacion_hasta: "",
     porcentaje_participacion: "",
+    productora: "",
   };
   const [percentage, setPercentage] = useState<string>("100");
+  const [participaciones, setParticipaciones] = useState<
+    Array<typeof initialValues>
+  >([]);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleDivClick = () => {
@@ -415,7 +421,22 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
       <p className="text-black font-bold text-[1.3rem]">Agregar Porcentaje</p>
       <Formik onSubmit={onSubmit} initialValues={initialValues}>
         {() => (
-          <Form className="w-[60%] flex flex-col justify-center items-center">
+          <Form className="w-[60%] flex flex-row justify-center items-center">
+            <div className={" w-[100%] container flex flex-col"}>
+              <label style={{ color: "black" }} className="font-bold">
+                Productora
+              </label>
+
+              <input
+                defaultValue={`${year}-01-01`}
+                type="text"
+                id="nombre_productora"
+                name="nombre_productora"
+                className={
+                  "padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-[black]"
+                }
+              />
+            </div>
             <div className={" w-[100%] container flex flex-col"}>
               <label style={{ color: "black" }} className="font-bold">
                 Fecha Inicio de Titularidad
@@ -452,30 +473,33 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
               <label style={{ color: "black" }} className="font-bold">
                 Porcentaje de Titularidad (solo numeros con hasta dos decimales)
               </label>
-              <div
-                onClick={handleDivClick}
+              <input
+                ref={inputRef}
+                type="number"
+                step={0.01}
+                value={percentage}
+                onChange={handleChangePercentage}
+                placeholder="0"
                 className={
-                  "padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-[black] relative overflow-hidden"
+                  "padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-[black]"
                 }
-              >
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={percentage}
-                  onChange={handleChangePercentage}
-                  maxLength={3}
-                  placeholder="0"
-                  className="w-[4.9%] h-[100%] pl-1 rounded text-black ring-0 outline-0 focus-ring-0"
-                />
-                <span className="absolute left-[5.4%] top-[50%] transform -translate-y-1/2 text-gray-500 ">
-                  %
-                </span>
-              </div>
+              />
             </div>
             <CustomButton type="submit">Continuar</CustomButton>
           </Form>
         )}
       </Formik>
+      <div>
+        <CustomTable
+          columnNames={[
+            { name: "PRODUCTORA", isSortable: true },
+            { name: "PORCENTAJE", isSortable: true },
+            { name: "REGISTRO DESDE", isSortable: true },
+            { name: "REGISTRO HASTA", isSortable: true },
+          ]}
+          columnValues={participaciones.map((p) => [...Object.values(p)])}
+        />
+      </div>
     </div>
   );
 };
@@ -492,12 +516,6 @@ const EditTerritoriality: FC = () => {
   return (
     <div className="w-[100%] flex flex-col justify-center items-center mt-[3rem] pl-[3rem] pr-[3rem]">
       <div className="w-[100%] pr-[2rem] pl-[2rem] justify-between items-end flex mt-[1rem] mb-[1rem]">
-        <button
-          onClick={() => {}}
-          className="text-mainblue text-[1.1rem] decoration-underline"
-        >
-          <p className="text-mainblue">Ir al paso anterior</p>
-        </button>
         <CustomInput type="text" label="Buscar Países" />
         <div className="flex gap-[1.5rem]">
           <CustomButton onClick={handleFinishNewPhonogram}>
