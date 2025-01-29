@@ -1,6 +1,6 @@
 "use client";
 import { Form, Formik } from "formik";
-import React, { FC, useRef, useState } from "react";
+import React, { FC, useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
@@ -22,7 +22,7 @@ function page() {
     | "load_audio"
     | "add_participation"
     | "edit_territoriality"
-  >("add_participation");
+  >("start");
 
   const handleGoToCreateNew = () => {
     if (isNewPhonogram) {
@@ -386,13 +386,19 @@ const LoadAudio: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
 };
 
 const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
-  const initialValues = {
-    fecha_participacion_inicio: "",
-    fecha_participacion_hasta: "",
+  const year = new Date().getFullYear();
+  const initialValues: {
+    cuit_productora: string;
+    porcentaje_participacion: number | string;
+    fecha_participacion_inicio: string;
+    fecha_participacion_hasta: string;
+  } = {
+    cuit_productora: "",
     porcentaje_participacion: "",
-    productora: "",
+    fecha_participacion_inicio: `${year}-01-01`,
+    fecha_participacion_hasta: "2099-12-31",
   };
-  const [percentage, setPercentage] = useState<string>("100");
+
   const [participacion, setParticipacion] =
     useState<typeof initialValues>(initialValues);
   const [participaciones, setParticipaciones] = useState<
@@ -400,28 +406,33 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
   >([]);
 
   const handleChangePercentage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
+    const inputValue = parseFloat(e.target.value ? e.target.value : "0");
 
-    const regex = /^(100|[0-9]{1,2})$/;
-
-    if (regex.test(inputValue) || inputValue === "") {
-      setPercentage(inputValue);
+    if (inputValue <= 100) {
+      setParticipacion({
+        ...participacion,
+        porcentaje_participacion: parseFloat(inputValue.toFixed(2)) || "",
+      });
     }
   };
-
-  const year = new Date().getFullYear();
 
   return (
     <div className="w-[100%] flex flex-col justify-center items-center mt-[3rem] pl-[3rem] pr-[3rem]">
       <p className="text-black font-bold text-[1.3rem]">Agregar Porcentaje</p>
-      <div className="w-[100%] flex flex-row justify-center items-center">
-        <div className={" w-[100%] container flex flex-col"}>
+      <div className="w-[100%] flex flex-row justify-center items-end space-x-3 py-[1rem]">
+        <div className={" w-[100%] flex flex-col"}>
           <label style={{ color: "black" }} className="font-bold">
             Productora
           </label>
 
           <input
-            defaultValue={`${year}-01-01`}
+            value={participacion.cuit_productora}
+            onChange={(e) =>
+              setParticipacion({
+                ...participacion,
+                cuit_productora: e.target.value,
+              })
+            }
             type="text"
             id="nombre_productora"
             name="nombre_productora"
@@ -430,13 +441,19 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
             }
           />
         </div>
-        <div className={" w-[100%] container flex flex-col"}>
+        <div className={" w-[100%] flex flex-col"}>
           <label style={{ color: "black" }} className="font-bold">
             Fecha Inicio de Titularidad
           </label>
 
           <input
-            defaultValue={`${year}-01-01`}
+            value={participacion.fecha_participacion_inicio}
+            onChange={(e) =>
+              setParticipacion({
+                ...participacion,
+                fecha_participacion_inicio: e.target.value,
+              })
+            }
             type="date"
             id="fecha_participacion_inicio"
             name="fecha_participacion_inicio"
@@ -445,13 +462,19 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
             }
           />
         </div>
-        <div className={" w-[100%] container flex flex-col"}>
+        <div className={" w-[100%] flex flex-col"}>
           <label style={{ color: "black" }} className="font-bold">
             Fecha Hasta de Titularidad
           </label>
 
           <input
-            defaultValue={"2099-12-31"}
+            value={participacion.fecha_participacion_hasta}
+            onChange={(e) =>
+              setParticipacion({
+                ...participacion,
+                fecha_participacion_hasta: e.target.value,
+              })
+            }
             type="date"
             id="fecha_participacion_hasta"
             name="fecha_participacion_hasta"
@@ -460,25 +483,31 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
             }
           />
         </div>
-        <div className={"w-[100%] container flex flex-col"}>
+        <div className={"w-[100%] flex flex-col"}>
           <label style={{ color: "black" }} className="font-bold">
-            Porcentaje de Titularidad (solo numeros con hasta dos decimales)
+            Porcentaje de Titularidad
           </label>
           <input
-            ref={inputRef}
             type="number"
             step={0.01}
-            value={percentage}
+            min={0}
+            max={100}
+            value={participacion.porcentaje_participacion}
             onChange={handleChangePercentage}
-            placeholder="0"
             className={
               "padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-[black]"
             }
           />
         </div>
-        <CustomButton>Agregar</CustomButton>
+        <CustomButton
+          onClick={() =>
+            setParticipaciones([...participaciones, participacion])
+          }
+        >
+          Agregar
+        </CustomButton>
       </div>
-      <div>
+      <div className="w-[100%] my-[1rem]">
         <CustomTable
           columnNames={[
             { name: "PRODUCTORA", isSortable: true },
@@ -486,12 +515,17 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
             { name: "REGISTRO DESDE", isSortable: true },
             { name: "REGISTRO HASTA", isSortable: true },
           ]}
-          columnValues={participaciones.map((p) => [...Object.values(p)])}
+          columnValues={participaciones.map((p) => [
+            p.cuit_productora,
+            p.porcentaje_participacion,
+            p.fecha_participacion_inicio,
+            p.fecha_participacion_hasta,
+          ])}
         />
-        <CustomButton onClick={onSubmit} type="button">
-          Continuar
-        </CustomButton>
       </div>
+      <CustomButton onClick={onSubmit} type="button">
+        Continuar
+      </CustomButton>
     </div>
   );
 };
