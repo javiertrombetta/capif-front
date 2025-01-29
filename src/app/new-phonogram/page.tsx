@@ -393,16 +393,11 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
     productora: "",
   };
   const [percentage, setPercentage] = useState<string>("100");
+  const [participacion, setParticipacion] =
+    useState<typeof initialValues>(initialValues);
   const [participaciones, setParticipaciones] = useState<
     Array<typeof initialValues>
   >([]);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const handleDivClick = () => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  };
 
   const handleChangePercentage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
@@ -419,76 +414,70 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
   return (
     <div className="w-[100%] flex flex-col justify-center items-center mt-[3rem] pl-[3rem] pr-[3rem]">
       <p className="text-black font-bold text-[1.3rem]">Agregar Porcentaje</p>
-      <Formik onSubmit={onSubmit} initialValues={initialValues}>
-        {() => (
-          <Form className="w-[60%] flex flex-row justify-center items-center">
-            <div className={" w-[100%] container flex flex-col"}>
-              <label style={{ color: "black" }} className="font-bold">
-                Productora
-              </label>
+      <div className="w-[100%] flex flex-row justify-center items-center">
+        <div className={" w-[100%] container flex flex-col"}>
+          <label style={{ color: "black" }} className="font-bold">
+            Productora
+          </label>
 
-              <input
-                defaultValue={`${year}-01-01`}
-                type="text"
-                id="nombre_productora"
-                name="nombre_productora"
-                className={
-                  "padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-[black]"
-                }
-              />
-            </div>
-            <div className={" w-[100%] container flex flex-col"}>
-              <label style={{ color: "black" }} className="font-bold">
-                Fecha Inicio de Titularidad
-              </label>
+          <input
+            defaultValue={`${year}-01-01`}
+            type="text"
+            id="nombre_productora"
+            name="nombre_productora"
+            className={
+              "padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-[black]"
+            }
+          />
+        </div>
+        <div className={" w-[100%] container flex flex-col"}>
+          <label style={{ color: "black" }} className="font-bold">
+            Fecha Inicio de Titularidad
+          </label>
 
-              <input
-                defaultValue={`${year}-01-01`}
-                type="date"
-                id="fecha_participacion_inicio"
-                name="fecha_participacion_inicio"
-                className={
-                  "padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-[black]"
-                }
-              />
-            </div>
+          <input
+            defaultValue={`${year}-01-01`}
+            type="date"
+            id="fecha_participacion_inicio"
+            name="fecha_participacion_inicio"
+            className={
+              "padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-[black]"
+            }
+          />
+        </div>
+        <div className={" w-[100%] container flex flex-col"}>
+          <label style={{ color: "black" }} className="font-bold">
+            Fecha Hasta de Titularidad
+          </label>
 
-            <div className={" w-[100%] container flex flex-col"}>
-              <label style={{ color: "black" }} className="font-bold">
-                Fecha Hasta de Titularidad
-              </label>
-
-              <input
-                defaultValue={"2099-12-31"}
-                type="date"
-                id="fecha_participacion_hasta"
-                name="fecha_participacion_hasta"
-                className={
-                  "padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-[black]"
-                }
-              />
-            </div>
-
-            <div className={"w-[100%] container flex flex-col"}>
-              <label style={{ color: "black" }} className="font-bold">
-                Porcentaje de Titularidad (solo numeros con hasta dos decimales)
-              </label>
-              <input
-                ref={inputRef}
-                type="number"
-                step={0.01}
-                value={percentage}
-                onChange={handleChangePercentage}
-                placeholder="0"
-                className={
-                  "padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-[black]"
-                }
-              />
-            </div>
-            <CustomButton type="submit">Continuar</CustomButton>
-          </Form>
-        )}
-      </Formik>
+          <input
+            defaultValue={"2099-12-31"}
+            type="date"
+            id="fecha_participacion_hasta"
+            name="fecha_participacion_hasta"
+            className={
+              "padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-[black]"
+            }
+          />
+        </div>
+        <div className={"w-[100%] container flex flex-col"}>
+          <label style={{ color: "black" }} className="font-bold">
+            Porcentaje de Titularidad (solo numeros con hasta dos decimales)
+          </label>
+          <input
+            ref={inputRef}
+            type="number"
+            step={0.01}
+            value={percentage}
+            onChange={handleChangePercentage}
+            placeholder="0"
+            className={
+              "padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-[black]"
+            }
+          />
+        </div>
+        <CustomButton>Agregar</CustomButton>
+      </div>
       <div>
         <CustomTable
           columnNames={[
@@ -499,6 +488,9 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
           ]}
           columnValues={participaciones.map((p) => [...Object.values(p)])}
         />
+        <CustomButton onClick={onSubmit} type="button">
+          Continuar
+        </CustomButton>
       </div>
     </div>
   );
