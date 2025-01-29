@@ -418,11 +418,11 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
 
   return (
     <div className="w-[100%] flex flex-col justify-center items-center mt-[3rem] pl-[3rem] pr-[3rem]">
-      <p className="text-black font-bold text-[1.3rem]">Agregar Porcentaje</p>
+      <p className="text-black font-bold text-[1.3rem]">Agregar Titulares</p>
       <div className="w-[100%] flex flex-row justify-center items-end space-x-3 py-[1rem]">
         <div className={" w-[100%] flex flex-col"}>
           <label style={{ color: "black" }} className="font-bold">
-            Productora
+            CUIT Productora
           </label>
 
           <input
@@ -510,7 +510,7 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
       <div className="w-[100%] my-[1rem]">
         <CustomTable
           columnNames={[
-            { name: "PRODUCTORA", isSortable: true },
+            { name: "CUIT", isSortable: true },
             { name: "PORCENTAJE", isSortable: true },
             { name: "REGISTRO DESDE", isSortable: true },
             { name: "REGISTRO HASTA", isSortable: true },
@@ -545,7 +545,7 @@ const EditTerritoriality: FC = () => {
         <CustomInput type="text" label="Buscar Países" />
         <div className="flex gap-[1.5rem]">
           <CustomButton onClick={handleFinishNewPhonogram}>
-            Guardar y ffff
+            Guardar y Terminar
           </CustomButton>
         </div>
       </div>
