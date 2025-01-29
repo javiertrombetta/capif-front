@@ -36,6 +36,18 @@ export interface SendApplication {
   };
 }
 
+export const TIPOS_REGISTRO = [
+  "DEPURAR",
+  "NUEVO",
+  "CONFIRMADO",
+  "PENDIENTE",
+  "ENVIADO",
+  "HABILITADO",
+  "DESHABILITADO",
+] as const;
+
+export type TIPO_REGISTRO = (typeof TIPOS_REGISTRO)[number];
+
 export interface User {
   apellido: string;
   email: string;
@@ -44,7 +56,7 @@ export interface User {
   nombre: string;
   rol_id: string;
   telefono: string;
-  tipo_registro: string;
+  tipo_registro: TIPO_REGISTRO;
   createdAt: Date;
   updatedAt: Date;
   rol?: {
@@ -53,12 +65,20 @@ export interface User {
   };
 }
 
-export interface UsersResponse {
+export interface UserData {
   hasSingleMaestro: boolean;
   maestros: [];
   user: User;
   vistas: { id_vista: string; is_habilitado: boolean }[];
 }
+
+export interface GetUsersResponse {
+  currentPage: number;
+  data: UserData[];
+  total: number;
+  totalPages: number;
+}
+
 export interface UpdateUserById {
   apellido?: string;
   nombre?: string;
