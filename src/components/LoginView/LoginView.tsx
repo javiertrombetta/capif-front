@@ -16,6 +16,7 @@ import { setAuthData } from "@/store/authSlice";
 import { setModal } from "@/store/modalSlice";
 import { ModalNames } from "@/types/modalNames";
 import { ROLES } from "@/types/auth.types";
+import { toast } from "react-toastify";
 
 interface LoginFormValues {
   email: string;
@@ -37,8 +38,12 @@ const LoginForm: FC = () => {
     }
 
     const { email, password } = values;
-
-    await authLogin({ email, password });
+    try {
+      await authLogin({ email, password });
+    } catch {
+      toast.error("Usuario o contraseña incorrectos");
+      return;
+    }
 
     const data = await getAuthData();
     dispatch(setAuthData(data));

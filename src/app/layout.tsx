@@ -8,6 +8,7 @@ import "../styles/globals.css";
 import { initialStateSignup } from "@/store/signupSlice";
 import { authDefaultState } from "@/store/authSlice";
 import AuthProvider from "@/components/AuthProvider/AuthProvider";
+import { ToastContainer } from "react-toastify";
 
 const ptSans = PT_Sans({ weight: "400", subsets: ["latin"] });
 export const metadata: Metadata = {
@@ -31,6 +32,7 @@ export default function RootLayout({
           <AuthProvider>
             <Navbar>
               <ModalProvider>{children}</ModalProvider>
+              <ToastContainer position="bottom-right" />
             </Navbar>
           </AuthProvider>
         </StoreProvider>
