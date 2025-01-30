@@ -9,7 +9,7 @@ import CustomField from "@/commons/CustomField/CustomField";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { setModal } from "@/store/modalSlice";
 import { ModalNames } from "@/types/modalNames";
-import { SendApplication } from "@/types/user.types";
+// import { SendApplication } from "@/types/user.types";
 import { sendApplication } from "@/services/auth";
 import CustomFileInput from "@/commons/CustomFileInput/CustomFileInput";
 
@@ -121,50 +121,60 @@ const page: FC = () => {
     values: ApplicationValues
   ) => {
     e.preventDefault();
-    ((values: ApplicationValues) => {
-      if (authUser.id_usuario) {
-        const requestData: SendApplication = {
-          id_usuario: authUser.id_usuario,
-          nombre: values.nombre,
-          apellido: values.apellido,
-          telefono: values.telefono,
-          documentos: [],
-          productoraData: {
-            nombre_productora: values.nombre_productora,
-            cuit_cuil: values.cuit_cuil,
-            email: values.email,
-            calle: values.calle,
-            numero: values.numero,
-            ciudad: values.ciudad,
-            localidad: values.localidad,
-            provincia: values.provincia,
-            codigo_postal: values.codigo_postal,
-            telefono: values.telefono,
-            nacionalidad: values.nacionalidad,
-            alias_cbu: values.alias_cbu,
-            cbu: values.cbu,
-            denominacion_sello: values.denominacion_sello,
-            datos_adicionales: values.datos_adicionales,
-            ...(currentEntity === "natural"
-              ? {
-                  tipo_persona: "FISICA",
-                  nombres: values.nombres_representante,
-                  apellidos: values.apellidos_representante,
-                }
-              : {
-                  tipo_persona: "JURIDICA",
-                  razon_social: values.razon_social,
-                  nombres_representante: values.nombres_representante,
-                  apellidos_representante: values.apellidos_representante,
-                  cuit_representante: values.cuit_representante,
-                }),
-          },
-        };
 
-        sendApplication(requestData);
-        onOpenModal();
-      }
-    })(values);
+    if (authUser.id_usuario) {
+      const formData = new FormData();
+
+      // Campos básicos
+      formData.append("nombre", values.nombre);
+      formData.append("apellido", values.apellido);
+      formData.append("telefono", values.telefono);
+
+      // Serializar el objeto 'productoraData' y agregarlo
+      formData.append(
+        "productoraData",
+        JSON.stringify({
+          nombre_productora: values.nombre_productora,
+          cuit_cuil: values.cuit_cuil,
+          email: values.email,
+          calle: values.calle,
+          numero: values.numero,
+          ciudad: values.ciudad,
+          localidad: values.localidad,
+          provincia: values.provincia,
+          codigo_postal: values.codigo_postal,
+          telefono: values.telefono,
+          nacionalidad: values.nacionalidad,
+          alias_cbu: values.alias_cbu,
+          cbu: values.cbu,
+          denominacion_sello: values.denominacion_sello,
+          datos_adicionales: values.datos_adicionales,
+          ...(currentEntity === "natural"
+            ? {
+                tipo_persona: "FISICA",
+                nombres: values.nombres_representante,
+                apellidos: values.apellidos_representante,
+              }
+            : {
+                tipo_persona: "JURIDICA",
+                razon_social: values.razon_social,
+                nombres_representante: values.nombres_representante,
+                apellidos_representante: values.apellidos_representante,
+                cuit_representante: values.cuit_representante,
+              }),
+        })
+      );
+
+      // Documentos y tipos de documentos
+      uploadedFiles.forEach((file, index) => {
+        formData.append(`documentos[${index}]`, file); // Archivo como File
+        formData.append(`tipoDocumento[${index}]`, file.name); // Tipo como texto
+      });
+
+      // Llamar al servicio con FormData
+      sendApplication(formData);
+      onOpenModal();
+    }
   };
 
   return (

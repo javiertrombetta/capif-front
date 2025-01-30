@@ -1,5 +1,5 @@
 import { ProductionCompanyResponse } from "@/types/productionCompany.types";
-import { SendApplication } from "@/types/user.types";
+// import { SendApplication } from "@/types/user.types";
 import { axiosInstance } from "./axiosInstance";
 import {
   GetAuthDataResponse,
@@ -131,9 +131,13 @@ export const selectProductionCompany = async (productoraId: string) => {
   await axiosInstance.post("auth/me/" + productoraId, {});
 };
 
-export const sendApplication = async (requestData: SendApplication) => {
+export const sendApplication = async (requestData: FormData) => {
   try {
-    await axiosInstance.post("auth/prods/primary/step-two", requestData);
+    await axiosInstance.post("auth/prods/primary/step-two", requestData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   } catch (error: unknown) {
     throw new Error(`${error}`);
   }
