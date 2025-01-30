@@ -82,4 +82,6 @@ export interface GetUsersResponse {
 export interface UpdateUserById {
   apellido?: string;
   nombre?: string;
+  telefono?: string;
+  email?: string;
 }
