@@ -1,22 +1,23 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import CustomInput from "@/commons/CustomInput/CustomInput";
-import Header from "@/commons/Header/Header";
-import { useAppSelector } from "@/hooks/storeHooks";
-import { ROLES } from "@/types/auth.types";
-import CustomButton from "@/commons/CustomButton/CustomButton";
-import CustomTable from "@/commons/CustomTable/CustomTable";
 import { FaMusic, FaUserAlt } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { ProductionCompanyResponse } from "@/types/productionCompany.types";
-import { getAllCompanies } from "@/services/productionCompanies";
-import CustomLayout from "@/commons/CustomLayout/CustomLayout";
-import { getPendingApplications } from "@/services/auth";
 import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
+import CustomButton from "@/commons/CustomButton/CustomButton";
+import CustomInput from "@/commons/CustomInput/CustomInput";
+import CustomLayout from "@/commons/CustomLayout/CustomLayout";
+import CustomTable from "@/commons/CustomTable/CustomTable";
+import Header from "@/commons/Header/Header";
+import Spinner from "@/commons/Spinner/Spinner";
+import { useAppSelector } from "@/hooks/storeHooks";
+import { getPendingApplications } from "@/services/auth";
+import { getAllCompanies } from "@/services/productionCompanies";
+import { ROLES } from "@/types/auth.types";
+import { ProductionCompanyResponse } from "@/types/productionCompany.types";
 
 export default function page() {
   const authData = useAppSelector((state) => state.auth);
-
+  const [loading, setLoading] = useState(true);
   const [productionCompanies, setProductionCompanies] = useState<
     ProductionCompanyResponse[] | null
   >(null);
@@ -38,18 +39,27 @@ export default function page() {
   const getProductionCompanies = async () => {
     const companies = await getAllCompanies();
     setProductionCompanies(companies);
+    setLoading(false);
   };
 
   useEffect(() => {
     getProductionCompanies();
   }, []);
 
+  if (loading) {
+    return (
+      <div className="w-full h-full flex justify-center items-center">
+        <Spinner color="black" />
+      </div>
+    );
+  }
+
   return (
     <CustomLayout>
       <Header title="Buscar Productora" />
 
       <div className="h-[4rem] w-[100%] flex items-end mt-[1rem] gap-[2rem] pl-[1rem] pr-[2rem]">
-        <CustomInput label="Buscar:" type="text" />
+        <CustomInput label="NOMBRE" type="text" />
         {authData.rol === ROLES.SUPER_ADMIN ||
         authData.rol === ROLES.CAPIF_ADMIN ? (
           <>
@@ -63,17 +73,6 @@ export default function page() {
               </option>
               <option value={"incompleto"}>Incompleto</option>
             </select>
-
-            <CustomInput
-              className="w-[15rem]"
-              label="FECHA CREACIÓN DESDE"
-              type="date"
-            />
-            <CustomInput
-              className="w-[15rem]"
-              label="FECHA CREACIÓN HASTA"
-              type="date"
-            />
           </>
         ) : (
           <></>

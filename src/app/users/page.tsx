@@ -12,10 +12,12 @@ import { TIPOS_REGISTRO, User } from "@/types/user.types";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
 import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
+import Spinner from "@/commons/Spinner/Spinner";
 
 export default function page() {
   const authData = useAppSelector((state) => state.auth);
   const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   const initialValues = {
@@ -25,13 +27,15 @@ export default function page() {
     estado: "",
   };
 
-  const getUsersData = async () => {
+  const getUsersData = async (values?: Record<string, string>) => {
     try {
-      const users = await getUsers();
+      const users = await getUsers(values);
       setUsers(users);
     } catch (error) {
       console.log("🔴", error);
       setUsers([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -47,26 +51,22 @@ export default function page() {
     e: React.FormEvent<HTMLFormElement>,
     values: Record<string, string>
   ) => {
+    setLoading(true);
     e.preventDefault();
-    try {
-      for (const key in values) {
-        if (!values[key]) delete values[key];
-      }
-      const { email, nombre, apellido, estado } = values;
-      console.log(values);
-
-      const users = await getUsers({
-        email,
-        nombre,
-        apellido,
-        estado,
-      });
-      setUsers(users);
-    } catch (error) {
-      console.log(error);
-      setUsers([]);
+    for (const key in values) {
+      if (!values[key]) delete values[key];
     }
+
+    await getUsersData(values);
   };
+
+  if (loading) {
+    return (
+      <div className="w-full h-full flex justify-center items-center">
+        <Spinner color="black" />
+      </div>
+    );
+  }
 
   return (
     <CustomLayout>
