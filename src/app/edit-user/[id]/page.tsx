@@ -16,6 +16,7 @@ import { User } from "@/types/user.types";
 import { Form, Formik } from "formik";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomField from "@/commons/CustomField/CustomField";
+import Spinner from "@/commons/Spinner/Spinner";
 interface UserInitialValue {
   nombre: string;
   apellido: string;
@@ -31,31 +32,23 @@ export default function page() {
   const userId = useParams().id;
   const { rol } = useAppSelector((state) => state.auth);
   const [userData, setUserData] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const initialValues: UserInitialValue = userData
-    ? {
-        nombre: userData.nombre || "",
-        apellido: userData.apellido || "",
-        email: userData.email || "",
-        estado: "",
-        contraseña: "",
-        repetir_contraseña: "",
-        bloqueado: userData.is_bloqueado,
-      }
-    : {
-        nombre: "",
-        apellido: "",
-        email: "",
-        estado: "",
-        contraseña: "",
-        repetir_contraseña: "",
-        bloqueado: false,
-      };
+  const initialValues: UserInitialValue = {
+    nombre: userData?.nombre || "",
+    apellido: userData?.apellido || "",
+    email: userData?.email || "",
+    estado: "",
+    contraseña: "",
+    repetir_contraseña: "",
+    bloqueado: userData?.is_bloqueado || false,
+  };
 
   const handleGetUser = async () => {
     try {
       const user = await getUserById(userId as string);
-      setUserData(user.user);
+      setUserData(user);
+      setLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -92,140 +85,150 @@ export default function page() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="w-full h-full flex justify-center items-center">
+        <Spinner color="black" />
+      </div>
+    );
+  }
+
   return (
     <CustomLayout>
       <Header back title="Editar Usuario" />
-      <div className="flex justify-end mr-[1rem] mt-[1rem]">
-        <button
-          onClick={() => router.push("/users")}
-          className="flex items-center justify-center bg-mainblue w-fit h-[2rem] pl-[1rem] pr-[1rem] pt-[0.5rem] pb-[0.5rem] rounded-[0.2rem]"
-        >
-          Volver a la lista
-        </button>
-      </div>
-      {!userData ? null : (
-        <Formik
-          initialValues={initialValues}
-          // validationSchema={validationRecoveryPassword}
-          onSubmit={() => {}}
-        >
-          {({ isSubmitting, isValid, dirty, values }) => (
-            <Form
-              onSubmit={(e: React.FormEvent<HTMLFormElement>) =>
-                onSubmit(e, values)
-              }
-              className="ml-[3rem] w-[30rem] flex flex-col "
-            >
-              <CustomField
-                id="nombre"
-                name="nombre"
-                labelText="NOMBRES"
-                type="text"
-                width="w-[100%]"
-              />
-              <CustomField
-                id="apellido"
-                name="apellido"
-                labelText="APELLIDOS"
-                type="text"
-                width="w-[100%]"
-              />
-
-              <div className="flex w-[100%] relative items-center">
+      <div className="flex flex-col overflow-y-auto py-[1rem]">
+        <div className="flex justify-end mr-[1rem] mt-[1rem]">
+          <button
+            onClick={() => router.push("/users")}
+            className="flex items-center justify-center bg-mainblue w-fit h-[2rem] pl-[1rem] pr-[1rem] pt-[0.5rem] pb-[0.5rem] rounded-[0.2rem]"
+          >
+            Volver a la lista
+          </button>
+        </div>
+        {userData && (
+          <Formik
+            initialValues={initialValues}
+            // validationSchema={validationRecoveryPassword}
+            onSubmit={() => {}}
+          >
+            {({ isSubmitting, isValid, dirty, values }) => (
+              <Form
+                onSubmit={(e: React.FormEvent<HTMLFormElement>) =>
+                  onSubmit(e, values)
+                }
+                className="ml-[3rem] w-[30rem] flex flex-col "
+              >
                 <CustomField
-                  id="email"
-                  name="email"
-                  labelText="EMAIL"
-                  type="email"
+                  id="nombre"
+                  name="nombre"
+                  labelText="NOMBRES"
+                  type="text"
                   width="w-[100%]"
                 />
-                <button className="ml-[1rem] right-[0] mb-[0.5rem] absolute flex items-center justify-center bg-mainblue w-[2rem] h-[2rem] rounded-[0.2rem]">
-                  <MdEdit size={19} />
-                </button>
-              </div>
-
-              <div className="w-[100%] gap-[0.5rem] flex flex-col">
-                <p className="font-bold text-black">ESTADO</p>
-                <select
-                  disabled
-                  className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem]"
-                >
-                  <option>Confirmado</option>
-                  <option>Nuevo</option>
-                  <option>Registrado</option>
-                </select>
-              </div>
-              <div className="w-[100%] mt-[2rem]">
                 <CustomField
-                  type="password"
-                  id="contraseña"
-                  name="contraseña"
-                  labelText="CONTRASEÑA"
+                  id="apellido"
+                  name="apellido"
+                  labelText="APELLIDOS"
+                  type="text"
                   width="w-[100%]"
                 />
-              </div>
 
-              <CustomField
-                type="password"
-                id="repetir_contraseña"
-                name="repetir_contraseña"
-                labelText="REPETIR CONTRASEÑA"
-                width="w-[100%]"
-              />
-
-              <div className="w-[100%] gap-[0.5rem] flex flex-col mb-[2rem]">
-                <p className="font-bold text-black">BLOQUEADO</p>
-                <select
-                  onChange={handleBlockUser}
-                  value={values.bloqueado ? "true" : "false"}
-                  className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem]"
-                >
-                  <option value={"false"}>NO</option>
-                  <option value={"true"}>SI</option>
-                </select>
-              </div>
-
-              {rol === ROLES.EMPLOYEE ? null : (
-                <div className="w-[28rem] flex flex-col gap-[1rem]">
-                  <NewUserMenusCheckbox
-                    menuName={"Repertorio"}
-                    subMenuOptions={[
-                      { name: "Declaración Repertorio", id: "newPhonogram" },
-                      { name: "Buscar", id: "searchPhonogram" },
-                      { name: "Conflictos", id: "conflicts" },
-                    ]}
+                <div className="flex w-[100%] relative items-center">
+                  <CustomField
+                    id="email"
+                    name="email"
+                    labelText="EMAIL"
+                    type="email"
+                    width="w-[100%]"
                   />
+                  <button className="ml-[1rem] right-[0] mb-[0.5rem] absolute flex items-center justify-center bg-mainblue w-[2rem] h-[2rem] rounded-[0.2rem]">
+                    <MdEdit size={19} />
+                  </button>
+                </div>
 
-                  <NewUserMenusCheckbox
-                    menuName={"Usuarios"}
-                    subMenuOptions={[{ name: "Registros", id: "records" }]}
-                  />
-
-                  <NewUserMenusCheckbox
-                    menuName={"Cuentas Corrientes"}
-                    subMenuOptions={[
-                      { name: "Estado de Cuenta", id: "stateAccount" },
-                    ]}
+                <div className="w-[100%] gap-[0.5rem] flex flex-col">
+                  <p className="font-bold text-black">ESTADO</p>
+                  <select
+                    disabled
+                    className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem]"
+                  >
+                    <option>Confirmado</option>
+                    <option>Nuevo</option>
+                    <option>Registrado</option>
+                  </select>
+                </div>
+                <div className="w-[100%] mt-[2rem]">
+                  <CustomField
+                    type="password"
+                    id="contraseña"
+                    name="contraseña"
+                    labelText="CONTRASEÑA"
+                    width="w-[100%]"
                   />
                 </div>
-              )}
-              <div className="flex gap-[2rem]">
-                <CustomButton
-                  type="submit"
-                  disabled={isSubmitting || !isValid || !dirty}
-                  className="flex items-center justify-center bg-mainblue w-fit h-[2rem] mt-[2rem] pl-[1rem] pr-[1rem] pt-[0.5rem] pb-[0.5rem] rounded-[0.2rem]"
-                >
-                  Aceptar
-                </CustomButton>
 
-                <button className="flex items-center justify-center bg-mainblue w-fit h-[2rem] mt-[2rem] pl-[1rem] pr-[1rem] pt-[0.5rem] pb-[0.5rem] rounded-[0.2rem]">
-                  Cancelar
-                </button>
-              </div>
-            </Form>
-          )}
-        </Formik>
-      )}
+                <CustomField
+                  type="password"
+                  id="repetir_contraseña"
+                  name="repetir_contraseña"
+                  labelText="REPETIR CONTRASEÑA"
+                  width="w-[100%]"
+                />
+
+                <div className="w-[100%] gap-[0.5rem] flex flex-col mb-[2rem]">
+                  <p className="font-bold text-black">BLOQUEADO</p>
+                  <select
+                    onChange={handleBlockUser}
+                    value={values.bloqueado ? "true" : "false"}
+                    className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem]"
+                  >
+                    <option value={"false"}>NO</option>
+                    <option value={"true"}>SI</option>
+                  </select>
+                </div>
+
+                {rol === ROLES.EMPLOYEE ? null : (
+                  <div className="w-[28rem] flex flex-col gap-[1rem]">
+                    <NewUserMenusCheckbox
+                      menuName={"Repertorio"}
+                      subMenuOptions={[
+                        { name: "Declaración Repertorio", id: "newPhonogram" },
+                        { name: "Buscar", id: "searchPhonogram" },
+                        { name: "Conflictos", id: "conflicts" },
+                      ]}
+                    />
+
+                    <NewUserMenusCheckbox
+                      menuName={"Usuarios"}
+                      subMenuOptions={[{ name: "Registros", id: "records" }]}
+                    />
+
+                    <NewUserMenusCheckbox
+                      menuName={"Cuentas Corrientes"}
+                      subMenuOptions={[
+                        { name: "Estado de Cuenta", id: "stateAccount" },
+                      ]}
+                    />
+                  </div>
+                )}
+                <div className="flex gap-[2rem]">
+                  <CustomButton
+                    type="submit"
+                    disabled={isSubmitting || !isValid || !dirty}
+                    className="flex items-center justify-center bg-mainblue w-fit h-[2rem] mt-[2rem] pl-[1rem] pr-[1rem] pt-[0.5rem] pb-[0.5rem] rounded-[0.2rem]"
+                  >
+                    Aceptar
+                  </CustomButton>
+
+                  <button className="flex items-center justify-center bg-mainblue w-fit h-[2rem] mt-[2rem] pl-[1rem] pr-[1rem] pt-[0.5rem] pb-[0.5rem] rounded-[0.2rem]">
+                    Cancelar
+                  </button>
+                </div>
+              </Form>
+            )}
+          </Formik>
+        )}
+      </div>
     </CustomLayout>
   );
 }

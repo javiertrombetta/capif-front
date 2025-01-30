@@ -17,6 +17,7 @@ import "./Navbar.css";
 import RouteGuard from "../RouteGuard/RouteGuard";
 import { authLogout } from "@/services/auth";
 import { authDefaultState, setAuthData } from "@/store/authSlice";
+import Spinner from "@/commons/Spinner/Spinner";
 
 interface NavbarProps {
   children: ReactNode;
@@ -25,6 +26,8 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
   const dispatch = useAppDispatch();
   const pathname = usePathname();
   const authData = useAppSelector((state) => state.auth);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+
   const noUserPathnames: string[] = [
     "/",
     "/login",
@@ -35,6 +38,7 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
     "/confirm-account/:token",
     "/password-recovery/:token",
   ];
+
   const checkForbbidenPathname = (
     forbiddenPathnames: string[],
     pathname: string
@@ -44,8 +48,6 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
       return isMatch(pathname) !== false;
     });
   };
-
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const handleMenuOpen = () => {
     setIsMenuOpen((prevState: boolean) => !prevState);
@@ -140,8 +142,14 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
           <div className="w-[15rem] navbar-background fixed h-[100vh] z-10 pt-[3rem]">
             <Sidebar />
           </div>
-          <div className="flex flex-col h-[100vh] pl-[15rem] pt-[3.2rem]">
-            <RouteGuard>{children}</RouteGuard>
+          <div className="flex flex-col h-[100vh] pl-[15rem] pt-[3.2rem] bg-white">
+            {authData.loading ? (
+              <div className="w-full h-full flex items-center justify-center">
+                <Spinner color="black" />
+              </div>
+            ) : (
+              <RouteGuard>{children}</RouteGuard>
+            )}
           </div>
         </div>
       )}

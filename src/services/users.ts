@@ -1,4 +1,4 @@
-import { UpdateUserById, User, GetUsersResponse } from "@/types/user.types";
+import { UpdateUserById, GetUsersResponse } from "@/types/user.types";
 import { axiosInstance } from "./axiosInstance";
 
 interface GetUsersParams {
@@ -16,10 +16,10 @@ export const getUsers = async (params?: GetUsersParams) => {
 };
 
 export const getUserById = async (id_usuario: string) => {
-  const users: { data: { user: User } } = await axiosInstance.get(
+  const users: { data: GetUsersResponse } = await axiosInstance.get(
     `users?usuarioId=${id_usuario}`
   );
-  return users.data;
+  return users.data.data[0].user;
 };
 
 export const updateUserById = async (

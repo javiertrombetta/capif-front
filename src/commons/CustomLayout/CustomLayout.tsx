@@ -7,7 +7,7 @@ interface CustomLayoutProps {
 const CustomLayout: FC<CustomLayoutProps> = ({ children, className }) => {
   return (
     <div
-      className={`max-w-[100%] min-w-[100%] h-[100%] bg-[white] overflow-y-auto flex flex-col ${className}`}
+      className={`max-w-[100%] min-w-[100%] h-[100%] overflow-y-auto flex flex-col ${className}`}
     >
       {children}
     </div>
