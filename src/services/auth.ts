@@ -1,6 +1,6 @@
 import { ProductionCompanyResponse } from "@/types/productionCompany.types";
-import { SendApplication } from "@/types/user.types";
 import { axiosInstance } from "./axiosInstance";
+import { SendApplication } from "@/types/user.types";
 import {
   GetAuthDataResponse,
   AuthProps,
