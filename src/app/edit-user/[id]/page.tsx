@@ -100,7 +100,9 @@ export default function page() {
               <>
                 <UserFields userData={userData} values={values} />
                 <Form
-                  onSubmit={(e: React.FormEvent<HTMLFormElement>) => {}}
+                  onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+                    console.log(e);
+                  }}
                   className="ml-[3rem] w-[30rem] flex flex-col mt-[2rem]"
                 >
                   <div className="w-[100%] gap-[0.5rem] flex flex-col">
