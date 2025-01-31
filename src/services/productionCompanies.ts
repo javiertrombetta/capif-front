@@ -62,3 +62,14 @@ export const getFilteredNominations = async (filters: {
 export const deleteAllNominations = async () => {
   await axiosInstance.delete("producers/postulaciones");
 };
+
+export const uploadCompanyDocument = async (
+  formData: FormData,
+  companyId: string
+) => {
+  await axiosInstance.post(`producers/${companyId}/documentos`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
