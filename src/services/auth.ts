@@ -7,6 +7,7 @@ import {
   AuthSecondarySignUpRequest,
 } from "@/types/auth.types";
 import { authDefaultState } from "@/store/authSlice";
+import { SendApplication } from "@/types/user.types";
 
 interface AuthSignUpRequest {
   email: string;
@@ -131,13 +132,18 @@ export const selectProductionCompany = async (productoraId: string) => {
   await axiosInstance.post("auth/me/" + productoraId, {});
 };
 
-export const sendApplication = async (requestData: FormData) => {
+export const sendApplication = async (requestData: SendApplication) => {
   try {
-    await axiosInstance.post("auth/prods/primary/step-two", requestData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response = (await axiosInstance.post(
+      "auth/prods/primary/step-two",
+      requestData
+    )) as {
+      data: {
+        productora: string;
+        message: string;
+      };
+    };
+    return response.data;
   } catch (error: unknown) {
     throw new Error(`${error}`);
   }

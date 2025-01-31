@@ -21,6 +21,7 @@ const CustomFileInput: FC<CustomFileInputProps> = ({
         onChange={onChange}
         className="absolute opacity-0 cursor-pointer w-[100%] h-[100%]"
         type="file"
+        accept="image/*,application/pdf"
       />
     </button>
   );
