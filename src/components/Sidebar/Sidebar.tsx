@@ -54,7 +54,7 @@ const Sidebar: FC = () => {
         : [
             {
               name: "Altas",
-              link: "/add-employee",
+              link: "/users/add-user",
             },
 
             {
@@ -161,7 +161,7 @@ const Sidebar: FC = () => {
       },
       {
         name: "Altas",
-        link: "/add-employee",
+        link: "/users/add-user",
       },
     ],
     cashFlowOptions: [

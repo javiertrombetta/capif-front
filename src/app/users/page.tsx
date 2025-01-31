@@ -171,7 +171,7 @@ export default function page() {
                             icon: <FaEdit />,
                             onClick: () => {
                               redirectToOption(
-                                `/edit-user/${element.id_usuario}`
+                                `/users/edit-user/${element.id_usuario}`
                               );
                             },
                           },
