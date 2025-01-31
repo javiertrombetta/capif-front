@@ -15,7 +15,7 @@ import {
   getUserById,
   updateUserById,
 } from "@/services/users";
-import { TIPOS_REGISTRO, User } from "@/types/user.types";
+import { ESTADOS, User } from "@/types/user.types";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomField from "@/commons/CustomField/CustomField";
 import Spinner from "@/commons/Spinner/Spinner";
@@ -91,18 +91,18 @@ export default function page() {
               <select
                 disabled
                 className="pl-[0.3rem] border-[#c8c8c8] bg-[#f4f4f4] border-[2px] outline-0 h-[2rem]"
-                value={userData.tipo_registro}
+                value={userData.estado}
               >
-                {TIPOS_REGISTRO.map((t) => (
+                {ESTADOS.map((t) => (
                   <option value={t}>{t}</option>
                 ))}
               </select>
             </div>
             <CustomSwitch
               label="BLOQUEADO"
-              checked={userData.is_bloqueado}
+              checked={userData.isBloqueado}
               handleOnCheck={(isChecked) =>
-                handleBlockUser(userData.id_usuario, isChecked)
+                handleBlockUser(userData.id, isChecked)
               }
             />
             <div className="p-[1rem] w-[100%] flex flex-col border-[1px] border-[#c8c8c8]">
@@ -139,8 +139,8 @@ const UserFields = ({ userData }: { userData: User }) => {
     try {
       // e.preventDefault();
       const { nombre, apellido, email, telefono } = values;
-      if (userData?.id_usuario) {
-        await updateUserById(userData?.id_usuario, {
+      if (userData?.id) {
+        await updateUserById(userData?.id, {
           nombre,
           apellido,
           email,
