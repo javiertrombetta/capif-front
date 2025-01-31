@@ -1,5 +1,24 @@
 import * as Yup from "yup";
 
+const validacionNombre = Yup.string()
+  .min(2, "El nombre debe tener al menos 2 caracteres.")
+  .max(100, "No puedes escribir más de 100 caracteres en este campo.")
+  .required("El nombre es requerido.");
+
+const validacionApellido = Yup.string()
+  .min(2, "El apellido debe tener al menos 2 caracteres.")
+  .max(100, "No puedes escribir más de 100 caracteres en este campo.")
+  .required("El apellido es requerido.");
+
+const validacionTelefono = Yup.string()
+  .max(50, "El teléfono no puede exceder los 50 caracteres")
+  .matches(/^[0-9\-+() ]+$/, "El teléfono contiene caracteres inválidos")
+  .nullable();
+
+const validacionEmail = Yup.string()
+  .email("Debe ser un correo electrónico válido")
+  .required("El correo electrónico es requerido");
+
 export const validationSignUpForm = Yup.object({
   // name: Yup.string()
   //   .min(2, "El nombre debe tener al menos 2 caracteres.")
@@ -114,9 +133,7 @@ export const validationRegisterApplication = Yup.object().shape({
   cuit_cuil: Yup.string()
     .required("El CUIT/CUIL es requerido")
     .matches(/^\d{11}$/, "El CUIT/CUIL debe contener exactamente 11 dígitos"),
-  email: Yup.string()
-    .email("Debe ser un correo electrónico válido")
-    .required("El correo electrónico es requerido"),
+  email: validacionEmail,
   calle: Yup.string().required("La calle es requerida"),
   numero: Yup.string()
     .required("El número es requerido")
@@ -163,7 +180,7 @@ export const validationChangePassword = Yup.object({
 });
 
 export const validationSecondaryRegister = Yup.object({
-  email: Yup.string().email("Email inválido").required("El email es requerido"),
+  email: validacionEmail,
   confirm_email: Yup.string()
     .email("Email inválido")
     .test({
@@ -174,16 +191,14 @@ export const validationSecondaryRegister = Yup.object({
       },
     })
     .required("El email de confirmación es requerido"),
-  nombre: Yup.string()
-    .min(2, "El nombre debe tener al menos 2 caracteres.")
-    .max(100, "No puedes escribir más de 100 caracteres en este campo.")
-    .required("El nombre es requerido."),
-  apellido: Yup.string()
-    .min(2, "El apellido debe tener al menos 2 caracteres.")
-    .max(100, "No puedes escribir más de 100 caracteres en este campo.")
-    .required("El apellido es requerido."),
-  telefono: Yup.string()
-    .max(50, "El teléfono no puede exceder los 50 caracteres")
-    .matches(/^[0-9\-+() ]+$/, "El teléfono contiene caracteres inválidos")
-    .nullable(),
+  nombre: validacionNombre,
+  apellido: validacionApellido,
+  telefono: validacionTelefono,
+});
+
+export const validationEditUser = Yup.object({
+  nombre: validacionNombre,
+  apellido: validacionApellido,
+  telefono: validacionTelefono,
+  email: validacionEmail,
 });

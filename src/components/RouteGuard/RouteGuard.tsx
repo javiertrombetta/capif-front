@@ -19,7 +19,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/new-phonogram",
       "/search-phonogram",
       "/conflicts",
-      "/add-employee",
+      "/users/add-user",
       "/users",
       "/send-audio-file",
       "/territoriality",
@@ -49,7 +49,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/cashflow-account-statement/history",
       "/audit-phonogram",
       "/edit-phonogram/:id",
-      "/edit-user/:id",
+      "/users/edit-user/:id",
       "/edit-production-company",
       "/register-production-company",
       "/my-profile",
@@ -60,7 +60,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/new-phonogram",
       "/search-phonogram",
       "/conflicts",
-      "/add-employee",
+      "/users/add-user",
       "/users",
       "/send-audio-file",
       "/territoriality",
@@ -87,7 +87,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/cashflow-account-statement/history",
       "/audit-phonogram",
       "/edit-phonogram/:id",
-      "/edit-user/:id",
+      "/users/edit-user/:id",
       "/edit-production-company",
       "/register-production-company",
       "/my-profile",
@@ -98,7 +98,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/new-phonogram",
       "/search-phonogram",
       "/conflicts",
-      "/add-employee",
+      "/users/add-user",
       "/users",
       "/territoriality-phonogram/:id",
       "/cashflow-account-statement",
@@ -127,10 +127,6 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    if (auth.tipo_registro && auth.tipo_registro !== "HABILITADO") {
-      router.push("/register-production-company");
-      return;
-    }
     if (auth.rol && !isRouteAllowed(pathname, allowedRoutes[auth.rol] || [])) {
       router.push("/users");
     }

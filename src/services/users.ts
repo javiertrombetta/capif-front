@@ -1,16 +1,25 @@
-import { UpdateUserById, User, UsersResponse } from "@/types/user.types";
+import { UpdateUserById, GetUsersResponse } from "@/types/user.types";
 import { axiosInstance } from "./axiosInstance";
 
-export const getAllUsers = async () => {
-  const users: { data: UsersResponse[] } = await axiosInstance.get("users/");
-  return users.data.map((user) => user.user);
+interface GetUsersParams {
+  email?: string;
+  nombre?: string;
+  apellido?: string;
+  estado?: string;
+}
+
+export const getUsers = async (params?: GetUsersParams) => {
+  const users: { data: GetUsersResponse } = await axiosInstance.get("users", {
+    params,
+  });
+  return users.data.data.map((user) => user.user);
 };
 
 export const getUserById = async (id_usuario: string) => {
-  const users: { data: { user: User } } = await axiosInstance.get(
+  const users: { data: GetUsersResponse } = await axiosInstance.get(
     `users?usuarioId=${id_usuario}`
   );
-  return users.data;
+  return users.data.data[0].user;
 };
 
 export const updateUserById = async (
