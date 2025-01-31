@@ -15,6 +15,8 @@ import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { setAuthData } from "@/store/authSlice";
 import { setModal } from "@/store/modalSlice";
 import { ModalNames } from "@/types/modalNames";
+import { ROLES } from "@/types/auth.types";
+import { toast } from "react-toastify";
 
 interface LoginFormValues {
   email: string;
@@ -36,17 +38,26 @@ const LoginForm: FC = () => {
     }
 
     const { email, password } = values;
-
-    await authLogin({ email, password });
+    try {
+      await authLogin({ email, password });
+    } catch {
+      toast.error("Usuario o contraseña incorrectos");
+      return;
+    }
 
     const data = await getAuthData();
     dispatch(setAuthData(data));
-    if (data.tipo_registro === "HABILITADO") {
+    if (data.estado === "HABILITADO") {
       router.push("/users");
     } else {
       router.push("/register-production-company");
     }
-    dispatch(setModal({ type: ModalNames.CHANGE_PRODUCER, isActive: true }));
+    if (
+      data.estado === "HABILITADO" &&
+      (data.rol === ROLES.USER_PRODUCER || data.rol === ROLES.EMPLOYEE)
+    ) {
+      dispatch(setModal({ type: ModalNames.CHANGE_PRODUCER, isActive: true }));
+    }
   };
 
   return (

@@ -1,13 +1,12 @@
 import { ProductionCompanyResponse } from "@/types/productionCompany.types";
-// import { SendApplication } from "@/types/user.types";
 import { axiosInstance } from "./axiosInstance";
+import { SendApplication } from "@/types/user.types";
 import {
   GetAuthDataResponse,
   AuthProps,
   AuthSecondarySignUpRequest,
 } from "@/types/auth.types";
 import { authDefaultState } from "@/store/authSlice";
-import { SendApplication } from "@/types/user.types";
 
 interface AuthSignUpRequest {
   email: string;
