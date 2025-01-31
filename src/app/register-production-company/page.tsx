@@ -12,6 +12,9 @@ import { ModalNames } from "@/types/modalNames";
 // import { SendApplication } from "@/types/user.types";
 import { sendApplication } from "@/services/auth";
 import CustomFileInput from "@/commons/CustomFileInput/CustomFileInput";
+import { SendApplication } from "@/types/user.types";
+import { uploadCompanyDocument } from "@/services/productionCompanies";
+import useFileHandler from "@/hooks/useFileHandler";
 
 export interface ApplicationValues {
   nombre_productora: string;
@@ -43,30 +46,12 @@ const page: FC = () => {
   const [currentEntity, setCurrentEntity] = useState<"natural" | "legal">(
     "natural"
   );
+  const { files, handleFileChange, handleRemoveFile } = useFileHandler();
   const dispatch = useAppDispatch();
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+
   const authUser = useAppSelector((state) => state.auth);
   const handleCurrentEntity = (value: "natural" | "legal") => {
     setCurrentEntity(value);
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    if (selectedFile) {
-      const isDuplicate = uploadedFiles.some(
-        (file) =>
-          file.name === selectedFile.name && file.size === selectedFile.size
-      );
-      if (!isDuplicate) {
-        setUploadedFiles((prevFiles) => [...prevFiles, selectedFile]);
-      } else {
-        console.log("El archivo ya fue agregado.");
-      }
-    }
-    e.target.value = "";
-  };
-  const handleRemoveFile = (index: number) => {
-    setUploadedFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
   };
 
   const onRadioFieldChange = (
@@ -116,94 +101,99 @@ const page: FC = () => {
     );
   };
 
-  const onSubmit = (
+  const onSubmit = async (
     e: React.FormEvent<HTMLFormElement>,
     values: ApplicationValues
   ) => {
     e.preventDefault();
-
-    if (authUser.id_usuario) {
-      const formData = new FormData();
-
-      // Campos básicos
-      formData.append("nombre", values.nombre);
-      formData.append("apellido", values.apellido);
-      formData.append("telefono", values.telefono);
-
-      // Serializar el objeto 'productoraData' y agregarlo
-      formData.append(
-        "productoraData",
-        JSON.stringify({
-          nombre_productora: values.nombre_productora,
-          cuit_cuil: values.cuit_cuil,
-          email: values.email,
-          calle: values.calle,
-          numero: values.numero,
-          ciudad: values.ciudad,
-          localidad: values.localidad,
-          provincia: values.provincia,
-          codigo_postal: values.codigo_postal,
+    try {
+      if (authUser.id_usuario) {
+        const requestData: SendApplication = {
+          nombre: values.nombre,
+          apellido: values.apellido,
           telefono: values.telefono,
-          nacionalidad: values.nacionalidad,
-          alias_cbu: values.alias_cbu,
-          cbu: values.cbu,
-          denominacion_sello: values.denominacion_sello,
-          datos_adicionales: values.datos_adicionales,
-          ...(currentEntity === "natural"
-            ? {
-                tipo_persona: "FISICA",
-                nombres: values.nombres_representante,
-                apellidos: values.apellidos_representante,
-              }
-            : {
-                tipo_persona: "JURIDICA",
-                razon_social: values.razon_social,
-                nombres_representante: values.nombres_representante,
-                apellidos_representante: values.apellidos_representante,
-                cuit_representante: values.cuit_representante,
-              }),
-        })
-      );
+          productoraData: {
+            nombre_productora: values.nombre_productora,
+            cuit_cuil: values.cuit_cuil,
+            email: values.email,
+            calle: values.calle,
+            numero: values.numero,
+            ciudad: values.ciudad,
+            localidad: values.localidad,
+            provincia: values.provincia,
+            codigo_postal: values.codigo_postal,
+            telefono: values.telefono,
+            nacionalidad: values.nacionalidad,
+            alias_cbu: values.alias_cbu,
+            cbu: values.cbu,
+            denominacion_sello: values.denominacion_sello,
+            datos_adicionales: values.datos_adicionales,
+            ...(currentEntity === "natural"
+              ? {
+                  tipo_persona: "FISICA",
+                  nombres: values.nombres_representante,
+                  apellidos: values.apellidos_representante,
+                }
+              : {
+                  tipo_persona: "JURIDICA",
+                  razon_social: values.razon_social,
+                  nombres_representante: values.nombres_representante,
+                  apellidos_representante: values.apellidos_representante,
+                  cuit_representante: values.cuit_representante,
+                }),
+          },
+        };
 
-      // Documentos y tipos de documentos
-      uploadedFiles.forEach((file, index) => {
-        formData.append(`documentos[${index}]`, file); // Archivo como File
-        formData.append(`tipoDocumento[${index}]`, file.name); // Tipo como texto
-      });
+        const response = await sendApplication(requestData);
 
-      // Llamar al servicio con FormData
-      sendApplication(formData);
-      onOpenModal();
+        if (files.isrcTicketsFiles.length > 0) {
+          await uploadFile(
+            "isrcTicketsFiles",
+            "comprobante_ISRC",
+            response.productora
+          );
+        }
+        if (files.nationalIdCardFiles.length > 0) {
+          await uploadFile(
+            "nationalIdCardFiles",
+            currentEntity === "natural"
+              ? "dni_persona_fisica"
+              : "dni_representante_legal",
+            response.productora
+          );
+        }
+        if (files.bylawsOrSocialContractFiles.length > 0) {
+          await uploadFile(
+            "bylawsOrSocialContractFiles",
+            "contrato_social",
+            response.productora
+          );
+        }
+
+        onOpenModal();
+      }
+    } catch (error) {
+      console.log(error);
     }
+  };
+
+  const uploadFile = async (
+    key: string,
+    docType: string,
+    companyId: string
+  ) => {
+    const formData = new FormData();
+    formData.append("tipoDocumento", docType);
+    files[key].forEach((file) => {
+      formData.append("documentos", file);
+    });
+    await uploadCompanyDocument(formData, companyId);
   };
 
   return (
     <CustomLayout>
       <Header title="Completar Registro" />
       <div className="flex flex-1 flex-col pr-[2rem] pl-[2rem] mb-[2rem] w-[100%] overflow-auto">
-        {/*
-        <div className="w-[100%] mt-[2rem] flex gap-[0.5rem]">
-          <p className="text-black text-[1.2rem]">Estado de Solicitud:</p>
-
-          <p
-            style={{ color: "#f1c40f" }}
-            className="font-bold text-black text-[1.2rem]"
-          >
-            PENDIENTE
-          </p>
-           <p
-           style={{ color: "#2ecc71" }}
-          className="font-bold text-black text-[1.2rem]">
-            APROBADO
-          </p>
-          <p
-           style={{ color: "#e74c3c" }}
-          className="font-bold text-black text-[1.2rem]">
-            RECHAZADO
-          </p>
-        </div>
-*/}
-
         <Formik
           initialValues={initialValues}
           validationSchema={validationRegisterApplication}
@@ -281,17 +271,30 @@ const page: FC = () => {
               </div>
 
               <EntityForm
-                files={uploadedFiles}
-                handleFileChange={handleFileChange}
-                handleRemoveFile={handleRemoveFile}
+                isrcFiles={{
+                  files: files.isrcTicketsFiles,
+                  handleFileChange: handleFileChange("isrcTicketsFiles"),
+                  handleRemoveFile: handleRemoveFile("isrcTicketsFiles"),
+                }}
+                nationalIdCard={{
+                  files: files.nationalIdCardFiles,
+                  handleFileChange: handleFileChange("nationalIdCardFiles"),
+                  handleRemoveFile: handleRemoveFile("nationalIdCardFiles"),
+                }}
+                bylawsOrSocialContract={{
+                  files: files.bylawsOrSocialContractFiles,
+                  handleFileChange: handleFileChange(
+                    "bylawsOrSocialContractFiles"
+                  ),
+                  handleRemoveFile: handleRemoveFile(
+                    "bylawsOrSocialContractFiles"
+                  ),
+                }}
                 dirty={dirty}
                 isValid={isValid}
                 isSubmitting={isSubmitting}
                 entity={currentEntity}
               />
-              {/* <CustomButton onClick={onOpenModal} className="bg-[#008d4c]">
-                PROBAR
-              </CustomButton> */}
             </Form>
           )}
         </Formik>
@@ -301,23 +304,63 @@ const page: FC = () => {
 };
 
 export default page;
+/*
+const ApplicationStatus: FC = () => {
+  return (
+    <div className="w-[100%] mt-[2rem] flex gap-[0.5rem]">
+      <p className="text-black text-[1.2rem]">Estado de Solicitud:</p>
+
+      <p
+        style={{ color: "#f1c40f" }}
+        className="font-bold text-black text-[1.2rem]"
+      >
+        PENDIENTE
+      </p>
+      <p
+        style={{ color: "#2ecc71" }}
+        className="font-bold text-black text-[1.2rem]"
+      >
+        APROBADO
+      </p>
+      <p
+        style={{ color: "#e74c3c" }}
+        className="font-bold text-black text-[1.2rem]"
+      >
+        RECHAZADO
+      </p>
+    </div>
+  );
+};
+*/
 
 const EntityForm: FC<{
   entity: "natural" | "legal";
   isSubmitting: boolean;
   isValid: boolean;
   dirty: boolean;
-  files: File[];
-  handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleRemoveFile: (index: number) => void;
+  isrcFiles: {
+    files: File[];
+    handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleRemoveFile: (index: number) => void;
+  };
+  nationalIdCard: {
+    files: File[];
+    handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleRemoveFile: (index: number) => void;
+  };
+  bylawsOrSocialContract: {
+    files: File[];
+    handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleRemoveFile: (index: number) => void;
+  };
 }> = ({
   entity,
   isSubmitting,
   isValid,
   dirty,
-  files,
-  handleFileChange,
-  handleRemoveFile,
+  isrcFiles,
+  nationalIdCard,
+  bylawsOrSocialContract,
 }) => {
   return (
     <div className="mt-[3rem] w-[100%]">
@@ -504,33 +547,63 @@ const EntityForm: FC<{
         />
       </div>
 
-      <div className="mt-[1.5rem]">
+      <div className="mt-[1.5rem] flex flex-col items-start">
         <p className="font-bold text-black">
           {entity === "natural"
             ? "CARGAR DOCUMENTO NACIONAL DE IDENTIDAD"
-            : "CARGAR ESTATUTO O CONTRATO SOCIAL"}
+            : " CARGAR DOCUMENTO NACIONAL DE IDENTIDAD DEL REPRESENTANTE LEGAL"}
         </p>
         <input
+          onChange={nationalIdCard.handleFileChange}
           className="mt-[0.3rem]"
           type="file"
-          accept="application/pdf"
+          accept="image/*,application/pdf"
           multiple
-          // onChange={handleFileChange}
         />
+        <div className="mt-[1rem] flex flex-col">
+          {nationalIdCard.files?.map((file: File, index: number) => (
+            <div className="flex gap-[1rem]">
+              <p className="text-mainblue">{file.name}</p>
+              <button
+                onClick={() => {
+                  nationalIdCard.handleRemoveFile(index);
+                }}
+                className="text-[#e74c3c]"
+              >
+                Eliminar
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
 
       {entity === "legal" && (
-        <div className="mt-[1.5rem]">
+        <div className="mt-[1.5rem] flex flex-col items-start">
           <p className="font-bold text-black">
-            CARGAR DOCUMENTO NACIONAL DE IDENTIDAD DEL REPRESENTANTE LEGAL
+            CARGAR ESTATUTO O CONTRATO SOCIAL
           </p>
           <input
+            onChange={bylawsOrSocialContract.handleFileChange}
             className="mt-[0.3rem]"
             type="file"
-            accept="application/pdf"
+            accept="image/*,application/pdf"
             multiple
-            // onChange={handleFileChange}
           />
+          <div className="mt-[1rem] flex flex-col">
+            {bylawsOrSocialContract.files?.map((file: File, index: number) => (
+              <div className="flex gap-[1rem]">
+                <p className="text-mainblue">{file.name}</p>
+                <button
+                  onClick={() => {
+                    bylawsOrSocialContract.handleRemoveFile(index);
+                  }}
+                  className="text-[#e74c3c]"
+                >
+                  Eliminar
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
@@ -560,11 +633,14 @@ const EntityForm: FC<{
         {/* <CustomButton type="file" className="mt-[1rem] ml-[1rem]">
           Seleccione Archivos
         </CustomButton> */}
-        <CustomFileInput onChange={handleFileChange} className="ml-[1rem]">
+        <CustomFileInput
+          onChange={isrcFiles.handleFileChange}
+          className="ml-[1rem]"
+        >
           {" "}
           Seleccione un Archivo
         </CustomFileInput>
-        {files.map((file: File, index: number) => (
+        {isrcFiles.files?.map((file: File, index: number) => (
           <div
             key={index}
             className="w-[100%] h-[3rem] bg-[#EBF6E0] flex items-center justify-between pr-[1rem] pl-[1rem] mt-[1rem] shadow-sm shadow-black"
@@ -572,7 +648,7 @@ const EntityForm: FC<{
             <p className="text-mainblue">{file.name}</p>
             <button
               onClick={() => {
-                handleRemoveFile(index);
+                isrcFiles.handleRemoveFile(index);
               }}
               className="text-mainblue"
             >
@@ -675,7 +751,7 @@ const EntityForm: FC<{
           );
         }
 
-        uploadedFiles.forEach((file, index) => {
+        isrcTicketsFiles.forEach((file, index) => {
           formData.append(
             `documentos[${index}]`,
             JSON.stringify({
