@@ -10,7 +10,8 @@ import { authDefaultState } from "@/store/authSlice";
 import AuthProvider from "@/components/AuthProvider/AuthProvider";
 import { ToastContainer } from "react-toastify";
 
-const ptSans = PT_Sans({ weight: "400", subsets: ["latin"] });
+const ptSans = PT_Sans({ weight: ["400", "700"], subsets: ["latin"] });
+
 export const metadata: Metadata = {
   title: "Capif Git",
   description: "",
