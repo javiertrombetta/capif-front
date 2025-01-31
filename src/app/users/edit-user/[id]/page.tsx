@@ -12,7 +12,6 @@ import { ROLES } from "@/types/auth.types";
 import { useAppSelector } from "@/hooks/storeHooks";
 import {
   blockOrUnlockUser,
-  changePassword,
   getUserById,
   updateUserById,
 } from "@/services/users";
@@ -25,6 +24,7 @@ import {
   validationEditUser,
 } from "@/utils/formValidations";
 import CustomSwitch from "@/commons/CustomSwitch/CustomSwitch";
+import { ChangePasswordView } from "@/components/ChangePasswordView/ChangePasswordView";
 
 export default function page() {
   const router = useRouter();
@@ -109,7 +109,7 @@ export default function page() {
               <h3 className="text-black text-3xl font-black mb-[1rem]">
                 Reestablecer Contraseña
               </h3>
-              <ChangePasswordForm idUsuario={userId} />
+              <ChangePasswordView idUsuario={userId} />
             </div>
             <div className="p-[1rem] w-[100%] flex flex-col border-[1px] border-[#c8c8c8]">
               <h3 className="text-black text-3xl font-black mb-[1rem]">
@@ -192,70 +192,6 @@ const UserFields = ({ userData }: { userData: User }) => {
               name="telefono"
               labelText="TELÉFONO"
               type="text"
-              width="w-[100%]"
-            />
-          </div>
-          <CustomButton
-            {...(isSubmitting || !isValid || !dirty
-              ? { disabled: true, background: "disabled" }
-              : {})}
-            type="submit"
-          >
-            Guardar
-          </CustomButton>
-        </Form>
-      )}
-    </Formik>
-  );
-};
-
-export const ChangePasswordForm = ({ idUsuario }: { idUsuario: string }) => {
-  const initialValues = {
-    newPassword: "",
-    confirmPassword: "",
-  };
-
-  const onSubmit = async (values: {
-    newPassword: string;
-    confirmPassword: string;
-  }) => {
-    try {
-      await changePassword({
-        id_usuario: idUsuario,
-        newPassword: values.newPassword,
-        confirmPassword: values.confirmPassword,
-      });
-      toast.success("Contraseña cambiada correctamente");
-    } catch (error) {
-      toast.error("Error al cambiar la contraseña");
-      console.log(error);
-    }
-  };
-
-  return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationChangePassword}
-      onSubmit={(values, { resetForm }) => {
-        onSubmit(values);
-        resetForm();
-      }}
-    >
-      {({ isSubmitting, isValid, dirty }) => (
-        <Form className="w-[100%] flex flex-col space-y-[1rem] items-end">
-          <div className="w-[100%] flex flex-row space-x-3 items-center justify-center">
-            <CustomField
-              type="password"
-              id="newPassword"
-              name="newPassword"
-              labelText="CONTRASEÑA"
-              width="w-[100%]"
-            />
-            <CustomField
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              labelText="REPETIR CONTRASEÑA"
               width="w-[100%]"
             />
           </div>
