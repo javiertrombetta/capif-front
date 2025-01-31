@@ -9,17 +9,17 @@ interface GetUsersParams {
 }
 
 export const getUsers = async (params?: GetUsersParams) => {
-  const users: { data: GetUsersResponse } = await axiosInstance.get("users", {
+  const users = await axiosInstance.get<GetUsersResponse>("users", {
     params,
   });
-  return users.data.data.map((user) => user.user);
+  return users.data.data;
 };
 
 export const getUserById = async (id_usuario: string) => {
   const users: { data: GetUsersResponse } = await axiosInstance.get(
     `users?usuarioId=${id_usuario}`
   );
-  return users.data.data[0].user;
+  return users.data.data[0];
 };
 
 export const updateUserById = async (

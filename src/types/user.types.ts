@@ -36,7 +36,7 @@ export interface SendApplication {
   };
 }
 
-export const TIPOS_REGISTRO = [
+export const ESTADOS = [
   "DEPURAR",
   "NUEVO",
   "CONFIRMADO",
@@ -46,35 +46,32 @@ export const TIPOS_REGISTRO = [
   "DESHABILITADO",
 ] as const;
 
-export type TIPO_REGISTRO = (typeof TIPOS_REGISTRO)[number];
+export type ESTADO = (typeof ESTADOS)[number];
 
 export interface User {
-  apellido: string;
+  id: string;
   email: string;
-  id_usuario: string;
-  is_bloqueado: boolean;
   nombre: string;
-  rol_id: string;
+  apellido: string;
   telefono: string;
-  tipo_registro: TIPO_REGISTRO;
-  createdAt: Date;
-  updatedAt: Date;
-  rol?: {
-    id_rol: string;
-    nombre_rol: string;
-  };
-}
-
-export interface UserData {
-  hasSingleMaestro: boolean;
-  maestros: [];
-  user: User;
-  vistas: { id_vista: string; is_habilitado: boolean }[];
+  estado: ESTADO;
+  isBloqueado: boolean;
+  rol: string;
+  vistas: {
+    id_vista_maestro: string;
+    nombre_vista: string;
+    nombre_vista_superior: string;
+    is_habilitado: boolean;
+  }[];
+  productoras: {
+    id: string;
+    productora: string;
+  }[];
 }
 
 export interface GetUsersResponse {
   currentPage: number;
-  data: UserData[];
+  data: User[];
   total: number;
   totalPages: number;
 }
