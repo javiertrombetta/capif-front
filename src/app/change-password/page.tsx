@@ -2,8 +2,8 @@
 import React from "react";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
+import { ChangePasswordView } from "@/components/ChangePasswordView/ChangePasswordView";
 import { useAppSelector } from "@/hooks/storeHooks";
-import { ChangePasswordForm } from "../users/edit-user/[id]/page";
 
 export default function page() {
   const authData = useAppSelector((state) => state.auth);
@@ -14,7 +14,7 @@ export default function page() {
 
       {authData.id_usuario && (
         <div className="w-[100%] mt-[2rem] pl-[2rem] pr-[2rem] flex justify-start">
-          <ChangePasswordForm idUsuario={authData.id_usuario} />
+          <ChangePasswordView idUsuario={authData.id_usuario} />
         </div>
       )}
     </CustomLayout>
