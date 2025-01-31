@@ -9,8 +9,12 @@ import CustomField from "@/commons/CustomField/CustomField";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { setModal } from "@/store/modalSlice";
 import { ModalNames } from "@/types/modalNames";
-import { SendApplication } from "@/types/user.types";
+// import { SendApplication } from "@/types/user.types";
 import { sendApplication } from "@/services/auth";
+import CustomFileInput from "@/commons/CustomFileInput/CustomFileInput";
+import { SendApplication } from "@/types/user.types";
+import { uploadCompanyDocument } from "@/services/productionCompanies";
+import useFileHandler from "@/hooks/useFileHandler";
 
 export interface ApplicationValues {
   nombre_productora: string;
@@ -42,17 +46,12 @@ const page: FC = () => {
   const [currentEntity, setCurrentEntity] = useState<"natural" | "legal">(
     "natural"
   );
+  const { files, handleFileChange, handleRemoveFile } = useFileHandler();
   const dispatch = useAppDispatch();
-  const [_uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+
   const authUser = useAppSelector((state) => state.auth);
   const handleCurrentEntity = (value: "natural" | "legal") => {
     setCurrentEntity(value);
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setUploadedFiles(Array.from(e.target.files));
-    }
   };
 
   const onRadioFieldChange = (
@@ -102,19 +101,17 @@ const page: FC = () => {
     );
   };
 
-  const onSubmit = (
+  const onSubmit = async (
     e: React.FormEvent<HTMLFormElement>,
     values: ApplicationValues
   ) => {
     e.preventDefault();
-    ((values: ApplicationValues) => {
+    try {
       if (authUser.id_usuario) {
         const requestData: SendApplication = {
-          id_usuario: authUser.id_usuario,
           nombre: values.nombre,
           apellido: values.apellido,
           telefono: values.telefono,
-          documentos: [],
           productoraData: {
             nombre_productora: values.nombre_productora,
             cuit_cuil: values.cuit_cuil,
@@ -147,39 +144,56 @@ const page: FC = () => {
           },
         };
 
-        sendApplication(requestData);
+        const response = await sendApplication(requestData);
+
+        if (files.isrcTicketsFiles.length > 0) {
+          await uploadFile(
+            "isrcTicketsFiles",
+            "comprobante_ISRC",
+            response.productora
+          );
+        }
+        if (files.nationalIdCardFiles.length > 0) {
+          await uploadFile(
+            "nationalIdCardFiles",
+            currentEntity === "natural"
+              ? "dni_persona_fisica"
+              : "dni_representante_legal",
+            response.productora
+          );
+        }
+        if (files.bylawsOrSocialContractFiles.length > 0) {
+          await uploadFile(
+            "bylawsOrSocialContractFiles",
+            "contrato_social",
+            response.productora
+          );
+        }
+
         onOpenModal();
       }
-    })(values);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const uploadFile = async (
+    key: string,
+    docType: string,
+    companyId: string
+  ) => {
+    const formData = new FormData();
+    formData.append("tipoDocumento", docType);
+    files[key].forEach((file) => {
+      formData.append("documentos", file);
+    });
+    await uploadCompanyDocument(formData, companyId);
   };
 
   return (
     <CustomLayout>
       <Header title="Completar Registro" />
-      <div className="flex flex-1 flex-col pr-[2rem] pl-[2rem] w-[100%] overflow-auto">
-        {/*
-        <div className="w-[100%] mt-[2rem] flex gap-[0.5rem]">
-          <p className="text-black text-[1.2rem]">Estado de Solicitud:</p>
-
-          <p
-            style={{ color: "#f1c40f" }}
-            className="font-bold text-black text-[1.2rem]"
-          >
-            PENDIENTE
-          </p>
-           <p
-           style={{ color: "#2ecc71" }}
-          className="font-bold text-black text-[1.2rem]">
-            APROBADO
-          </p>
-          <p
-           style={{ color: "#e74c3c" }}
-          className="font-bold text-black text-[1.2rem]">
-            RECHAZADO
-          </p>
-        </div>
-*/}
-
+      <div className="flex flex-1 flex-col pr-[2rem] pl-[2rem] mb-[2rem] w-[100%] overflow-auto">
         <Formik
           initialValues={initialValues}
           validationSchema={validationRegisterApplication}
@@ -257,15 +271,30 @@ const page: FC = () => {
               </div>
 
               <EntityForm
-                handleFileChange={handleFileChange}
+                isrcFiles={{
+                  files: files.isrcTicketsFiles,
+                  handleFileChange: handleFileChange("isrcTicketsFiles"),
+                  handleRemoveFile: handleRemoveFile("isrcTicketsFiles"),
+                }}
+                nationalIdCard={{
+                  files: files.nationalIdCardFiles,
+                  handleFileChange: handleFileChange("nationalIdCardFiles"),
+                  handleRemoveFile: handleRemoveFile("nationalIdCardFiles"),
+                }}
+                bylawsOrSocialContract={{
+                  files: files.bylawsOrSocialContractFiles,
+                  handleFileChange: handleFileChange(
+                    "bylawsOrSocialContractFiles"
+                  ),
+                  handleRemoveFile: handleRemoveFile(
+                    "bylawsOrSocialContractFiles"
+                  ),
+                }}
                 dirty={dirty}
                 isValid={isValid}
                 isSubmitting={isSubmitting}
                 entity={currentEntity}
               />
-              {/* <CustomButton onClick={onOpenModal} className="bg-[#008d4c]">
-                PROBAR
-              </CustomButton> */}
             </Form>
           )}
         </Formik>
@@ -275,14 +304,64 @@ const page: FC = () => {
 };
 
 export default page;
+/*
+const ApplicationStatus: FC = () => {
+  return (
+    <div className="w-[100%] mt-[2rem] flex gap-[0.5rem]">
+      <p className="text-black text-[1.2rem]">Estado de Solicitud:</p>
+
+      <p
+        style={{ color: "#f1c40f" }}
+        className="font-bold text-black text-[1.2rem]"
+      >
+        PENDIENTE
+      </p>
+      <p
+        style={{ color: "#2ecc71" }}
+        className="font-bold text-black text-[1.2rem]"
+      >
+        APROBADO
+      </p>
+      <p
+        style={{ color: "#e74c3c" }}
+        className="font-bold text-black text-[1.2rem]"
+      >
+        RECHAZADO
+      </p>
+    </div>
+  );
+};
+*/
 
 const EntityForm: FC<{
   entity: "natural" | "legal";
   isSubmitting: boolean;
   isValid: boolean;
   dirty: boolean;
-  handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}> = ({ entity, isSubmitting, isValid, dirty, handleFileChange }) => {
+  isrcFiles: {
+    files: File[];
+    handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleRemoveFile: (index: number) => void;
+  };
+  nationalIdCard: {
+    files: File[];
+    handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleRemoveFile: (index: number) => void;
+  };
+  bylawsOrSocialContract: {
+    files: File[];
+    handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleRemoveFile: (index: number) => void;
+  };
+}> = ({
+  entity,
+  isSubmitting,
+  isValid,
+  dirty,
+  isrcFiles,
+  nationalIdCard,
+  bylawsOrSocialContract,
+}) => {
   return (
     <div className="mt-[3rem] w-[100%]">
       <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
@@ -468,33 +547,63 @@ const EntityForm: FC<{
         />
       </div>
 
-      <div className="mt-[1.5rem]">
+      <div className="mt-[1.5rem] flex flex-col items-start">
         <p className="font-bold text-black">
           {entity === "natural"
             ? "CARGAR DOCUMENTO NACIONAL DE IDENTIDAD"
-            : "CARGAR ESTATUTO O CONTRATO SOCIAL"}
+            : " CARGAR DOCUMENTO NACIONAL DE IDENTIDAD DEL REPRESENTANTE LEGAL"}
         </p>
         <input
+          onChange={nationalIdCard.handleFileChange}
           className="mt-[0.3rem]"
           type="file"
-          accept="application/pdf"
+          accept="image/*,application/pdf"
           multiple
-          onChange={handleFileChange}
         />
+        <div className="mt-[1rem] flex flex-col">
+          {nationalIdCard.files?.map((file: File, index: number) => (
+            <div className="flex gap-[1rem]">
+              <p className="text-mainblue">{file.name}</p>
+              <button
+                onClick={() => {
+                  nationalIdCard.handleRemoveFile(index);
+                }}
+                className="text-[#e74c3c]"
+              >
+                Eliminar
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
 
       {entity === "legal" && (
-        <div className="mt-[1.5rem]">
+        <div className="mt-[1.5rem] flex flex-col items-start">
           <p className="font-bold text-black">
-            CARGAR DOCUMENTO NACIONAL DE IDENTIDAD DEL REPRESENTANTE LEGAL
+            CARGAR ESTATUTO O CONTRATO SOCIAL
           </p>
           <input
+            onChange={bylawsOrSocialContract.handleFileChange}
             className="mt-[0.3rem]"
             type="file"
-            accept="application/pdf"
+            accept="image/*,application/pdf"
             multiple
-            onChange={handleFileChange}
           />
+          <div className="mt-[1rem] flex flex-col">
+            {bylawsOrSocialContract.files?.map((file: File, index: number) => (
+              <div className="flex gap-[1rem]">
+                <p className="text-mainblue">{file.name}</p>
+                <button
+                  onClick={() => {
+                    bylawsOrSocialContract.handleRemoveFile(index);
+                  }}
+                  className="text-[#e74c3c]"
+                >
+                  Eliminar
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
@@ -520,18 +629,34 @@ const EntityForm: FC<{
         <p className="font-bold text-black">N°: 9750252-4 005-6</p>
         <p className="font-bold text-black">CBU: 0070005430009750252469</p>
       </div>
-
-      <div className="mt-[2rem] w-[100%] h-[15rem] border-[#c5c5c5] border-[1px] rounded-[0.7rem] overflow-hidden">
-        <CustomButton className="mt-[1rem] ml-[1rem]">
+      <div className="pt-[1rem] pb-[1rem] mt-[2rem] w-[100%] h-auto border-[#c5c5c5] border-[1px] rounded-[0.7rem] overflow-hidden">
+        {/* <CustomButton type="file" className="mt-[1rem] ml-[1rem]">
           Seleccione Archivos
-        </CustomButton>
-
-        <div className="w-[100%] h-[3rem] bg-[#EBF6E0] flex items-center justify-between pr-[1rem] pl-[1rem] mt-[1rem] shadow-sm shadow-black">
-          <p className="text-mainblue">1-comprobante pago CAPIF.jpg</p>
-          <p className="text-mainblue">Eliminar</p>
-        </div>
+        </CustomButton> */}
+        <CustomFileInput
+          onChange={isrcFiles.handleFileChange}
+          className="ml-[1rem]"
+        >
+          {" "}
+          Seleccione un Archivo
+        </CustomFileInput>
+        {isrcFiles.files?.map((file: File, index: number) => (
+          <div
+            key={index}
+            className="w-[100%] h-[3rem] bg-[#EBF6E0] flex items-center justify-between pr-[1rem] pl-[1rem] mt-[1rem] shadow-sm shadow-black"
+          >
+            <p className="text-mainblue">{file.name}</p>
+            <button
+              onClick={() => {
+                isrcFiles.handleRemoveFile(index);
+              }}
+              className="text-mainblue"
+            >
+              Eliminar
+            </button>
+          </div>
+        ))}
       </div>
-
       <div className="mt-[5rem] flex gap-[1rem] ">
         {isSubmitting || !isValid || !dirty ? (
           <CustomButton
@@ -626,7 +751,7 @@ const EntityForm: FC<{
           );
         }
 
-        uploadedFiles.forEach((file, index) => {
+        isrcTicketsFiles.forEach((file, index) => {
           formData.append(
             `documentos[${index}]`,
             JSON.stringify({
