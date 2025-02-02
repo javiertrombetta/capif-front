@@ -1,4 +1,8 @@
-import { UpdateUserById, GetUsersResponse } from "@/types/user.types";
+import {
+  UpdateUserById,
+  GetUsersResponse,
+  UpdateViewsPayload,
+} from "@/types/user.types";
 import { axiosInstance } from "./axiosInstance";
 
 interface GetUsersParams {
@@ -9,17 +13,17 @@ interface GetUsersParams {
 }
 
 export const getUsers = async (params?: GetUsersParams) => {
-  const users: { data: GetUsersResponse } = await axiosInstance.get("users", {
+  const users = await axiosInstance.get<GetUsersResponse>("users", {
     params,
   });
-  return users.data.data.map((user) => user.user);
+  return users.data.data;
 };
 
 export const getUserById = async (id_usuario: string) => {
   const users: { data: GetUsersResponse } = await axiosInstance.get(
     `users?usuarioId=${id_usuario}`
   );
-  return users.data.data[0].user;
+  return users.data.data[0];
 };
 
 export const updateUserById = async (
@@ -30,6 +34,17 @@ export const updateUserById = async (
     await axiosInstance.put("users/" + id_usuario, {
       datosUsuario: data,
     });
+  } catch (error: unknown) {
+    throw new Error(`${error}`);
+  }
+};
+
+export const updateUserViews = async (
+  id_usuario: string,
+  views: UpdateViewsPayload
+) => {
+  try {
+    await axiosInstance.put("users/" + id_usuario + "/views/status", views);
   } catch (error: unknown) {
     throw new Error(`${error}`);
   }

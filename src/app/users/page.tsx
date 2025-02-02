@@ -8,7 +8,7 @@ import { useAppSelector } from "@/hooks/storeHooks";
 import { ROLES } from "@/types/auth.types";
 import CustomTable from "@/commons/CustomTable/CustomTable";
 import { getUsers } from "@/services/users";
-import { TIPOS_REGISTRO, User } from "@/types/user.types";
+import { ESTADOS, User } from "@/types/user.types";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
 import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
@@ -108,7 +108,7 @@ export default function page() {
                     type="select"
                     options={[
                       { name: "", value: "" },
-                      ...TIPOS_REGISTRO.map((t) => ({ name: t, value: t })),
+                      ...ESTADOS.map((t) => ({ name: t, value: t })),
                     ]}
                   />
                 </>
@@ -136,8 +136,6 @@ export default function page() {
                       { name: "APELLIDOS", isSortable: true },
                       { name: "TELÉFONO", isSortable: true },
                       { name: "SELLO", isSortable: true },
-                      { name: "FECHA CREACIÓN", isSortable: true },
-                      { name: "FECHA ACTUALIZACIÓN", isSortable: true },
                       { name: "ACCIÓN", isSortable: false },
                     ]
                   : [
@@ -147,23 +145,19 @@ export default function page() {
                       { name: "APELLIDOS", isSortable: true },
                       { name: "TELÉFONO", isSortable: true },
                       { name: "SELLO", isSortable: true },
-                      { name: "FECHA CREACIÓN", isSortable: true },
-                      { name: "FECHA ACTUALIZACIÓN", isSortable: true },
                     ]
               }
               columnValues={users.map((element) => {
                 return authData.rol === ROLES.SUPER_ADMIN ||
                   authData.rol === ROLES.CAPIF_ADMIN
                   ? [
-                      element?.email,
-                      element?.tipo_registro,
+                      element.email,
+                      element.estado,
                       "123123",
                       element?.nombre,
                       element?.apellido,
                       element?.telefono,
                       "Sony Music",
-                      element?.createdAt,
-                      element?.updatedAt,
                       <ActionDropdownButton
                         menuOptions={[
                           {
@@ -171,7 +165,7 @@ export default function page() {
                             icon: <FaEdit />,
                             onClick: () => {
                               redirectToOption(
-                                `/users/edit-user/${element?.id_usuario}`
+                                `/users/edit-user/${element.id}`
                               );
                             },
                           },
@@ -185,8 +179,6 @@ export default function page() {
                       element?.apellido,
                       element?.telefono,
                       "Sony Music",
-                      element?.createdAt,
-                      element?.updatedAt,
                     ];
               })}
             />
