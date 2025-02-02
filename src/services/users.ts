@@ -1,4 +1,8 @@
-import { UpdateUserById, GetUsersResponse } from "@/types/user.types";
+import {
+  UpdateUserById,
+  GetUsersResponse,
+  UpdateViewsPayload,
+} from "@/types/user.types";
 import { axiosInstance } from "./axiosInstance";
 
 interface GetUsersParams {
@@ -30,6 +34,17 @@ export const updateUserById = async (
     await axiosInstance.put("users/" + id_usuario, {
       datosUsuario: data,
     });
+  } catch (error: unknown) {
+    throw new Error(`${error}`);
+  }
+};
+
+export const updateUserViews = async (
+  id_usuario: string,
+  views: UpdateViewsPayload
+) => {
+  try {
+    await axiosInstance.put("users/" + id_usuario + "/views/status", views);
   } catch (error: unknown) {
     throw new Error(`${error}`);
   }

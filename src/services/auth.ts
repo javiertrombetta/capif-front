@@ -41,9 +41,10 @@ export const authSignUp = async (authSignUpData: AuthSignUpRequest) => {
 };
 
 export const authSecondarySignup = async (
+  type: "prods" | "admins",
   formValues: AuthSecondarySignUpRequest
 ) => {
-  await axiosInstance.post("auth/prods/secondary", formValues);
+  await axiosInstance.post(`auth/${type}/secondary`, formValues);
 };
 
 export const authLogin = async (authLoginData: AuthLoginRequest) => {

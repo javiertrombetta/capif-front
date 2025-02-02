@@ -82,3 +82,10 @@ export interface UpdateUserById {
   telefono?: string;
   email?: string;
 }
+
+export interface UpdateViewsPayload {
+  vistas: {
+    nombre_vista: string;
+    is_habilitado: boolean;
+  }[];
+}

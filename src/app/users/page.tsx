@@ -68,8 +68,6 @@ export default function page() {
     );
   }
 
-  console.log(users);
-
   return (
     <CustomLayout>
       <Header title="Registros" />

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { Form, Formik } from "formik";
 import { useParams, useRouter } from "next/navigation";
@@ -14,6 +14,7 @@ import {
   blockOrUnlockUser,
   getUserById,
   updateUserById,
+  updateUserViews,
 } from "@/services/users";
 import { ESTADOS, User } from "@/types/user.types";
 import CustomButton from "@/commons/CustomButton/CustomButton";
@@ -115,7 +116,7 @@ export default function page() {
               <h3 className="text-black text-3xl font-black mb-[1rem]">
                 Vistas
               </h3>
-              <ViewsFields />
+              <ViewsFields userData={userData} />
             </div>
           </>
         )}
@@ -132,12 +133,8 @@ const UserFields = ({ userData }: { userData: User }) => {
     telefono: userData?.telefono || "",
   };
 
-  const onSubmit = async (
-    // e: React.FormEvent<HTMLFormElement>,
-    values: typeof initialValues
-  ) => {
+  const onSubmit = async (values: typeof initialValues) => {
     try {
-      // e.preventDefault();
       const { nombre, apellido, email, telefono } = values;
       if (userData?.id) {
         await updateUserById(userData?.id, {
@@ -209,64 +206,80 @@ const UserFields = ({ userData }: { userData: User }) => {
   );
 };
 
-const ViewsFields = () => {
-  const { rol } = useAppSelector((state) => state.auth);
+const ViewsFields = ({ userData }: { userData: User }) => {
+  const formatVistas = (views: typeof userData.vistas) =>
+    views.reduce(
+      (
+        acc: Record<string, { id: string; name: string; isChecked: boolean }[]>,
+        vista
+      ) => {
+        return {
+          ...acc,
+          [vista.nombre_vista_superior]: [
+            ...(acc[vista.nombre_vista_superior] || []),
+            {
+              id: vista.id_vista_maestro,
+              name: vista.nombre_vista,
+              isChecked: vista.is_habilitado,
+            },
+          ],
+        };
+      },
+      {}
+    );
 
-  const initialValues = {
-    newPassword: "",
-    confirmPassword: "",
+  const { rol } = useAppSelector((state) => state.auth);
+  const [views, setViews] = useState(userData.vistas);
+
+  const handleViewCheck = (key: string, isChecked: boolean) => {
+    setViews((prev) =>
+      prev.map((vista) =>
+        vista.id_vista_maestro === key
+          ? { ...vista, is_habilitado: isChecked }
+          : vista
+      )
+    );
   };
 
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      await updateUserViews(userData.id, {
+        vistas: views.map(({ nombre_vista, is_habilitado }) => ({
+          nombre_vista,
+          is_habilitado,
+        })),
+      });
+
+      toast.success("Usuario actualizado correctamente");
+    } catch (error) {
+      toast.error("Error al actualizar el usuario");
+      console.error(error);
+    }
+  };
+
+  const vistasFormateadas = useMemo(() => formatVistas(views), [views]);
+
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationChangePassword}
-      onSubmit={(values, { resetForm }) => {
-        console.log(values);
-        resetForm();
-      }}
+    <form
+      onSubmit={(e) => onSubmit(e)}
+      className="w-[100%] flex flex-col space-y-[1rem] items-start"
     >
-      {({ isSubmitting, isValid, dirty }) => (
-        <Form
-          onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-            console.log(e);
-          }}
-          className="w-[100%] flex flex-col space-y-[1rem] items-start"
-        >
-          {rol === ROLES.EMPLOYEE ? null : (
-            <div className="w-[28rem] flex flex-col gap-[1rem]">
-              <NewUserMenusCheckbox
-                menuName={"Repertorio"}
-                subMenuOptions={[
-                  {
-                    name: "Declaración Repertorio",
-                    id: "newPhonogram",
-                  },
-                  { name: "Buscar", id: "searchPhonogram" },
-                  { name: "Conflictos", id: "conflicts" },
-                ]}
-              />
-              <NewUserMenusCheckbox
-                menuName={"Usuarios"}
-                subMenuOptions={[{ name: "Registros", id: "records" }]}
-              />
-              <NewUserMenusCheckbox
-                menuName={"Cuentas Corrientes"}
-                subMenuOptions={[
-                  { name: "Estado de Cuenta", id: "stateAccount" },
-                ]}
-              />
-            </div>
-          )}
-          <CustomButton
-            type="submit"
-            disabled={isSubmitting || !isValid || !dirty}
-            className="self-end"
-          >
-            Aceptar
-          </CustomButton>
-        </Form>
+      {rol === ROLES.EMPLOYEE ? null : (
+        <div className="w-[28rem] flex flex-col gap-[1rem]">
+          {Object.keys(vistasFormateadas).map((v) => (
+            <NewUserMenusCheckbox
+              key={v}
+              menuName={v}
+              subMenuOptions={vistasFormateadas[v]}
+              handleViewCheck={handleViewCheck}
+            />
+          ))}
+        </div>
       )}
-    </Formik>
+      <CustomButton type="submit" className="self-end">
+        Aceptar
+      </CustomButton>
+    </form>
   );
 };
