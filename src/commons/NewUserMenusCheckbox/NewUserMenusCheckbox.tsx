@@ -3,18 +3,24 @@ import React, { FC, useEffect, useState } from "react";
 type MenuOption = {
   name: string;
   id: string;
+  isChecked: boolean;
 };
 
 interface MenuProps {
   menuName: string;
   subMenuOptions: MenuOption[];
+  handleViewCheck: (id: string, isChecked: boolean) => void;
 }
 
-const NewUserMenusCheckbox: FC<MenuProps> = ({ menuName, subMenuOptions }) => {
+const NewUserMenusCheckbox: FC<MenuProps> = ({
+  menuName,
+  subMenuOptions,
+  handleViewCheck,
+}) => {
   // Crear el estado inicial dinámicamente con base en las opciones
   const initialState = subMenuOptions.reduce(
     (acc, option) => {
-      acc[option.id] = false;
+      acc[option.id] = option.isChecked;
       return acc;
     },
     {} as Record<string, boolean>
@@ -30,6 +36,9 @@ const NewUserMenusCheckbox: FC<MenuProps> = ({ menuName, subMenuOptions }) => {
       Object.keys(menuState).map((key) => [key, !mainMenuState])
     );
     setMenuState(newState);
+    Object.keys(newState).forEach((key) => {
+      handleViewCheck(key, newState[key]);
+    });
     setMainMenuState(!mainMenuState);
   };
 
@@ -39,20 +48,16 @@ const NewUserMenusCheckbox: FC<MenuProps> = ({ menuName, subMenuOptions }) => {
     setMenuState((prevState) => {
       const updatedState = { ...prevState, [id]: checked };
 
-      // Si cualquier submenú está activo, activa el principal
-      const anyChecked = Object.values(updatedState).some((value) => value);
-      setMainMenuState(anyChecked);
-
       return updatedState;
     });
+    handleViewCheck(id, checked);
   };
 
   // Sincroniza el estado del menú principal si todos los submenús están seleccionados
   useEffect(() => {
-    const allChecked = Object.values(menuState).every((value) => value);
-    if (allChecked) {
-      setMainMenuState(true);
-    }
+    // Si cualquier submenú está activo, activa el principal
+    const anyChecked = Object.values(menuState).some((value) => value);
+    setMainMenuState(anyChecked);
   }, [menuState]);
 
   return (

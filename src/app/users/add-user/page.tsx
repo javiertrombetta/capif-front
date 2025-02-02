@@ -1,12 +1,13 @@
 "use client";
 import React from "react";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { Form, Formik } from "formik";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
 import { useAppSelector } from "@/hooks/storeHooks";
 import { ROLES } from "@/types/auth.types";
-import NewUserMenusCheckbox from "@/commons/NewUserMenusCheckbox/NewUserMenusCheckbox";
-import { Form, Formik } from "formik";
 import CustomField from "@/commons/CustomField/CustomField";
 import { validationSecondaryRegister } from "@/utils/formValidations";
 import { authSecondarySignup } from "@/services/auth";
@@ -21,6 +22,8 @@ interface secondaryRegisterValues {
 
 function page() {
   const { rol } = useAppSelector((state) => state.auth);
+  const router = useRouter();
+
   const headerTitle = (() => {
     switch (rol) {
       case ROLES.USER_PRODUCER:
@@ -39,22 +42,23 @@ function page() {
     telefono: "",
   };
 
-  const onSubmit = async (
-    e: React.FormEvent<HTMLFormElement>,
-    values: secondaryRegisterValues
-  ) => {
-    e.preventDefault();
+  const onSubmit = async (values: secondaryRegisterValues) => {
     try {
       const { email, nombre, apellido, telefono } = values;
 
-      await authSecondarySignup({
-        email,
-        nombre,
-        apellido,
-        telefono,
-      });
-      alert("Usuario secundario registrado exitosamente");
+      await authSecondarySignup(
+        rol === ROLES.USER_PRODUCER ? "prods" : "admins",
+        {
+          email,
+          nombre,
+          apellido,
+          telefono,
+        }
+      );
+      toast.success("Usuario secundario registrado exitosamente");
+      router.push("/users");
     } catch (error) {
+      toast.error("Error al registrar usuario secundario");
       console.log(error);
     }
   };
@@ -65,16 +69,11 @@ function page() {
       <div className="flex-1 flex flex-col overflow-auto">
         <Formik
           validationSchema={validationSecondaryRegister}
-          onSubmit={() => {}}
+          onSubmit={(values) => onSubmit(values)}
           initialValues={initialValues}
         >
-          {({ values }) => (
-            <Form
-              onSubmit={(e: React.FormEvent<HTMLFormElement>) =>
-                onSubmit(e, values)
-              }
-              className="w-[100%] pr-[2rem] pl-[2rem] mt-[2rem] pb-[2rem] flex flex-col gap-[1rem]"
-            >
+          {({ isSubmitting, isValid }) => (
+            <Form className="w-[100%] pr-[2rem] pl-[2rem] mt-[2rem] pb-[2rem] flex flex-col gap-[1rem]">
               <p className="text-black">
                 Escriba el correo electrónico del usuario al cual desea dar de
                 alta.
@@ -114,83 +113,14 @@ function page() {
                 type="text"
                 labelText="Teléfono"
               />
-              <div>
-                <p className="font-bold text-black">Menu</p>
-              </div>
-              <div className="w-[28rem] flex flex-col gap-[1rem]">
-                <NewUserMenusCheckbox
-                  menuName={"Repertorio"}
-                  subMenuOptions={
-                    rol === ROLES.SUPER_ADMIN
-                      ? [
-                          {
-                            name: "Declaración Repertorio",
-                            id: "newPhonogram",
-                          },
-                          { name: "Buscar", id: "searchPhonogram" },
-                          { name: "Conflictos", id: "conflicts" },
-                          { name: "Envio Archivo Audio", id: "sendAudioFile" },
-                          { name: "Territorialidad", id: "territoriality" },
-                        ]
-                      : [
-                          {
-                            name: "Declaración Repertorio",
-                            id: "newPhonogram",
-                          },
-                          { name: "Buscar", id: "searchPhonogram" },
-                          { name: "Conflictos", id: "conflicts" },
-                        ]
-                  }
-                />
-                {rol === ROLES.SUPER_ADMIN && (
-                  <NewUserMenusCheckbox
-                    menuName={"Productoras"}
-                    subMenuOptions={[
-                      { name: "Buscar", id: "searchProductionCompany" },
-                      { name: "Premios Gardel", id: "gardelAwards" },
-                    ]}
-                  />
-                )}
-                <NewUserMenusCheckbox
-                  menuName={"Usuarios"}
-                  subMenuOptions={
-                    rol === ROLES.SUPER_ADMIN
-                      ? [
-                          { name: "Alta Usuario", id: "addEmployee" },
-                          { name: "Registros", id: "records" },
-                        ]
-                      : [{ name: "Registros", id: "records" }]
-                  }
-                />
-                <NewUserMenusCheckbox
-                  menuName={"Cuentas Corrientes"}
-                  subMenuOptions={
-                    rol === ROLES.SUPER_ADMIN
-                      ? [
-                          { name: "Liquidaciones", id: "payouts" },
-                          { name: "Pagos", id: "payments" },
-                          { name: "Traspasos", id: "trasnfers" },
-                          { name: "Rechazos", id: "rejects" },
-                          { name: "Estado de Cuenta", id: "stateAccount" },
-                        ]
-                      : [{ name: "Estado de Cuenta", id: "stateAccount" }]
-                  }
-                />
-                {rol === ROLES.SUPER_ADMIN && (
-                  <NewUserMenusCheckbox
-                    menuName={"Auditoria"}
-                    subMenuOptions={[
-                      { name: "Historial de Cambios", id: "changesHistory" },
-                      {
-                        name: "Cambios en Repertorios",
-                        id: "repertoryChanges",
-                      },
-                      { name: "Sesiones", id: "sessions" },
-                    ]}
-                  />
-                )}
-              </div>
-              <CustomButton type="submit">Enviar Invitación</CustomButton>
+              <CustomButton
+                type="submit"
+                {...(isSubmitting || !isValid
+                  ? { disabled: true, background: "disabled" }
+                  : {})}
+              >
+                Enviar Invitación
+              </CustomButton>
             </Form>
           )}
         </Formik>
