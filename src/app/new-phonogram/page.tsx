@@ -33,14 +33,10 @@ function page() {
   };
 
   const newPhonogramSubmit = () => {
-    setFlowState("load_audio");
-  };
-
-  const existingPhonogramSubmit = () => {
     setFlowState("add_participation");
   };
 
-  const loadAudioSubmit = () => {
+  const existingPhonogramSubmit = () => {
     setFlowState("add_participation");
   };
 
@@ -48,6 +44,9 @@ function page() {
     setFlowState("edit_territoriality");
   };
 
+  const editTerritorialitySubmit = () => {
+    setFlowState("load_audio");
+  };
   const handleGoBack = () => {
     switch (flowState) {
       case "existing_phonogram":
@@ -116,16 +115,6 @@ function page() {
               Crear/Verificar Fonograma
             </p>
             <IoIosArrowForward color="#a6acaf" size={20} />
-            {isNewPhonogram && (
-              <>
-                <p
-                  className={`${flowState === "load_audio" ? "text-black" : "text-[#a6acaf]"} font-bold`}
-                >
-                  Cargar Audio
-                </p>
-                <IoIosArrowForward color="#a6acaf" size={20} />
-              </>
-            )}
 
             <p
               className={`${flowState === "add_participation" ? "text-black" : "text-[#a6acaf]"} font-bold`}
@@ -138,6 +127,17 @@ function page() {
             >
               Territorialidad
             </p>
+            <IoIosArrowForward color="#a6acaf" size={20} />
+
+            {isNewPhonogram && (
+              <>
+                <p
+                  className={`${flowState === "load_audio" ? "text-black" : "text-[#a6acaf]"} font-bold`}
+                >
+                  Cargar Audio
+                </p>
+              </>
+            )}
           </div>
           <div className="relative mt-[0.5rem]">
             <div className="absolute left-[3%] top-[20%]">
@@ -164,11 +164,13 @@ function page() {
         <ExistingPhonogram onSubmit={existingPhonogramSubmit} />
       )}
 
-      {flowState === "load_audio" && <LoadAudio onSubmit={loadAudioSubmit} />}
       {flowState === "add_participation" && (
         <AddParticipation onSubmit={addPercentageSubmit} />
       )}
-      {flowState === "edit_territoriality" && <EditTerritoriality />}
+      {flowState === "edit_territoriality" && (
+        <EditTerritoriality onSubmit={editTerritorialitySubmit} />
+      )}
+      {flowState === "load_audio" && <LoadAudio />}
     </CustomLayout>
   );
 }
@@ -361,7 +363,14 @@ const ExistingPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
   );
 };
 
-const LoadAudio: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
+const LoadAudio: FC = () => {
+  const dispatch = useAppDispatch();
+
+  const handleFinishNewPhonogram = () => {
+    dispatch(
+      setModal({ type: ModalNames.FINISH_NEW_PHONOGRAM, isActive: true })
+    );
+  };
   return (
     <div className="w-[100%] flex flex-col justify-center items-center mt-[3rem] pl-[3rem] pr-[3rem]">
       <p className="text-black font-bold">
@@ -377,8 +386,8 @@ const LoadAudio: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
           />
         </button>
 
-        <CustomButton type="submit" onClick={onSubmit}>
-          Continuar
+        <CustomButton type="submit" onClick={handleFinishNewPhonogram}>
+          Guardar y Finalizar
         </CustomButton>
       </div>
     </div>
@@ -530,23 +539,13 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
   );
 };
 
-const EditTerritoriality: FC = () => {
-  const dispatch = useAppDispatch();
-
-  const handleFinishNewPhonogram = () => {
-    dispatch(
-      setModal({ type: ModalNames.FINISH_NEW_PHONOGRAM, isActive: true })
-    );
-  };
-
+const EditTerritoriality: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
   return (
     <div className="w-[100%] flex flex-col justify-center items-center mt-[3rem] pl-[3rem] pr-[3rem]">
       <div className="w-[100%] pr-[2rem] pl-[2rem] justify-between items-end flex mt-[1rem] mb-[1rem]">
         <CustomInput type="text" label="Buscar Países" />
         <div className="flex gap-[1.5rem]">
-          <CustomButton onClick={handleFinishNewPhonogram}>
-            Guardar y Terminar
-          </CustomButton>
+          <CustomButton onClick={onSubmit}>Continuar</CustomButton>
         </div>
       </div>
 
