@@ -20,10 +20,7 @@ import { ESTADOS, User } from "@/types/user.types";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomField from "@/commons/CustomField/CustomField";
 import Spinner from "@/commons/Spinner/Spinner";
-import {
-  validationChangePassword,
-  validationEditUser,
-} from "@/utils/formValidations";
+import { validationEditUser } from "@/utils/formValidations";
 import CustomSwitch from "@/commons/CustomSwitch/CustomSwitch";
 import { ChangePasswordView } from "@/components/ChangePasswordView/ChangePasswordView";
 
