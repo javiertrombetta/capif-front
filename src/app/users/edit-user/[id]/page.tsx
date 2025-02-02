@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { Form, Formik } from "formik";
 import { useParams, useRouter } from "next/navigation";
@@ -14,15 +14,13 @@ import {
   blockOrUnlockUser,
   getUserById,
   updateUserById,
+  updateUserViews,
 } from "@/services/users";
-import { TIPOS_REGISTRO, User } from "@/types/user.types";
+import { ESTADOS, User } from "@/types/user.types";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomField from "@/commons/CustomField/CustomField";
 import Spinner from "@/commons/Spinner/Spinner";
-import {
-  validationChangePassword,
-  validationEditUser,
-} from "@/utils/formValidations";
+import { validationEditUser } from "@/utils/formValidations";
 import CustomSwitch from "@/commons/CustomSwitch/CustomSwitch";
 import { ChangePasswordView } from "@/components/ChangePasswordView/ChangePasswordView";
 
@@ -91,18 +89,18 @@ export default function page() {
               <select
                 disabled
                 className="pl-[0.3rem] border-[#c8c8c8] bg-[#f4f4f4] border-[2px] outline-0 h-[2rem]"
-                value={userData.tipo_registro}
+                value={userData.estado}
               >
-                {TIPOS_REGISTRO.map((t) => (
+                {ESTADOS.map((t) => (
                   <option value={t}>{t}</option>
                 ))}
               </select>
             </div>
             <CustomSwitch
               label="BLOQUEADO"
-              checked={userData.is_bloqueado}
+              checked={userData.isBloqueado}
               handleOnCheck={(isChecked) =>
-                handleBlockUser(userData.id_usuario, isChecked)
+                handleBlockUser(userData.id, isChecked)
               }
             />
             <div className="p-[1rem] w-[100%] flex flex-col border-[1px] border-[#c8c8c8]">
@@ -115,7 +113,7 @@ export default function page() {
               <h3 className="text-black text-3xl font-black mb-[1rem]">
                 Vistas
               </h3>
-              <ViewsFields />
+              <ViewsFields userData={userData} />
             </div>
           </>
         )}
@@ -132,15 +130,11 @@ const UserFields = ({ userData }: { userData: User }) => {
     telefono: userData?.telefono || "",
   };
 
-  const onSubmit = async (
-    // e: React.FormEvent<HTMLFormElement>,
-    values: typeof initialValues
-  ) => {
+  const onSubmit = async (values: typeof initialValues) => {
     try {
-      // e.preventDefault();
       const { nombre, apellido, email, telefono } = values;
-      if (userData?.id_usuario) {
-        await updateUserById(userData?.id_usuario, {
+      if (userData?.id) {
+        await updateUserById(userData?.id, {
           nombre,
           apellido,
           email,
@@ -209,64 +203,80 @@ const UserFields = ({ userData }: { userData: User }) => {
   );
 };
 
-const ViewsFields = () => {
-  const { rol } = useAppSelector((state) => state.auth);
+const ViewsFields = ({ userData }: { userData: User }) => {
+  const formatVistas = (views: typeof userData.vistas) =>
+    views.reduce(
+      (
+        acc: Record<string, { id: string; name: string; isChecked: boolean }[]>,
+        vista
+      ) => {
+        return {
+          ...acc,
+          [vista.nombre_vista_superior]: [
+            ...(acc[vista.nombre_vista_superior] || []),
+            {
+              id: vista.id_vista_maestro,
+              name: vista.nombre_vista,
+              isChecked: vista.is_habilitado,
+            },
+          ],
+        };
+      },
+      {}
+    );
 
-  const initialValues = {
-    newPassword: "",
-    confirmPassword: "",
+  const { rol } = useAppSelector((state) => state.auth);
+  const [views, setViews] = useState(userData.vistas);
+
+  const handleViewCheck = (key: string, isChecked: boolean) => {
+    setViews((prev) =>
+      prev.map((vista) =>
+        vista.id_vista_maestro === key
+          ? { ...vista, is_habilitado: isChecked }
+          : vista
+      )
+    );
   };
 
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      await updateUserViews(userData.id, {
+        vistas: views.map(({ nombre_vista, is_habilitado }) => ({
+          nombre_vista,
+          is_habilitado,
+        })),
+      });
+
+      toast.success("Usuario actualizado correctamente");
+    } catch (error) {
+      toast.error("Error al actualizar el usuario");
+      console.error(error);
+    }
+  };
+
+  const vistasFormateadas = useMemo(() => formatVistas(views), [views]);
+
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationChangePassword}
-      onSubmit={(values, { resetForm }) => {
-        console.log(values);
-        resetForm();
-      }}
+    <form
+      onSubmit={(e) => onSubmit(e)}
+      className="w-[100%] flex flex-col space-y-[1rem] items-start"
     >
-      {({ isSubmitting, isValid, dirty }) => (
-        <Form
-          onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-            console.log(e);
-          }}
-          className="w-[100%] flex flex-col space-y-[1rem] items-start"
-        >
-          {rol === ROLES.EMPLOYEE ? null : (
-            <div className="w-[28rem] flex flex-col gap-[1rem]">
-              <NewUserMenusCheckbox
-                menuName={"Repertorio"}
-                subMenuOptions={[
-                  {
-                    name: "Declaración Repertorio",
-                    id: "newPhonogram",
-                  },
-                  { name: "Buscar", id: "searchPhonogram" },
-                  { name: "Conflictos", id: "conflicts" },
-                ]}
-              />
-              <NewUserMenusCheckbox
-                menuName={"Usuarios"}
-                subMenuOptions={[{ name: "Registros", id: "records" }]}
-              />
-              <NewUserMenusCheckbox
-                menuName={"Cuentas Corrientes"}
-                subMenuOptions={[
-                  { name: "Estado de Cuenta", id: "stateAccount" },
-                ]}
-              />
-            </div>
-          )}
-          <CustomButton
-            type="submit"
-            disabled={isSubmitting || !isValid || !dirty}
-            className="self-end"
-          >
-            Aceptar
-          </CustomButton>
-        </Form>
+      {rol === ROLES.EMPLOYEE ? null : (
+        <div className="w-[28rem] flex flex-col gap-[1rem]">
+          {Object.keys(vistasFormateadas).map((v) => (
+            <NewUserMenusCheckbox
+              key={v}
+              menuName={v}
+              subMenuOptions={vistasFormateadas[v]}
+              handleViewCheck={handleViewCheck}
+            />
+          ))}
+        </div>
       )}
-    </Formik>
+      <CustomButton type="submit" className="self-end">
+        Aceptar
+      </CustomButton>
+    </form>
   );
 };
