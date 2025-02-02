@@ -1,57 +1,65 @@
-// "use client";
-// import React, { FC } from "react";
-// import { Viewer, Worker } from "@react-pdf-viewer/core";
-// import {
-//   defaultLayoutPlugin,
-//   ToolbarProps,
-//   ToolbarSlot,
-// } from "@react-pdf-viewer/default-layout";
-// import "@react-pdf-viewer/core/lib/styles/index.css";
-// import "@react-pdf-viewer/default-layout/lib/styles/index.css";
-// import Header from "@/commons/Header/Header";
+"use client";
+import React, { FC, useState } from "react";
+import { Document, Page, pdfjs } from "react-pdf";
+import "react-pdf/dist/esm/Page/AnnotationLayer.css";
+import "react-pdf/dist/esm/Page/TextLayer.css";
+import Header from "@/commons/Header/Header";
+import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 
-// type ToolbarType = (props: ToolbarProps) => React.ReactElement;
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.min.mjs",
+  import.meta.url
+).toString();
 
-// const TycPrivacyPolicy: FC = () => {
-//   const transform = (slot: ToolbarSlot) => ({
-//     ...slot,
-//     Open: () => <></>,
-//     OpenMenuItem: () => <></>,
-//     DownloadMenuItem: () => <></>,
-//     Print: () => <></>,
-//     PrintMenuItem: () => <></>,
-//     Rotate: () => <></>,
-//     RotateBackwardMenuItem: () => <></>,
-//     RotateForwardMenuItem: () => <></>,
-//     ShowProperties: () => <></>,
-//     ShowPropertiesMenuItem: () => <></>,
-//   });
+const TycPrivacyPolicy: FC = () => {
+  const [numPages, setNumPages] = useState<number>(0);
+  const [pageNumber, setPageNumber] = useState<number>(1);
 
-//   const renderToolbar = (Toolbar: ToolbarType) => (
-//     <Toolbar>{renderDefaultToolbar(transform)}</Toolbar>
-//   );
+  function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
+    setNumPages(numPages);
+    setPageNumber(1);
+  }
 
-//   const defaultLayoutPluginInstance = defaultLayoutPlugin({
-//     renderToolbar,
-//   });
+  function changePage(offset: number) {
+    setPageNumber((prevPageNumber) => prevPageNumber + offset);
+  }
 
-//   const { renderDefaultToolbar } =
-//     defaultLayoutPluginInstance.toolbarPluginInstance;
+  function previousPage() {
+    changePage(-1);
+  }
 
-//   return (
-//     <div className="h-[100vh] max-w-[100%] min-w-[100%] bg-[white] overflow-y-scroll overflow-x-hidden pb-[4rem]">
-//       <Header back title="Terminos y Políticas de Privacidad" />
-//       <div>
-//         <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
-//           <Viewer
-//             enableSmoothScroll={true}
-//             fileUrl={"/tyc-privacy-policy/tyc.pdf"}
-//             plugins={[defaultLayoutPluginInstance]}
-//           />
-//         </Worker>
-//       </div>
-//     </div>
-//   );
-// };
+  function nextPage() {
+    changePage(1);
+  }
 
-// export default TycPrivacyPolicy;
+  return (
+    <CustomLayout>
+      <Header back title="Terminos y Políticas de Privacidad" />
+      <div className="w-[100%] flex-1 flex flex-col items-center overflow-y-auto">
+        <Document
+          file="/tyc-privacy-policy/tyc.pdf"
+          onLoadSuccess={onDocumentLoadSuccess}
+        >
+          <Page pageNumber={pageNumber} scale={1.5} />
+        </Document>
+      </div>
+      <div className="relative bottom-0 left-0 flex flex-row space-x-[1rem] items-center justify-center text-black py-[1rem]">
+        <button type="button" disabled={pageNumber <= 1} onClick={previousPage}>
+          {"<"}
+        </button>
+        <p>
+          Página {pageNumber || (numPages ? 1 : "--")} de {numPages || "--"}
+        </p>
+        <button
+          type="button"
+          disabled={pageNumber >= numPages}
+          onClick={nextPage}
+        >
+          {">"}
+        </button>
+      </div>
+    </CustomLayout>
+  );
+};
+
+export default TycPrivacyPolicy;
