@@ -1,15 +1,11 @@
 "use client";
 import React, { FC, useState } from "react";
-import { Document, Page, pdfjs } from "react-pdf";
+import { Document, Page } from "react-pdf";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import "react-pdf/dist/esm/Page/TextLayer.css";
 import Header from "@/commons/Header/Header";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
-
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url
-).toString();
+import "pdfjs-dist/build/pdf.worker.min.mjs";
 
 const TycPrivacyPolicy: FC = () => {
   const [numPages, setNumPages] = useState<number>(0);
