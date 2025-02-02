@@ -155,15 +155,15 @@ export default function page() {
                 return authData.rol === ROLES.SUPER_ADMIN ||
                   authData.rol === ROLES.CAPIF_ADMIN
                   ? [
-                      element.email,
-                      element.tipo_registro,
+                      element?.email,
+                      element?.tipo_registro,
                       "123123",
-                      element.nombre,
-                      element.apellido,
-                      element.telefono,
+                      element?.nombre,
+                      element?.apellido,
+                      element?.telefono,
                       "Sony Music",
-                      element.createdAt,
-                      element.updatedAt,
+                      element?.createdAt,
+                      element?.updatedAt,
                       <ActionDropdownButton
                         menuOptions={[
                           {
@@ -171,7 +171,7 @@ export default function page() {
                             icon: <FaEdit />,
                             onClick: () => {
                               redirectToOption(
-                                `/users/edit-user/${element.id_usuario}`
+                                `/users/edit-user/${element?.id_usuario}`
                               );
                             },
                           },
@@ -179,14 +179,14 @@ export default function page() {
                       />,
                     ]
                   : [
-                      element.email,
+                      element?.email,
                       "123123",
-                      element.nombre,
-                      element.apellido,
-                      element.telefono,
+                      element?.nombre,
+                      element?.apellido,
+                      element?.telefono,
                       "Sony Music",
-                      element.createdAt,
-                      element.updatedAt,
+                      element?.createdAt,
+                      element?.updatedAt,
                     ];
               })}
             />
