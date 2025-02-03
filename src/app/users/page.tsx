@@ -70,7 +70,7 @@ export default function page() {
 
   return (
     <CustomLayout>
-      <Header title="Registros" />
+      <Header title="Usuarios" />
       <div className="w-[100%] flex-1 flex flex-col overflow-y-auto">
         <Formik initialValues={initialValues} onSubmit={() => {}}>
           {({ values }) => (

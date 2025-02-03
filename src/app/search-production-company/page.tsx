@@ -58,92 +58,93 @@ export default function page() {
     <CustomLayout>
       <Header title="Buscar Productora" />
 
-      <div className="h-[4rem] w-[100%] flex items-end mt-[1rem] gap-[2rem] pl-[1rem] pr-[2rem]">
-        <CustomInput label="NOMBRE" type="text" />
-        {authData.rol === ROLES.SUPER_ADMIN ||
-        authData.rol === ROLES.CAPIF_ADMIN ? (
-          <>
-            <select
-              onChange={handleSelectChange}
-              className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem]"
-            >
-              <option value={"registrados"}>Registrados</option>
-              <option value={"pendientes_registro"}>
-                Pendientes de Registro
-              </option>
-              <option value={"incompleto"}>Incompleto</option>
-            </select>
-          </>
-        ) : (
-          <></>
-        )}
-      </div>
-      {productionCompanies && productionCompanies.length > 0 ? (
-        <CustomTable
-          columnNames={[
-            { name: "EMAIL", isSortable: true },
-            { name: "CUIT", isSortable: true },
-            { name: "RAZON SOCIAL/NOMBRE", isSortable: true },
-            { name: "TELÉFONO", isSortable: true },
-            { name: "SELLO", isSortable: true },
-            { name: "FONOGRAMAS", isSortable: true },
-            { name: "FECHA CREACIÓN", isSortable: true },
-            { name: "FECHA ACTUALIZACIÓN", isSortable: true },
-            { name: "ISRC AUDIO", isSortable: true },
-            { name: "ISRC VIDEO", isSortable: true },
-            { name: "ACCIÓN", isSortable: false },
-          ]}
-          columnValues={productionCompanies?.map((element) => {
-            let ISRCAudio: string | undefined = "";
-            let ISRCVideo: string | undefined = "";
-            if (
-              element.codigosDeLaProductora &&
-              element.codigosDeLaProductora.length > 0
-            ) {
-              ISRCAudio =
-                element?.codigosDeLaProductora?.find(
-                  (item) => item?.tipo === "AUDIO"
-                )?.codigo_productora || "";
-              ISRCVideo =
-                element?.codigosDeLaProductora?.find(
-                  (item) => item?.tipo === "VIDEO"
-                )?.codigo_productora || "";
-            }
-
-            return [
-              element.email,
-              element.cuit_cuil,
-              element.razon_social || "",
-              element.telefono,
-              "",
-              "",
-              `${element.createdAt}`,
-              `${element.updatedAt}`,
-              ISRCAudio || "",
-              ISRCVideo || "",
-              <ActionDropdownButton
-                menuOptions={[
-                  {
-                    label: "Ficha",
-                    icon: <FaUserAlt />,
-                    onClick: () =>
-                      redirectToOption(
-                        `/user-profile/${element.id_usuario ? element.id_usuario : element.id_productora}`
-                      ),
-                  },
-                  {
-                    label: "Repertorio",
-                    icon: <FaMusic />,
-                    onClick: () => redirectToOption("/"),
-                  },
-                ]}
-              />,
-            ];
-          })}
-        />
-      ) : null}
-      <div className="w-[100%] mt-[2rem] mb-[2rem] pr-[2rem] pl-[2rem] flex justify-end">
-        <CustomButton>Descargar CVS</CustomButton>
+      <div className="w-[100%] flex-1 flex flex-col space-y-[1rem] overflow-y-auto">
+        <div className="h-[4rem] w-[100%] flex items-end mt-[1rem] gap-[2rem] pl-[1rem] pr-[2rem]">
+          <CustomInput label="NOMBRE" type="text" />
+          {authData.rol === ROLES.SUPER_ADMIN ||
+          authData.rol === ROLES.CAPIF_ADMIN ? (
+            <>
+              <select
+                onChange={handleSelectChange}
+                className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem]"
+              >
+                <option value={"registrados"}>Registrados</option>
+                <option value={"pendientes_registro"}>
+                  Pendientes de Registro
+                </option>
+                <option value={"incompleto"}>Incompleto</option>
+              </select>
+            </>
+          ) : (
+            <></>
+          )}
+        </div>
+        {productionCompanies && productionCompanies.length > 0 ? (
+          <CustomTable
+            columnNames={[
+              { name: "EMAIL", isSortable: true },
+              { name: "CUIT", isSortable: true },
+              { name: "RAZON SOCIAL/NOMBRE", isSortable: true },
+              { name: "TELÉFONO", isSortable: true },
+              { name: "SELLO", isSortable: true },
+              { name: "FONOGRAMAS", isSortable: true },
+              { name: "FECHA CREACIÓN", isSortable: true },
+              { name: "FECHA ACTUALIZACIÓN", isSortable: true },
+              { name: "ISRC AUDIO", isSortable: true },
+              { name: "ISRC VIDEO", isSortable: true },
+              { name: "ACCIÓN", isSortable: false },
+            ]}
+            columnValues={productionCompanies?.map((element) => {
+              let ISRCAudio: string | undefined = "";
+              let ISRCVideo: string | undefined = "";
+              if (
+                element.codigosDeLaProductora &&
+                element.codigosDeLaProductora.length > 0
+              ) {
+                ISRCAudio =
+                  element?.codigosDeLaProductora?.find(
+                    (item) => item?.tipo === "AUDIO"
+                  )?.codigo_productora || "";
+                ISRCVideo =
+                  element?.codigosDeLaProductora?.find(
+                    (item) => item?.tipo === "VIDEO"
+                  )?.codigo_productora || "";
+              }
+              return [
+                element.email,
+                element.cuit_cuil,
+                element.razon_social || "",
+                element.telefono,
+                "",
+                "",
+                `${element.createdAt}`,
+                `${element.updatedAt}`,
+                ISRCAudio || "",
+                ISRCVideo || "",
+                <ActionDropdownButton
+                  menuOptions={[
+                    {
+                      label: "Ficha",
+                      icon: <FaUserAlt />,
+                      onClick: () =>
+                        redirectToOption(
+                          `/user-profile/${element.id_usuario ? element.id_usuario : element.id_productora}`
+                        ),
+                    },
+                    {
+                      label: "Repertorio",
+                      icon: <FaMusic />,
+                      onClick: () => redirectToOption("/"),
+                    },
+                  ]}
+                />,
+              ];
+            })}
+          />
+        ) : null}
+        <div className="w-[100%] mt-[2rem] mb-[2rem] pr-[2rem] pl-[2rem] flex justify-end">
+          <CustomButton>Descargar CVS</CustomButton>
+        </div>
       </div>
     </CustomLayout>
   );
