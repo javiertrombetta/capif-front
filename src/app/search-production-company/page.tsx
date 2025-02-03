@@ -4,16 +4,16 @@ import { FaMusic, FaUserAlt } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
 import CustomButton from "@/commons/CustomButton/CustomButton";
-import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import CustomTable from "@/commons/CustomTable/CustomTable";
 import Header from "@/commons/Header/Header";
 import Spinner from "@/commons/Spinner/Spinner";
 import { useAppSelector } from "@/hooks/storeHooks";
-import { getPendingApplications } from "@/services/auth";
 import { getAllCompanies } from "@/services/productionCompanies";
 import { ROLES } from "@/types/auth.types";
 import { ProductionCompanyResponse } from "@/types/productionCompany.types";
+import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
+import { Form, Formik } from "formik";
 
 export default function page() {
   const authData = useAppSelector((state) => state.auth);
@@ -23,23 +23,30 @@ export default function page() {
   >(null);
   const router = useRouter();
 
-  const redirectToOption = (route: string): void => {
-    router.push(route);
+  const initialValues = {
+    nombre: "",
+    apellido: "",
+    email: "",
+    estado: "",
   };
 
-  const handleSelectChange = async (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    if (e.target.value === "pendientes_registro") {
-      const results = await getPendingApplications();
-      setProductionCompanies(results);
-    }
+  const redirectToOption = (route: string): void => {
+    router.push(route);
   };
 
   const getProductionCompanies = async () => {
     const companies = await getAllCompanies();
     setProductionCompanies(companies);
     setLoading(false);
+  };
+
+  const handleOnSubmit = async (values: Record<string, string>) => {
+    setLoading(true);
+    for (const key in values) {
+      if (!values[key]) delete values[key];
+    }
+
+    await getProductionCompanies();
   };
 
   useEffect(() => {
@@ -59,26 +66,45 @@ export default function page() {
       <Header title="Buscar Productora" />
 
       <div className="w-[100%] flex-1 flex flex-col space-y-[1rem] overflow-y-auto">
-        <div className="h-[4rem] w-[100%] flex items-end mt-[1rem] gap-[2rem] pl-[1rem] pr-[2rem]">
-          <CustomInput label="NOMBRE" type="text" />
-          {authData.rol === ROLES.SUPER_ADMIN ||
-          authData.rol === ROLES.CAPIF_ADMIN ? (
-            <>
-              <select
-                onChange={handleSelectChange}
-                className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem]"
-              >
-                <option value={"registrados"}>Registrados</option>
-                <option value={"pendientes_registro"}>
-                  Pendientes de Registro
-                </option>
-                <option value={"incompleto"}>Incompleto</option>
-              </select>
-            </>
-          ) : (
-            <></>
-          )}
-        </div>
+        <Formik
+          initialValues={initialValues}
+          onSubmit={(values) => handleOnSubmit(values)}
+        >
+          <Form className="h-[4rem] w-[100%] flex items-end mt-[1rem] gap-[2rem] pl-[1rem] pr-[2rem]">
+            <CustomSearchField
+              id="nombre"
+              name="nombre"
+              labelText="NOMBRE"
+              type="text"
+            />
+            <CustomSearchField
+              id="cuit"
+              name="cuit"
+              labelText="CUIT"
+              type="text"
+            />
+            {authData.rol === ROLES.SUPER_ADMIN ||
+            authData.rol === ROLES.CAPIF_ADMIN ? (
+              <CustomSearchField
+                id="estado"
+                name="estado"
+                labelText="ESTADO"
+                type="select"
+                options={[
+                  { name: "", value: "" },
+                  { name: "Autorizada", value: "Autorizada" },
+                  { name: "Pendiente", value: "Pendiente" },
+                ]}
+              />
+            ) : (
+              <></>
+            )}
+            <CustomButton type="submit">Buscar</CustomButton>
+            <CustomButton type="button">
+              <p className="whitespace-nowrap">Descargar CSV</p>
+            </CustomButton>
+          </Form>
+        </Formik>
         {productionCompanies && productionCompanies.length > 0 ? (
           <CustomTable
             columnNames={[
@@ -142,9 +168,6 @@ export default function page() {
             })}
           />
         ) : null}
-        <div className="w-[100%] mt-[2rem] mb-[2rem] pr-[2rem] pl-[2rem] flex justify-end">
-          <CustomButton>Descargar CVS</CustomButton>
-        </div>
       </div>
     </CustomLayout>
   );
