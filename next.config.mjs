@@ -5,6 +5,7 @@ const nextConfig = {
       test: /\.node/,
       use: "raw-loader",
     });
+    config.resolve.alias.canvas = false;
     return config;
   },
 };
