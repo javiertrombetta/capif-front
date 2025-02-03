@@ -134,7 +134,16 @@ export const selectProductionCompany = async (productoraId: string) => {
 
 export const sendApplication = async (requestData: SendApplication) => {
   try {
-    await axiosInstance.post("auth/prods/primary/step-two", requestData);
+    const response = (await axiosInstance.post(
+      "auth/prods/primary/step-two",
+      requestData
+    )) as {
+      data: {
+        productora: string;
+        message: string;
+      };
+    };
+    return response.data;
   } catch (error: unknown) {
     throw new Error(`${error}`);
   }

@@ -1,14 +1,7 @@
-interface Document {
-  nombre_documento: string;
-  ruta_archivo_documento: string;
-}
-
 export interface SendApplication {
-  id_usuario: string;
   nombre: string;
   apellido: string;
   telefono: string;
-  documentos: Document[];
   productoraData: {
     id_productora?: string;
     tipo_persona: "FISICA" | "JURIDICA";
