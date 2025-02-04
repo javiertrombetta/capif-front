@@ -82,7 +82,12 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
       case ModalNames.REJECT_REGISTRATION:
         return <RejectApplication onCloseModal={onCloseModal} />;
       case ModalNames.ACCEPT_APPLICATION:
-        return <AcceptApplication onCloseModal={onCloseModal} />;
+        return (
+          <AcceptApplication
+            onCloseModal={onCloseModal}
+            onAcceptModal={modalData.handleAccept ?? (() => {})}
+          />
+        );
       case ModalNames.CHANGE_PRODUCER:
         return <ChangeProducerModal onCloseModal={onCloseModal} />;
       case ModalNames.ACCEPT_REGISTRATION:
