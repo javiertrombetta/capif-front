@@ -68,20 +68,16 @@ export const authLogout = async () => {
 export const getAuthData = async (): Promise<AuthProps> => {
   try {
     const { data } = await axiosInstance.get<GetAuthDataResponse>("users/me");
+    console.log(data);
     return {
       ...data.usuario,
       id_usuario: data.usuario.id,
-      productoras: data.productoras.map(
-        ({ productora: { nombre_productora: nombre, id_productora: id } }) => ({
-          id,
-          nombre,
-        })
-      ),
+      productoras: data.productoras,
       vistas: data.vistas.map((vista) => ({
         nombre: vista.nombre_vista,
         nombre_vista_superior: vista.nombre_vista_superior,
       })),
-      productoraActiva: null, //ToDo: traer productora activa eventualmente
+      productoraActiva: data.usuario.productora_activa || data.productoras[0], //ToDo: traer productora activa eventualmente
       loading: false,
     };
   } catch (error: unknown) {

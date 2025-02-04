@@ -154,7 +154,7 @@ export default function page() {
                       icon: <FaUserAlt />,
                       onClick: () =>
                         redirectToOption(
-                          `/user-profile/${element.id_usuario ? element.id_usuario : element.id_productora}`
+                          `/producers/${element.id_usuario ? element.id_usuario : element.id_productora}`
                         ),
                     },
                     {

@@ -121,16 +121,15 @@ export default function page() {
                   ? [
                       { name: "EMAIL", isSortable: true },
                       { name: "TIPO REGISTRO", isSortable: true },
-                      { name: "CUIT", isSortable: true },
                       { name: "NOMBRES", isSortable: true },
                       { name: "APELLIDOS", isSortable: true },
                       { name: "TELÉFONO", isSortable: true },
+                      { name: "ROL", isSortable: true },
                       { name: "SELLO", isSortable: true },
                       { name: "ACCIÓN", isSortable: false },
                     ]
                   : [
                       { name: "EMAIL", isSortable: true },
-                      { name: "CUIT", isSortable: true },
                       { name: "NOMBRES", isSortable: true },
                       { name: "APELLIDOS", isSortable: true },
                       { name: "TELÉFONO", isSortable: true },
@@ -143,11 +142,11 @@ export default function page() {
                   ? [
                       element.email,
                       element.estado,
-                      "123123",
                       element.nombre,
                       element.apellido,
                       element.telefono,
-                      "Sony Music",
+                      element.rol,
+                      element.productoras[0]?.productora || "",
                       <ActionDropdownButton
                         menuOptions={[
                           {
@@ -164,11 +163,10 @@ export default function page() {
                     ]
                   : [
                       element.email,
-                      "123123",
                       element.nombre,
                       element.apellido,
                       element.telefono,
-                      "Sony Music",
+                      element.productoras[0]?.productora || "",
                     ];
               })}
             />

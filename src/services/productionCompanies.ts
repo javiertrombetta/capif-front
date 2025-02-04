@@ -3,7 +3,7 @@ import {
   ProductionCompanyByIdResponse,
 } from "@/types/productionCompany.types";
 import { axiosInstance } from "./axiosInstance";
-import { CompanyValues } from "@/components/UserProfileView/UserProfileView";
+import { CompanyValues } from "@/components/ProducerView/ProducerView";
 
 export const getAllCompanies = async () => {
   const companies = await axiosInstance.get("producers/");

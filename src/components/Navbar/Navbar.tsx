@@ -68,6 +68,9 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
   useEffect(() => {
     openProductionCompanySelection();
   }, []);
+
+  console.log(authData);
+
   return (
     <>
       {checkForbbidenPathname(noUserPathnames, pathname) ? (
@@ -114,7 +117,7 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
                     <p className="">Productora Activa:</p>
 
                     <p className="font-bold">
-                      {authData?.productoras?.[0]?.nombre}
+                      {authData?.productoraActiva?.productora}
                     </p>
                   </div>
                 ) : null}

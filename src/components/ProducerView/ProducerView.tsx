@@ -37,7 +37,7 @@ export interface CompanyValues {
   cuit_representante?: string;
 }
 
-const UserProfileView: FC = () => {
+const ProducerView: FC = () => {
   const { id } = useParams();
   const [currentEntity, setCurrentEntity] = useState<"natural" | "legal">(
     "natural"
@@ -199,7 +199,7 @@ const UserProfileView: FC = () => {
   );
 };
 
-export default UserProfileView;
+export default ProducerView;
 
 const EntityForm: FC<{
   disabled: boolean;
