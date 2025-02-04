@@ -69,8 +69,6 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
     openProductionCompanySelection();
   }, []);
 
-  console.log(authData);
-
   return (
     <>
       {checkForbbidenPathname(noUserPathnames, pathname) ? (

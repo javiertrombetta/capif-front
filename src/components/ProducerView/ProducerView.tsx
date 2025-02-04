@@ -4,53 +4,30 @@ import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
 import { validationRegisterApplication } from "@/utils/formValidations";
-import { Field, Form, Formik, FormikErrors } from "formik";
+import { Field, Form, Formik } from "formik";
 import CustomField from "@/commons/CustomField/CustomField";
 import { useAppDispatch } from "@/hooks/storeHooks";
 import { setModal } from "@/store/modalSlice";
 import { ModalNames } from "@/types/modalNames";
-import { getCompanyById, updateCompany } from "@/services/productionCompanies";
+import { getCompanyById, updateProducer } from "@/services/productionCompanies";
 import { useParams } from "next/navigation";
-import { ProductionCompanyByIdResponse } from "@/types/productionCompany.types";
-
-export interface CompanyValues {
-  nombre_productora: string;
-  apellido_productor: string;
-  tipo_persona: "FISICA" | "JURIDICA";
-  cuit_cuil: string;
-  email: string;
-  calle: string;
-  numero: string;
-  ciudad: string;
-  localidad: string;
-  provincia: string;
-  codigo_postal: string;
-  telefono: string;
-  nacionalidad: string;
-  alias_cbu: string;
-  cbu: string;
-  datos_adicionales?: string;
-  denominacion_sello?: string;
-  razon_social?: string;
-  apellidos_representante?: string;
-  nombres_representante?: string;
-  cuit_representante?: string;
-}
+import {
+  ProductionCompanyByIdResponse,
+  UpdateProducerPayload,
+} from "@/types/productionCompany.types";
+import { toast } from "react-toastify";
+import { getUsers } from "@/services/users";
+import { acceptApplication } from "@/services/auth";
 
 const ProducerView: FC = () => {
   const { id } = useParams();
-  const [currentEntity, setCurrentEntity] = useState<"natural" | "legal">(
-    "natural"
-  );
   const [_uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [companyData, setCompanyData] =
     useState<ProductionCompanyByIdResponse | null>(null);
   const [fieldsDisabled, setFieldsDisabled] = useState<boolean>(true);
 
-  const initialValues: CompanyValues = {
+  const initialValues: UpdateProducerPayload = {
     nombre_productora: companyData?.nombre_productora || "",
-    apellido_productor: "",
-    tipo_persona: companyData?.tipo_persona || "FISICA",
     cuit_cuil: companyData?.cuit_cuil || "",
     email: companyData?.email || "",
     calle: companyData?.calle || "",
@@ -61,18 +38,14 @@ const ProducerView: FC = () => {
     codigo_postal: companyData?.codigo_postal || "",
     telefono: companyData?.telefono || "",
     nacionalidad: companyData?.nacionalidad || "",
-    alias_cbu: companyData?.alias_cbu || "",
-    cbu: companyData?.cbu || "",
     datos_adicionales: companyData?.datos_adicionales || "",
     denominacion_sello: companyData?.denominacion_sello || "",
     razon_social: companyData?.razon_social || "",
-    apellidos_representante: companyData?.apellidos_representante || "",
-    nombres_representante: companyData?.nombres_representante || "",
+    apellidos_representante:
+      companyData?.apellidos_representante || companyData?.apellidos || "",
+    nombres_representante:
+      companyData?.nombres_representante || companyData?.nombres || "",
     cuit_representante: companyData?.cuit_representante || "",
-  };
-
-  const handleCurrentEntity = (value: "natural" | "legal") => {
-    setCurrentEntity(value);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,19 +54,26 @@ const ProducerView: FC = () => {
     }
   };
 
-  const onRadioFieldChange = (
-    entity: "natural" | "legal",
-    values: CompanyValues,
-    setValues: (
-      values: React.SetStateAction<CompanyValues>,
-      shouldValidate?: boolean
-    ) => Promise<void | FormikErrors<CompanyValues>>
-  ) => {
-    handleCurrentEntity(entity);
-    setValues({
-      ...values,
-      tipo_persona: entity === "natural" ? "FISICA" : "JURIDICA",
+  const handleAccept = async () => {
+    const users = await getUsers({
+      productoraId: companyData?.id_productora,
     });
+
+    const { id } = users[0];
+
+    console.log(id);
+
+    // try {
+    //   await acceptApplication(id);
+    //   toast.success("La solicitud fue aceptada correctamente");
+    // } catch (error) {
+    //   toast.error("Error al aceptar la solicitud");
+    //   console.error("Error al aceptar la solicitud:", error);
+    // }
+  };
+
+  const handleEditCompany = async (values: UpdateProducerPayload) => {
+    await updateProducer(id as string, values);
   };
 
   const getCompanyData = async () => {
@@ -103,25 +83,21 @@ const ProducerView: FC = () => {
     }
   };
 
-  const handleEditCompany = async (values: CompanyValues) => {
-    await updateCompany(id as string, values);
-  };
-
   useEffect(() => {
     getCompanyData();
   }, []);
 
   return (
     <CustomLayout>
-      <Header back title="Ficha de Usuario" className="" />
+      <Header back title="Ficha de Productora" />
       <div className="pr-[2rem] pl-[2rem] w-[100%] mb-[2rem]">
         {companyData ? (
           <Formik
             initialValues={initialValues}
             validationSchema={validationRegisterApplication}
-            onSubmit={() => {}}
+            onSubmit={(values) => handleEditCompany(values)}
           >
-            {({ isSubmitting, isValid, dirty, values, setValues }) => (
+            {({ isSubmitting, isValid, dirty }) => (
               <Form id="form" className="w-[100%]">
                 <div className="mt-[1rem] pr-[2rem] pl-[2rem] w-[100%] flex justify-end items-center">
                   {fieldsDisabled ? (
@@ -133,14 +109,7 @@ const ProducerView: FC = () => {
                     </CustomButton>
                   ) : (
                     <div className="flex gap-[1rem]">
-                      <CustomButton
-                        type="button"
-                        onClick={() => {
-                          handleEditCompany(values);
-                        }}
-                      >
-                        Guardar
-                      </CustomButton>
+                      <CustomButton type="submit">Guardar</CustomButton>
                       <CustomButton
                         background="delete"
                         onClick={() => setFieldsDisabled(true)}
@@ -151,36 +120,15 @@ const ProducerView: FC = () => {
                   )}
                 </div>
 
-                <div className="flex gap-[2rem] mt-[2rem]">
-                  {companyData.tipo_persona === "FISICA" ? (
-                    <div className="flex gap-[0.5rem]">
-                      <Field
-                        onChange={() => {
-                          onRadioFieldChange("natural", values, setValues);
-                        }}
-                        name="tipo_persona"
-                        id="tipo_persona"
-                        checked={currentEntity === "natural"}
-                        value="FISICA"
-                        type="radio"
-                      />
-                      <h1 className="font-bold text-black">PERSONA FÍSICA</h1>
-                    </div>
-                  ) : (
-                    <div className="flex gap-[0.5rem]">
-                      <Field
-                        onChange={() => {
-                          onRadioFieldChange("legal", values, setValues);
-                        }}
-                        name="tipo_persona"
-                        id="tipo_persona"
-                        checked={currentEntity === "legal"}
-                        value="JURIDICA"
-                        type="radio"
-                      />
-                      <h1 className="font-bold text-black">PERSONA JURÍDICA</h1>
-                    </div>
-                  )}
+                <div className="flex flex-col text-[#a6acaf]">
+                  <label className="font-bold">TIPO PERSONA</label>
+                  <p
+                    className={
+                      "padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black"
+                    }
+                  >
+                    {companyData.tipo_persona}
+                  </p>
                 </div>
                 <EntityForm
                   disabled={fieldsDisabled}
@@ -188,7 +136,8 @@ const ProducerView: FC = () => {
                   dirty={dirty}
                   isValid={isValid}
                   isSubmitting={isSubmitting}
-                  entity={currentEntity}
+                  entity={companyData.tipo_persona}
+                  handleAccept={handleAccept}
                 />
               </Form>
             )}
@@ -203,12 +152,13 @@ export default ProducerView;
 
 const EntityForm: FC<{
   disabled: boolean;
-  entity: "natural" | "legal";
+  entity: ProductionCompanyByIdResponse["tipo_persona"];
   isSubmitting: boolean;
   isValid: boolean;
   dirty: boolean;
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}> = ({ entity, handleFileChange, disabled }) => {
+  handleAccept: () => void;
+}> = ({ entity, handleFileChange, disabled, handleAccept }) => {
   const dispatch = useAppDispatch();
 
   const rejectApplication = () => {
@@ -225,6 +175,7 @@ const EntityForm: FC<{
       setModal({
         type: ModalNames.ACCEPT_APPLICATION,
         isActive: true,
+        handleAccept,
       })
     );
   };
@@ -249,7 +200,7 @@ const EntityForm: FC<{
           labelText="CUIT/CUIL"
         />
       </div>
-      {entity === "legal" && (
+      {entity === "JURIDICA" && (
         <CustomField
           disabled={disabled}
           width="w-[100%]"
@@ -260,21 +211,21 @@ const EntityForm: FC<{
         />
       )}
 
-      {entity === "natural" ? (
+      {entity === "FISICA" ? (
         <div className="flex w-[100%] gap-[2rem] mt-[1rem]">
           <CustomField
             disabled={disabled}
             width="w-[100%]"
-            id="nombre_productor"
-            name="nombre_productor"
+            id="nombres_representante"
+            name="nombres_representante"
             type="text"
             labelText="NOMBRES"
           />
           <CustomField
             disabled={disabled}
             width="w-[100%]"
-            id="apellido_productor"
-            name="apellido_productor"
+            id="apellidos_representante"
+            name="apellidos_representante"
             type="text"
             labelText="APELLIDOS"
           />
@@ -300,7 +251,7 @@ const EntityForm: FC<{
         </div>
       )}
 
-      {entity === "natural" ? (
+      {entity === "FISICA" ? (
         <CustomField
           disabled={disabled}
           width="w-[100%]"
@@ -417,28 +368,10 @@ const EntityForm: FC<{
         type="text"
         labelText="NACIONALIDAD"
       />
-      <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
-        <CustomField
-          disabled={disabled}
-          width="w-[100%]"
-          id="cbu"
-          name="cbu"
-          type="text"
-          labelText="CBU (opcional)"
-        />
-        <CustomField
-          disabled={disabled}
-          width="w-[100%]"
-          id="alias_cbu"
-          name="alias_cbu"
-          type="text"
-          labelText="ALIAS (opcional)"
-        />
-      </div>
 
       <div className="mt-[1.5rem]">
         <p className="font-bold text-black">
-          {entity === "natural"
+          {entity === "FISICA"
             ? "CARGAR DOCUMENTO NACIONAL DE IDENTIDAD"
             : "CARGAR ESTATUTO O CONTRATO SOCIAL"}
         </p>
@@ -451,7 +384,7 @@ const EntityForm: FC<{
         />
       </div>
 
-      {entity === "legal" && (
+      {entity === "JURIDICA" && (
         <div className="mt-[1.5rem]">
           <p className="font-bold text-black">
             CARGAR DOCUMENTO NACIONAL DE IDENTIDAD DEL REPRESENTANTE LEGAL
