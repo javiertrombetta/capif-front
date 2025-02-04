@@ -209,7 +209,10 @@ const ChangeProducerModal: FC<{ onCloseModal: () => void }> = ({
   const dispatch = useAppDispatch();
   const authData = useAppSelector((state) => state.auth);
 
-  const selectProductora = async (element: { id: string; nombre: string }) => {
+  const selectProductora = async (element: {
+    id: string;
+    productora: string;
+  }) => {
     try {
       await selectProductionCompany(element.id);
       if (window && window.localStorage) {
@@ -244,7 +247,7 @@ const ChangeProducerModal: FC<{ onCloseModal: () => void }> = ({
               onClick={() => selectProductora(element)}
             >
               <p className="text-center text-black hover:bg-[#d8d8d8]">
-                {element.nombre}
+                {element.productora}
               </p>
             </div>
           ))

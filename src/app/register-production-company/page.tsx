@@ -15,6 +15,7 @@ import CustomFileInput from "@/commons/CustomFileInput/CustomFileInput";
 import { SendApplication } from "@/types/user.types";
 import { uploadCompanyDocument } from "@/services/productionCompanies";
 import useFileHandler from "@/hooks/useFileHandler";
+import { toast } from "react-toastify";
 
 export interface ApplicationValues {
   nombre_productora: string;
@@ -173,6 +174,9 @@ const page: FC = () => {
         onOpenModal();
       }
     } catch (error) {
+      toast.error(
+        "Error al crear aplicación. Revisar campos e intentar nuevamente"
+      );
       console.log(error);
     }
   };
