@@ -19,12 +19,16 @@ import { toast } from "react-toastify";
 import { getUsers } from "@/services/users";
 import { acceptApplication } from "@/services/auth";
 
-const ProducerView: FC = () => {
-  const { id } = useParams();
+const ProducerView = ({
+  idProducer,
+  fieldsDisabled = true,
+}: {
+  idProducer: string;
+  fieldsDisabled: boolean;
+}) => {
   const [_uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [companyData, setCompanyData] =
     useState<ProductionCompanyByIdResponse | null>(null);
-  const [fieldsDisabled, setFieldsDisabled] = useState<boolean>(true);
 
   const initialValues: UpdateProducerPayload = {
     nombre_productora: companyData?.nombre_productora || "",
@@ -54,31 +58,13 @@ const ProducerView: FC = () => {
     }
   };
 
-  const handleAccept = async () => {
-    const users = await getUsers({
-      productoraId: companyData?.id_productora,
-    });
-
-    const { id } = users[0];
-
-    console.log(id);
-
-    // try {
-    //   await acceptApplication(id);
-    //   toast.success("La solicitud fue aceptada correctamente");
-    // } catch (error) {
-    //   toast.error("Error al aceptar la solicitud");
-    //   console.error("Error al aceptar la solicitud:", error);
-    // }
-  };
-
   const handleEditCompany = async (values: UpdateProducerPayload) => {
-    await updateProducer(id as string, values);
+    await updateProducer(idProducer as string, values);
   };
 
   const getCompanyData = async () => {
-    if (id && !Array.isArray(id)) {
-      const company = await getCompanyById(id);
+    if (idProducer && !Array.isArray(idProducer)) {
+      const company = await getCompanyById(idProducer);
       setCompanyData(company);
     }
   };
@@ -88,63 +74,38 @@ const ProducerView: FC = () => {
   }, []);
 
   return (
-    <CustomLayout>
-      <Header back title="Ficha de Productora" />
-      <div className="pr-[2rem] pl-[2rem] w-[100%] mb-[2rem]">
-        {companyData ? (
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationRegisterApplication}
-            onSubmit={(values) => handleEditCompany(values)}
-          >
-            {({ isSubmitting, isValid, dirty }) => (
-              <Form id="form" className="w-[100%]">
-                <div className="mt-[1rem] pr-[2rem] pl-[2rem] w-[100%] flex justify-end items-center">
-                  {fieldsDisabled ? (
-                    <CustomButton
-                      background="warn"
-                      onClick={() => setFieldsDisabled(false)}
-                    >
-                      Editar
-                    </CustomButton>
-                  ) : (
-                    <div className="flex gap-[1rem]">
-                      <CustomButton type="submit">Guardar</CustomButton>
-                      <CustomButton
-                        background="delete"
-                        onClick={() => setFieldsDisabled(true)}
-                      >
-                        Cancelar
-                      </CustomButton>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex flex-col text-[#a6acaf]">
-                  <label className="font-bold">TIPO PERSONA</label>
-                  <p
-                    className={
-                      "padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black"
-                    }
-                  >
-                    {companyData.tipo_persona}
-                  </p>
-                </div>
-                <EntityForm
-                  disabled={fieldsDisabled}
-                  handleFileChange={handleFileChange}
-                  dirty={dirty}
-                  isValid={isValid}
-                  isSubmitting={isSubmitting}
-                  entity={companyData.tipo_persona}
-                  handleAccept={handleAccept}
-                />
-              </Form>
-            )}
-          </Formik>
-        ) : null}
-      </div>
-    </CustomLayout>
+    <div className="pr-[2rem] pl-[2rem] w-[100%] mb-[2rem]">
+      {companyData ? (
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationRegisterApplication}
+          onSubmit={(values) => handleEditCompany(values)}
+        >
+          {({ isSubmitting, isValid, dirty }) => (
+            <Form id="form" className="w-[100%]">
+              <div className="flex flex-col text-[#a6acaf]">
+                <label className="font-bold">TIPO PERSONA</label>
+                <p
+                  className={
+                    "padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black"
+                  }
+                >
+                  {companyData.tipo_persona}
+                </p>
+              </div>
+              <EntityForm
+                disabled={fieldsDisabled}
+                handleFileChange={handleFileChange}
+                dirty={dirty}
+                isValid={isValid}
+                isSubmitting={isSubmitting}
+                entity={companyData.tipo_persona}
+              />
+            </Form>
+          )}
+        </Formik>
+      ) : null}
+    </div>
   );
 };
 
@@ -157,29 +118,7 @@ const EntityForm: FC<{
   isValid: boolean;
   dirty: boolean;
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleAccept: () => void;
-}> = ({ entity, handleFileChange, disabled, handleAccept }) => {
-  const dispatch = useAppDispatch();
-
-  const rejectApplication = () => {
-    dispatch(
-      setModal({
-        type: ModalNames.REJECT_REGISTRATION,
-        isActive: true,
-      })
-    );
-  };
-
-  const acceptApplication = () => {
-    dispatch(
-      setModal({
-        type: ModalNames.ACCEPT_APPLICATION,
-        isActive: true,
-        handleAccept,
-      })
-    );
-  };
-
+}> = ({ entity, handleFileChange, disabled }) => {
   return (
     <div className="mt-[3rem] w-[100%]">
       <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
@@ -431,20 +370,6 @@ const EntityForm: FC<{
           <p className="text-mainblue">1-comprobante pago CAPIF.jpg</p>
           <p className="text-mainblue">Eliminar</p>
         </div>
-      </div>
-
-      <div className="mt-[5rem] flex gap-[1rem] ">
-        <div className="flex gap-[1rem]">
-          <CustomButton onClick={acceptApplication} className="bg-[#008d4c]">
-            Confirmar el Registro del Usuario
-          </CustomButton>
-          <CustomButton background="delete" onClick={rejectApplication}>
-            Rechazar
-          </CustomButton>
-          {/* <CustomButton background="warn">Editar</CustomButton> */}
-        </div>
-
-        {/* <CustomButton onClick={handleRejectRegister}>Cancelar</CustomButton> */}
       </div>
     </div>
   );
