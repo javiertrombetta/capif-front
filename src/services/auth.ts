@@ -71,12 +71,10 @@ export const getAuthData = async (): Promise<AuthProps> => {
     return {
       ...data.usuario,
       id_usuario: data.usuario.id,
-      productoras: data.productoras.map(
-        ({ productora: { nombre_productora: nombre, id_productora: id } }) => ({
-          id,
-          nombre,
-        })
-      ),
+      productoras: data.productoras.map((productora) => ({
+        id: productora.id,
+        nombre: productora.productora,
+      })),
       vistas: data.vistas.map((vista) => ({
         nombre: vista.nombre_vista,
         nombre_vista_superior: vista.nombre_vista_superior,
