@@ -16,7 +16,18 @@ const AuthProvider: FC<AuthProvider> = ({ children }) => {
 
   const handleGetUserData = async () => {
     const data = await getAuthData();
-    dispatch(setAuthData(data));
+    let activeCompany = null;
+
+    if (window && window.localStorage) {
+      activeCompany = localStorage.getItem("company");
+    }
+    if (activeCompany) {
+      dispatch(
+        setAuthData({ ...data, productoraActiva: JSON.parse(activeCompany) })
+      );
+    } else {
+      dispatch(setAuthData(data));
+    }
 
     if (!data.id_usuario) {
       router.push("/login");
