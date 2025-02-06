@@ -9,7 +9,7 @@ interface CustomFieldProps {
   id: string;
   name: string;
   fieldClassName?: string;
-  labelText: string;
+  labelText?: string;
   width?: string;
   disabled?: boolean;
   options?: { name: string; value: string }[];

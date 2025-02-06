@@ -154,9 +154,9 @@ export default function page() {
                       element.email,
                       element.estado,
                       "123123",
-                      element.nombre,
-                      element.apellido,
-                      element.telefono,
+                      element?.nombre,
+                      element?.apellido,
+                      element?.telefono,
                       "Sony Music",
                       <ActionDropdownButton
                         menuOptions={[
@@ -173,11 +173,11 @@ export default function page() {
                       />,
                     ]
                   : [
-                      element.email,
+                      element?.email,
                       "123123",
-                      element.nombre,
-                      element.apellido,
-                      element.telefono,
+                      element?.nombre,
+                      element?.apellido,
+                      element?.telefono,
                       "Sony Music",
                     ];
               })}

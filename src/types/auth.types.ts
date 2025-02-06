@@ -53,14 +53,10 @@ export interface GetAuthDataResponse {
     apellido: string;
     telefono: string;
   };
-  productoras: [
-    {
-      productora: {
-        id_productora: string;
-        nombre_productora: string;
-      };
-    },
-  ];
+  productoras: {
+    id: string;
+    productora: string;
+  }[];
   vistas: [
     {
       nombre_vista: string;
@@ -82,7 +78,7 @@ export interface AuthProps {
     nombre: string;
   }[];
   vistas: { nombre: string; nombre_vista_superior: string }[];
-  productoraActiva: { id: string; nombre: string } | null;
+  productoraActiva: { id: string; nombre: string; cuit_cuil: string } | null;
   loading: boolean;
 }
 
