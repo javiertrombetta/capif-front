@@ -1,28 +1,42 @@
-import React, { useState } from "react";
-import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
+import { useState } from "react";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+
+type Time = {
+  hours: number;
+  minutes: number;
+  seconds: number;
+};
 
 interface TimerInputProps {
-  defaultTime?: { hours: number; minutes: number; seconds: number };
+  defaultTime?: Time;
+  onChange?: (formattedTime: string) => void;
 }
 
-const TimerInput: React.FC<TimerInputProps> = ({ defaultTime }) => {
-  const [time, setTime] = useState(
+const TimerInput: React.FC<TimerInputProps> = ({ defaultTime, onChange }) => {
+  const [time, setTime] = useState<Time>(
     defaultTime ? defaultTime : { hours: 0, minutes: 0, seconds: 0 }
   );
 
+  const formatTime = (time: Time): string => {
+    const pad = (num: number) => String(num).padStart(2, "0");
+    return `${pad(time.hours)}:${pad(time.minutes)}:${pad(time.seconds)}`;
+  };
+
+  const updateTime = (newTime: Time) => {
+    setTime(newTime);
+    onChange?.(formatTime(newTime));
+  };
+
   const handleIncrement = (field: "hours" | "minutes" | "seconds") => {
-    setTime((prev) => ({
-      ...prev,
-      [field]:
-        prev[field] < (field === "hours" ? 23 : 59) ? prev[field] + 1 : 0,
-    }));
+    const newValue =
+      time[field] < (field === "hours" ? 23 : 59) ? time[field] + 1 : 0;
+    updateTime({ ...time, [field]: newValue });
   };
 
   const handleDecrement = (field: "hours" | "minutes" | "seconds") => {
-    setTime((prev) => ({
-      ...prev,
-      [field]: prev[field] > 0 ? prev[field] - 1 : field === "hours" ? 99 : 59,
-    }));
+    const newValue =
+      time[field] > 0 ? time[field] - 1 : field === "hours" ? 23 : 59;
+    updateTime({ ...time, [field]: newValue });
   };
 
   const handleInputChange = (
@@ -35,16 +49,11 @@ const TimerInput: React.FC<TimerInputProps> = ({ defaultTime }) => {
       numericValue >= 0 &&
       numericValue <= (field === "hours" ? 23 : 59)
     ) {
-      setTime((prev) => ({
-        ...prev,
-        [field]: numericValue,
-      }));
+      updateTime({ ...time, [field]: numericValue });
     } else if (value === "") {
-      setTime((prev) => ({ ...prev, [field]: 0 }));
+      updateTime({ ...time, [field]: 0 });
     }
   };
-
-  const formatTime = (value: number) => value.toString().padStart(2, "0");
 
   return (
     <div className="w-[12rem] p-4 bg-white text-white rounded-md shadow-lg">
@@ -52,13 +61,7 @@ const TimerInput: React.FC<TimerInputProps> = ({ defaultTime }) => {
         {["hours", "minutes", "seconds"].map((field, index) => (
           <div key={index} className="flex flex-col items-center gap-[0.5rem]">
             <p className="text-black">
-              {field === "hours"
-                ? "HH"
-                : field === "minutes"
-                  ? "MM"
-                  : field === "seconds"
-                    ? "SS"
-                    : null}
+              {field === "hours" ? "HH" : field === "minutes" ? "MM" : "SS"}
             </p>
             <button
               type="button"
@@ -71,7 +74,7 @@ const TimerInput: React.FC<TimerInputProps> = ({ defaultTime }) => {
             </button>
             <input
               type="number"
-              value={formatTime(time[field as "hours" | "minutes" | "seconds"])}
+              value={time[field as "hours" | "minutes" | "seconds"]}
               onChange={(e) =>
                 handleInputChange(
                   field as "hours" | "minutes" | "seconds",
@@ -79,9 +82,6 @@ const TimerInput: React.FC<TimerInputProps> = ({ defaultTime }) => {
                 )
               }
               className="w-12 h-12 text-center bg-[#d0d3d4] text-black rounded-md text-2xl appearance-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-              maxLength={2}
-              max={field === "hours" ? 23 : 59}
-              min={0}
             />
             <button
               type="button"

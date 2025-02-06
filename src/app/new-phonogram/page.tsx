@@ -1,6 +1,6 @@
 "use client";
 import { Form, Formik } from "formik";
-import React, { FC, useState } from "react";
+import React, { Dispatch, FC, SetStateAction, useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
@@ -10,11 +10,20 @@ import TimerInput from "@/components/TimerInput/TimerInput";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomTable from "@/commons/CustomTable/CustomTable";
-import { setModal } from "@/store/modalSlice";
-import { ModalNames } from "@/types/modalNames";
-function page() {
-  const [isNewPhonogram, setIsNewPhonogram] = useState<boolean>(true);
+import { setCreatePhonogram } from "@/store/createPhonogramSlice";
+import { RxCross2 } from "react-icons/rx";
+import {
+  createPhonogram,
+  uploadPhonogramFile,
+  validateISRC,
+} from "@/services/repertoire";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { isrcValidation } from "@/utils/formValidations";
 
+function page() {
+  const router = useRouter();
+  const [isNewPhonogram, setIsNewPhonogram] = useState<boolean>(true);
   const [flowState, setFlowState] = useState<
     | "start"
     | "existing_phonogram"
@@ -23,30 +32,9 @@ function page() {
     | "add_participation"
     | "edit_territoriality"
   >("start");
-
-  const handleGoToCreateNew = () => {
-    if (isNewPhonogram) {
-      setFlowState("new_phonogram");
-    } else {
-      setFlowState("existing_phonogram");
-    }
-  };
-
-  const newPhonogramSubmit = () => {
-    setFlowState("add_participation");
-  };
-
-  const existingPhonogramSubmit = () => {
-    setFlowState("add_participation");
-  };
-
-  const addPercentageSubmit = () => {
-    setFlowState("edit_territoriality");
-  };
-
-  const editTerritorialitySubmit = () => {
-    setFlowState("load_audio");
-  };
+  const [audio, setAudio] = useState<File | null>(null);
+  const authData = useAppSelector((state) => state.auth);
+  const createPhonogramData = useAppSelector((state) => state.createPhonogram);
   const handleGoBack = () => {
     switch (flowState) {
       case "existing_phonogram":
@@ -75,13 +63,53 @@ function page() {
     }
   };
 
-  const handleIsNewPhonogramStateChange = (
-    e: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    if (e.target.value === "fonograma_nuevo") {
-      setIsNewPhonogram(true);
-    } else if (e.target.value === "fonograma_existente") {
-      setIsNewPhonogram(false);
+  const sendPhonogram = async () => {
+    const {
+      titulo,
+      album,
+      artista,
+      productora_id,
+      duracion,
+      anio_lanzamiento,
+      participaciones,
+      territorios,
+    } = createPhonogramData;
+
+    if (
+      territorios &&
+      participaciones &&
+      anio_lanzamiento &&
+      duracion &&
+      productora_id &&
+      artista &&
+      album &&
+      titulo
+    ) {
+      const response = await createPhonogram({
+        ...createPhonogramData,
+        codigo_designacion: "00001",
+      });
+      return response;
+    }
+  };
+
+  const sendPhonogramFile = async (id: string) => {
+    if (audio && authData.productoraActiva) {
+      const formData = new FormData();
+      formData.append("audioFile", audio);
+      await uploadPhonogramFile(formData, id);
+    }
+  };
+
+  const onSubmit = async () => {
+    try {
+      const phonogram = await sendPhonogram();
+      await sendPhonogramFile(phonogram.id_fonograma as string);
+      toast.success("¡Fonograma creado correctamente!");
+      router.push("/search-phonogram");
+    } catch (error: unknown) {
+      console.log(error);
+      toast.error(`${error}`);
     }
   };
 
@@ -89,22 +117,7 @@ function page() {
     <CustomLayout>
       <Header title="Declaración de Repertorio" />
 
-      {flowState === "start" ? (
-        <div className="w-[100%] pr-[2rem] pl-[2rem] flex justify-end items-center mt-[0.5rem] gap-[0.6rem] relative">
-          <select
-            onChange={handleIsNewPhonogramStateChange}
-            className="text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem]"
-            defaultValue={"fonograma_nuevo"}
-          >
-            <option className="text-black" value={"fonograma_nuevo"}>
-              Fonograma Nuevo
-            </option>
-            <option className="text-black" value={"fonograma_existente"}>
-              Fonograma Existente
-            </option>
-          </select>
-        </div>
-      ) : (
+      {flowState === "start" ? null : (
         <>
           <div className="w-[100%] pr-[2rem] pl-[2rem] flex justify-center items-center mt-[2rem] gap-[0.6rem] relative">
             <p className="text-[#a6acaf] font-bold">Ingresar ISRC</p>
@@ -153,45 +166,123 @@ function page() {
       )}
 
       {flowState === "start" ? (
-        <SearchForISRC onSubmit={handleGoToCreateNew} />
+        <SearchForISRC
+          setExisting={() => {
+            setFlowState("existing_phonogram");
+            setIsNewPhonogram(false);
+          }}
+          setNew={() => {
+            setFlowState("new_phonogram");
+            setIsNewPhonogram(true);
+          }}
+        />
       ) : null}
 
       {flowState === "new_phonogram" && (
-        <NewPhonogram onSubmit={newPhonogramSubmit} />
+        <NewPhonogram
+          onSubmit={() => {
+            setFlowState("add_participation");
+          }}
+        />
       )}
 
       {flowState === "existing_phonogram" && (
-        <ExistingPhonogram onSubmit={existingPhonogramSubmit} />
+        <ExistingPhonogram
+          onSubmit={() => {
+            setFlowState("add_participation");
+          }}
+        />
       )}
 
       {flowState === "add_participation" && (
-        <AddParticipation onSubmit={addPercentageSubmit} />
+        <AddParticipation
+          onSubmit={() => {
+            setFlowState("edit_territoriality");
+          }}
+        />
       )}
       {flowState === "edit_territoriality" && (
-        <EditTerritoriality onSubmit={editTerritorialitySubmit} />
+        <EditTerritoriality
+          onSubmit={() => {
+            setFlowState("load_audio");
+          }}
+        />
       )}
-      {flowState === "load_audio" && <LoadAudio />}
+      {flowState === "load_audio" && (
+        <LoadAudio audio={audio} setAudio={setAudio} onSubmit={onSubmit} />
+      )}
     </CustomLayout>
   );
 }
 
-const SearchForISRC: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
+const SearchForISRC: FC<{ setExisting: () => void; setNew: () => void }> = ({
+  setExisting,
+  setNew,
+}) => {
+  const dispatch = useAppDispatch();
+  const createPhogramCurrentData = useAppSelector(
+    (state) => state.createPhonogram
+  );
   const initialValues = {
     ISRC: "",
   };
+
+  const onSubmit = async (
+    e: React.FormEvent<HTMLFormElement>,
+    values: { ISRC: string }
+  ) => {
+    e.preventDefault();
+
+    const available = await validateISRC(`ARAAA25${values.ISRC}`);
+    if (available) {
+      setNew();
+    } else {
+      setExisting();
+    }
+    dispatch(
+      setCreatePhonogram({
+        ...createPhogramCurrentData,
+        codigo_designacion: values.ISRC,
+      })
+    );
+  };
+  //AR1234567890
+
   return (
     <div className="w-[100%] h-[20%] flex flex-col justify-center items-center mt-[3rem] pl-[3rem] pr-[3rem]">
       <p className="text-black font-bold">Ingresa el ISRC del fonograma.</p>
-      <Formik onSubmit={onSubmit} initialValues={initialValues}>
-        {({ isSubmitting, isValid, dirty }) => (
-          <Form className="w-[60%] flex flex-col justify-center items-center">
-            <CustomField type="text" id="ISRC" name="ISRC" labelText="ISRC" />
-            <CustomButton
-              type="submit"
-              disabled={isSubmitting || !isValid || !dirty}
-            >
-              Buscar ISRC
-            </CustomButton>
+      <Formik
+        onSubmit={() => {}}
+        validationSchema={isrcValidation}
+        initialValues={initialValues}
+      >
+        {({ isSubmitting, isValid, dirty, values }) => (
+          <Form
+            onSubmit={(e: React.FormEvent<HTMLFormElement>) =>
+              onSubmit(e, values)
+            }
+            className="w-[60%] flex flex-col justify-center items-center"
+          >
+            <div className="mt-[2rem] flex items-start gap-[0.5rem]">
+              <p className="text-black text-[1.3rem] font-bold">ARAAA25</p>
+              <CustomField
+                width="w-[10rem]"
+                type="text"
+                id="ISRC"
+                name="ISRC"
+              />
+            </div>
+            {isSubmitting || !isValid || !dirty ? (
+              <CustomButton
+                type="submit"
+                background="disabled"
+                disabled={isSubmitting || !isValid || !dirty}
+              >
+                Buscar ISRC
+              </CustomButton>
+            ) : (
+              <CustomButton type="submit">Buscar ISRC</CustomButton>
+            )}
           </Form>
         )}
       </Formik>
@@ -201,18 +292,23 @@ const SearchForISRC: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
 
 const NewPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
   const authData = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+  const createPhogramCurrentData = useAppSelector(
+    (state) => state.createPhonogram
+  );
   const initialValues = {
     titulo: "",
     artista: "",
     album: "",
-    duracion: "",
-    productor_originario: authData.productoraActiva,
+    productor_originario: authData.productoraActiva?.nombre || "",
+    sello_discografico: "",
     año_lanzamiento: "",
     registro_desde: "",
     registro_hasta: "",
   };
 
   const [year, setYear] = useState("");
+  const [time, setTime] = useState<string>("");
   const currentYear = new Date().getFullYear();
 
   const handleInputYear = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -225,14 +321,56 @@ const NewPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
     }
   };
 
+  const handleSubmit = (
+    e: React.FormEvent<HTMLFormElement>,
+    values: {
+      titulo: string;
+      artista: string;
+      album: string;
+      año_lanzamiento: string;
+      sello_discografico: string;
+    }
+  ) => {
+    e.preventDefault();
+    if (authData?.productoras && authData.productoraActiva)
+      dispatch(
+        setCreatePhonogram({
+          ...createPhogramCurrentData,
+          productora_id: authData.productoraActiva.id,
+          album: values.album,
+          titulo: values.titulo,
+          anio_lanzamiento: Number(year),
+          artista: values.artista,
+          duracion: time,
+          sello_discografico: values.sello_discografico,
+        })
+      );
+    onSubmit();
+  };
+
+  const handleTime = (formatedTime: string) => {
+    setTime(formatedTime);
+  };
+
   return (
     <div className="w-[100%] flex flex-col justify-center items-center mt-[3rem] px-[3rem]">
       <p className="text-black font-bold">
         Complete los campos para crear el fonograma.
       </p>
-      <Formik onSubmit={onSubmit} initialValues={initialValues}>
-        {({ isSubmitting, isValid, dirty }) => (
-          <Form className="w-[60%] flex flex-col justify-center items-center">
+      <Formik onSubmit={() => {}} initialValues={initialValues}>
+        {({ isSubmitting, isValid, dirty, values }) => (
+          <Form
+            onSubmit={(e) =>
+              handleSubmit(e, {
+                titulo: values.titulo,
+                artista: values.artista,
+                album: values.album,
+                año_lanzamiento: values.año_lanzamiento as string,
+                sello_discografico: values.sello_discografico,
+              })
+            }
+            className="w-[60%] flex flex-col justify-center items-center mb-[2rem]"
+          >
             <CustomField
               type="text"
               id="titulo"
@@ -254,7 +392,7 @@ const NewPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
 
             <div className="w-[100%] mb-[1.5rem]">
               <p className="text-black font-bold">Duración del Repertorio</p>
-              <TimerInput />
+              <TimerInput onChange={handleTime} />
             </div>
             <CustomField
               type="text"
@@ -263,7 +401,12 @@ const NewPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
               labelText="Productor Originario"
               disabled
             />
-
+            <CustomField
+              type="text"
+              id="sello_discografico"
+              name="sello_discografico"
+              labelText="Sello Discográfico"
+            />
             <div className="w-[100%] flex flex-col">
               <label style={{ color: "black" }} className="font-bold">
                 Año de Lanzamiento
@@ -363,14 +506,21 @@ const ExistingPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
   );
 };
 
-const LoadAudio: FC = () => {
-  const dispatch = useAppDispatch();
-
-  const handleFinishNewPhonogram = () => {
-    dispatch(
-      setModal({ type: ModalNames.FINISH_NEW_PHONOGRAM, isActive: true })
-    );
+const LoadAudio: FC<{
+  audio: File | null;
+  setAudio: Dispatch<SetStateAction<File | null>>;
+  onSubmit: () => Promise<void>;
+}> = ({ audio, setAudio, onSubmit }) => {
+  const loadAudio = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setAudio(e.target.files[0]);
+    }
   };
+
+  const deleteAudio = () => {
+    setAudio(null);
+  };
+
   return (
     <div className="w-[100%] flex flex-col justify-center items-center mt-[3rem] pl-[3rem] pr-[3rem]">
       <p className="text-black font-bold">
@@ -378,15 +528,24 @@ const LoadAudio: FC = () => {
       </p>
 
       <div className="w-[60%] flex flex-col justify-center items-center gap-[0.8rem] mt-[0.5rem]">
-        <button className="relative overflow-hidden p-[0.4rem] text-white cursor-pointer font-bold flex justify-center items-center bg-[#2ecc71] rounded-[0.3rem]">
-          Seleccionar Audio
-          <input
-            className="absolute opacity-0 cursor-pointer w-[100%] h-[100%]"
-            type="file"
-          />
-        </button>
-
-        <CustomButton type="submit" onClick={handleFinishNewPhonogram}>
+        {audio ? (
+          <div className="flex gap-[1rem]">
+            <p className="text-black">{audio.name}</p>
+            <button onClick={deleteAudio}>
+              <RxCross2 color="#979797" size={15} />
+            </button>
+          </div>
+        ) : (
+          <button className="relative overflow-hidden p-[0.4rem] text-white cursor-pointer font-bold flex justify-center items-center bg-[#2ecc71] rounded-[0.3rem]">
+            Seleccionar Audio
+            <input
+              onChange={loadAudio}
+              className="absolute opacity-0 cursor-pointer w-[100%] h-[100%]"
+              type="file"
+            />
+          </button>
+        )}
+        <CustomButton onClick={onSubmit} type="submit">
           Guardar y Finalizar
         </CustomButton>
       </div>
@@ -395,6 +554,11 @@ const LoadAudio: FC = () => {
 };
 
 const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
+  const authData = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+  const createPhogramCurrentData = useAppSelector(
+    (state) => state.createPhonogram
+  );
   const year = new Date().getFullYear();
   const initialValues: {
     cuit_productora: string;
@@ -402,7 +566,7 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
     fecha_participacion_inicio: string;
     fecha_participacion_hasta: string;
   } = {
-    cuit_productora: "",
+    cuit_productora: authData.productoraActiva?.cuit_cuil || "",
     porcentaje_participacion: "",
     fecha_participacion_inicio: `${year}-01-01`,
     fecha_participacion_hasta: "2099-12-31",
@@ -424,6 +588,42 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
       });
     }
   };
+
+  const handleSubmit = () => {
+    if (participaciones.length > 0) {
+      const titulares = participaciones.map((participacion) => {
+        return {
+          cuit: participacion.cuit_productora,
+          porcentaje_participacion: Number(
+            participacion.porcentaje_participacion
+          ),
+          fecha_inicio: participacion.fecha_participacion_inicio,
+          fecha_hasta: participacion.fecha_participacion_hasta,
+        };
+      });
+
+      dispatch(
+        setCreatePhonogram({
+          ...createPhogramCurrentData,
+          participaciones: titulares,
+        })
+      );
+
+      onSubmit();
+    }
+  };
+  /*
+  const handleSetCuitCuilCompany = () => {
+    setParticipacion({
+      ...participacion,
+      cuit_productora: authData.productoraActiva?.cuit_cuil || "",
+    });
+  };
+
+  useEffect(() => {
+    handleSetCuitCuilCompany();
+  }, []);
+*/
 
   return (
     <div className="w-[100%] flex flex-col justify-center items-center mt-[3rem] pl-[3rem] pr-[3rem]">
@@ -532,21 +732,63 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
           ])}
         />
       </div>
-      <CustomButton onClick={onSubmit} type="button">
+      <CustomButton onClick={() => handleSubmit()} type="button">
         Continuar
       </CustomButton>
     </div>
   );
 };
 
-const EditTerritoriality: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
+const initialCountries = [
+  { name: "Paraguay", iso: "PY", selected: true },
+  { name: "Uruguay", iso: "UY", selected: true },
+  { name: "Brasil", iso: "BR", selected: true },
+  { name: "Guatemala", iso: "GT", selected: true },
+  { name: "Costa Rica", iso: "CR", selected: true },
+  { name: "El Salvador", iso: "SV", selected: true },
+  { name: "Panamá", iso: "PA", selected: true },
+  { name: "República Dominicana", iso: "DO", selected: true },
+  { name: "España", iso: "ES", selected: true },
+  { name: "India", iso: "IN", selected: true },
+  { name: "Italia", iso: "IT", selected: true },
+  { name: "Ucrania", iso: "UA", selected: true },
+];
+
+const EditTerritoriality: React.FC<{
+  onSubmit: () => void;
+}> = ({ onSubmit }) => {
+  const dispatch = useAppDispatch();
+  const createPhogramCurrentData = useAppSelector(
+    (state) => state.createPhonogram
+  );
+  const [countries, setCountries] = useState(initialCountries);
+
+  const handleCheckboxChange = (iso: string) => {
+    setCountries((prev) =>
+      prev.map((country) =>
+        country.iso === iso
+          ? { ...country, selected: !country.selected }
+          : country
+      )
+    );
+  };
+
+  const handleSubmit = () => {
+    const selectedISOs = countries.filter((c) => c.selected).map((c) => c.iso);
+    dispatch(
+      setCreatePhonogram({
+        ...createPhogramCurrentData,
+        territorios: selectedISOs,
+      })
+    );
+    onSubmit();
+  };
+
   return (
-    <div className="w-[100%] flex flex-col justify-center items-center mt-[3rem] pl-[3rem] pr-[3rem]">
-      <div className="w-[100%] pr-[2rem] pl-[2rem] justify-between items-end flex mt-[1rem] mb-[1rem]">
+    <div className="w-full flex flex-col justify-center items-center mt-12 px-12">
+      <div className="w-full flex justify-between items-center my-4 px-8">
         <CustomInput type="text" label="Buscar Países" />
-        <div className="flex gap-[1.5rem]">
-          <CustomButton onClick={onSubmit}>Continuar</CustomButton>
-        </div>
+        <CustomButton onClick={handleSubmit}>Continuar</CustomButton>
       </div>
 
       <CustomTable
@@ -555,116 +797,16 @@ const EditTerritoriality: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
           { name: "PAÍS", isSortable: true },
           { name: "ISO", isSortable: true },
         ]}
-        columnValues={[
-          [
-            <input
-              type="checkbox"
-              defaultChecked
-              className="w-[1rem] h-[1rem]"
-            />,
-            "Paraguay",
-            "PY",
-          ],
-          [
-            <input
-              type="checkbox"
-              defaultChecked
-              className="w-[1rem] h-[1rem]"
-            />,
-            "Uruguay",
-            "UY",
-          ],
-          [
-            <input
-              type="checkbox"
-              defaultChecked
-              className="w-[1rem] h-[1rem]"
-            />,
-            "Brasil",
-            "BR",
-          ],
-          [
-            <input
-              type="checkbox"
-              defaultChecked
-              className="w-[1rem] h-[1rem]"
-            />,
-            "Guatemala",
-            "GT",
-          ],
-          [
-            <input
-              type="checkbox"
-              defaultChecked
-              className="w-[1rem] h-[1rem]"
-            />,
-            "Costa Rica",
-            "CR",
-          ],
-          [
-            <input
-              type="checkbox"
-              defaultChecked
-              className="w-[1rem] h-[1rem]"
-            />,
-            "El Salvador",
-            "SV",
-          ],
-          [
-            <input
-              type="checkbox"
-              defaultChecked
-              className="w-[1rem] h-[1rem]"
-            />,
-            "Panamá",
-            "PA",
-          ],
-          [
-            <input
-              type="checkbox"
-              defaultChecked
-              className="w-[1rem] h-[1rem]"
-            />,
-            "República Dominicana",
-            "DO",
-          ],
-          [
-            <input
-              type="checkbox"
-              defaultChecked
-              className="w-[1rem] h-[1rem]"
-            />,
-            "España",
-            "ES",
-          ],
-          [
-            <input
-              type="checkbox"
-              defaultChecked
-              className="w-[1rem] h-[1rem]"
-            />,
-            "India",
-            "IN",
-          ],
-          [
-            <input
-              type="checkbox"
-              defaultChecked
-              className="w-[1rem] h-[1rem]"
-            />,
-            "Italia",
-            "IT",
-          ],
-          [
-            <input
-              type="checkbox"
-              defaultChecked
-              className="w-[1rem] h-[1rem]"
-            />,
-            "Ucrania",
-            "UA",
-          ],
-        ]}
+        columnValues={countries.map((country) => [
+          <input
+            type="checkbox"
+            checked={country.selected}
+            onChange={() => handleCheckboxChange(country.iso)}
+            className="w-4 h-4"
+          />,
+          country.name,
+          country.iso,
+        ])}
       />
     </div>
   );
