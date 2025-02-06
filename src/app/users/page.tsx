@@ -2,13 +2,13 @@
 import { Form, Formik } from "formik";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaUserAlt } from "react-icons/fa";
 import Header from "@/commons/Header/Header";
 import { useAppSelector } from "@/hooks/storeHooks";
 import { ROLES } from "@/types/auth.types";
 import CustomTable from "@/commons/CustomTable/CustomTable";
 import { getUsers } from "@/services/users";
-import { ESTADOS, User } from "@/types/user.types";
+import { ESTADO, ESTADOS, User } from "@/types/user.types";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
 import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
@@ -153,11 +153,22 @@ export default function page() {
                             label: "Editar",
                             icon: <FaEdit />,
                             onClick: () => {
-                              redirectToOption(
-                                `/users/edit-user/${element.id}`
-                              );
+                              redirectToOption(`/users/${element.id}`);
                             },
                           },
+                          ...(element.estado === "ENVIADO"
+                            ? [
+                                {
+                                  label: "Ver Aplicación",
+                                  icon: <FaUserAlt />,
+                                  onClick: () => {
+                                    redirectToOption(
+                                      `/users/${element.id}/application`
+                                    );
+                                  },
+                                },
+                              ]
+                            : []),
                         ]}
                       />,
                     ]
