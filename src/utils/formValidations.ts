@@ -227,3 +227,9 @@ export const validationEditProducer = Yup.object({
   telefono: validacionTelefono,
   nacionalidad: Yup.string().required("La nacionalidad es requerida"),
 });
+export const isrcValidation = Yup.object({
+  ISRC: Yup.string()
+    .min(5, "El código de designación debe tener 5 caracteres.")
+    .max(5, "El código de designación debe tener 5 caracteres.")
+    .required("El código de designación es requerido."),
+});
