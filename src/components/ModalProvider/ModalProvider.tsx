@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, ReactNode } from "react";
+import React, { FC, ReactNode, useEffect } from "react";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { ModalNames } from "@/types/modalNames";
@@ -63,6 +63,7 @@ import RejectApplication from "../Modals/RejectApplication/RejectApplication";
 import AcceptApplication from "../Modals/AcceptApplication/AcceptApplication";
 import { selectProductionCompany } from "@/services/auth";
 import { setAuthData } from "@/store/authSlice";
+import { getCompanyById } from "@/services/productionCompanies";
 
 interface ModalProvderProps {
   children: ReactNode;
@@ -90,8 +91,6 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
         );
       case ModalNames.CHANGE_PRODUCER:
         return <ChangeProducerModal onCloseModal={onCloseModal} />;
-      case ModalNames.ACCEPT_REGISTRATION:
-        return <AcceptRegistrationModal onCloseModal={onCloseModal} />;
       case ModalNames.ADD_TERRITORIALITY:
         return <AddTerritorialityModal onCloseModal={onCloseModal} />;
       case ModalNames.SEARCH_CONFLICTS_FILTERS:
@@ -220,10 +219,14 @@ const ChangeProducerModal: FC<{ onCloseModal: () => void }> = ({
   }) => {
     try {
       await selectProductionCompany(element.id);
+      const company = await getCompanyById(element.id);
+      const productionCompany = { ...element, cuit_cuil: company.cuit_cuil };
       if (window && window.localStorage) {
-        localStorage.setItem("company", JSON.stringify(element));
+        localStorage.setItem("company", JSON.stringify(productionCompany));
       }
-      dispatch(setAuthData({ ...authData, productoraActiva: element }));
+      dispatch(
+        setAuthData({ ...authData, productoraActiva: productionCompany })
+      );
     } catch (error) {
       console.log(error);
     } finally {
@@ -231,11 +234,15 @@ const ChangeProducerModal: FC<{ onCloseModal: () => void }> = ({
     }
   };
 
-  // const handleChangeProductionModal = (production: string) => {
-  //   dispatch(setUser({ ...userData, activeProduction: production }));
-  //   onCloseModal();
-  // };
-
+  useEffect(() => {
+    if (
+      authData.productoras &&
+      authData.id_usuario &&
+      !authData.productoras[0].id
+    ) {
+      onCloseModal();
+    }
+  }, [authData]);
   return (
     <div className="relative bg-white h-[13rem] w-[30rem] mb-[6rem] rounded-[2rem] gap-[0.5rem] flex flex-col justify-center items-center">
       <button onClick={onCloseModal} className="absolute top-[5%] right-[5%]">
@@ -246,8 +253,9 @@ const ChangeProducerModal: FC<{ onCloseModal: () => void }> = ({
         Selecciona una productora.
       </p>
       {authData.productoras && authData.productoras.length > 0
-        ? authData.productoras.map((element) => (
+        ? authData.productoras.map((element, index) => (
             <div
+              key={index}
               className="w-[100%] cursor-pointer"
               onClick={() => selectProductora(element)}
             >
@@ -269,31 +277,6 @@ const ChangeProducerModal: FC<{ onCloseModal: () => void }> = ({
       >
         <p className="text-center text-black hover:bg-[#d8d8d8]">Goldstein</p>
       </div> */}
-    </div>
-  );
-};
-
-const AcceptRegistrationModal: FC<{ onCloseModal: () => void }> = ({
-  onCloseModal,
-}) => {
-  return (
-    <div className="relative bg-white h-[13rem] w-[30rem] mb-[6rem] rounded-[2rem] gap-[0.5rem] flex flex-col justify-center items-center">
-      <button onClick={onCloseModal} className="absolute top-[5%] right-[5%]">
-        <IoClose size={25} color="black" />
-      </button>
-
-      <p className="text-black font-bold text-[1.2rem] text-center w-[95%]">
-        Selecciona una productora.
-      </p>
-      <div className="w-[100%] cursor-pointer">
-        <p className="text-center text-black hover:bg-[#d8d8d8]">Warner</p>
-      </div>
-      <div className="w-[100%] cursor-pointer">
-        <p className="text-center text-black hover:bg-[#d8d8d8]">Sony Music</p>
-      </div>
-      <div className="w-[100%] cursor-pointer">
-        <p className="text-center text-black hover:bg-[#d8d8d8]">Goldstein</p>
-      </div>
     </div>
   );
 };

@@ -1,16 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface SignupSliceProps {
-  // name: string;
-  // lastname: string;
-  // phone: string;
   email: string;
 }
 
 export const initialStateSignup: SignupSliceProps = {
-  // name: "",
-  // lastname: "",
-  // phone: "",
   email: "",
 };
 
