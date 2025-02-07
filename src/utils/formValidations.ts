@@ -19,6 +19,10 @@ const validacionEmail = Yup.string()
   .email("Debe ser un correo electrónico válido")
   .required("El correo electrónico es requerido");
 
+const validacionCuitCuil = Yup.string()
+  .required("El CUIT/CUIL es requerido")
+  .matches(/^\d{11}$/, "El CUIT/CUIL debe contener exactamente 11 dígitos");
+
 export const validationSignUpForm = Yup.object({
   // name: Yup.string()
   //   .min(2, "El nombre debe tener al menos 2 caracteres.")
@@ -130,9 +134,7 @@ export const validationRegisterApplication = Yup.object().shape({
   nombre_productora: Yup.string()
     .min(3, "Debe contener al menos 3 caracteres")
     .required("El nombre de la productora es requerido"),
-  cuit_cuil: Yup.string()
-    .required("El CUIT/CUIL es requerido")
-    .matches(/^\d{11}$/, "El CUIT/CUIL debe contener exactamente 11 dígitos"),
+  cuit_cuil: validacionCuitCuil,
   email: validacionEmail,
   calle: Yup.string().required("La calle es requerida"),
   numero: Yup.string()
@@ -154,7 +156,7 @@ export const validationRegisterApplication = Yup.object().shape({
     .matches(/^\d{22}$/, "El CBU debe contener exactamente 22 dígitos"),
   cuit_representante: Yup.string()
     .test(
-      "cuit-cuil",
+      "cuit_cuil_representante",
       "El CUIT/CUIL del representante es requerido",
       function (value) {
         return this.parent.tipo_persona === "JURIDICA" ? Boolean(value) : true;
@@ -162,7 +164,7 @@ export const validationRegisterApplication = Yup.object().shape({
     )
     .matches(/^\d{11}$/, "El CUIT/CUIL debe contener exactamente 11 dígitos"),
   razon_social: Yup.string().test(
-    "razon-social",
+    "razon_social",
     "La razón social es requerida",
     function (value) {
       return this.parent.tipo_persona === "JURIDICA" ? Boolean(value) : true;
@@ -201,4 +203,27 @@ export const validationEditUser = Yup.object({
   apellido: validacionApellido,
   telefono: validacionTelefono,
   email: validacionEmail,
+});
+
+export const validationEditProducer = Yup.object({
+  nombre_productora: validacionNombre,
+  cuit_cuil: validacionCuitCuil,
+  razon_social: Yup.string().optional(),
+  nombres_representante: validacionNombre,
+  apellidos_representante: validacionApellido,
+  email: validacionEmail,
+  cuit_representante: Yup.string().optional(),
+  denominacion_sello: Yup.string().optional(),
+  calle: Yup.string().required("La calle es requerida"),
+  numero: Yup.string()
+    .required("El número es requerido")
+    .matches(/^\d+$/, "El número debe ser numérico"),
+  datos_adicionales: Yup.string().optional(),
+  localidad: Yup.string().required("La localidad es requerida"),
+  provincia: Yup.string().required("La provincia es requerida"),
+  codigo_postal: Yup.string()
+    .required("El código postal es requerido")
+    .matches(/^\d+$/, "El código postal debe ser numérico"),
+  telefono: validacionTelefono,
+  nacionalidad: Yup.string().required("La nacionalidad es requerida"),
 });

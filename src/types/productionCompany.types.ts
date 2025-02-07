@@ -58,6 +58,7 @@ export interface ProductionCompanyByIdResponse {
 
 export interface UpdateProducerPayload {
   nombre_productora: string;
+  tipo_persona: "FISICA" | "JURIDICA";
   telefono: string;
   email: string;
   cuit_cuil: string;
@@ -76,6 +77,8 @@ export interface UpdateProducerPayload {
   nombres_representante?: string;
   apellidos_representante?: string;
   cuit_representante?: string;
+  cbu?: string;
+  alias_cbu?: string;
 }
 
 export interface UpdateProducerByIdResponse {

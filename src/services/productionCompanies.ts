@@ -22,9 +22,10 @@ export const updateProducer = async (
   id: string,
   companyData: UpdateProducerPayload
 ): Promise<UpdateProducerByIdResponse> => {
-  const updatedCompany = await axiosInstance.put(`producers/${id}`, {
-    companyData,
-  });
+  const updatedCompany = await axiosInstance.put(
+    `producers/${id}`,
+    companyData
+  );
   return updatedCompany.data;
 };
 
