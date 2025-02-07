@@ -1,23 +1,14 @@
 "use client";
 import React, { FC, useEffect, useState } from "react";
 import CustomButton from "@/commons/CustomButton/CustomButton";
-import CustomLayout from "@/commons/CustomLayout/CustomLayout";
-import Header from "@/commons/Header/Header";
-import { validationRegisterApplication } from "@/utils/formValidations";
-import { Field, Form, Formik } from "formik";
+import { validationEditProducer } from "@/utils/formValidations";
+import { Field, Form, Formik, FormikErrors } from "formik";
 import CustomField from "@/commons/CustomField/CustomField";
-import { useAppDispatch } from "@/hooks/storeHooks";
-import { setModal } from "@/store/modalSlice";
-import { ModalNames } from "@/types/modalNames";
 import { getCompanyById, updateProducer } from "@/services/productionCompanies";
-import { useParams } from "next/navigation";
 import {
   ProductionCompanyByIdResponse,
   UpdateProducerPayload,
 } from "@/types/productionCompany.types";
-import { toast } from "react-toastify";
-import { getUsers } from "@/services/users";
-import { acceptApplication } from "@/services/auth";
 
 const ProducerView = ({
   idProducer,
@@ -26,12 +17,16 @@ const ProducerView = ({
   idProducer: string;
   fieldsDisabled: boolean;
 }) => {
+  const [currentEntity, setCurrentEntity] = useState<"FISICA" | "JURIDICA">(
+    "FISICA"
+  );
   const [_uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [companyData, setCompanyData] =
     useState<ProductionCompanyByIdResponse | null>(null);
 
   const initialValues: UpdateProducerPayload = {
     nombre_productora: companyData?.nombre_productora || "",
+    tipo_persona: companyData?.tipo_persona || "FISICA",
     cuit_cuil: companyData?.cuit_cuil || "",
     email: companyData?.email || "",
     calle: companyData?.calle || "",
@@ -50,6 +45,23 @@ const ProducerView = ({
     nombres_representante:
       companyData?.nombres_representante || companyData?.nombres || "",
     cuit_representante: companyData?.cuit_representante || "",
+    cbu: companyData?.cbu || "",
+    alias_cbu: companyData?.alias_cbu || "",
+  };
+
+  const onRadioFieldChange = (
+    entity: "FISICA" | "JURIDICA",
+    values: UpdateProducerPayload,
+    setValues: (
+      values: React.SetStateAction<UpdateProducerPayload>,
+      shouldValidate?: boolean
+    ) => Promise<void | FormikErrors<UpdateProducerPayload>>
+  ) => {
+    setCurrentEntity(entity);
+    setValues({
+      ...values,
+      tipo_persona: entity,
+    });
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,7 +71,36 @@ const ProducerView = ({
   };
 
   const handleEditCompany = async (values: UpdateProducerPayload) => {
-    await updateProducer(idProducer as string, values);
+    const payload: UpdateProducerPayload = {
+      nombre_productora: values.nombre_productora,
+      tipo_persona: values.tipo_persona,
+      telefono: values.telefono,
+      email: values.email,
+      cuit_cuil: values.cuit_cuil,
+      calle: values.calle,
+      numero: values.numero,
+      ciudad: values.ciudad,
+      localidad: values.localidad,
+      provincia: values.provincia,
+      codigo_postal: values.codigo_postal,
+      nacionalidad: values.nacionalidad,
+      datos_adicionales: values.datos_adicionales,
+      denominacion_sello: values.denominacion_sello,
+      cbu: values.cbu,
+      alias_cbu: values.alias_cbu,
+      ...(values.tipo_persona === "FISICA"
+        ? {
+            nombres: values.nombre_productora,
+            apellidos: values.apellidos_representante,
+          }
+        : {
+            razon_social: values.razon_social,
+            nombres_representante: values.nombres_representante,
+            apellidos_representante: values.apellidos_representante,
+            cuit_representante: values.cuit_representante,
+          }),
+    };
+    await updateProducer(idProducer as string, payload);
   };
 
   const getCompanyData = async () => {
@@ -78,29 +119,58 @@ const ProducerView = ({
       {companyData ? (
         <Formik
           initialValues={initialValues}
-          validationSchema={validationRegisterApplication}
+          validationSchema={validationEditProducer}
           onSubmit={(values) => handleEditCompany(values)}
         >
-          {({ isSubmitting, isValid, dirty }) => (
+          {({ isSubmitting, isValid, dirty, values, setValues }) => (
             <Form id="form" className="w-[100%]">
-              <div className="flex flex-col text-[#a6acaf]">
-                <label className="font-bold">TIPO PERSONA</label>
-                <p
-                  className={
-                    "padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black"
-                  }
-                >
-                  {companyData.tipo_persona}
-                </p>
+              <div className="flex gap-[2rem]">
+                <label className="font-bold text-black">TIPO PERSONA</label>
+                <div className="flex gap-[0.5rem]">
+                  <Field
+                    onChange={() => {
+                      onRadioFieldChange("FISICA", values, setValues);
+                    }}
+                    name="tipo_persona"
+                    id="tipo_persona"
+                    checked={currentEntity === "FISICA"}
+                    value="FISICA"
+                    type="radio"
+                  />
+                  <h1 className="font-bold text-black">PERSONA FÍSICA</h1>
+                </div>
+
+                <div className="flex gap-[0.5rem]">
+                  <Field
+                    onChange={() => {
+                      onRadioFieldChange("JURIDICA", values, setValues);
+                    }}
+                    name="tipo_persona"
+                    id="tipo_persona"
+                    checked={currentEntity === "JURIDICA"}
+                    value="JURIDICA"
+                    type="radio"
+                  />
+                  <h1 className="font-bold text-black">PERSONA JURÍDICA</h1>
+                </div>
               </div>
+
               <EntityForm
                 disabled={fieldsDisabled}
                 handleFileChange={handleFileChange}
-                dirty={dirty}
-                isValid={isValid}
-                isSubmitting={isSubmitting}
-                entity={companyData.tipo_persona}
+                entity={currentEntity}
               />
+              {!fieldsDisabled && (
+                <CustomButton
+                  {...(isSubmitting || !isValid || !dirty
+                    ? { disabled: true, background: "disabled" }
+                    : {})}
+                  type="submit"
+                  className="mt-[1rem]"
+                >
+                  Guardar
+                </CustomButton>
+              )}
             </Form>
           )}
         </Formik>
@@ -114,13 +184,10 @@ export default ProducerView;
 const EntityForm: FC<{
   disabled: boolean;
   entity: ProductionCompanyByIdResponse["tipo_persona"];
-  isSubmitting: boolean;
-  isValid: boolean;
-  dirty: boolean;
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }> = ({ entity, handleFileChange, disabled }) => {
   return (
-    <div className="mt-[3rem] w-[100%]">
+    <div className="w-[100%]">
       <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
         <CustomField
           disabled={disabled}
@@ -307,6 +374,22 @@ const EntityForm: FC<{
         type="text"
         labelText="NACIONALIDAD"
       />
+      <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
+        <CustomField
+          width="w-[100%]"
+          id="cbu"
+          name="cbu"
+          type="text"
+          labelText="CBU"
+        />
+        <CustomField
+          width="w-[100%]"
+          id="alias_cbu"
+          name="alias_cbu"
+          type="text"
+          labelText="ALIAS"
+        />
+      </div>
 
       <div className="mt-[1.5rem]">
         <p className="font-bold text-black">

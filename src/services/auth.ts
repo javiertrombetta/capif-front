@@ -1,10 +1,10 @@
-import { ProductionCompanyResponse } from "@/types/productionCompany.types";
 import { axiosInstance } from "./axiosInstance";
 import { SendApplication } from "@/types/user.types";
 import {
   GetAuthDataResponse,
   AuthProps,
   AuthSecondarySignUpRequest,
+  GetPendingApplicationsResponse,
 } from "@/types/auth.types";
 import { authDefaultState } from "@/store/authSlice";
 
@@ -168,15 +168,18 @@ export const acceptApplication = async (id_usuario: string) => {
   }
 };
 
-export const getPendingApplications = async () => {
+export const getPendingApplications = async (id_usuario: string) => {
   try {
-    const response = (await axiosInstance.get("auth/pending", {})) as {
-      data: { user: ProductionCompanyResponse | ProductionCompanyResponse[] };
-    };
+    const { data } = await axiosInstance.get<GetPendingApplicationsResponse>(
+      "auth/pending",
+      {
+        params: {
+          usuarioId: id_usuario,
+        },
+      }
+    );
 
-    return Array.isArray(response.data.user)
-      ? response.data.user
-      : [response.data.user];
+    return data.data;
   } catch (error: unknown) {
     throw new Error(`${error}`);
   }

@@ -8,7 +8,7 @@ import { useAppSelector } from "@/hooks/storeHooks";
 import { ROLES } from "@/types/auth.types";
 import CustomTable from "@/commons/CustomTable/CustomTable";
 import { getUsers } from "@/services/users";
-import { ESTADO, ESTADOS, User } from "@/types/user.types";
+import { ESTADOS, User } from "@/types/user.types";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
 import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
