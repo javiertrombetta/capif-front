@@ -85,7 +85,7 @@ export interface AuthProps {
   productoraActiva: {
     id: string;
     productora: string;
-    cuit_cuil: string;
+    cuit_cuil?: string;
   } | null;
   loading: boolean;
 }

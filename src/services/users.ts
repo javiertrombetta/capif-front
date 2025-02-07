@@ -1,5 +1,5 @@
 import {
-  UpdateUserById as UpdateUserByIdPayload,
+  UpdateUserByIdPayload,
   GetUsersResponse,
   UpdateViewsPayload,
 } from "@/types/user.types";
