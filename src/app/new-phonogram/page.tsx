@@ -300,7 +300,7 @@ const NewPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
     titulo: "",
     artista: "",
     album: "",
-    productor_originario: authData.productoraActiva?.nombre || "",
+    productor_originario: authData.productoraActiva?.productora || "",
     sello_discografico: "",
     año_lanzamiento: "",
     registro_desde: "",

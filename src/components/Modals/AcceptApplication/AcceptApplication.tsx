@@ -2,15 +2,11 @@
 import React, { FC } from "react";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import { IoClose } from "react-icons/io5";
-// import { useParams } from "next/navigation";
-// import { acceptApplication } from "@/services/auth";
 
 const AcceptApplication: FC<{
   onCloseModal: () => void;
   onAcceptModal: () => void;
 }> = ({ onCloseModal, onAcceptModal }) => {
-  // const id_usuario = useParams().id;
-
   const handleAccept = () => {
     onAcceptModal();
     onCloseModal();
