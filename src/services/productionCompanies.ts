@@ -93,3 +93,13 @@ export const deleteCompanyDocument = async (
 ) => {
   await axiosInstance.delete(`producers/${companyId}/documentos/${documentId}`);
 };
+
+export const downloadCompanyDocuments = async (companyId: string) => {
+  const { data } = await axiosInstance.get(
+    `producers/${companyId}/documentos/zip`,
+    {
+      responseType: "blob",
+    }
+  );
+  return data;
+};
