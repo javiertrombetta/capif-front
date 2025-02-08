@@ -1,55 +1,31 @@
 "use client";
 import React, { FC, useEffect, useState } from "react";
 import CustomButton from "@/commons/CustomButton/CustomButton";
-import CustomLayout from "@/commons/CustomLayout/CustomLayout";
-import Header from "@/commons/Header/Header";
-import { validationRegisterApplication } from "@/utils/formValidations";
+import { validationEditProducer } from "@/utils/formValidations";
 import { Field, Form, Formik, FormikErrors } from "formik";
 import CustomField from "@/commons/CustomField/CustomField";
-import { useAppDispatch } from "@/hooks/storeHooks";
-import { setModal } from "@/store/modalSlice";
-import { ModalNames } from "@/types/modalNames";
-import { getCompanyById, updateCompany } from "@/services/productionCompanies";
-import { useParams } from "next/navigation";
-import { ProductionCompanyByIdResponse } from "@/types/productionCompany.types";
+import { getCompanyById, updateProducer } from "@/services/productionCompanies";
+import {
+  ProductionCompanyByIdResponse,
+  UpdateProducerPayload,
+} from "@/types/productionCompany.types";
 
-export interface CompanyValues {
-  nombre_productora: string;
-  apellido_productor: string;
-  tipo_persona: "FISICA" | "JURIDICA";
-  cuit_cuil: string;
-  email: string;
-  calle: string;
-  numero: string;
-  ciudad: string;
-  localidad: string;
-  provincia: string;
-  codigo_postal: string;
-  telefono: string;
-  nacionalidad: string;
-  alias_cbu: string;
-  cbu: string;
-  datos_adicionales?: string;
-  denominacion_sello?: string;
-  razon_social?: string;
-  apellidos_representante?: string;
-  nombres_representante?: string;
-  cuit_representante?: string;
-}
-
-const UserProfileView: FC = () => {
-  const { id } = useParams();
-  const [currentEntity, setCurrentEntity] = useState<"natural" | "legal">(
-    "natural"
+const ProducerView = ({
+  idProducer,
+  fieldsDisabled = true,
+}: {
+  idProducer: string;
+  fieldsDisabled: boolean;
+}) => {
+  const [currentEntity, setCurrentEntity] = useState<"FISICA" | "JURIDICA">(
+    "FISICA"
   );
   const [_uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [companyData, setCompanyData] =
     useState<ProductionCompanyByIdResponse | null>(null);
-  const [fieldsDisabled, setFieldsDisabled] = useState<boolean>(true);
 
-  const initialValues: CompanyValues = {
+  const initialValues: UpdateProducerPayload = {
     nombre_productora: companyData?.nombre_productora || "",
-    apellido_productor: "",
     tipo_persona: companyData?.tipo_persona || "FISICA",
     cuit_cuil: companyData?.cuit_cuil || "",
     email: companyData?.email || "",
@@ -61,18 +37,31 @@ const UserProfileView: FC = () => {
     codigo_postal: companyData?.codigo_postal || "",
     telefono: companyData?.telefono || "",
     nacionalidad: companyData?.nacionalidad || "",
-    alias_cbu: companyData?.alias_cbu || "",
-    cbu: companyData?.cbu || "",
     datos_adicionales: companyData?.datos_adicionales || "",
     denominacion_sello: companyData?.denominacion_sello || "",
     razon_social: companyData?.razon_social || "",
-    apellidos_representante: companyData?.apellidos_representante || "",
-    nombres_representante: companyData?.nombres_representante || "",
+    apellidos_representante:
+      companyData?.apellidos_representante || companyData?.apellidos || "",
+    nombres_representante:
+      companyData?.nombres_representante || companyData?.nombres || "",
     cuit_representante: companyData?.cuit_representante || "",
+    cbu: companyData?.cbu || "",
+    alias_cbu: companyData?.alias_cbu || "",
   };
 
-  const handleCurrentEntity = (value: "natural" | "legal") => {
-    setCurrentEntity(value);
+  const onRadioFieldChange = (
+    entity: "FISICA" | "JURIDICA",
+    values: UpdateProducerPayload,
+    setValues: (
+      values: React.SetStateAction<UpdateProducerPayload>,
+      shouldValidate?: boolean
+    ) => Promise<void | FormikErrors<UpdateProducerPayload>>
+  ) => {
+    setCurrentEntity(entity);
+    setValues({
+      ...values,
+      tipo_persona: entity,
+    });
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,30 +70,44 @@ const UserProfileView: FC = () => {
     }
   };
 
-  const onRadioFieldChange = (
-    entity: "natural" | "legal",
-    values: CompanyValues,
-    setValues: (
-      values: React.SetStateAction<CompanyValues>,
-      shouldValidate?: boolean
-    ) => Promise<void | FormikErrors<CompanyValues>>
-  ) => {
-    handleCurrentEntity(entity);
-    setValues({
-      ...values,
-      tipo_persona: entity === "natural" ? "FISICA" : "JURIDICA",
-    });
+  const handleEditCompany = async (values: UpdateProducerPayload) => {
+    const payload: UpdateProducerPayload = {
+      nombre_productora: values.nombre_productora,
+      tipo_persona: values.tipo_persona,
+      telefono: values.telefono,
+      email: values.email,
+      cuit_cuil: values.cuit_cuil,
+      calle: values.calle,
+      numero: values.numero,
+      ciudad: values.ciudad,
+      localidad: values.localidad,
+      provincia: values.provincia,
+      codigo_postal: values.codigo_postal,
+      nacionalidad: values.nacionalidad,
+      datos_adicionales: values.datos_adicionales,
+      denominacion_sello: values.denominacion_sello,
+      cbu: values.cbu,
+      alias_cbu: values.alias_cbu,
+      ...(values.tipo_persona === "FISICA"
+        ? {
+            nombres: values.nombre_productora,
+            apellidos: values.apellidos_representante,
+          }
+        : {
+            razon_social: values.razon_social,
+            nombres_representante: values.nombres_representante,
+            apellidos_representante: values.apellidos_representante,
+            cuit_representante: values.cuit_representante,
+          }),
+    };
+    await updateProducer(idProducer as string, payload);
   };
 
   const getCompanyData = async () => {
-    if (id && !Array.isArray(id)) {
-      const company = await getCompanyById(id);
+    if (idProducer && !Array.isArray(idProducer)) {
+      const company = await getCompanyById(idProducer);
       setCompanyData(company);
     }
-  };
-
-  const handleEditCompany = async (values: CompanyValues) => {
-    await updateCompany(id as string, values);
   };
 
   useEffect(() => {
@@ -112,125 +115,79 @@ const UserProfileView: FC = () => {
   }, []);
 
   return (
-    <CustomLayout>
-      <Header back title="Ficha de Usuario" className="" />
-      <div className="pr-[2rem] pl-[2rem] w-[100%] mb-[2rem]">
-        {companyData ? (
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationRegisterApplication}
-            onSubmit={() => {}}
-          >
-            {({ isSubmitting, isValid, dirty, values, setValues }) => (
-              <Form id="form" className="w-[100%]">
-                <div className="mt-[1rem] pr-[2rem] pl-[2rem] w-[100%] flex justify-end items-center">
-                  {fieldsDisabled ? (
-                    <CustomButton
-                      background="warn"
-                      onClick={() => setFieldsDisabled(false)}
-                    >
-                      Editar
-                    </CustomButton>
-                  ) : (
-                    <div className="flex gap-[1rem]">
-                      <CustomButton
-                        type="button"
-                        onClick={() => {
-                          handleEditCompany(values);
-                        }}
-                      >
-                        Guardar
-                      </CustomButton>
-                      <CustomButton
-                        background="delete"
-                        onClick={() => setFieldsDisabled(true)}
-                      >
-                        Cancelar
-                      </CustomButton>
-                    </div>
-                  )}
+    <div className="pr-[2rem] pl-[2rem] w-[100%] mb-[2rem]">
+      {companyData ? (
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationEditProducer}
+          onSubmit={(values) => handleEditCompany(values)}
+        >
+          {({ isSubmitting, isValid, dirty, values, setValues }) => (
+            <Form id="form" className="w-[100%]">
+              <div className="flex gap-[2rem]">
+                <label className="font-bold text-black">TIPO PERSONA</label>
+                <div className="flex gap-[0.5rem]">
+                  <Field
+                    onChange={() => {
+                      onRadioFieldChange("FISICA", values, setValues);
+                    }}
+                    name="tipo_persona"
+                    id="tipo_persona"
+                    checked={currentEntity === "FISICA"}
+                    value="FISICA"
+                    type="radio"
+                  />
+                  <h1 className="font-bold text-black">PERSONA FÍSICA</h1>
                 </div>
 
-                <div className="flex gap-[2rem] mt-[2rem]">
-                  {companyData.tipo_persona === "FISICA" ? (
-                    <div className="flex gap-[0.5rem]">
-                      <Field
-                        onChange={() => {
-                          onRadioFieldChange("natural", values, setValues);
-                        }}
-                        name="tipo_persona"
-                        id="tipo_persona"
-                        checked={currentEntity === "natural"}
-                        value="FISICA"
-                        type="radio"
-                      />
-                      <h1 className="font-bold text-black">PERSONA FÍSICA</h1>
-                    </div>
-                  ) : (
-                    <div className="flex gap-[0.5rem]">
-                      <Field
-                        onChange={() => {
-                          onRadioFieldChange("legal", values, setValues);
-                        }}
-                        name="tipo_persona"
-                        id="tipo_persona"
-                        checked={currentEntity === "legal"}
-                        value="JURIDICA"
-                        type="radio"
-                      />
-                      <h1 className="font-bold text-black">PERSONA JURÍDICA</h1>
-                    </div>
-                  )}
+                <div className="flex gap-[0.5rem]">
+                  <Field
+                    onChange={() => {
+                      onRadioFieldChange("JURIDICA", values, setValues);
+                    }}
+                    name="tipo_persona"
+                    id="tipo_persona"
+                    checked={currentEntity === "JURIDICA"}
+                    value="JURIDICA"
+                    type="radio"
+                  />
+                  <h1 className="font-bold text-black">PERSONA JURÍDICA</h1>
                 </div>
-                <EntityForm
-                  disabled={fieldsDisabled}
-                  handleFileChange={handleFileChange}
-                  dirty={dirty}
-                  isValid={isValid}
-                  isSubmitting={isSubmitting}
-                  entity={currentEntity}
-                />
-              </Form>
-            )}
-          </Formik>
-        ) : null}
-      </div>
-    </CustomLayout>
+              </div>
+
+              <EntityForm
+                disabled={fieldsDisabled}
+                handleFileChange={handleFileChange}
+                entity={currentEntity}
+              />
+              {!fieldsDisabled && (
+                <CustomButton
+                  {...(isSubmitting || !isValid || !dirty
+                    ? { disabled: true, background: "disabled" }
+                    : {})}
+                  type="submit"
+                  className="mt-[1rem]"
+                >
+                  Guardar
+                </CustomButton>
+              )}
+            </Form>
+          )}
+        </Formik>
+      ) : null}
+    </div>
   );
 };
 
-export default UserProfileView;
+export default ProducerView;
 
 const EntityForm: FC<{
   disabled: boolean;
-  entity: "natural" | "legal";
-  isSubmitting: boolean;
-  isValid: boolean;
-  dirty: boolean;
+  entity: ProductionCompanyByIdResponse["tipo_persona"];
   handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }> = ({ entity, handleFileChange, disabled }) => {
-  const dispatch = useAppDispatch();
-
-  const rejectApplication = () => {
-    dispatch(
-      setModal({
-        type: ModalNames.REJECT_REGISTRATION,
-        isActive: true,
-      })
-    );
-  };
-
-  const acceptApplication = () => {
-    dispatch(
-      setModal({
-        type: ModalNames.ACCEPT_APPLICATION,
-        isActive: true,
-      })
-    );
-  };
-
   return (
-    <div className="mt-[3rem] w-[100%]">
+    <div className="w-[100%]">
       <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
         <CustomField
           disabled={disabled}
@@ -249,7 +206,7 @@ const EntityForm: FC<{
           labelText="CUIT/CUIL"
         />
       </div>
-      {entity === "legal" && (
+      {entity === "JURIDICA" && (
         <CustomField
           disabled={disabled}
           width="w-[100%]"
@@ -260,21 +217,21 @@ const EntityForm: FC<{
         />
       )}
 
-      {entity === "natural" ? (
+      {entity === "FISICA" ? (
         <div className="flex w-[100%] gap-[2rem] mt-[1rem]">
           <CustomField
             disabled={disabled}
             width="w-[100%]"
-            id="nombre_productor"
-            name="nombre_productor"
+            id="nombres_representante"
+            name="nombres_representante"
             type="text"
             labelText="NOMBRES"
           />
           <CustomField
             disabled={disabled}
             width="w-[100%]"
-            id="apellido_productor"
-            name="apellido_productor"
+            id="apellidos_representante"
+            name="apellidos_representante"
             type="text"
             labelText="APELLIDOS"
           />
@@ -300,7 +257,7 @@ const EntityForm: FC<{
         </div>
       )}
 
-      {entity === "natural" ? (
+      {entity === "FISICA" ? (
         <CustomField
           disabled={disabled}
           width="w-[100%]"
@@ -419,26 +376,24 @@ const EntityForm: FC<{
       />
       <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
         <CustomField
-          disabled={disabled}
           width="w-[100%]"
           id="cbu"
           name="cbu"
           type="text"
-          labelText="CBU (opcional)"
+          labelText="CBU"
         />
         <CustomField
-          disabled={disabled}
           width="w-[100%]"
           id="alias_cbu"
           name="alias_cbu"
           type="text"
-          labelText="ALIAS (opcional)"
+          labelText="ALIAS"
         />
       </div>
 
       <div className="mt-[1.5rem]">
         <p className="font-bold text-black">
-          {entity === "natural"
+          {entity === "FISICA"
             ? "CARGAR DOCUMENTO NACIONAL DE IDENTIDAD"
             : "CARGAR ESTATUTO O CONTRATO SOCIAL"}
         </p>
@@ -451,7 +406,7 @@ const EntityForm: FC<{
         />
       </div>
 
-      {entity === "legal" && (
+      {entity === "JURIDICA" && (
         <div className="mt-[1.5rem]">
           <p className="font-bold text-black">
             CARGAR DOCUMENTO NACIONAL DE IDENTIDAD DEL REPRESENTANTE LEGAL
@@ -498,20 +453,6 @@ const EntityForm: FC<{
           <p className="text-mainblue">1-comprobante pago CAPIF.jpg</p>
           <p className="text-mainblue">Eliminar</p>
         </div>
-      </div>
-
-      <div className="mt-[5rem] flex gap-[1rem] ">
-        <div className="flex gap-[1rem]">
-          <CustomButton onClick={acceptApplication} className="bg-[#008d4c]">
-            Confirmar el Registro del Usuario
-          </CustomButton>
-          <CustomButton background="delete" onClick={rejectApplication}>
-            Rechazar
-          </CustomButton>
-          {/* <CustomButton background="warn">Editar</CustomButton> */}
-        </div>
-
-        {/* <CustomButton onClick={handleRejectRegister}>Cancelar</CustomButton> */}
       </div>
     </div>
   );
