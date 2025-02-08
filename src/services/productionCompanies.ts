@@ -70,9 +70,6 @@ export const getCompanyDocuments = async (companyId: string) => {
   const { data } = await axiosInstance.get<GetDocumentsResponse>(
     `producers/${companyId}/documentos`
   );
-  data.documentos[0].tipo_documento = "dni_persona_fisica";
-  if (data.documentos[1])
-    data.documentos[1].tipo_documento = "comprobante_ISRC";
   return data.documentos;
 };
 
@@ -85,13 +82,6 @@ export const uploadCompanyDocument = async (
       "Content-Type": "multipart/form-data",
     },
   });
-};
-
-export const deleteCompanyDocument = async (
-  companyId: string,
-  documentId: string
-) => {
-  await axiosInstance.delete(`producers/${companyId}/documentos/${documentId}`);
 };
 
 export const downloadCompanyDocuments = async (companyId: string) => {
