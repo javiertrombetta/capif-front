@@ -1,10 +1,10 @@
-import { ProductionCompanyResponse } from "@/types/productionCompany.types";
 import { axiosInstance } from "./axiosInstance";
 import { SendApplication } from "@/types/user.types";
 import {
   GetAuthDataResponse,
   AuthProps,
   AuthSecondarySignUpRequest,
+  GetPendingApplicationsResponse,
 } from "@/types/auth.types";
 import { authDefaultState } from "@/store/authSlice";
 
@@ -68,18 +68,16 @@ export const authLogout = async () => {
 export const getAuthData = async (): Promise<AuthProps> => {
   try {
     const { data } = await axiosInstance.get<GetAuthDataResponse>("users/me");
+    console.log(data);
     return {
       ...data.usuario,
       id_usuario: data.usuario.id,
-      productoras: data.productoras.map((productora) => ({
-        id: productora.id,
-        nombre: productora.productora,
-      })),
+      productoras: data.productoras,
       vistas: data.vistas.map((vista) => ({
         nombre: vista.nombre_vista,
         nombre_vista_superior: vista.nombre_vista_superior,
       })),
-      productoraActiva: null, //ToDo: traer productora activa eventualmente
+      productoraActiva: data.usuario.productora_activa || data.productoras[0], //ToDo: traer productora activa eventualmente
       loading: false,
     };
   } catch (error: unknown) {
@@ -170,15 +168,18 @@ export const acceptApplication = async (id_usuario: string) => {
   }
 };
 
-export const getPendingApplications = async () => {
+export const getPendingApplications = async (id_usuario: string) => {
   try {
-    const response = (await axiosInstance.get("auth/pending", {})) as {
-      data: { user: ProductionCompanyResponse | ProductionCompanyResponse[] };
-    };
+    const { data } = await axiosInstance.get<GetPendingApplicationsResponse>(
+      "auth/pending",
+      {
+        params: {
+          usuarioId: id_usuario,
+        },
+      }
+    );
 
-    return Array.isArray(response.data.user)
-      ? response.data.user
-      : [response.data.user];
+    return data.data;
   } catch (error: unknown) {
     throw new Error(`${error}`);
   }

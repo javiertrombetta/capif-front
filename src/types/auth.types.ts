@@ -52,6 +52,10 @@ export interface GetAuthDataResponse {
     nombre: string;
     apellido: string;
     telefono: string;
+    productora_activa: {
+      id: string;
+      productora: string;
+    };
   };
   productoras: {
     id: string;
@@ -75,13 +79,52 @@ export interface AuthProps {
   rol: ROLES | null;
   productoras?: {
     id: string;
-    nombre: string;
+    productora: string;
   }[];
   vistas: { nombre: string; nombre_vista_superior: string }[];
-  productoraActiva: { id: string; nombre: string; cuit_cuil: string } | null;
+  productoraActiva: {
+    id: string;
+    productora: string;
+    cuit_cuil?: string;
+  } | null;
   loading: boolean;
 }
 
 export interface GetProductorasResponse {
   productoras: { id: string; nombre: string }[];
+}
+
+export interface GetPendingApplicationsResponse {
+  message: string;
+  data: {
+    targetUser: {
+      id_usuario: string;
+      rol_id: string;
+      tipo_registro: string;
+      nombre: string;
+      apellido: string;
+      email: string;
+      clave: string;
+      is_bloqueado: boolean;
+      intentos_fallidos: number;
+      fecha_ultimo_cambio_registro: string;
+      telefono: string;
+      email_verification_token: string | null;
+      email_verification_token_expires: string | null;
+      reset_password_token: string | null;
+      reset_password_token_expires: string | null;
+      fecha_ultimo_inicio_sesion: string | null;
+      fecha_ultimo_cambio_rol: string;
+      createdAt: string;
+      updatedAt: string;
+      rol: {
+        id_rol: string;
+        nombre_rol: string;
+      };
+    };
+    productoras: {
+      id_productora: string;
+      nombre_productora: string;
+    }[];
+  };
 }

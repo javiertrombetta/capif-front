@@ -1,5 +1,5 @@
 import {
-  UpdateUserById,
+  UpdateUserByIdPayload,
   GetUsersResponse,
   UpdateViewsPayload,
 } from "@/types/user.types";
@@ -10,6 +10,7 @@ interface GetUsersParams {
   nombre?: string;
   apellido?: string;
   estado?: string;
+  productoraId?: string;
 }
 
 export const getUsers = async (params?: GetUsersParams) => {
@@ -28,7 +29,7 @@ export const getUserById = async (id_usuario: string) => {
 
 export const updateUserById = async (
   id_usuario: string,
-  data: UpdateUserById
+  data: UpdateUserByIdPayload
 ) => {
   try {
     await axiosInstance.put("users/" + id_usuario, {

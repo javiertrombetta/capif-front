@@ -83,7 +83,12 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
       case ModalNames.REJECT_REGISTRATION:
         return <RejectApplication onCloseModal={onCloseModal} />;
       case ModalNames.ACCEPT_APPLICATION:
-        return <AcceptApplication onCloseModal={onCloseModal} />;
+        return (
+          <AcceptApplication
+            onCloseModal={onCloseModal}
+            onAcceptModal={modalData.handleAccept ?? (() => {})}
+          />
+        );
       case ModalNames.CHANGE_PRODUCER:
         return <ChangeProducerModal onCloseModal={onCloseModal} />;
       case ModalNames.ADD_TERRITORIALITY:
@@ -208,7 +213,10 @@ const ChangeProducerModal: FC<{ onCloseModal: () => void }> = ({
   const dispatch = useAppDispatch();
   const authData = useAppSelector((state) => state.auth);
 
-  const selectProductora = async (element: { id: string; nombre: string }) => {
+  const selectProductora = async (element: {
+    id: string;
+    productora: string;
+  }) => {
     try {
       await selectProductionCompany(element.id);
       const company = await getCompanyById(element.id);
@@ -252,7 +260,7 @@ const ChangeProducerModal: FC<{ onCloseModal: () => void }> = ({
               onClick={() => selectProductora(element)}
             >
               <p className="text-center text-black hover:bg-[#d8d8d8]">
-                {element.nombre}
+                {element.productora}
               </p>
             </div>
           ))

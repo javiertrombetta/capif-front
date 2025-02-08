@@ -147,7 +147,7 @@ const Sidebar: FC = () => {
     producersOptions: [
       {
         name: "Buscar",
-        link: "/search-production-company",
+        link: "/producers",
       },
       {
         name: "Permios Gardel",

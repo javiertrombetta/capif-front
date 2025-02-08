@@ -1,9 +1,10 @@
 import {
   NominationsResponse,
   ProductionCompanyByIdResponse,
+  UpdateProducerByIdResponse,
+  UpdateProducerPayload,
 } from "@/types/productionCompany.types";
 import { axiosInstance } from "./axiosInstance";
-import { CompanyValues } from "@/components/UserProfileView/UserProfileView";
 
 export const getAllCompanies = async () => {
   const companies = await axiosInstance.get("producers/");
@@ -17,13 +18,14 @@ export const getCompanyById = async (
   return companies.data.productora as ProductionCompanyByIdResponse;
 };
 
-export const updateCompany = async (
+export const updateProducer = async (
   id: string,
-  companyData: CompanyValues
-): Promise<ProductionCompanyByIdResponse> => {
-  const updatedCompany = await axiosInstance.put(`producers/${id}`, {
-    companyData,
-  });
+  companyData: UpdateProducerPayload
+): Promise<UpdateProducerByIdResponse> => {
+  const updatedCompany = await axiosInstance.put(
+    `producers/${id}`,
+    companyData
+  );
   return updatedCompany.data;
 };
 

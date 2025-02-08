@@ -56,6 +56,42 @@ export interface ProductionCompanyByIdResponse {
   cuit_representante?: string;
 }
 
+export interface UpdateProducerPayload {
+  nombre_productora: string;
+  tipo_persona: "FISICA" | "JURIDICA";
+  telefono: string;
+  email: string;
+  cuit_cuil: string;
+  calle: string;
+  numero: string;
+  ciudad: string;
+  localidad: string;
+  provincia: string;
+  codigo_postal: string;
+  nacionalidad: string;
+  datos_adicionales?: string;
+  denominacion_sello?: string;
+  nombres?: string;
+  apellidos?: string;
+  razon_social?: string;
+  nombres_representante?: string;
+  apellidos_representante?: string;
+  cuit_representante?: string;
+  cbu?: string;
+  alias_cbu?: string;
+}
+
+export interface UpdateProducerByIdResponse {
+  message: string;
+  productora: {
+    nombre_productora: string;
+    direccion: string;
+    telefono: string;
+    email: string;
+    cuit_cuil: string;
+  };
+}
+
 export interface NominationsResponse {
   id_premio: string;
   productora_id: string;

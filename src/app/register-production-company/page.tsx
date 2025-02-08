@@ -15,6 +15,7 @@ import CustomFileInput from "@/commons/CustomFileInput/CustomFileInput";
 import { SendApplication } from "@/types/user.types";
 import { uploadCompanyDocument } from "@/services/productionCompanies";
 import useFileHandler from "@/hooks/useFileHandler";
+import { toast } from "react-toastify";
 
 export interface ApplicationValues {
   nombre_productora: string;
@@ -46,7 +47,11 @@ const page: FC = () => {
   const [currentEntity, setCurrentEntity] = useState<"natural" | "legal">(
     "natural"
   );
-  const { files, handleFileChange, handleRemoveFile } = useFileHandler();
+  const { files, handleFileChange, handleRemoveFile } = useFileHandler({
+    isrcTicketsFile: [],
+    nationalIdCardFiles: [],
+    bylawsOrSocialContractFiles: [],
+  });
   const dispatch = useAppDispatch();
 
   const authUser = useAppSelector((state) => state.auth);
@@ -146,14 +151,14 @@ const page: FC = () => {
 
         const response = await sendApplication(requestData);
 
-        if (files.isrcTicketsFiles.length > 0) {
+        if (files.isrcTicketsFiles?.length > 0) {
           await uploadFile(
             "isrcTicketsFiles",
             "comprobante_ISRC",
             response.productora
           );
         }
-        if (files.nationalIdCardFiles.length > 0) {
+        if (files.nationalIdCardFiles?.length > 0) {
           await uploadFile(
             "nationalIdCardFiles",
             currentEntity === "natural"
@@ -162,7 +167,7 @@ const page: FC = () => {
             response.productora
           );
         }
-        if (files.bylawsOrSocialContractFiles.length > 0) {
+        if (files.bylawsOrSocialContractFiles?.length > 0) {
           await uploadFile(
             "bylawsOrSocialContractFiles",
             "contrato_social",
@@ -173,6 +178,9 @@ const page: FC = () => {
         onOpenModal();
       }
     } catch (error) {
+      toast.error(
+        "Error al crear aplicación. Revisar campos e intentar nuevamente"
+      );
       console.log(error);
     }
   };

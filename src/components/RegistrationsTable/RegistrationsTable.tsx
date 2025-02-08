@@ -151,7 +151,7 @@ const RegistrationsTable: FC<RegistrationsTableProps> = () => {
                       <FaEdit /> <p>Editar</p>
                     </li>
                     <li
-                      onClick={() => redirectToOption("/user-profile")}
+                      onClick={() => redirectToOption("/producers")}
                       className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
                     >
                       <FaUserAlt /> <p>Ficha</p>

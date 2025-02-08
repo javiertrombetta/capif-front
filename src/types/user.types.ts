@@ -69,7 +69,7 @@ export interface GetUsersResponse {
   totalPages: number;
 }
 
-export interface UpdateUserById {
+export interface UpdateUserByIdPayload {
   apellido?: string;
   nombre?: string;
   telefono?: string;
