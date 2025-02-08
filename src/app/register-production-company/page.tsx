@@ -645,7 +645,6 @@ const EntityForm: FC<{
           onChange={isrcFiles.handleFileChange}
           className="ml-[1rem]"
         >
-          {" "}
           Seleccione un Archivo
         </CustomFileInput>
         {isrcFiles.files?.map((file: File, index: number) => (

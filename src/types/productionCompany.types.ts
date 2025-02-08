@@ -46,14 +46,20 @@ export interface ProductionCompanyByIdResponse {
   nacionalidad: string;
   alias_cbu: string;
   cbu: string;
-  denominacion_sello?: string;
-  datos_adicionales?: string;
-  nombres?: string;
-  apellidos?: string;
-  razon_social?: string;
-  nombres_representante?: string;
-  apellidos_representante?: string;
-  cuit_representante?: string;
+  denominacion_sello: string;
+  datos_adicionales: string;
+  nombres: string;
+  apellidos: string;
+  razon_social: string;
+  nombres_representante: string;
+  apellidos_representante: string;
+  cuit_representante: string;
+  usuarioPrincipal: {
+    apellido: string;
+    email: string;
+    id_usuario: string;
+    nombre: string;
+  };
 }
 
 export interface UpdateProducerPayload {
@@ -128,4 +134,24 @@ export interface NominationsResponse {
     createdAt: Date;
     updatedAt: Date;
   };
+}
+
+export const TIPO_DOCUMENTOS = [
+  "dni_persona_fisica",
+  "contrato_social",
+  "dni_representante_legal",
+  "comprobante_ISRC",
+] as const;
+
+export type TipoDocumento = (typeof TIPO_DOCUMENTOS)[number];
+
+export interface Document {
+  id_documento: string;
+  ruta_archivo_documento: string;
+  tipo_documento: TipoDocumento;
+}
+
+export interface GetDocumentsResponse {
+  message: string;
+  documentos: Document[];
 }

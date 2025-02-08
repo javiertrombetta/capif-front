@@ -68,7 +68,6 @@ export const authLogout = async () => {
 export const getAuthData = async (): Promise<AuthProps> => {
   try {
     const { data } = await axiosInstance.get<GetAuthDataResponse>("users/me");
-    console.log(data);
     return {
       ...data.usuario,
       id_usuario: data.usuario.id,
