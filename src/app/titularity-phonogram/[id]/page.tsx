@@ -1,10 +1,8 @@
 "use client";
-import React, { FC, useState } from "react";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomTable from "@/commons/CustomTable/CustomTable";
-import { IoMdSettings } from "react-icons/io";
 import { useRouter } from "next/navigation";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import { RiProhibited2Line } from "react-icons/ri";
@@ -12,16 +10,14 @@ import { MdEdit } from "react-icons/md";
 import { useAppDispatch } from "@/hooks/storeHooks";
 import { ModalNames } from "@/types/modalNames";
 import { setModal } from "@/store/modalSlice";
+import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
 
 function page() {
   const router = useRouter();
-  const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
-  const toggleDropdown = (id: number) => {
-    if (activeDropdown === id) {
-      setActiveDropdown(null);
-    } else {
-      setActiveDropdown(id);
-    }
+  const dispatch = useAppDispatch();
+
+  const handleOpenModal = (type: ModalNames) => {
+    dispatch(setModal({ type, isActive: true }));
   };
 
   const redirectToOption = (route: string): void => {
@@ -36,7 +32,7 @@ function page() {
         <CustomButton background="warn">Cancelar</CustomButton>
       </div> */}
 
-      <div className="w-[100%] mt-[1rem] flex justify-end items-center justify-between pl-[2rem] pr-[2rem]">
+      <div className="w-[100%] mt-[1rem] flex items-center justify-between pl-[2rem] pr-[2rem]">
         <CustomInput label="Buscar Titular" type="text" />
         <CustomButton
           onClick={() =>
@@ -47,7 +43,7 @@ function page() {
         </CustomButton>
       </div>
 
-      <div className="mt-[3rem] w-[100%] mt-[1rem] flex flex-col justify-center items-center">
+      <div className="mt-[3rem] w-[100%] flex flex-col justify-center items-center">
         <p className="mb-[1rem] font-bold text-[1.2rem] text-black w-[100%] text-start pl-[2rem]">
           INFORMACIÓN DEL FONOGRAMA:
         </p>
@@ -89,10 +85,20 @@ function page() {
               "12/10/2020",
               "16/07/2030",
               <ActionDropdownButton
-                redirectToOption={redirectToOption}
-                toggleDropdown={toggleDropdown}
-                id={1}
-                activeDropdown={activeDropdown}
+                menuOptions={[
+                  {
+                    label: "Editar",
+                    icon: <MdEdit />,
+                    onClick: () =>
+                      redirectToOption("/titularity-phonogram/1/edit-titular"),
+                  },
+                  {
+                    label: "Editar",
+                    icon: <RiProhibited2Line />,
+                    onClick: () =>
+                      handleOpenModal(ModalNames.TITULARITY_PHOGRAM_REMOVE),
+                  },
+                ]}
               />,
             ],
             [
@@ -101,10 +107,20 @@ function page() {
               "12/10/2020",
               "16/07/2030",
               <ActionDropdownButton
-                redirectToOption={redirectToOption}
-                toggleDropdown={toggleDropdown}
-                id={2}
-                activeDropdown={activeDropdown}
+                menuOptions={[
+                  {
+                    label: "Editar",
+                    icon: <MdEdit />,
+                    onClick: () =>
+                      redirectToOption("/titularity-phonogram/1/edit-titular"),
+                  },
+                  {
+                    label: "Editar",
+                    icon: <RiProhibited2Line />,
+                    onClick: () =>
+                      handleOpenModal(ModalNames.TITULARITY_PHOGRAM_REMOVE),
+                  },
+                ]}
               />,
             ],
             [
@@ -113,10 +129,20 @@ function page() {
               "12/10/2020",
               "16/07/2030",
               <ActionDropdownButton
-                redirectToOption={redirectToOption}
-                toggleDropdown={toggleDropdown}
-                id={3}
-                activeDropdown={activeDropdown}
+                menuOptions={[
+                  {
+                    label: "Editar",
+                    icon: <MdEdit />,
+                    onClick: () =>
+                      redirectToOption("/titularity-phonogram/1/edit-titular"),
+                  },
+                  {
+                    label: "Editar",
+                    icon: <RiProhibited2Line />,
+                    onClick: () =>
+                      handleOpenModal(ModalNames.TITULARITY_PHOGRAM_REMOVE),
+                  },
+                ]}
               />,
             ],
           ]}
@@ -127,53 +153,3 @@ function page() {
 }
 
 export default page;
-
-interface ActionDropdownButtonProps {
-  toggleDropdown: (id: number) => void;
-  id: number;
-  activeDropdown: number | null;
-  redirectToOption: (route: string) => void;
-}
-
-const ActionDropdownButton: FC<ActionDropdownButtonProps> = ({
-  toggleDropdown,
-  id,
-  activeDropdown,
-}) => {
-  const router = useRouter();
-  const dispatch = useAppDispatch();
-  const handleOpenModal = (type: ModalNames) => {
-    dispatch(setModal({ type, isActive: true }));
-  };
-
-  return (
-    <div className="px-6 py-4 relative group">
-      <button
-        onClick={() => toggleDropdown(id)}
-        className="bg-[#1280e1] text-white w-[2rem] h-[2rem] flex justify-center items-center rounded-[0.3rem]"
-      >
-        <IoMdSettings size={20} />
-      </button>
-      <ul
-        className={`absolute right-0 mt-2 w-[6rem] bg-slate-900 border rounded-md shadow-lg z-30 overflow-hidden ${
-          activeDropdown === id ? "" : "hidden"
-        }`}
-      >
-        <li
-          onClick={() => router.push("/titularity-phonogram/10/edit-titular")}
-          className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
-        >
-          <MdEdit />
-          <p>Editar</p>
-        </li>
-        <li
-          onClick={() => handleOpenModal(ModalNames.TITULARITY_PHOGRAM_REMOVE)}
-          className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-start gap-[0.7rem]"
-        >
-          <RiProhibited2Line />
-          <p>Quitar</p>
-        </li>
-      </ul>
-    </div>
-  );
-};

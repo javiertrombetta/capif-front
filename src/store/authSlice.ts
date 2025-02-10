@@ -7,11 +7,12 @@ export const authDefaultState: AuthProps = {
   nombre: null,
   telefono: null,
   apellido: null,
-  tipo_registro: null,
+  estado: null,
   rol: null,
   productoras: [],
   vistas: [],
   productoraActiva: null,
+  loading: true,
 };
 
 const authSlice = createSlice({

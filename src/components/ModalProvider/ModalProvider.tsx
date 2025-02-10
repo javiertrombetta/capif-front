@@ -1,11 +1,10 @@
 "use client";
-import React, { FC, ReactNode, useEffect, useState } from "react";
+import React, { FC, ReactNode, useEffect } from "react";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { ModalNames } from "@/types/modalNames";
 import { IoClose } from "react-icons/io5";
 import { setModal } from "@/store/modalSlice";
-import { GetProductorasResponse } from "@/types/auth.types";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import SearchConflictsFilters from "../Modals/Conflicts/SearchConflictsFilters";
 import {
@@ -62,11 +61,9 @@ import AuditSessionsPurgeModal from "../Modals/AuditSessionsPurgeModal/AuditSess
 import SubmitSendApplication from "../Modals/SubmitSendApplication/SubmitSendApplication";
 import RejectApplication from "../Modals/RejectApplication/RejectApplication";
 import AcceptApplication from "../Modals/AcceptApplication/AcceptApplication";
-import {
-  getAssociatedProductionCompanies,
-  selectProductionCompany,
-} from "@/services/auth";
+import { selectProductionCompany } from "@/services/auth";
 import { setAuthData } from "@/store/authSlice";
+import { getCompanyById } from "@/services/productionCompanies";
 
 interface ModalProvderProps {
   children: ReactNode;
@@ -86,11 +83,14 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
       case ModalNames.REJECT_REGISTRATION:
         return <RejectApplication onCloseModal={onCloseModal} />;
       case ModalNames.ACCEPT_APPLICATION:
-        return <AcceptApplication onCloseModal={onCloseModal} />;
+        return (
+          <AcceptApplication
+            onCloseModal={onCloseModal}
+            onAcceptModal={modalData.handleAccept ?? (() => {})}
+          />
+        );
       case ModalNames.CHANGE_PRODUCER:
         return <ChangeProducerModal onCloseModal={onCloseModal} />;
-      case ModalNames.ACCEPT_REGISTRATION:
-        return <AcceptRegistrationModal onCloseModal={onCloseModal} />;
       case ModalNames.ADD_TERRITORIALITY:
         return <AddTerritorialityModal onCloseModal={onCloseModal} />;
       case ModalNames.SEARCH_CONFLICTS_FILTERS:
@@ -180,18 +180,18 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
   };
 
   return (
-    <div className="w-[100%] h-[100%] relative">
+    <>
       {modalData.isActive && (
         <>
-          <div className="absolute w-[100%] h-[100%] z-30 flex justify-center items-center">
+          <div className="absolute top-0 left-0 w-[100vw] h-[100vh] z-40 flex justify-center items-center">
             {renderModal()}
           </div>
-          <div className="z-20 absolute w-[100%] h-[100%] bg-[black] opacity-[0.4]" />
+          <div className="absolute top-0 left-0 w-[100vw] h-[100vh] z-30 bg-[black] opacity-[0.4]" />
         </>
       )}
 
       {children}
-    </div>
+    </>
   );
 };
 
@@ -212,27 +212,21 @@ const ChangeProducerModal: FC<{ onCloseModal: () => void }> = ({
 }) => {
   const dispatch = useAppDispatch();
   const authData = useAppSelector((state) => state.auth);
-  const [productoras, setProductoras] = useState<GetProductorasResponse | null>(
-    null
-  );
-  const getProductoras = async () => {
-    try {
-      const response = await getAssociatedProductionCompanies();
-      if (response) {
-        setProductoras(response);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
-  const selectProductora = async (element: { id: string; nombre: string }) => {
+  const selectProductora = async (element: {
+    id: string;
+    productora: string;
+  }) => {
     try {
       await selectProductionCompany(element.id);
+      const company = await getCompanyById(element.id);
+      const productionCompany = { ...element, cuit_cuil: company.cuit_cuil };
       if (window && window.localStorage) {
-        localStorage.setItem("company", JSON.stringify(element));
+        localStorage.setItem("company", JSON.stringify(productionCompany));
       }
-      dispatch(setAuthData({ ...authData, productoraActiva: element }));
+      dispatch(
+        setAuthData({ ...authData, productoraActiva: productionCompany })
+      );
     } catch (error) {
       console.log(error);
     } finally {
@@ -240,14 +234,15 @@ const ChangeProducerModal: FC<{ onCloseModal: () => void }> = ({
     }
   };
 
-  // const handleChangeProductionModal = (production: string) => {
-  //   dispatch(setUser({ ...userData, activeProduction: production }));
-  //   onCloseModal();
-  // };
   useEffect(() => {
-    getProductoras();
-  }, []);
-
+    if (
+      authData.productoras &&
+      authData.id_usuario &&
+      !authData.productoras[0].id
+    ) {
+      onCloseModal();
+    }
+  }, [authData]);
   return (
     <div className="relative bg-white h-[13rem] w-[30rem] mb-[6rem] rounded-[2rem] gap-[0.5rem] flex flex-col justify-center items-center">
       <button onClick={onCloseModal} className="absolute top-[5%] right-[5%]">
@@ -257,14 +252,15 @@ const ChangeProducerModal: FC<{ onCloseModal: () => void }> = ({
       <p className="text-black font-bold text-[1.2rem] text-center w-[95%]">
         Selecciona una productora.
       </p>
-      {productoras?.productoras && productoras.productoras.length > 0
-        ? productoras.productoras.map((element) => (
+      {authData.productoras && authData.productoras.length > 0
+        ? authData.productoras.map((element, index) => (
             <div
+              key={index}
               className="w-[100%] cursor-pointer"
               onClick={() => selectProductora(element)}
             >
               <p className="text-center text-black hover:bg-[#d8d8d8]">
-                {element.nombre}
+                {element.productora}
               </p>
             </div>
           ))
@@ -281,31 +277,6 @@ const ChangeProducerModal: FC<{ onCloseModal: () => void }> = ({
       >
         <p className="text-center text-black hover:bg-[#d8d8d8]">Goldstein</p>
       </div> */}
-    </div>
-  );
-};
-
-const AcceptRegistrationModal: FC<{ onCloseModal: () => void }> = ({
-  onCloseModal,
-}) => {
-  return (
-    <div className="relative bg-white h-[13rem] w-[30rem] mb-[6rem] rounded-[2rem] gap-[0.5rem] flex flex-col justify-center items-center">
-      <button onClick={onCloseModal} className="absolute top-[5%] right-[5%]">
-        <IoClose size={25} color="black" />
-      </button>
-
-      <p className="text-black font-bold text-[1.2rem] text-center w-[95%]">
-        Selecciona una productora.
-      </p>
-      <div className="w-[100%] cursor-pointer">
-        <p className="text-center text-black hover:bg-[#d8d8d8]">Warner</p>
-      </div>
-      <div className="w-[100%] cursor-pointer">
-        <p className="text-center text-black hover:bg-[#d8d8d8]">Sony Music</p>
-      </div>
-      <div className="w-[100%] cursor-pointer">
-        <p className="text-center text-black hover:bg-[#d8d8d8]">Goldstein</p>
-      </div>
     </div>
   );
 };

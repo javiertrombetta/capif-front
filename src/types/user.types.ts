@@ -1,17 +1,12 @@
-interface Document {
-  nombre_documento: string;
-  ruta_archivo_documento: string;
-}
+import { TipoPersona } from "./productionCompany.types";
 
 export interface SendApplication {
-  id_usuario: string;
   nombre: string;
   apellido: string;
   telefono: string;
-  documentos: Document[];
   productoraData: {
     id_productora?: string;
-    tipo_persona: "FISICA" | "JURIDICA";
+    tipo_persona: TipoPersona;
     nombre_productora: string;
     cuit_cuil: string;
     email: string;
@@ -36,30 +31,63 @@ export interface SendApplication {
   };
 }
 
+export const ESTADOS = [
+  "DEPURAR",
+  "NUEVO",
+  "CONFIRMADO",
+  "PENDIENTE",
+  "ENVIADO",
+  "HABILITADO",
+  "DESHABILITADO",
+] as const;
+
+export type ESTADO = (typeof ESTADOS)[number];
+
 export interface User {
-  apellido: string;
+  id: string;
   email: string;
-  id_usuario: string;
-  is_bloqueado: boolean;
   nombre: string;
-  rol_id: string;
+  apellido: string;
   telefono: string;
-  tipo_registro: string;
-  createdAt: Date;
-  updatedAt: Date;
-  rol?: {
-    id_rol: string;
-    nombre_rol: string;
-  };
+  estado: ESTADO;
+  isBloqueado: boolean;
+  rol: string;
+  vistas: {
+    id_vista: string;
+    nombre: string;
+    superior: string;
+    habilitado: boolean;
+  }[];
+  productoras: {
+    id: string;
+    productora: string;
+  }[];
 }
 
-export interface UsersResponse {
-  hasSingleMaestro: boolean;
-  maestros: [];
-  user: User;
-  vistas: { id_vista: string; is_habilitado: boolean }[];
+export interface GetUsersResponse {
+  currentPage: number;
+  data: User[];
+  total: number;
+  totalPages: number;
 }
-export interface UpdateUserById {
+
+export interface UpdateUserByIdPayload {
   apellido?: string;
   nombre?: string;
+  telefono?: string;
+  email?: string;
+}
+
+export interface UpdateViewsPayload {
+  vistas: {
+    nombre_vista: string;
+    is_habilitado: boolean;
+  }[];
+}
+
+export interface GetPendingApplicationsResponse extends GetUsersResponse {
+  documentos: {
+    nombre: string;
+    ruta: string;
+  };
 }

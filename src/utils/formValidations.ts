@@ -1,5 +1,28 @@
 import * as Yup from "yup";
 
+const validacionNombre = Yup.string()
+  .min(2, "El nombre debe tener al menos 2 caracteres.")
+  .max(100, "No puedes escribir más de 100 caracteres en este campo.")
+  .required("El nombre es requerido.");
+
+const validacionApellido = Yup.string()
+  .min(2, "El apellido debe tener al menos 2 caracteres.")
+  .max(100, "No puedes escribir más de 100 caracteres en este campo.")
+  .required("El apellido es requerido.");
+
+const validacionTelefono = Yup.string()
+  .max(50, "El teléfono no puede exceder los 50 caracteres")
+  .matches(/^[0-9\-+() ]+$/, "El teléfono contiene caracteres inválidos")
+  .nullable();
+
+const validacionEmail = Yup.string()
+  .email("Debe ser un correo electrónico válido")
+  .required("El correo electrónico es requerido");
+
+const validacionCuitCuil = Yup.string()
+  .required("El CUIT/CUIL es requerido")
+  .matches(/^\d{11}$/, "El CUIT/CUIL debe contener exactamente 11 dígitos");
+
 export const validationSignUpForm = Yup.object({
   // name: Yup.string()
   //   .min(2, "El nombre debe tener al menos 2 caracteres.")
@@ -111,12 +134,8 @@ export const validationRegisterApplication = Yup.object().shape({
   nombre_productora: Yup.string()
     .min(3, "Debe contener al menos 3 caracteres")
     .required("El nombre de la productora es requerido"),
-  cuit_cuil: Yup.string()
-    .required("El CUIT/CUIL es requerido")
-    .matches(/^\d{11}$/, "El CUIT/CUIL debe contener exactamente 11 dígitos"),
-  email: Yup.string()
-    .email("Debe ser un correo electrónico válido")
-    .required("El correo electrónico es requerido"),
+  cuit_cuil: validacionCuitCuil,
+  email: validacionEmail,
   calle: Yup.string().required("La calle es requerida"),
   numero: Yup.string()
     .required("El número es requerido")
@@ -137,7 +156,7 @@ export const validationRegisterApplication = Yup.object().shape({
     .matches(/^\d{22}$/, "El CBU debe contener exactamente 22 dígitos"),
   cuit_representante: Yup.string()
     .test(
-      "cuit-cuil",
+      "cuit_cuil_representante",
       "El CUIT/CUIL del representante es requerido",
       function (value) {
         return this.parent.tipo_persona === "JURIDICA" ? Boolean(value) : true;
@@ -145,7 +164,7 @@ export const validationRegisterApplication = Yup.object().shape({
     )
     .matches(/^\d{11}$/, "El CUIT/CUIL debe contener exactamente 11 dígitos"),
   razon_social: Yup.string().test(
-    "razon-social",
+    "razon_social",
     "La razón social es requerida",
     function (value) {
       return this.parent.tipo_persona === "JURIDICA" ? Boolean(value) : true;
@@ -163,7 +182,7 @@ export const validationChangePassword = Yup.object({
 });
 
 export const validationSecondaryRegister = Yup.object({
-  email: Yup.string().email("Email inválido").required("El email es requerido"),
+  email: validacionEmail,
   confirm_email: Yup.string()
     .email("Email inválido")
     .test({
@@ -174,16 +193,43 @@ export const validationSecondaryRegister = Yup.object({
       },
     })
     .required("El email de confirmación es requerido"),
-  nombre: Yup.string()
-    .min(2, "El nombre debe tener al menos 2 caracteres.")
-    .max(100, "No puedes escribir más de 100 caracteres en este campo.")
-    .required("El nombre es requerido."),
-  apellido: Yup.string()
-    .min(2, "El apellido debe tener al menos 2 caracteres.")
-    .max(100, "No puedes escribir más de 100 caracteres en este campo.")
-    .required("El apellido es requerido."),
-  telefono: Yup.string()
-    .max(50, "El teléfono no puede exceder los 50 caracteres")
-    .matches(/^[0-9\-+() ]+$/, "El teléfono contiene caracteres inválidos")
-    .nullable(),
+  nombre: validacionNombre,
+  apellido: validacionApellido,
+  telefono: validacionTelefono,
+});
+
+export const validationEditUser = Yup.object({
+  nombre: validacionNombre,
+  apellido: validacionApellido,
+  telefono: validacionTelefono,
+  email: validacionEmail,
+});
+
+export const validationEditProducer = Yup.object({
+  nombre_productora: validacionNombre,
+  cuit_cuil: validacionCuitCuil,
+  razon_social: Yup.string().optional(),
+  nombres_representante: validacionNombre,
+  apellidos_representante: validacionApellido,
+  email: validacionEmail,
+  cuit_representante: Yup.string().optional(),
+  denominacion_sello: Yup.string().optional(),
+  calle: Yup.string().required("La calle es requerida"),
+  numero: Yup.string()
+    .required("El número es requerido")
+    .matches(/^\d+$/, "El número debe ser numérico"),
+  datos_adicionales: Yup.string().optional(),
+  localidad: Yup.string().required("La localidad es requerida"),
+  provincia: Yup.string().required("La provincia es requerida"),
+  codigo_postal: Yup.string()
+    .required("El código postal es requerido")
+    .matches(/^\d+$/, "El código postal debe ser numérico"),
+  telefono: validacionTelefono,
+  nacionalidad: Yup.string().required("La nacionalidad es requerida"),
+});
+export const isrcValidation = Yup.object({
+  ISRC: Yup.string()
+    .min(5, "El código de designación debe tener 5 caracteres.")
+    .max(5, "El código de designación debe tener 5 caracteres.")
+    .required("El código de designación es requerido."),
 });

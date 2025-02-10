@@ -16,6 +16,8 @@ import "../../styles/globals.css";
 import "./Navbar.css";
 import RouteGuard from "../RouteGuard/RouteGuard";
 import { authLogout } from "@/services/auth";
+import { authDefaultState, setAuthData } from "@/store/authSlice";
+import Spinner from "@/commons/Spinner/Spinner";
 
 interface NavbarProps {
   children: ReactNode;
@@ -24,6 +26,8 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
   const dispatch = useAppDispatch();
   const pathname = usePathname();
   const authData = useAppSelector((state) => state.auth);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+
   const noUserPathnames: string[] = [
     "/",
     "/login",
@@ -34,6 +38,7 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
     "/confirm-account/:token",
     "/password-recovery/:token",
   ];
+
   const checkForbbidenPathname = (
     forbiddenPathnames: string[],
     pathname: string
@@ -44,19 +49,15 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
     });
   };
 
-  const [isChangingProducingCompany, setIsChangingProducingCompany] =
-    useState<boolean>(false);
-
-  const handleIsChangingProducingCompany = () => {
-    setIsChangingProducingCompany((prevState: boolean) => !prevState);
+  const handleMenuOpen = () => {
+    setIsMenuOpen((prevState: boolean) => !prevState);
   };
 
   const openProductionCompanySelection = () => {
     if (window && window.localStorage) {
       const company = localStorage.getItem("company");
-      const isLoged = localStorage.getItem("isLoged");
 
-      if (!company && isLoged && authData.id_usuario) {
+      if (!company && authData.id_usuario) {
         dispatch(
           setModal({ type: ModalNames.CHANGE_PRODUCER, isActive: true })
         );
@@ -67,6 +68,7 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
   useEffect(() => {
     openProductionCompanySelection();
   }, []);
+
   return (
     <>
       {checkForbbidenPathname(noUserPathnames, pathname) ? (
@@ -74,7 +76,10 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
       ) : (
         <div className="w-[100%] border-[black] max-h-[100vh] overflow-y-hidden">
           <div className="w-[100%] h-[3.2rem] background z-20 absolute flex items-center">
-            <div className="w-[15rem] flex items-center justify-center">
+            <a
+              href="/users"
+              className="w-[15rem] flex items-center justify-center"
+            >
               <Image
                 className="w-[6.3rem]"
                 height={2000}
@@ -82,11 +87,11 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
                 alt="GIT CAPIF"
                 src={gitLogo}
               />
-            </div>
+            </a>
             {pathname === "/register-production-company" ? (
               <div className="h-[100%] flex-grow flex justify-end items-center pr-[2rem]">
                 <button
-                  onClick={handleIsChangingProducingCompany}
+                  onClick={handleMenuOpen}
                   className="flex items-center gap-[0.5rem] cursor-pointer"
                 >
                   <PiUserCircleFill
@@ -95,10 +100,10 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
                   />
                   <p className="text-white">{authData?.email}</p>
                 </button>
-                {isChangingProducingCompany && (
+                {isMenuOpen && (
                   <NavbarMenu
                     isEnabledUser={false}
-                    closeMenu={handleIsChangingProducingCompany}
+                    closeMenu={handleMenuOpen}
                   />
                 )}
               </div>
@@ -110,7 +115,7 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
                     <p className="">Productora Activa:</p>
 
                     <p className="font-bold">
-                      {authData?.productoras?.[0]?.nombre}
+                      {authData?.productoraActiva?.productora}
                     </p>
                   </div>
                 ) : null}
@@ -119,7 +124,7 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
                 <IoMenuSharp className="w-[1.3rem] h-[1.3rem]" />
               </button> */}
                 <button
-                  onClick={handleIsChangingProducingCompany}
+                  onClick={handleMenuOpen}
                   className="flex items-center gap-[0.5rem] cursor-pointer"
                 >
                   <PiUserCircleFill
@@ -128,11 +133,8 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
                   />
                   <p className="text-white">{authData.email}</p>
                 </button>
-                {isChangingProducingCompany && (
-                  <NavbarMenu
-                    isEnabledUser={true}
-                    closeMenu={handleIsChangingProducingCompany}
-                  />
+                {isMenuOpen && (
+                  <NavbarMenu isEnabledUser={true} closeMenu={handleMenuOpen} />
                 )}
               </div>
             )}
@@ -141,8 +143,14 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
           <div className="w-[15rem] navbar-background fixed h-[100vh] z-10 pt-[3rem]">
             <Sidebar />
           </div>
-          <div className="flex flex-col h-[100%] pl-[15rem] pt-[3.2rem]">
-            <RouteGuard>{children}</RouteGuard>
+          <div className="flex flex-col h-[100vh] pl-[15rem] pt-[3.2rem] bg-white">
+            {authData.loading ? (
+              <div className="w-full h-full flex items-center justify-center">
+                <Spinner color="black" />
+              </div>
+            ) : (
+              <RouteGuard>{children}</RouteGuard>
+            )}
           </div>
         </div>
       )}
@@ -174,8 +182,9 @@ const NavbarMenu: FC<{ closeMenu: () => void; isEnabledUser: boolean }> = ({
     } catch (error) {
       console.log(error);
     } finally {
-      localStorage.removeItem("isLoged");
+      closeMenu();
       localStorage.removeItem("company");
+      dispatch(setAuthData({ ...authDefaultState, loading: false }));
       router.push("/login");
     }
   };
