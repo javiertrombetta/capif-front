@@ -1,10 +1,12 @@
 import { axiosInstance } from "./axiosInstance";
-import { SendApplication } from "@/types/user.types";
+import {
+  GetPendingApplicationsResponse,
+  SendApplication,
+} from "@/types/user.types";
 import {
   GetAuthDataResponse,
   AuthProps,
   AuthSecondarySignUpRequest,
-  GetPendingApplicationsResponse,
 } from "@/types/auth.types";
 import { authDefaultState } from "@/store/authSlice";
 
@@ -149,7 +151,7 @@ export const rejectApplication = async (
   comentario: string
 ) => {
   try {
-    await axiosInstance.post(`auth/prods/primary/${id_usuario}/authorize`, {
+    await axiosInstance.post(`auth/prods/primary/${id_usuario}/reject`, {
       comentario,
     });
   } catch (error: unknown) {
@@ -178,7 +180,7 @@ export const getPendingApplications = async (id_usuario: string) => {
       }
     );
 
-    return data.data;
+    return data.data[0];
   } catch (error: unknown) {
     throw new Error(`${error}`);
   }
