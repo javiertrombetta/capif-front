@@ -43,6 +43,7 @@ export enum ROLES {
   EMPLOYEE = "productor_secundario",
   // USER = "usuario",
 }
+
 export interface GetAuthDataResponse {
   usuario: {
     id: string;

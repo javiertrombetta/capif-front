@@ -57,14 +57,6 @@ export default function page() {
     await getUsersData(values);
   };
 
-  if (loading) {
-    return (
-      <div className="w-full h-full flex justify-center items-center">
-        <Spinner color="black" />
-      </div>
-    );
-  }
-
   return (
     <CustomLayout>
       <Header title="Usuarios" />
@@ -113,7 +105,11 @@ export default function page() {
           </Form>
         </Formik>
         <div className="w-[100%] mt-[2rem] flex-1 overflow-y-auto">
-          {users.length > 0 && (
+          {loading ? (
+            <div className="w-full h-full flex justify-center items-center">
+              <Spinner color="black" />
+            </div>
+          ) : users.length > 0 ? (
             <CustomTable
               columnNames={
                 authData.rol === ROLES.SUPER_ADMIN ||
@@ -181,6 +177,10 @@ export default function page() {
                     ];
               })}
             />
+          ) : (
+            <div className="text-black justify-self-center pt-[4rem]">
+              No se encontraron usuarios
+            </div>
           )}
         </div>
       </div>

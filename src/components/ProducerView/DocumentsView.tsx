@@ -1,9 +1,9 @@
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomFileInput from "@/commons/CustomFileInput/CustomFileInput";
 import {
-  uploadCompanyDocument,
-  getCompanyDocuments,
-  downloadCompanyDocuments,
+  uploadProducerDocument,
+  getProducerDocuments,
+  downloadProducerDocuments,
 } from "@/services/productionCompanies";
 import {
   TipoDocumento,
@@ -60,7 +60,7 @@ export const Documents = ({
       const formData = new FormData();
       formData.append("tipoDocumento", document.tipoDocumento);
       formData.append("documentos", document.documento);
-      await uploadCompanyDocument(formData, idProductora);
+      await uploadProducerDocument(formData, idProductora);
       toast.success("Archivo enviado correctamente.");
       await getDocuments();
       setUploadedDocuments([
@@ -74,7 +74,7 @@ export const Documents = ({
 
   const handleDownloadDocuments = async () => {
     try {
-      const data = await downloadCompanyDocuments(idProductora);
+      const data = await downloadProducerDocuments(idProductora);
       const url = window.URL.createObjectURL(new Blob([data]));
 
       const link = document.createElement("a");
@@ -89,7 +89,7 @@ export const Documents = ({
   };
 
   const getDocuments = async () => {
-    const documents = await getCompanyDocuments(idProductora);
+    const documents = await getProducerDocuments(idProductora);
     setDocuments(documents);
   };
 
