@@ -1,10 +1,9 @@
 import { axiosInstance } from "./axiosInstance";
-import { SendApplication } from "@/types/user.types";
+import { GetUsersResponse, SendApplication } from "@/types/user.types";
 import {
   GetAuthDataResponse,
   AuthProps,
   AuthSecondarySignUpRequest,
-  GetPendingApplicationsResponse,
 } from "@/types/auth.types";
 import { authDefaultState } from "@/store/authSlice";
 
@@ -169,16 +168,13 @@ export const acceptApplication = async (id_usuario: string) => {
 
 export const getPendingApplications = async (id_usuario: string) => {
   try {
-    const { data } = await axiosInstance.get<GetPendingApplicationsResponse>(
-      "auth/pending",
-      {
-        params: {
-          usuarioId: id_usuario,
-        },
-      }
-    );
+    const { data } = await axiosInstance.get<GetUsersResponse>("auth/pending", {
+      params: {
+        usuarioId: id_usuario,
+      },
+    });
 
-    return data.data;
+    return data.data[0];
   } catch (error: unknown) {
     throw new Error(`${error}`);
   }

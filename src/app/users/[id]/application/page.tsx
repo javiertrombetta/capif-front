@@ -5,7 +5,11 @@ import { toast } from "react-toastify";
 import ProducerView from "@/components/ProducerView/ProducerView";
 import { useParams } from "next/navigation";
 import CustomButton from "@/commons/CustomButton/CustomButton";
-import { acceptApplication, getPendingApplications } from "@/services/auth";
+import {
+  acceptApplication,
+  getPendingApplications,
+  rejectApplication,
+} from "@/services/auth";
 import { ModalNames } from "@/types/modalNames";
 import { useAppDispatch } from "@/hooks/storeHooks";
 import { setModal } from "@/store/modalSlice";
@@ -19,7 +23,7 @@ export default function page() {
 
   const getProductoraPendiente = async () => {
     const user = await getPendingApplications(id as string);
-    setIdProductora(user.productoras[0].id_productora);
+    setIdProductora(user.productoras[0].id);
   };
 
   useEffect(() => {
@@ -38,11 +42,24 @@ export default function page() {
     }
   };
 
-  const rejectApplication = () => {
+  const handleReject = async (comentario: string) => {
+    if (!id) return;
+
+    try {
+      await rejectApplication(id as string, comentario);
+      toast.success("La solicitud fue aceptada correctamente");
+    } catch (error) {
+      toast.error("Error al aceptar la solicitud");
+      console.error("Error al aceptar la solicitud:", error);
+    }
+  };
+
+  const onRejectApplication = () => {
     dispatch(
       setModal({
         type: ModalNames.REJECT_REGISTRATION,
         isActive: true,
+        handleAccept: handleReject,
       })
     );
   };
@@ -69,8 +86,8 @@ export default function page() {
         <CustomButton onClick={onAcceptApplication} className="bg-[#008d4c]">
           Confirmar el Registro del Usuario
         </CustomButton>
-        <CustomButton background="delete" onClick={rejectApplication}>
-          Rechazar
+        <CustomButton background="delete" onClick={onRejectApplication}>
+          Rechazar el Registro del Usuario
         </CustomButton>
       </div>
     </CustomLayout>
