@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
 
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
 
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
@@ -22,7 +22,6 @@ import { ChangePasswordView } from "@/components/ChangePasswordView/ChangePasswo
 import UserFieldsView from "@/components/UserFieldsView/UserFieldsView";
 
 export default function page() {
-  const router = useRouter();
   const userId = useParams().id as string;
   const [userData, setUserData] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);

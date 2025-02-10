@@ -10,7 +10,7 @@ export default function page() {
 
   return (
     <CustomLayout>
-      <Header title="Ficha Productora" />
+      <Header back title="Ficha Productora" />
       <div className="flex flex-col w-[100%] overflow-auto p-[1rem]">
         <ProducerView fieldsDisabled={false} idProducer={id as string} />
       </div>
