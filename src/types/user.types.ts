@@ -1,10 +1,12 @@
+import { TipoPersona } from "./productionCompany.types";
+
 export interface SendApplication {
   nombre: string;
   apellido: string;
   telefono: string;
   productoraData: {
     id_productora?: string;
-    tipo_persona: "FISICA" | "JURIDICA";
+    tipo_persona: TipoPersona;
     nombre_productora: string;
     cuit_cuil: string;
     email: string;
@@ -51,10 +53,10 @@ export interface User {
   isBloqueado: boolean;
   rol: string;
   vistas: {
-    id_vista_maestro: string;
-    nombre_vista: string;
-    nombre_vista_superior: string;
-    is_habilitado: boolean;
+    id_vista: string;
+    nombre: string;
+    superior: string;
+    habilitado: boolean;
   }[];
   productoras: {
     id: string;
@@ -81,4 +83,11 @@ export interface UpdateViewsPayload {
     nombre_vista: string;
     is_habilitado: boolean;
   }[];
+}
+
+export interface GetPendingApplicationsResponse extends GetUsersResponse {
+  documentos: {
+    nombre: string;
+    ruta: string;
+  };
 }
