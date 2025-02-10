@@ -148,7 +148,7 @@ export const rejectApplication = async (
   comentario: string
 ) => {
   try {
-    await axiosInstance.post(`auth/prods/primary/${id_usuario}/authorize`, {
+    await axiosInstance.post(`auth/prods/primary/${id_usuario}/reject`, {
       comentario,
     });
   } catch (error: unknown) {
