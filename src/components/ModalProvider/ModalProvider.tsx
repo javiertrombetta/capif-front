@@ -63,7 +63,7 @@ import RejectApplication from "../Modals/RejectApplication/RejectApplication";
 import AcceptApplication from "../Modals/AcceptApplication/AcceptApplication";
 import { selectProductionCompany } from "@/services/auth";
 import { setAuthData } from "@/store/authSlice";
-import { getCompanyById } from "@/services/productionCompanies";
+import { getProducerById } from "@/services/productionCompanies";
 
 interface ModalProvderProps {
   children: ReactNode;
@@ -219,7 +219,7 @@ const ChangeProducerModal: FC<{ onCloseModal: () => void }> = ({
   }) => {
     try {
       await selectProductionCompany(element.id);
-      const company = await getCompanyById(element.id);
+      const company = await getProducerById(element.id);
       const productionCompany = { ...element, cuit_cuil: company.cuit_cuil };
       if (window && window.localStorage) {
         localStorage.setItem("company", JSON.stringify(productionCompany));

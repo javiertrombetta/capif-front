@@ -1,4 +1,5 @@
 import {
+  EstadoProductora,
   GetCompaniesResponse,
   GetDocumentsResponse,
   NominationsResponse,
@@ -8,12 +9,20 @@ import {
 } from "@/types/productionCompany.types";
 import { axiosInstance } from "./axiosInstance";
 
-export const getAllCompanies = async () => {
-  const companies = await axiosInstance.get<GetCompaniesResponse>("producers/");
+interface GetProducersParams {
+  nombre?: string;
+  cuit?: string;
+  estado?: EstadoProductora;
+}
+
+export const getProducers = async (params?: GetProducersParams) => {
+  const companies = await axiosInstance.get<GetCompaniesResponse>("producers", {
+    params,
+  });
   return companies.data.data;
 };
 
-export const getCompanyById = async (id: string) => {
+export const getProducerById = async (id: string) => {
   const companies = await axiosInstance.get<ProductionCompanyByIdResponse>(
     `producers/${id}`
   );
@@ -67,14 +76,14 @@ export const deleteAllNominations = async () => {
   await axiosInstance.delete("producers/postulaciones");
 };
 
-export const getCompanyDocuments = async (companyId: string) => {
+export const getProducerDocuments = async (companyId: string) => {
   const { data } = await axiosInstance.get<GetDocumentsResponse>(
     `producers/${companyId}/docs`
   );
   return data.documentos;
 };
 
-export const uploadCompanyDocument = async (
+export const uploadProducerDocument = async (
   formData: FormData,
   companyId: string
 ) => {
@@ -85,7 +94,7 @@ export const uploadCompanyDocument = async (
   });
 };
 
-export const downloadCompanyDocuments = async (companyId: string) => {
+export const downloadProducerDocuments = async (companyId: string) => {
   const { data } = await axiosInstance.get(`producers/${companyId}/docs/zip`, {
     responseType: "blob",
   });

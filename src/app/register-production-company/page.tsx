@@ -13,7 +13,7 @@ import { ModalNames } from "@/types/modalNames";
 import { sendApplication } from "@/services/auth";
 import CustomFileInput from "@/commons/CustomFileInput/CustomFileInput";
 import { SendApplication } from "@/types/user.types";
-import { uploadCompanyDocument } from "@/services/productionCompanies";
+import { uploadProducerDocument } from "@/services/productionCompanies";
 import useFileHandler from "@/hooks/useFileHandler";
 import { TipoPersona } from "@/types/productionCompany.types";
 
@@ -195,7 +195,7 @@ const page: FC = () => {
     files[key].forEach((file) => {
       formData.append("documentos", file);
     });
-    await uploadCompanyDocument(formData, companyId);
+    await uploadProducerDocument(formData, companyId);
   };
 
   return (
