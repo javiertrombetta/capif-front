@@ -1,28 +1,28 @@
 "use client";
 import React, { FC, useState } from "react";
+import { toast } from "react-toastify";
+import { Field, Form, Formik, FormikErrors } from "formik";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
 import { validationRegisterApplication } from "@/utils/formValidations";
-import { Field, Form, Formik, FormikErrors } from "formik";
 import CustomField from "@/commons/CustomField/CustomField";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { setModal } from "@/store/modalSlice";
 import { ModalNames } from "@/types/modalNames";
-// import { SendApplication } from "@/types/user.types";
 import { sendApplication } from "@/services/auth";
 import CustomFileInput from "@/commons/CustomFileInput/CustomFileInput";
 import { SendApplication } from "@/types/user.types";
 import { uploadCompanyDocument } from "@/services/productionCompanies";
 import useFileHandler from "@/hooks/useFileHandler";
-import { toast } from "react-toastify";
+import { TipoPersona } from "@/types/productionCompany.types";
 
 export interface ApplicationValues {
   nombre_productora: string;
   nombre: string;
   apellido: string;
   telefono_usuario: string;
-  tipo_persona: "FISICA" | "JURIDICA";
+  tipo_persona: TipoPersona;
   cuit_cuil: string;
   email: string;
   calle: string;
