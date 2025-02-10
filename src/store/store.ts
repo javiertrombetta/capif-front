@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import authSlice from "./authSlice";
 import modalSlice from "./modalSlice";
 import signupSlice from "./signupSlice";
+import createPhonogramSlice from "./createPhonogramSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -9,6 +10,7 @@ export const makeStore = () => {
       auth: authSlice,
       modal: modalSlice,
       signup: signupSlice,
+      createPhonogram: createPhonogramSlice,
     },
   });
 };

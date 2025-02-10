@@ -1,10 +1,18 @@
 import React, { FC } from "react";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import { IoCloseSharp } from "react-icons/io5";
+import { useRouter } from "next/navigation";
 
 const SubmitSendApplication: FC<{ onCloseModal: () => void }> = ({
   onCloseModal,
 }) => {
+  const router = useRouter();
+
+  const handleClose = () => {
+    router.push("/users");
+    onCloseModal();
+  };
+
   return (
     <div
       className={
@@ -24,7 +32,7 @@ const SubmitSendApplication: FC<{ onCloseModal: () => void }> = ({
         </p>
 
         <div className="flex gap-[3rem] w-[100%] justify-center">
-          <CustomButton onClick={onCloseModal}>Aceptar</CustomButton>
+          <CustomButton onClick={handleClose}>Aceptar</CustomButton>
         </div>
       </div>
     </div>

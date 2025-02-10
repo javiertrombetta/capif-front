@@ -1,10 +1,14 @@
 import { axiosInstance } from "./axiosInstance";
 import {
+  GetPendingApplicationsResponse,
+  SendApplication,
+} from "@/types/user.types";
+import {
   GetAuthDataResponse,
   AuthProps,
   AuthSecondarySignUpRequest,
-  GetProductorasResponse,
 } from "@/types/auth.types";
+import { authDefaultState } from "@/store/authSlice";
 
 interface AuthSignUpRequest {
   email: string;
@@ -29,7 +33,7 @@ interface AuthLoginRequest {
 export const authSignUp = async (authSignUpData: AuthSignUpRequest) => {
   try {
     const { data } = await axiosInstance.post(
-      "auth/registro/primario",
+      "auth/prods/primary/step-one",
       authSignUpData
     );
     return data;
@@ -39,19 +43,22 @@ export const authSignUp = async (authSignUpData: AuthSignUpRequest) => {
 };
 
 export const authSecondarySignup = async (
+  type: "prods" | "admins",
   formValues: AuthSecondarySignUpRequest
 ) => {
-  await axiosInstance.post("auth/registro/secundario", formValues);
+  await axiosInstance.post(`auth/${type}/secondary`, formValues);
 };
 
 export const authLogin = async (authLoginData: AuthLoginRequest) => {
   try {
     const { data } = await axiosInstance.post("auth/login", authLoginData);
     return data;
-  } catch (error: unknown) {
+  } catch (error) {
+    console.error(error);
     throw new Error(`${error}`);
   }
 };
+
 export const authLogout = async () => {
   try {
     await axiosInstance.post("auth/logout");
@@ -62,29 +69,27 @@ export const authLogout = async () => {
 
 export const getAuthData = async (): Promise<AuthProps> => {
   try {
-    const { data } = await axiosInstance.get<GetAuthDataResponse>("auth/me");
+    const { data } = await axiosInstance.get<GetAuthDataResponse>("users/me");
     return {
-      ...data.user,
-      productoras: data.maestros.map(
-        ({ productora: { nombre_productora: nombre, id_productora: id } }) => ({
-          id,
-          nombre,
-        })
-      ),
+      ...data.usuario,
+      id_usuario: data.usuario.id,
+      productoras: data.productoras,
       vistas: data.vistas.map((vista) => ({
         nombre: vista.nombre_vista,
         nombre_vista_superior: vista.nombre_vista_superior,
       })),
-      productoraActiva: null, //ToDo: traer productora activa eventualmente
+      productoraActiva: data.usuario.productora_activa || data.productoras[0], //ToDo: traer productora activa eventualmente
+      loading: false,
     };
   } catch (error: unknown) {
-    throw new Error(`${error}`);
+    console.error(error);
+    return { ...authDefaultState, loading: false };
   }
 };
 
 export const validateEmail = async (token: string) => {
   try {
-    await axiosInstance.get(`auth/validate-email/${token}`);
+    await axiosInstance.put(`auth/validate/${token}`);
   } catch (error: unknown) {
     throw new Error(`${error}`);
   }
@@ -92,7 +97,7 @@ export const validateEmail = async (token: string) => {
 
 export const resetPasswordRequest = async (email: string) => {
   try {
-    const { data } = await axiosInstance.post("auth/clave/mail/reseteo", {
+    const { data } = await axiosInstance.put("auth/password/request-reset", {
       email,
     });
     return data;
@@ -103,7 +108,7 @@ export const resetPasswordRequest = async (email: string) => {
 
 export const passwordRecovery = async (token: string, newPassword: string) => {
   try {
-    await axiosInstance.post("auth/clave/mail/cambio", {
+    await axiosInstance.put("auth/password/reset", {
       token,
       newPassword,
     });
@@ -114,34 +119,69 @@ export const passwordRecovery = async (token: string, newPassword: string) => {
 
 export const verifyAccount = async (token: string) => {
   try {
-    await axiosInstance.put(`auth/clave/mail/validacion/${token}`);
+    await axiosInstance.put(`auth/validate/${token}`);
   } catch (error: unknown) {
     throw new Error(`${error}`);
   }
 };
 
-export const changePassword = async (data_request: {
-  id_usuario: string;
-  newPassword: string;
-  confirmPassword: string;
-}) => {
+export const selectProductionCompany = async (productoraId: string) => {
+  await axiosInstance.post("auth/me/" + productoraId, {});
+};
+
+export const sendApplication = async (requestData: SendApplication) => {
   try {
-    await axiosInstance.post("auth/clave/cambio", {
-      id_usuario: data_request.id_usuario,
-      newPassword: data_request.newPassword,
-      confirmPassword: data_request.confirmPassword,
-    });
-  } catch (error) {
-    console.log(error);
+    const response = (await axiosInstance.post(
+      "auth/prods/primary/step-two",
+      requestData
+    )) as {
+      data: {
+        productora: string;
+        message: string;
+      };
+    };
+    return response.data;
+  } catch (error: unknown) {
+    throw new Error(`${error}`);
   }
 };
 
-export const getAssociatedProductionCompanies =
-  async (): Promise<GetProductorasResponse> => {
-    const productoras = await axiosInstance.get("auth/productora");
-    return productoras.data;
-  };
+export const rejectApplication = async (
+  id_usuario: string,
+  comentario: string
+) => {
+  try {
+    await axiosInstance.post(`auth/prods/primary/${id_usuario}/reject`, {
+      comentario,
+    });
+  } catch (error: unknown) {
+    throw new Error(`${error}`);
+  }
+};
 
-export const selectProductionCompany = async (productoraId: string) => {
-  await axiosInstance.post("auth/productora/activa", { productoraId });
+export const acceptApplication = async (id_usuario: string) => {
+  try {
+    await axiosInstance.post(`auth/prods/primary/${id_usuario}/authorize`, {
+      usuarioId: id_usuario,
+    });
+  } catch (error: unknown) {
+    throw new Error(`${error}`);
+  }
+};
+
+export const getPendingApplications = async (id_usuario: string) => {
+  try {
+    const { data } = await axiosInstance.get<GetPendingApplicationsResponse>(
+      "auth/pending",
+      {
+        params: {
+          usuarioId: id_usuario,
+        },
+      }
+    );
+
+    return data.data[0];
+  } catch (error: unknown) {
+    throw new Error(`${error}`);
+  }
 };

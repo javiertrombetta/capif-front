@@ -48,18 +48,18 @@ const Sidebar: FC = () => {
         ? [
             {
               name: "Buscar",
-              link: "/records",
+              link: "/users",
             },
           ]
         : [
             {
               name: "Altas",
-              link: "/add-employee",
+              link: "/users/add-user",
             },
 
             {
               name: "Buscar",
-              link: "/records",
+              link: "/users",
             },
           ],
 
@@ -147,7 +147,7 @@ const Sidebar: FC = () => {
     producersOptions: [
       {
         name: "Buscar",
-        link: "/search-production-company",
+        link: "/producers",
       },
       {
         name: "Permios Gardel",
@@ -157,11 +157,11 @@ const Sidebar: FC = () => {
     usersOptions: [
       {
         name: "Buscar",
-        link: "/records",
+        link: "/users",
       },
       {
         name: "Altas",
-        link: "/add-employee",
+        link: "/users/add-user",
       },
     ],
     cashFlowOptions: [

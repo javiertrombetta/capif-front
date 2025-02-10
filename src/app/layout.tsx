@@ -8,8 +8,10 @@ import "../styles/globals.css";
 import { initialStateSignup } from "@/store/signupSlice";
 import { authDefaultState } from "@/store/authSlice";
 import AuthProvider from "@/components/AuthProvider/AuthProvider";
+import { ToastContainer } from "react-toastify";
+import { initialStateCreatePhonogram } from "@/store/createPhonogramSlice";
+const ptSans = PT_Sans({ weight: ["400", "700"], subsets: ["latin"] });
 
-const ptSans = PT_Sans({ weight: "400", subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Capif Git",
   description: "",
@@ -24,6 +26,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={ptSans.className}>
         <StoreProvider
+          initialCreatePhonogram={initialStateCreatePhonogram}
           initialAuth={authDefaultState}
           initialModal={initialStateModal}
           initialSignup={initialStateSignup}
@@ -31,6 +34,7 @@ export default function RootLayout({
           <AuthProvider>
             <Navbar>
               <ModalProvider>{children}</ModalProvider>
+              <ToastContainer position="bottom-right" />
             </Navbar>
           </AuthProvider>
         </StoreProvider>

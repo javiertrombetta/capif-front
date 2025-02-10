@@ -43,24 +43,25 @@ export enum ROLES {
   EMPLOYEE = "productor_secundario",
   // USER = "usuario",
 }
+
 export interface GetAuthDataResponse {
-  user: {
-    id_usuario: string;
+  usuario: {
+    id: string;
     rol: ROLES;
-    tipo_registro: string;
+    estado: string;
     email: string;
     nombre: string;
     apellido: string;
     telefono: string;
+    productora_activa: {
+      id: string;
+      productora: string;
+    };
   };
-  maestros: [
-    {
-      productora: {
-        id_productora: string;
-        nombre_productora: string;
-      };
-    },
-  ];
+  productoras: {
+    id: string;
+    productora: string;
+  }[];
   vistas: [
     {
       nombre_vista: string;
@@ -75,14 +76,19 @@ export interface AuthProps {
   telefono: string | null;
   nombre: string | null;
   apellido: string | null;
-  tipo_registro: string | null;
+  estado: string | null;
   rol: ROLES | null;
   productoras?: {
     id: string;
-    nombre: string;
+    productora: string;
   }[];
   vistas: { nombre: string; nombre_vista_superior: string }[];
-  productoraActiva: { id: string; nombre: string } | null;
+  productoraActiva: {
+    id: string;
+    productora: string;
+    cuit_cuil?: string;
+  } | null;
+  loading: boolean;
 }
 
 export interface GetProductorasResponse {
