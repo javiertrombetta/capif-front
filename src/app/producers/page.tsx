@@ -11,7 +11,7 @@ import Spinner from "@/commons/Spinner/Spinner";
 import { useAppSelector } from "@/hooks/storeHooks";
 import { getAllCompanies } from "@/services/productionCompanies";
 import { ROLES } from "@/types/auth.types";
-import { ProductionCompanyResponse } from "@/types/productionCompany.types";
+import { ProductionCompany } from "@/types/productionCompany.types";
 import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
 import { Form, Formik } from "formik";
 
@@ -19,7 +19,7 @@ export default function page() {
   const authData = useAppSelector((state) => state.auth);
   const [loading, setLoading] = useState(true);
   const [productionCompanies, setProductionCompanies] = useState<
-    ProductionCompanyResponse[] | null
+    ProductionCompany[] | null
   >(null);
   const router = useRouter();
 
@@ -141,8 +141,8 @@ export default function page() {
                 element.cuit_cuil,
                 element.razon_social || "",
                 element.telefono,
-                "",
-                "",
+                element.denominacion_sello || "",
+                element.cantidad_fonogramas,
                 `${element.createdAt}`,
                 `${element.updatedAt}`,
                 ISRCAudio || "",
@@ -153,9 +153,7 @@ export default function page() {
                       label: "Ficha",
                       icon: <FaUserAlt />,
                       onClick: () =>
-                        redirectToOption(
-                          `/producers/${element.id_usuario ? element.id_usuario : element.id_productora}`
-                        ),
+                        redirectToOption(`/producers/${element.id_productora}`),
                     },
                     {
                       label: "Repertorio",

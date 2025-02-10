@@ -1,4 +1,5 @@
 import {
+  GetCompaniesResponse,
   GetDocumentsResponse,
   NominationsResponse,
   ProductionCompanyByIdResponse,
@@ -8,15 +9,15 @@ import {
 import { axiosInstance } from "./axiosInstance";
 
 export const getAllCompanies = async () => {
-  const companies = await axiosInstance.get("producers/");
-  return companies.data.productoras;
+  const companies = await axiosInstance.get<GetCompaniesResponse>("producers/");
+  return companies.data.data;
 };
 
-export const getCompanyById = async (
-  id: string
-): Promise<ProductionCompanyByIdResponse> => {
-  const companies = await axiosInstance.get(`producers/${id}`);
-  return companies.data.productora as ProductionCompanyByIdResponse;
+export const getCompanyById = async (id: string) => {
+  const companies = await axiosInstance.get<ProductionCompanyByIdResponse>(
+    `producers/${id}`
+  );
+  return companies.data.productora;
 };
 
 export const updateProducer = async (
@@ -68,7 +69,7 @@ export const deleteAllNominations = async () => {
 
 export const getCompanyDocuments = async (companyId: string) => {
   const { data } = await axiosInstance.get<GetDocumentsResponse>(
-    `producers/${companyId}/documentos`
+    `producers/${companyId}/docs`
   );
   return data.documentos;
 };
@@ -77,7 +78,7 @@ export const uploadCompanyDocument = async (
   formData: FormData,
   companyId: string
 ) => {
-  await axiosInstance.post(`producers/${companyId}/documentos`, formData, {
+  await axiosInstance.post(`producers/${companyId}/docs`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -85,11 +86,8 @@ export const uploadCompanyDocument = async (
 };
 
 export const downloadCompanyDocuments = async (companyId: string) => {
-  const { data } = await axiosInstance.get(
-    `producers/${companyId}/documentos/zip`,
-    {
-      responseType: "blob",
-    }
-  );
+  const { data } = await axiosInstance.get(`producers/${companyId}/docs/zip`, {
+    responseType: "blob",
+  });
   return data;
 };

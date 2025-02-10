@@ -7,9 +7,11 @@ import CustomField from "@/commons/CustomField/CustomField";
 import { getCompanyById, updateProducer } from "@/services/productionCompanies";
 import {
   ProductionCompanyByIdResponse,
+  TipoPersona,
   UpdateProducerPayload,
 } from "@/types/productionCompany.types";
 import { Documents } from "./DocumentsView";
+import { toast } from "react-toastify";
 
 const ProducerView = ({
   idProducer,
@@ -18,11 +20,10 @@ const ProducerView = ({
   idProducer: string;
   fieldsDisabled: boolean;
 }) => {
-  const [currentEntity, setCurrentEntity] = useState<"FISICA" | "JURIDICA">(
-    "FISICA"
-  );
-  const [companyData, setCompanyData] =
-    useState<ProductionCompanyByIdResponse | null>(null);
+  const [currentEntity, setCurrentEntity] = useState<TipoPersona>("FISICA");
+  const [companyData, setCompanyData] = useState<
+    ProductionCompanyByIdResponse["productora"] | null
+  >(null);
 
   const initialValues: UpdateProducerPayload = {
     nombre_productora: companyData?.nombre_productora || "",
@@ -50,7 +51,7 @@ const ProducerView = ({
   };
 
   const onRadioFieldChange = (
-    entity: "FISICA" | "JURIDICA",
+    entity: TipoPersona,
     values: UpdateProducerPayload,
     setValues: (
       values: React.SetStateAction<UpdateProducerPayload>,
@@ -94,7 +95,13 @@ const ProducerView = ({
             cuit_representante: values.cuit_representante,
           }),
     };
-    await updateProducer(idProducer as string, payload);
+    try {
+      await updateProducer(idProducer as string, payload);
+      toast.success("Productora Actualizada.");
+    } catch (error) {
+      console.error(error);
+      toast.error("Error al actualizar productora.");
+    }
   };
 
   const getCompanyData = async () => {
@@ -108,86 +115,79 @@ const ProducerView = ({
     getCompanyData();
   }, []);
 
-  return (
-    <div className="pr-[2rem] pl-[2rem] w-[100%] mb-[2rem]">
-      {companyData ? (
-        <>
-          <div className="p-[1rem] w-[100%] flex flex-col border-[1px] border-[#c8c8c8]">
-            <h3 className="text-black text-3xl font-black mb-[1rem]">Datos</h3>
-            <Formik
-              initialValues={initialValues}
-              validationSchema={validationEditProducer}
-              onSubmit={(values) => handleEditCompany(values)}
-            >
-              {({ isSubmitting, isValid, dirty, values, setValues }) => (
-                <Form id="form" className="w-[100%]">
-                  <div className="flex gap-[2rem]">
-                    <label className="font-bold text-black">TIPO PERSONA</label>
-                    <div className="flex gap-[0.5rem]">
-                      <Field
-                        onChange={() => {
-                          onRadioFieldChange("FISICA", values, setValues);
-                        }}
-                        name="tipo_persona"
-                        id="tipo_persona"
-                        checked={currentEntity === "FISICA"}
-                        value="FISICA"
-                        type="radio"
-                      />
-                      <h1 className="font-bold text-black">PERSONA FÍSICA</h1>
-                    </div>
-
-                    <div className="flex gap-[0.5rem]">
-                      <Field
-                        onChange={() => {
-                          onRadioFieldChange("JURIDICA", values, setValues);
-                        }}
-                        name="tipo_persona"
-                        id="tipo_persona"
-                        checked={currentEntity === "JURIDICA"}
-                        value="JURIDICA"
-                        type="radio"
-                      />
-                      <h1 className="font-bold text-black">PERSONA JURÍDICA</h1>
-                    </div>
-                  </div>
-
-                  <EntityForm
-                    disabled={fieldsDisabled}
-                    entity={currentEntity}
+  return companyData ? (
+    <>
+      <div className="p-[1rem] w-[100%] flex flex-col border-[1px] border-[#c8c8c8]">
+        <h3 className="text-black text-3xl font-black mb-[1rem]">
+          Datos Productora
+        </h3>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationEditProducer}
+          onSubmit={(values) => handleEditCompany(values)}
+        >
+          {({ isSubmitting, isValid, dirty, values, setValues }) => (
+            <Form id="form" className="w-[100%]">
+              <div className="flex gap-[2rem]">
+                <label className="font-bold text-black">TIPO PERSONA</label>
+                <div className="flex gap-[0.5rem]">
+                  <Field
+                    onChange={() => {
+                      onRadioFieldChange("FISICA", values, setValues);
+                    }}
+                    name="tipo_persona"
+                    id="tipo_persona"
+                    checked={currentEntity === "FISICA"}
+                    value="FISICA"
+                    type="radio"
                   />
-                  {!fieldsDisabled && (
-                    <CustomButton
-                      {...(isSubmitting || !isValid || !dirty
-                        ? { disabled: true, background: "disabled" }
-                        : {})}
-                      type="submit"
-                      className="mt-[1rem]"
-                    >
-                      Guardar
-                    </CustomButton>
-                  )}
-                </Form>
+                  <h1 className="font-bold text-black">PERSONA FÍSICA</h1>
+                </div>
+
+                <div className="flex gap-[0.5rem]">
+                  <Field
+                    onChange={() => {
+                      onRadioFieldChange("JURIDICA", values, setValues);
+                    }}
+                    name="tipo_persona"
+                    id="tipo_persona"
+                    checked={currentEntity === "JURIDICA"}
+                    value="JURIDICA"
+                    type="radio"
+                  />
+                  <h1 className="font-bold text-black">PERSONA JURÍDICA</h1>
+                </div>
+              </div>
+
+              <EntityForm disabled={fieldsDisabled} entity={currentEntity} />
+              {!fieldsDisabled && (
+                <CustomButton
+                  {...(isSubmitting || !isValid || !dirty
+                    ? { disabled: true, background: "disabled" }
+                    : {})}
+                  type="submit"
+                  className="mt-[1rem]"
+                >
+                  Guardar
+                </CustomButton>
               )}
-            </Formik>
-          </div>
-          <div className="p-[1rem] mt-[1rem] w-[100%] flex flex-col border-[1px] border-[#c8c8c8]">
-            <h3 className="text-black text-3xl font-black mb-[1rem]">
-              Documentos
-            </h3>
-            <Documents entity={currentEntity} idProductora={idProducer} />
-          </div>
-        </>
-      ) : null}
-    </div>
-  );
+            </Form>
+          )}
+        </Formik>
+      </div>
+      <div className="p-[1rem] mt-[1rem] w-[100%] flex flex-col border-[1px] border-[#c8c8c8]">
+        <h3 className="text-black text-3xl font-black mb-[1rem]">Documentos</h3>
+        <Documents entity={currentEntity} idProductora={idProducer} />
+      </div>
+    </>
+  ) : null;
 };
 
 export default ProducerView;
 
 const EntityForm: FC<{
   disabled: boolean;
-  entity: ProductionCompanyByIdResponse["tipo_persona"];
+  entity: TipoPersona;
 }> = ({ entity, disabled }) => {
   return (
     <div className="w-[100%]">

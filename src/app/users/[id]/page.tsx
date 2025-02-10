@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
 
-import { Form, Formik } from "formik";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
@@ -13,16 +12,14 @@ import { useAppSelector } from "@/hooks/storeHooks";
 import {
   blockOrUnlockUser,
   getUserById,
-  updateUserById,
   updateUserViews,
 } from "@/services/users";
 import { ESTADOS, User } from "@/types/user.types";
 import CustomButton from "@/commons/CustomButton/CustomButton";
-import CustomField from "@/commons/CustomField/CustomField";
 import Spinner from "@/commons/Spinner/Spinner";
-import { validationEditUser } from "@/utils/formValidations";
 import CustomSwitch from "@/commons/CustomSwitch/CustomSwitch";
 import { ChangePasswordView } from "@/components/ChangePasswordView/ChangePasswordView";
+import UserFieldsView from "@/components/UserFieldsView/UserFieldsView";
 
 export default function page() {
   const router = useRouter();
@@ -82,7 +79,7 @@ export default function page() {
               <h3 className="text-black text-3xl font-black mb-[1rem]">
                 Datos
               </h3>
-              <UserFields userData={userData} />
+              <UserFieldsView userData={userData} />
             </div>
             <div className="w-[100%] gap-[0.5rem] flex flex-col text-black">
               <p className="font-bold ">ESTADO</p>
@@ -122,87 +119,6 @@ export default function page() {
   );
 }
 
-const UserFields = ({ userData }: { userData: User }) => {
-  const initialValues = {
-    nombre: userData?.nombre || "",
-    apellido: userData?.apellido || "",
-    email: userData?.email || "",
-    telefono: userData?.telefono || "",
-  };
-
-  const onSubmit = async (values: typeof initialValues) => {
-    try {
-      const { nombre, apellido, email, telefono } = values;
-      if (userData?.id) {
-        await updateUserById(userData?.id, {
-          nombre,
-          apellido,
-          email,
-          telefono,
-        });
-      }
-      toast.success("Usuario actualizado correctamente");
-    } catch (error) {
-      toast.error("Error al actualizar el usuario");
-      console.error(error);
-    }
-  };
-
-  return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationEditUser}
-      onSubmit={(values) => onSubmit(values)}
-    >
-      {({ isSubmitting, isValid, dirty }) => (
-        <Form className="w-[100%] flex flex-col space-y-[1rem] items-end">
-          <div className="w-[100%] flex flex-row space-x-3">
-            <CustomField
-              id="nombre"
-              name="nombre"
-              labelText="NOMBRES"
-              type="text"
-              width="w-[100%]"
-            />
-            <CustomField
-              id="apellido"
-              name="apellido"
-              labelText="APELLIDOS"
-              type="text"
-              width="w-[100%]"
-            />
-          </div>
-
-          <div className="w-[100%] flex flex-row space-x-3">
-            <CustomField
-              id="email"
-              name="email"
-              labelText="EMAIL"
-              type="email"
-              width="w-[100%]"
-            />
-            <CustomField
-              id="telefono"
-              name="telefono"
-              labelText="TELÉFONO"
-              type="text"
-              width="w-[100%]"
-            />
-          </div>
-          <CustomButton
-            {...(isSubmitting || !isValid || !dirty
-              ? { disabled: true, background: "disabled" }
-              : {})}
-            type="submit"
-          >
-            Guardar
-          </CustomButton>
-        </Form>
-      )}
-    </Formik>
-  );
-};
-
 const ViewsFields = ({ userData }: { userData: User }) => {
   const formatVistas = (views: typeof userData.vistas) =>
     views.reduce(
@@ -212,12 +128,12 @@ const ViewsFields = ({ userData }: { userData: User }) => {
       ) => {
         return {
           ...acc,
-          [vista.nombre_vista_superior]: [
-            ...(acc[vista.nombre_vista_superior] || []),
+          [vista.superior]: [
+            ...(acc[vista.superior] || []),
             {
-              id: vista.id_vista_maestro,
-              name: vista.nombre_vista,
-              isChecked: vista.is_habilitado,
+              id: vista.id_vista,
+              name: vista.nombre,
+              isChecked: vista.habilitado,
             },
           ],
         };
@@ -231,9 +147,7 @@ const ViewsFields = ({ userData }: { userData: User }) => {
   const handleViewCheck = (key: string, isChecked: boolean) => {
     setViews((prev) =>
       prev.map((vista) =>
-        vista.id_vista_maestro === key
-          ? { ...vista, is_habilitado: isChecked }
-          : vista
+        vista.id_vista === key ? { ...vista, habilitado: isChecked } : vista
       )
     );
   };
@@ -242,9 +156,9 @@ const ViewsFields = ({ userData }: { userData: User }) => {
     e.preventDefault();
     try {
       await updateUserViews(userData.id, {
-        vistas: views.map(({ nombre_vista, is_habilitado }) => ({
-          nombre_vista,
-          is_habilitado,
+        vistas: views.map(({ nombre, habilitado }) => ({
+          nombre_vista: nombre,
+          is_habilitado: habilitado,
         })),
       });
 
