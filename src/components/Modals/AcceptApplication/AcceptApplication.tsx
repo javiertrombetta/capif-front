@@ -2,14 +2,18 @@
 import React, { FC } from "react";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import { IoClose } from "react-icons/io5";
+import { useAppSelector } from "@/hooks/storeHooks";
 
 const AcceptApplication: FC<{
   onCloseModal: () => void;
-  onAcceptModal: () => void;
-}> = ({ onCloseModal, onAcceptModal }) => {
+}> = ({ onCloseModal }) => {
+  const modalData = useAppSelector((state) => state.modal);
+
   const handleAccept = () => {
-    onAcceptModal();
-    onCloseModal();
+    if (modalData.handleAccept) {
+      modalData.handleAccept();
+      onCloseModal();
+    }
   };
 
   return (

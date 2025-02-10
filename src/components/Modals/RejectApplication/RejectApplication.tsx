@@ -1,16 +1,22 @@
 "use client";
 import React, { FC } from "react";
+import { IoClose } from "react-icons/io5";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import CustomButton from "@/commons/CustomButton/CustomButton";
-import { IoClose } from "react-icons/io5";
-import { useParams } from "next/navigation";
-import { rejectApplication } from "@/services/auth";
+import { useAppSelector } from "@/hooks/storeHooks";
 
 const RejectApplication: FC<{ onCloseModal: () => void }> = ({
   onCloseModal,
 }) => {
-  const id_usuario = useParams().id;
+  const modalData = useAppSelector((state) => state.modal);
+
+  const handleSubmit = async (values: { comentario: string }) => {
+    if (modalData.handleAccept) {
+      modalData.handleAccept(values.comentario);
+      onCloseModal();
+    }
+  };
 
   const initialValues = {
     comentario: "",
@@ -21,18 +27,6 @@ const RejectApplication: FC<{ onCloseModal: () => void }> = ({
       .min(5, "El comentario debe tener al menos 5 caracteres")
       .required("El comentario es obligatorio"),
   });
-
-  const handleSubmit = async (values: { comentario: string }) => {
-    if (!Array.isArray(id_usuario)) {
-      try {
-        await rejectApplication(id_usuario, values.comentario);
-        alert("La solicitud fue rechazada correctamente");
-        onCloseModal();
-      } catch (error) {
-        console.error("Error al rechazar la solicitud:", error);
-      }
-    }
-  };
 
   return (
     <div className="relative bg-white h-[13rem] w-[30rem] mb-[6rem] rounded-[2rem] flex flex-col gap-[1rem] justify-center items-center">
