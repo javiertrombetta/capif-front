@@ -4,13 +4,13 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { Form, Formik } from "formik";
 import CustomButton from "@/commons/CustomButton/CustomButton";
+import CustomField from "@/commons/CustomField/CustomField";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
 import { useAppSelector } from "@/hooks/storeHooks";
 import { ROLES } from "@/types/auth.types";
-import CustomField from "@/commons/CustomField/CustomField";
-import { validationSecondaryRegister } from "@/utils/formValidations";
 import { authSecondarySignup } from "@/services/auth";
+import { validationSecondaryRegister } from "@/utils/formValidations";
 
 interface secondaryRegisterValues {
   nombre: string;
@@ -66,14 +66,14 @@ function page() {
   return (
     <CustomLayout>
       <Header title={headerTitle} />
-      <div className="flex-1 flex flex-col overflow-auto">
+      <div className="flex-1 flex flex-col items-center overflow-auto">
         <Formik
           validationSchema={validationSecondaryRegister}
           onSubmit={(values) => onSubmit(values)}
           initialValues={initialValues}
         >
           {({ isSubmitting, isValid }) => (
-            <Form className="w-[100%] pr-[2rem] pl-[2rem] mt-[2rem] pb-[2rem] flex flex-col gap-[1rem]">
+            <Form className="p-[2rem] mt-[2rem] flex flex-col items-center gap-[1rem] border-[1px] border-[#c8c8c8]">
               <p className="text-black">
                 Escriba el correo electrónico del usuario al cual desea dar de
                 alta.
