@@ -50,7 +50,7 @@ const LoginForm: FC = () => {
     if (data.estado === "HABILITADO") {
       router.push("/users");
     } else {
-      router.push("/register-production-company");
+      router.push("/producers/register");
     }
     if (
       data.estado === "HABILITADO" &&
