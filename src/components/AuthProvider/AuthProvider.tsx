@@ -37,7 +37,7 @@ const AuthProvider: FC<AuthProvider> = ({ children }) => {
         return;
       }
       if (data.estado !== "HABILITADO") {
-        router.push("/register-production-company");
+        router.push("/producers/register");
       }
     }
     return;
