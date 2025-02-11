@@ -164,6 +164,7 @@ const NavbarMenu: FC<{ closeMenu: () => void; isEnabledUser: boolean }> = ({
   closeMenu,
   isEnabledUser,
 }) => {
+  const { rol } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -200,13 +201,15 @@ const NavbarMenu: FC<{ closeMenu: () => void; isEnabledUser: boolean }> = ({
             <FaUser size={13} />
             <p>Mi Perfil</p>
           </div>
-          <div
-            onClick={handleChangeProducer}
-            className="w-[100%] hover:bg-[#29395e] pl-[0.4rem] cursor-pointer flex items-center gap-[0.4rem]"
-          >
-            <FaBuilding size={13} />
-            <p>Cambiar de Productora </p>
-          </div>
+          {rol === ROLES.EMPLOYEE && (
+            <div
+              onClick={handleChangeProducer}
+              className="w-[100%] hover:bg-[#29395e] pl-[0.4rem] cursor-pointer flex items-center gap-[0.4rem]"
+            >
+              <FaBuilding size={13} />
+              <p>Cambiar de Productora </p>
+            </div>
+          )}
         </>
       )}
       <div
