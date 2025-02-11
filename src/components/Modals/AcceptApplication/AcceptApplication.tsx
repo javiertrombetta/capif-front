@@ -2,30 +2,39 @@
 import React, { FC } from "react";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import { IoClose } from "react-icons/io5";
-import { useAppSelector } from "@/hooks/storeHooks";
+import { acceptApplication } from "@/services/auth";
+import { toast } from "react-toastify";
+import useModal from "@/hooks/useModal";
+import { useRouter } from "next/navigation";
 
 const AcceptApplication: FC<{
-  onCloseModal: () => void;
-}> = ({ onCloseModal }) => {
-  const modalData = useAppSelector((state) => state.modal);
+  idUsuario: string;
+}> = ({ idUsuario }) => {
+  const { closeModal } = useModal();
+  const router = useRouter();
 
-  const handleAccept = () => {
-    if (modalData.handleAccept) {
-      modalData.handleAccept();
-      onCloseModal();
+  const handleAccept = async () => {
+    try {
+      await acceptApplication(idUsuario);
+      toast.success("La solicitud fue aceptada correctamente");
+      closeModal();
+      router.push("/users");
+    } catch (error) {
+      toast.error("Error al aceptar la solicitud");
+      console.error("Error al aceptar la solicitud:", error);
     }
   };
 
   return (
     <div className="relative bg-white h-[13rem] w-[30rem] mb-[6rem] rounded-[2rem] flex flex-col gap-[1rem] justify-center items-center">
-      <button onClick={onCloseModal} className="absolute top-[5%] right-[5%]">
+      <button onClick={closeModal} className="absolute top-[5%] right-[5%]">
         <IoClose size={25} color="black" />
       </button>
       <p className="text-black font-bold text-[1.2rem] text-center w-[95%]">
         ¿Estás seguro que quieres aceptar esta solicitud?
       </p>
       <CustomButton onClick={handleAccept}>Aceptar</CustomButton>
-      <CustomButton onClick={onCloseModal}>Cancelar</CustomButton>
+      <CustomButton onClick={closeModal}>Cancelar</CustomButton>
     </div>
   );
 };
