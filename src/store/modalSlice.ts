@@ -4,7 +4,6 @@ import { ModalNames } from "@/types/modalNames";
 export interface ModalSliceProps {
   type: ModalNames | null;
   isActive: boolean;
-  handleAccept?: (...args: string[]) => void;
 }
 
 export const initialStateModal: ModalSliceProps = {
