@@ -243,11 +243,11 @@ const Sidebar: FC = () => {
   return (
     <div className="w-[100%]">
       <div className="w-[100%] h-[3rem] bg-[#1a2226] flex items-center pl-[1rem]">
-        {pathname === "/register-production-company" ? null : (
+        {pathname === "/producers/register" ? null : (
           <p className="text-[#4b646f] text-[0.8rem]">MENU</p>
         )}
       </div>
-      {pathname === "/register-production-company" ? null : (
+      {pathname === "/producers/register" ? null : (
         <>
           {authData.rol === ROLES.USER_PRODUCER ||
           authData.rol === ROLES.EMPLOYEE

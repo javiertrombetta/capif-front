@@ -142,7 +142,7 @@ export default function page() {
                       element.apellido,
                       element.telefono,
                       element.rol,
-                      element.productoras[0]?.productora || "",
+                      element.productoras[0]?.nombre || "",
                       <ActionDropdownButton
                         menuOptions={[
                           {
@@ -173,7 +173,7 @@ export default function page() {
                       element.nombre,
                       element.apellido,
                       element.telefono,
-                      element.productoras[0]?.productora || "",
+                      element.productoras[0]?.nombre || "",
                     ];
               })}
             />
