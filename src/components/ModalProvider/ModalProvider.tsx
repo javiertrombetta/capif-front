@@ -1,5 +1,11 @@
 "use client";
-import React, { FC, ReactNode, useEffect } from "react";
+import React, {
+  createContext,
+  FC,
+  ReactNode,
+  useEffect,
+  useState,
+} from "react";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { ModalNames } from "@/types/modalNames";
@@ -59,11 +65,19 @@ import {
 } from "../Modals/Conflicts/ConflictsActions";
 import AuditSessionsPurgeModal from "../Modals/AuditSessionsPurgeModal/AuditSessionsPurgeModal";
 import SubmitSendApplication from "../Modals/SubmitSendApplication/SubmitSendApplication";
-import RejectApplication from "../Modals/RejectApplication/RejectApplication";
-import AcceptApplication from "../Modals/AcceptApplication/AcceptApplication";
 import { selectProductionCompany } from "@/services/auth";
 import { setAuthData } from "@/store/authSlice";
 import { getProducerById } from "@/services/productionCompanies";
+
+interface ModalContextType {
+  modal: ReactNode | null;
+  openModal: (name: ReactNode) => void;
+  closeModal: () => void;
+}
+
+export const ModalContext = createContext<ModalContextType | undefined>(
+  undefined
+);
 
 interface ModalProvderProps {
   children: ReactNode;
@@ -71,19 +85,26 @@ interface ModalProvderProps {
 
 const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
   const modalData = useAppSelector((state) => state.modal);
+  const [selectedModal, setSelectedModal] = useState<ReactNode | null>(null);
 
   const dispatch = useAppDispatch();
+
   const onCloseModal = () => {
     dispatch(setModal({ isActive: false, type: null }));
   };
+
+  const openModal = (modal: ReactNode) => {
+    setSelectedModal(modal);
+  };
+
+  const closeModal = () => {
+    setSelectedModal(null);
+  };
+
   const renderModal = (): ReactNode => {
     switch (modalData.type) {
       case ModalNames.COMPLETE_REGISTRATION:
         return <EndRegisterUserModal />;
-      case ModalNames.REJECT_REGISTRATION:
-        return <RejectApplication onCloseModal={onCloseModal} />;
-      case ModalNames.ACCEPT_APPLICATION:
-        return <AcceptApplication onCloseModal={onCloseModal} />;
       case ModalNames.CHANGE_PRODUCER:
         return <ChangeProducerModal onCloseModal={onCloseModal} />;
       case ModalNames.ADD_TERRITORIALITY:
@@ -171,11 +192,12 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
       case ModalNames.SUBMIT_SEND_APPILICATION:
         return <SubmitSendApplication onCloseModal={onCloseModal} />;
     }
-    <></>;
   };
 
   return (
-    <>
+    <ModalContext.Provider
+      value={{ modal: selectedModal, openModal, closeModal }}
+    >
       {modalData.isActive && (
         <>
           <div className="absolute top-0 left-0 w-[100vw] h-[100vh] z-40 flex justify-center items-center">
@@ -184,9 +206,17 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
           <div className="absolute top-0 left-0 w-[100vw] h-[100vh] z-30 bg-[black] opacity-[0.4]" />
         </>
       )}
+      {selectedModal && (
+        <>
+          <div className="absolute top-0 left-0 w-[100vw] h-[100vh] z-40 flex justify-center items-center">
+            {selectedModal}
+          </div>
+          <div className="absolute top-0 left-0 w-[100vw] h-[100vh] z-30 bg-[black] opacity-[0.4]" />
+        </>
+      )}
 
       {children}
-    </>
+    </ModalContext.Provider>
   );
 };
 

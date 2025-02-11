@@ -1,27 +1,22 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import ProducerView from "@/components/ProducerView/ProducerView";
 import { useParams } from "next/navigation";
 import CustomButton from "@/commons/CustomButton/CustomButton";
-import {
-  acceptApplication,
-  getPendingApplications,
-  rejectApplication,
-} from "@/services/auth";
-import { ModalNames } from "@/types/modalNames";
-import { useAppDispatch } from "@/hooks/storeHooks";
-import { setModal } from "@/store/modalSlice";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
+import AcceptApplication from "@/components/Modals/AcceptApplication/AcceptApplication";
+import RejectApplication from "@/components/Modals/RejectApplication/RejectApplication";
+import ProducerView from "@/components/ProducerView/ProducerView";
 import UserFieldsView from "@/components/UserFieldsView/UserFieldsView";
+import useModal from "@/hooks/useModal";
+import { getPendingApplications } from "@/services/auth";
 import { User } from "@/types/user.types";
 
 export default function page() {
   const { id } = useParams();
-  const dispatch = useAppDispatch();
   const [user, setUser] = useState<User>();
+  const { openModal } = useModal();
 
   const getProductoraPendiente = async () => {
     const user = await getPendingApplications(id as string);
@@ -32,48 +27,12 @@ export default function page() {
     getProductoraPendiente();
   }, []);
 
-  const handleAccept = async () => {
-    if (!id) return;
-
-    try {
-      await acceptApplication(id as string);
-      toast.success("La solicitud fue aceptada correctamente");
-    } catch (error) {
-      toast.error("Error al aceptar la solicitud");
-      console.error("Error al aceptar la solicitud:", error);
-    }
-  };
-
-  const handleReject = async (comentario: string) => {
-    if (!id) return;
-
-    try {
-      await rejectApplication(id as string, comentario);
-      toast.success("La solicitud fue aceptada correctamente");
-    } catch (error) {
-      toast.error("Error al aceptar la solicitud");
-      console.error("Error al aceptar la solicitud:", error);
-    }
-  };
-
   const onRejectApplication = () => {
-    dispatch(
-      setModal({
-        type: ModalNames.REJECT_REGISTRATION,
-        isActive: true,
-        handleAccept: handleReject,
-      })
-    );
+    openModal(<RejectApplication idUsuario={id as string} />);
   };
 
   const onAcceptApplication = () => {
-    dispatch(
-      setModal({
-        type: ModalNames.ACCEPT_APPLICATION,
-        isActive: true,
-        handleAccept,
-      })
-    );
+    openModal(<AcceptApplication idUsuario={id as string} />);
   };
 
   if (!user) return;
