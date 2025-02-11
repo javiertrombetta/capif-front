@@ -61,7 +61,7 @@ export interface User {
   }[];
   productoras: {
     id: string;
-    productora: string;
+    nombre: string;
   }[];
 }
 

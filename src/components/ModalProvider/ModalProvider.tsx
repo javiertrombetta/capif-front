@@ -64,7 +64,6 @@ import {
   Accept,
 } from "../Modals/Conflicts/ConflictsActions";
 import AuditSessionsPurgeModal from "../Modals/AuditSessionsPurgeModal/AuditSessionsPurgeModal";
-import SubmitSendApplication from "../Modals/SubmitSendApplication/SubmitSendApplication";
 import { selectProductionCompany } from "@/services/auth";
 import { setAuthData } from "@/store/authSlice";
 import { getProducerById } from "@/services/productionCompanies";
@@ -189,8 +188,6 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
         return <Desist onCloseModal={onCloseModal} />;
       case ModalNames.AUDIT_SESSIONS_PURGE:
         return <AuditSessionsPurgeModal onCloseModal={onCloseModal} />;
-      case ModalNames.SUBMIT_SEND_APPILICATION:
-        return <SubmitSendApplication onCloseModal={onCloseModal} />;
     }
   };
 

@@ -1,16 +1,15 @@
-import React, { FC } from "react";
-import CustomButton from "@/commons/CustomButton/CustomButton";
 import { IoCloseSharp } from "react-icons/io5";
 import { useRouter } from "next/navigation";
+import CustomButton from "@/commons/CustomButton/CustomButton";
+import useModal from "@/hooks/useModal";
 
-const SubmitSendApplication: FC<{ onCloseModal: () => void }> = ({
-  onCloseModal,
-}) => {
+const SubmitSendApplication = () => {
+  const { closeModal } = useModal();
   const router = useRouter();
 
   const handleClose = () => {
+    closeModal();
     router.push("/users");
-    onCloseModal();
   };
 
   return (
@@ -19,7 +18,7 @@ const SubmitSendApplication: FC<{ onCloseModal: () => void }> = ({
         "relative bg-white h-[16rem] w-[30rem] mb-[6rem] rounded-[2rem] gap-[0.5rem] flex flex-col justify-center items-center"
       }
     >
-      <button onClick={onCloseModal} className="absolute top-[5%] right-[5%]">
+      <button onClick={handleClose} className="absolute top-[5%] right-[5%]">
         <IoCloseSharp size={25} color="black" />
       </button>
 

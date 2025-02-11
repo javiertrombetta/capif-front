@@ -88,7 +88,7 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
                 src={gitLogo}
               />
             </a>
-            {pathname === "/register-production-company" ? (
+            {pathname === "/producers/register" ? (
               <div className="h-[100%] flex-grow flex justify-end items-center pr-[2rem]">
                 <button
                   onClick={handleMenuOpen}
