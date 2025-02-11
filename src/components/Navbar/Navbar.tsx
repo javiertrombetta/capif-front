@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, ReactNode, useEffect, useState } from "react";
+import React, { FC, ReactNode, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import gitLogo from "../../assets/GIT LOGO.png";
@@ -166,6 +166,7 @@ const NavbarMenu: FC<{ closeMenu: () => void; isEnabledUser: boolean }> = ({
 }) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const ref = useRef<HTMLDivElement>(null);
 
   const handleChangeProducer = () => {
     dispatch(setModal({ type: ModalNames.CHANGE_PRODUCER, isActive: true }));
@@ -173,6 +174,7 @@ const NavbarMenu: FC<{ closeMenu: () => void; isEnabledUser: boolean }> = ({
   };
 
   const handleGoToProfile = () => {
+    closeMenu();
     router.push("/my-profile");
   };
 
@@ -189,8 +191,25 @@ const NavbarMenu: FC<{ closeMenu: () => void; isEnabledUser: boolean }> = ({
     }
   };
 
+  const handleClick = (event: MouseEvent) => {
+    if (ref.current && !ref.current.contains(event.target as HTMLElement)) {
+      closeMenu();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleClick);
+
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  });
+
   return (
-    <div className="pt-[0.6rem] pb-[0.6rem] absolute w-[15rem] h-[auto] bg-[#0F172A] right-[1%] top-[100%] rounded-b-[0.5rem] flex flex-col gap-[0.2rem] overflow-hidden">
+    <div
+      ref={ref}
+      className="pt-[0.6rem] pb-[0.6rem] absolute w-[15rem] h-[auto] bg-[#0F172A] right-[1%] top-[100%] rounded-b-[0.5rem] flex flex-col gap-[0.2rem] overflow-hidden"
+    >
       {isEnabledUser && (
         <>
           <div
