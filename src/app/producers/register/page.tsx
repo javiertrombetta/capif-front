@@ -7,16 +7,14 @@ import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
 import { validationRegisterApplication } from "@/utils/formValidations";
 import CustomField from "@/commons/CustomField/CustomField";
-import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
-import { setModal } from "@/store/modalSlice";
-import { ModalNames } from "@/types/modalNames";
+import { useAppSelector } from "@/hooks/storeHooks";
 import { sendApplication } from "@/services/auth";
 import CustomFileInput from "@/commons/CustomFileInput/CustomFileInput";
 import { SendApplication } from "@/types/user.types";
 import { uploadProducerDocument } from "@/services/productionCompanies";
-import useFileHandler from "@/hooks/useFileHandler";
 import { TipoDocumento, TipoPersona } from "@/types/productionCompany.types";
-import CustomInput from "@/commons/CustomInput/CustomInput";
+import useModal from "@/hooks/useModal";
+import SubmitSendApplication from "@/components/Modals/SubmitSendApplication/SubmitSendApplication";
 
 export interface ApplicationValues {
   nombre_productora: string;
@@ -47,13 +45,8 @@ export interface ApplicationValues {
 const page: FC = () => {
   const [currentEntity, setCurrentEntity] = useState<TipoPersona>("FISICA");
   const [files, setFiles] = useState<Partial<Record<TipoDocumento, File>>>({});
-  // const { files, handleFileChange, handleRemoveFile } = useFileHandler({
-  //   isrcTicketsFile: [],
-  //   nationalIdCardFiles: [],
-  //   bylawsOrSocialContractFiles: [],
-  // });
-  const dispatch = useAppDispatch();
   const authUser = useAppSelector((state) => state.auth);
+  const { openModal } = useModal();
 
   const initialValues: ApplicationValues = {
     nombre_productora: "",
@@ -115,9 +108,7 @@ const page: FC = () => {
   };
 
   const onOpenModal = () => {
-    dispatch(
-      setModal({ isActive: true, type: ModalNames.SUBMIT_SEND_APPILICATION })
-    );
+    openModal(<SubmitSendApplication />);
   };
 
   const onSubmit = async (
@@ -343,9 +334,6 @@ const page: FC = () => {
                   </p>
                 </DocumentInput>
               </div>
-              <button type="button" onClick={() => uploadFiles("212")}>
-                Test
-              </button>
               <div className="mt-[5rem] flex gap-[1rem] ">
                 {isSubmitting || !isValid || !dirty ? (
                   <CustomButton
