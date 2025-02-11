@@ -38,6 +38,7 @@ export const ESTADOS = [
   "PENDIENTE",
   "ENVIADO",
   "HABILITADO",
+  "RECHAZADO",
   "DESHABILITADO",
 ] as const;
 
