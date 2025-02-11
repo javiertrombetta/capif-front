@@ -64,7 +64,6 @@ import {
   Accept,
 } from "../Modals/Conflicts/ConflictsActions";
 import AuditSessionsPurgeModal from "../Modals/AuditSessionsPurgeModal/AuditSessionsPurgeModal";
-import SubmitSendApplication from "../Modals/SubmitSendApplication/SubmitSendApplication";
 import { selectProductionCompany } from "@/services/auth";
 import { setAuthData } from "@/store/authSlice";
 import { getProducerById } from "@/services/productionCompanies";
