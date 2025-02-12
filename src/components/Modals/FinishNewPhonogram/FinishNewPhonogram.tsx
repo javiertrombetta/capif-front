@@ -9,7 +9,7 @@ const FinishNewPhonogram: FC<{ onCloseModal: () => void }> = ({
   const router = useRouter();
 
   const handleSubmit = () => {
-    router.push("/search-phonogram");
+    router.push("/repertoires");
     onCloseModal();
   };
   return (

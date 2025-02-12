@@ -4,7 +4,7 @@ import {
   uploadProducerDocument,
   getProducerDocuments,
   downloadProducerDocuments,
-} from "@/services/productionCompanies";
+} from "@/services/producers";
 import {
   TipoDocumento,
   GetDocumentsResponse,

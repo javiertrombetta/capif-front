@@ -106,7 +106,7 @@ function page() {
       const phonogram = await sendPhonogram();
       await sendPhonogramFile(phonogram.id_fonograma as string);
       toast.success("¡Fonograma creado correctamente!");
-      router.push("/search-phonogram");
+      router.push("/repertoires");
     } catch (error: unknown) {
       console.log(error);
       toast.error(`${error}`);

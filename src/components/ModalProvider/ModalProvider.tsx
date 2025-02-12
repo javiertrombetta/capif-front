@@ -66,7 +66,7 @@ import {
 import AuditSessionsPurgeModal from "../Modals/AuditSessionsPurgeModal/AuditSessionsPurgeModal";
 import { selectProductionCompany } from "@/services/auth";
 import { setAuthData } from "@/store/authSlice";
-import { getProducerById } from "@/services/productionCompanies";
+import { getProducerById } from "@/services/producers";
 
 interface ModalContextType {
   modal: ReactNode | null;
