@@ -4,10 +4,7 @@ import { Field, Form, Formik, FormikErrors } from "formik";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import { validationEditProducer } from "@/utils/formValidations";
 import CustomField from "@/commons/CustomField/CustomField";
-import {
-  getProducerById,
-  updateProducer,
-} from "@/services/productionCompanies";
+import { getProducerById, updateProducer } from "@/services/producers";
 import {
   ProductionCompanyByIdResponse,
   TipoPersona,
