@@ -9,14 +9,14 @@ import TimerInput from "@/components/TimerInput/TimerInput";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import { setModal } from "@/store/modalSlice";
 import { ModalNames } from "@/types/modalNames";
-import { editPhonogram, getPhonogramById } from "@/services/repertoire";
+import { editRepertoire, getPhonogramById } from "@/services/repertoire";
 import { useParams } from "next/navigation";
-import { GetPhonogramByIdResponse } from "@/types/repertoire.types";
+import { GetRepertoireByIdResponse } from "@/types/repertoire.types";
 import { toast } from "react-toastify";
 function page() {
   const params = useParams();
   // const authData = useAppSelector((state) => state.auth);
-  const [phonogram, setPhonogram] = useState<GetPhonogramByIdResponse | null>(
+  const [phonogram, setPhonogram] = useState<GetRepertoireByIdResponse | null>(
     null
   );
 
@@ -65,14 +65,14 @@ function page() {
     try {
       e.preventDefault();
       if (params.id && !Array.isArray(params.id)) {
-        const { data, message } = await editPhonogram(params.id, {
+        const { data, message } = await editRepertoire(params.id, {
           titulo: values.titulo,
           artista: values.artista,
           album: values.album,
           duracion: time,
           anio_lanzamiento: Number(year),
         });
-        setPhonogram((prevState: GetPhonogramByIdResponse | null) => {
+        setPhonogram((prevState: GetRepertoireByIdResponse | null) => {
           if (prevState) {
             return {
               ...prevState,

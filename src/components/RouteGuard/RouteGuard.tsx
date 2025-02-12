@@ -16,7 +16,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
   const allowedRoutes = {
     [ROLES.SUPER_ADMIN]: [
       "/",
-      "/search-phonogram",
+      "/repertoires",
       "/new-phonogram",
       "/edit-phonogram/:id",
       "/titularity-phonogram/:id",
@@ -59,7 +59,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
     ],
     [ROLES.CAPIF_ADMIN]: [
       "/",
-      "/search-phonogram",
+      "/repertoires",
       "/new-phonogram",
       "/edit-phonogram/:id",
       "/send-audio-file",
@@ -99,7 +99,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
     [ROLES.USER_PRODUCER]: [
       "/",
       "/new-phonogram",
-      "/search-phonogram",
+      "/repertoires",
       "/edit-phonogram/:id",
       "/territoriality-phonogram/:id",
       "/conflicts",
@@ -113,7 +113,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
     [ROLES.EMPLOYEE]: [
       "/",
       "/new-phonogram",
-      "/search-phonogram",
+      "/repertoires",
       "/edit-phonogram/:id",
       "/territoriality-phonogram/:id",
       "/conflicts",

@@ -18,20 +18,25 @@ export interface CreatePhonogramRequest {
   territorios: string[] | [];
 }
 
+export type ESTADO_FONOGRAMA = "ACTIVO" | "BAJA";
+
+export interface Repertoire {
+  id_fonograma: string;
+  titulo: string;
+  isrc: string;
+  artista: string;
+  album: string;
+  anio_lanzamiento: number;
+  sello_discografico: string;
+  nombre_productora: string;
+  estado_fonograma: ESTADO_FONOGRAMA;
+}
 export interface GetRepertoiresResponse {
-  data: {
-    id_fonograma: string;
-    titulo: string;
-    isrc: string;
-    artista: string;
-    album: string;
-    anio_lanzamiento: number;
-    estado_fonograma: "ACTIVO" | "BAJA";
-  }[];
+  data: Repertoire[];
   total: number;
 }
 
-export interface GetPhonogramByIdResponse {
+export interface GetRepertoireByIdResponse {
   id_fonograma: string;
   titulo: string;
   isrc: string;
@@ -41,7 +46,7 @@ export interface GetPhonogramByIdResponse {
   anio_lanzamiento: number;
   sello_discografico: string;
   is_dominio_publico: boolean;
-  estado_fonograma: "ACTIVO" | "BAJA";
+  estado_fonograma: ESTADO_FONOGRAMA;
   archivos: {
     id_fonograma_archivo: string;
     ruta_archivo_audio: string;
@@ -60,7 +65,7 @@ export interface GetPhonogramByIdResponse {
   }[];
 }
 
-export interface EditPhonogramRequest {
+export interface EditRepertoireRequest {
   titulo?: string;
   artista?: string;
   album?: string;
@@ -70,13 +75,16 @@ export interface EditPhonogramRequest {
   estado_fonograma?: string;
 }
 
-export interface EditPhonogramResponse {
-  id_fonograma: string;
-  titulo: string;
-  artista: string;
-  album: string;
-  duracion: string;
-  anio_lanzamiento: number;
-  sello_discografico: string;
-  estado_fonograma: string;
+export interface EditRepertoireResponse {
+  message: string;
+  data: {
+    id_fonograma: string;
+    titulo: string;
+    artista: string;
+    album: string;
+    duracion: string;
+    anio_lanzamiento: number;
+    sello_discografico: string;
+    estado_fonograma: ESTADO_FONOGRAMA;
+  };
 }
