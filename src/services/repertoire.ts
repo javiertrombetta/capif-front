@@ -2,10 +2,32 @@ import {
   CreatePhonogramRequest,
   EditPhonogramRequest,
   EditPhonogramResponse,
-  GetPhonogramByIdResponse,
+  GetRepertoireByIdResponse,
   GetRepertoiresResponse,
 } from "@/types/repertoire.types";
 import { axiosInstance } from "./axiosInstance";
+
+interface GetRepertoiresParams {
+  titulo: string;
+  artista: string;
+  album: string;
+  nombre_productora: string;
+  sello_discografico: string;
+  isrc: string;
+  anio_lanzamiento: string;
+}
+
+export const getRepertoires = async (
+  params?: Partial<GetRepertoiresParams>
+) => {
+  const response = await axiosInstance.get<GetRepertoiresResponse>(
+    "/repertoires",
+    {
+      params,
+    }
+  );
+  return response.data.data;
+};
 
 export const createPhonogram = async (
   repertoireData: CreatePhonogramRequest
@@ -36,16 +58,9 @@ export const validateISRC = async (isrc: string) => {
   return response.data.available;
 };
 
-export const getRepertoires = async () => {
-  const response = (await axiosInstance.get("/repertoires/")) as {
-    data: GetRepertoiresResponse;
-  };
-  return response.data;
-};
-
 export const getPhonogramById = async (id: string) => {
   const response = (await axiosInstance.get(`/repertoires/${id}`)) as {
-    data: { data: GetPhonogramByIdResponse; message: string };
+    data: { data: GetRepertoireByIdResponse; message: string };
   };
   return response.data.data;
 };
