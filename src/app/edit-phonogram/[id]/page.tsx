@@ -9,7 +9,7 @@ import TimerInput from "@/components/TimerInput/TimerInput";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import { setModal } from "@/store/modalSlice";
 import { ModalNames } from "@/types/modalNames";
-import { editPhonogram, getPhonogramById } from "@/services/repertoire";
+import { editRepertoire, getPhonogramById } from "@/services/repertoire";
 import { useParams } from "next/navigation";
 import { GetRepertoireByIdResponse } from "@/types/repertoire.types";
 import { toast } from "react-toastify";
@@ -65,7 +65,7 @@ function page() {
     try {
       e.preventDefault();
       if (params.id && !Array.isArray(params.id)) {
-        const { data, message } = await editPhonogram(params.id, {
+        const { data, message } = await editRepertoire(params.id, {
           titulo: values.titulo,
           artista: values.artista,
           album: values.album,

@@ -1,7 +1,7 @@
 import {
   CreatePhonogramRequest,
-  EditPhonogramRequest,
-  EditPhonogramResponse,
+  EditRepertoireRequest,
+  EditRepertoireResponse,
   GetRepertoireByIdResponse,
   GetRepertoiresResponse,
 } from "@/types/repertoire.types";
@@ -75,18 +75,13 @@ export const getPrefixIsrc = async () => {
   return response.data;
 };
 
-export const editPhonogram = async (
+export const editRepertoire = async (
   id: string,
-  phonogramFields: EditPhonogramRequest
+  phonogramFields: EditRepertoireRequest
 ) => {
-  const response = (await axiosInstance.put(
+  const response = await axiosInstance.put<EditRepertoireResponse>(
     `/repertoires/${id}`,
     phonogramFields
-  )) as {
-    data: {
-      message: string;
-      data: EditPhonogramResponse;
-    };
-  };
-  return response.data;
+  );
+  return response.data.data;
 };

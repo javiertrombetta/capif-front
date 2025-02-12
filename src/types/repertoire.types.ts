@@ -65,7 +65,7 @@ export interface GetRepertoireByIdResponse {
   }[];
 }
 
-export interface EditPhonogramRequest {
+export interface EditRepertoireRequest {
   titulo?: string;
   artista?: string;
   album?: string;
@@ -75,14 +75,16 @@ export interface EditPhonogramRequest {
   estado_fonograma?: string;
 }
 
-export interface EditPhonogramResponse {
-  id_fonograma: string;
-  titulo: string;
-  artista: string;
-  album: string;
-  duracion: string;
-  anio_lanzamiento: number;
-  sello_discografico: string;
-  estado_fonograma: string;
-  nombre_productora: string;
+export interface EditRepertoireResponse {
+  message: string;
+  data: {
+    id_fonograma: string;
+    titulo: string;
+    artista: string;
+    album: string;
+    duracion: string;
+    anio_lanzamiento: number;
+    sello_discografico: string;
+    estado_fonograma: string;
+  };
 }
