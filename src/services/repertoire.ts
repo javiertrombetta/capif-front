@@ -83,5 +83,5 @@ export const editRepertoire = async (
     `/repertoires/${id}`,
     phonogramFields
   );
-  return response.data.data;
+  return response.data;
 };
