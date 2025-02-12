@@ -11,7 +11,7 @@ import { NominationsResponse } from "@/types/productionCompany.types";
 import {
   getAllNominations,
   getFilteredNominations,
-} from "@/services/productionCompanies";
+} from "@/services/producers";
 import CustomField from "@/commons/CustomField/CustomField";
 import { Form, Formik } from "formik";
 

@@ -10,13 +10,13 @@ import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import CustomTable from "@/commons/CustomTable/CustomTable";
 import Header from "@/commons/Header/Header";
 import Spinner from "@/commons/Spinner/Spinner";
-import { getProducers } from "@/services/productionCompanies";
+import { getProducers } from "@/services/producers";
 import { ProductionCompany } from "@/types/productionCompany.types";
 import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
 
 export default function page() {
   const [loading, setLoading] = useState(true);
-  const [producers, setProducers] = useState<ProductionCompany[] | null>(null);
+  const [producers, setProducers] = useState<ProductionCompany[]>([]);
   const router = useRouter();
 
   const initialValues = {

@@ -17,3 +17,20 @@ export interface CreatePhonogramRequest {
     | null;
   territorios: string[] | [];
 }
+
+export interface Repertoire {
+  id_fonograma: string;
+  titulo: string;
+  isrc: string;
+  artista: string;
+  album: string;
+  anio_lanzamiento: number;
+  estado_fonograma: string;
+  sello_discografico: string;
+  nombre_productora: string;
+}
+
+export interface GetRepertoriesResponse {
+  data: Repertoire[];
+  total: number;
+}

@@ -1,5 +1,30 @@
-import { CreatePhonogramRequest } from "@/types/repertoire.types";
+import {
+  CreatePhonogramRequest,
+  GetRepertoriesResponse,
+} from "@/types/repertoire.types";
 import { axiosInstance } from "./axiosInstance";
+
+interface GetRepertoriesParams {
+  titulo: string;
+  artista: string;
+  album: string;
+  nombre_productora: string;
+  sello_discografico: string;
+  isrc: string;
+  anio_lanzamiento: string;
+}
+
+export const getRepertoires = async (
+  params?: Partial<GetRepertoriesParams>
+) => {
+  const response = await axiosInstance.get<GetRepertoriesResponse>(
+    "/repertoires",
+    {
+      params,
+    }
+  );
+  return response.data.data;
+};
 
 export const createPhonogram = async (
   repertoireData: CreatePhonogramRequest

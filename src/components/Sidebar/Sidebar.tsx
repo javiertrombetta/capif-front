@@ -35,7 +35,7 @@ const Sidebar: FC = () => {
       },
       {
         name: "Buscar",
-        link: "/search-phonogram",
+        link: "/repertoires",
       },
       {
         name: "Conflictos",
@@ -101,7 +101,7 @@ const Sidebar: FC = () => {
         ? [
             {
               name: "Buscar",
-              link: "/search-phonogram",
+              link: "/repertoires",
             },
             {
               name: "Declaración Repertorio",
@@ -124,7 +124,7 @@ const Sidebar: FC = () => {
         : [
             {
               name: "Buscar",
-              link: "/search-phonogram",
+              link: "/repertoires",
             },
             {
               name: "Declaración Repertorio",
