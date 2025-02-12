@@ -85,6 +85,6 @@ export interface EditRepertoireResponse {
     duracion: string;
     anio_lanzamiento: number;
     sello_discografico: string;
-    estado_fonograma: string;
+    estado_fonograma: ESTADO_FONOGRAMA;
   };
 }
