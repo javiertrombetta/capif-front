@@ -6,18 +6,21 @@ import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import CustomTable from "@/commons/CustomTable/CustomTable";
 import Header from "@/commons/Header/Header";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
+import { getRepertoires } from "@/services/repertoire";
 import { setModal } from "@/store/modalSlice";
 import { ROLES } from "@/types/auth.types";
 import { ModalNames } from "@/types/modalNames";
+import { GetRepertoiresResponse } from "@/types/repertoire.types";
 import { useRouter } from "next/navigation";
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 
 function page() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { rol } = useAppSelector((state) => state.auth);
-
+  const [repertoireList, setRepertoireList] =
+    useState<GetRepertoiresResponse | null>(null);
   const openModal = () => {
     dispatch(
       setModal({ isActive: true, type: ModalNames.EXPORT_CHANGES_LIST })
@@ -53,6 +56,14 @@ function page() {
     ];
   };
 
+  const handleListPhonogram = async () =>
+    // e:React.FormEvent<HTMLFormElement>
+    {
+      // e.preventDefault()
+      const response = await getRepertoires();
+      setRepertoireList(response);
+    };
+
   return (
     <CustomLayout>
       <Header title="Buscar Repertorio" />
@@ -65,7 +76,7 @@ function page() {
         <CustomInput type="text" label="Buscar" />
       </div> */}
 
-      <SearchPhonogramForm />
+      <SearchPhonogramForm onSearch={handleListPhonogram} />
 
       <div className="w-[100%] mt-[2rem] pr-[2rem] pl-[2rem]">
         <CustomTable
@@ -79,38 +90,22 @@ function page() {
             { name: "ESTADO", isSortable: true },
             { name: "Acción", isSortable: true },
           ]}
-          columnValues={[
-            [
-              "Himno Nacional Argentino",
-              "Charly Garcia",
-              "ARF100300069",
-              "SONY MUSIC ENTERTAINMENT ARGENTINA S.A.",
-              "2003",
-              "Argentina",
-              "Enviado",
-              <ActionDropdownButton menuOptions={menuOptions("1")} />,
-            ],
-            [
-              "Himno Nacional Argentino",
-              "Charly Garcia",
-              "ARF100300069",
-              "SONY MUSIC ENTERTAINMENT ARGENTINA S.A.",
-              "2003",
-              "Argentina",
-              "Enviado",
-              <ActionDropdownButton menuOptions={menuOptions("2")} />,
-            ],
-            [
-              "Himno Nacional Argentino",
-              "Charly Garcia",
-              "ARF100300069",
-              "SONY MUSIC ENTERTAINMENT ARGENTINA S.A.",
-              "2003",
-              "Argentina",
-              "Enviado",
-              <ActionDropdownButton menuOptions={menuOptions("3")} />,
-            ],
-          ]}
+          columnValues={
+            repertoireList && repertoireList.data.length > 0
+              ? repertoireList.data.map((element) => [
+                  element.titulo,
+                  element.artista,
+                  element.isrc,
+                  "Sony",
+                  element.anio_lanzamiento,
+                  element.album,
+                  element.estado_fonograma,
+                  <ActionDropdownButton
+                    menuOptions={menuOptions(element.id_fonograma)}
+                  />,
+                ])
+              : []
+          }
         />
       </div>
     </CustomLayout>
@@ -119,7 +114,7 @@ function page() {
 
 export default page;
 
-const SearchPhonogramForm: FC = () => {
+const SearchPhonogramForm: FC<{ onSearch: () => void }> = ({ onSearch }) => {
   return (
     <div className="w-[100%]  mt-[2rem] flex flex-col gap-[1rem]">
       <div className="w-[100%] flex justify-center items-center pl-[2rem] pr-[2rem] gap-[2rem]">
@@ -191,7 +186,10 @@ const SearchPhonogramForm: FC = () => {
       </div>
 
       <div className="w-[100%] flex justify-center items-center pl-[2rem] pr-[2rem] gap-[2rem]">
-        <button className="text-white w-[100%] h-[2.5rem] bg-mainblue text-[1rem] font-bold flex justify-center items-center gap-[0.3rem]">
+        <button
+          onClick={onSearch}
+          className="text-white w-[100%] h-[2.5rem] bg-mainblue text-[1rem] font-bold flex justify-center items-center gap-[0.3rem]"
+        >
           <FaSearch />
           Buscar
         </button>
