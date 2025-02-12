@@ -1,6 +1,12 @@
 "use client";
 import { Form, Formik } from "formik";
-import React, { Dispatch, FC, SetStateAction, useState } from "react";
+import React, {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { IoIosArrowForward } from "react-icons/io";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
@@ -14,6 +20,7 @@ import { setCreatePhonogram } from "@/store/createPhonogramSlice";
 import { RxCross2 } from "react-icons/rx";
 import {
   createPhonogram,
+  getPrefixIsrc,
   uploadPhonogramFile,
   validateISRC,
 } from "@/services/repertoire";
@@ -219,10 +226,16 @@ const SearchForISRC: FC<{ setExisting: () => void; setNew: () => void }> = ({
   setExisting,
   setNew,
 }) => {
+  const [prefixIsrc, setPrefixIsrc] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   const createPhogramCurrentData = useAppSelector(
     (state) => state.createPhonogram
   );
+
+  const handleGetPrefixIsrc = async () => {
+    const prefix = await getPrefixIsrc();
+    setPrefixIsrc(prefix.data);
+  };
   const initialValues = {
     ISRC: "",
   };
@@ -233,7 +246,7 @@ const SearchForISRC: FC<{ setExisting: () => void; setNew: () => void }> = ({
   ) => {
     e.preventDefault();
 
-    const available = await validateISRC(`ARAAA25${values.ISRC}`);
+    const available = await validateISRC(`${prefixIsrc}${values.ISRC}`);
     if (available) {
       setNew();
     } else {
@@ -246,46 +259,53 @@ const SearchForISRC: FC<{ setExisting: () => void; setNew: () => void }> = ({
       })
     );
   };
-  //AR1234567890
+
+  useEffect(() => {
+    handleGetPrefixIsrc();
+  }, []);
 
   return (
     <div className="w-[100%] h-[20%] flex flex-col justify-center items-center mt-[3rem] pl-[3rem] pr-[3rem]">
       <p className="text-black font-bold">Ingresa el ISRC del fonograma.</p>
-      <Formik
-        onSubmit={() => {}}
-        validationSchema={isrcValidation}
-        initialValues={initialValues}
-      >
-        {({ isSubmitting, isValid, dirty, values }) => (
-          <Form
-            onSubmit={(e: React.FormEvent<HTMLFormElement>) =>
-              onSubmit(e, values)
-            }
-            className="w-[60%] flex flex-col justify-center items-center"
-          >
-            <div className="mt-[2rem] flex items-start gap-[0.5rem]">
-              <p className="text-black text-[1.3rem] font-bold">ARAAA25</p>
-              <CustomField
-                width="w-[10rem]"
-                type="text"
-                id="ISRC"
-                name="ISRC"
-              />
-            </div>
-            {isSubmitting || !isValid || !dirty ? (
-              <CustomButton
-                type="submit"
-                background="disabled"
-                disabled={isSubmitting || !isValid || !dirty}
-              >
-                Buscar ISRC
-              </CustomButton>
-            ) : (
-              <CustomButton type="submit">Buscar ISRC</CustomButton>
-            )}
-          </Form>
-        )}
-      </Formik>
+      {prefixIsrc ? (
+        <Formik
+          onSubmit={() => {}}
+          validationSchema={isrcValidation}
+          initialValues={initialValues}
+        >
+          {({ isSubmitting, isValid, dirty, values }) => (
+            <Form
+              onSubmit={(e: React.FormEvent<HTMLFormElement>) =>
+                onSubmit(e, values)
+              }
+              className="w-[60%] flex flex-col justify-center items-center"
+            >
+              <div className="mt-[2rem] flex items-start gap-[0.5rem]">
+                <p className="text-black text-[1.3rem] font-bold">
+                  {prefixIsrc}
+                </p>
+                <CustomField
+                  width="w-[10rem]"
+                  type="text"
+                  id="ISRC"
+                  name="ISRC"
+                />
+              </div>
+              {isSubmitting || !isValid || !dirty ? (
+                <CustomButton
+                  type="submit"
+                  background="disabled"
+                  disabled={isSubmitting || !isValid || !dirty}
+                >
+                  Buscar ISRC
+                </CustomButton>
+              ) : (
+                <CustomButton type="submit">Buscar ISRC</CustomButton>
+              )}
+            </Form>
+          )}
+        </Formik>
+      ) : null}
     </div>
   );
 };
