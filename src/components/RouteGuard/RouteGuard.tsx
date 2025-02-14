@@ -117,7 +117,6 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/edit-phonogram/:id",
       "/territoriality-phonogram/:id",
       "/conflicts",
-      "/users",
       "/cashflow-account-statement",
       "/producers/register",
       "/my-profile",
@@ -131,7 +130,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
 
   useEffect(() => {
     if (auth.rol && !isRouteAllowed(pathname, allowedRoutes[auth.rol] || [])) {
-      router.push("/users");
+      router.push("/repertoires");
     }
   }, [auth.rol, pathname, router, auth]);
 

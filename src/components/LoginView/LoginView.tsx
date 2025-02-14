@@ -17,6 +17,8 @@ import { setModal } from "@/store/modalSlice";
 import { ModalNames } from "@/types/modalNames";
 import { ROLES } from "@/types/auth.types";
 import { toast } from "react-toastify";
+import useModal from "@/hooks/useModal";
+import { ChangeProducerModal } from "../Modals/ChangeProducerModal/ChangeProducerModal";
 
 interface LoginFormValues {
   email: string;
@@ -31,6 +33,7 @@ const initialValues: LoginFormValues = {
 const LoginForm: FC = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const { openModal } = useModal();
 
   const handleSubmit = async (values: { email: string; password: string }) => {
     if (window && window.localStorage) {
@@ -48,15 +51,16 @@ const LoginForm: FC = () => {
     const data = await getAuthData();
     dispatch(setAuthData(data));
     if (data.estado === "HABILITADO") {
-      router.push("/users");
+      router.push("/repertoires");
     } else {
       router.push("/producers/register");
     }
     if (
       data.estado === "HABILITADO" &&
-      (data.rol === ROLES.USER_PRODUCER || data.rol === ROLES.EMPLOYEE)
+      data.rol === ROLES.EMPLOYEE &&
+      (data.productoras?.length ?? 0) > 1
     ) {
-      dispatch(setModal({ type: ModalNames.CHANGE_PRODUCER, isActive: true }));
+      openModal(<ChangeProducerModal />);
     }
   };
 
