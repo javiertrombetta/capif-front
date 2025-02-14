@@ -1,11 +1,5 @@
 "use client";
-import React, {
-  createContext,
-  FC,
-  ReactNode,
-  useEffect,
-  useState,
-} from "react";
+import React, { createContext, FC, ReactNode, useState } from "react";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { ModalNames } from "@/types/modalNames";
@@ -64,9 +58,6 @@ import {
   Accept,
 } from "../Modals/Conflicts/ConflictsActions";
 import AuditSessionsPurgeModal from "../Modals/AuditSessionsPurgeModal/AuditSessionsPurgeModal";
-import { selectProductionCompany } from "@/services/auth";
-import { setAuthData } from "@/store/authSlice";
-import { getProducerById } from "@/services/producers";
 
 interface ModalContextType {
   modal: ReactNode | null;

@@ -13,8 +13,6 @@ import { validationLoginForm } from "@/utils/formValidations";
 import { authLogin, getAuthData } from "@/services/auth";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { setAuthData } from "@/store/authSlice";
-import { setModal } from "@/store/modalSlice";
-import { ModalNames } from "@/types/modalNames";
 import { ROLES } from "@/types/auth.types";
 import { toast } from "react-toastify";
 import useModal from "@/hooks/useModal";
