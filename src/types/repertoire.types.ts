@@ -88,3 +88,35 @@ export interface EditRepertoireResponse {
     estado_fonograma: ESTADO_FONOGRAMA;
   };
 }
+
+export interface GetRepertoireTerritorialityResponse {
+  fonograma_id: string;
+  territorios: {
+    id_territorio_maestro: string;
+    id_territorio: string;
+    nombre_pais: string;
+    codigo_iso: string;
+    is_habilitado: boolean;
+    is_activo: boolean;
+  }[];
+}
+
+export interface GetRepertoireTitularityResponse {
+  fonograma_id: string;
+  participaciones: {
+    porcentaje_participacion: number;
+    fecha_participacion_inicio: Date;
+    fecha_participacion_hasta: Date;
+    id_participacion: string;
+    fonograma_id: string;
+    productora_id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    productoraDeParticipante: {
+      id_productora: string;
+      nombre_productora: string;
+      cuit_cuil: string;
+    };
+  }[];
+  momentosClave: Record<string, number>;
+}
