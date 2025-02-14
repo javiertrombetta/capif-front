@@ -9,8 +9,6 @@ import { match } from "path-to-regexp";
 import { FaUser, FaBuilding } from "react-icons/fa";
 import { CiLogout } from "react-icons/ci";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
-import { setModal } from "@/store/modalSlice";
-import { ModalNames } from "@/types/modalNames";
 import { ROLES } from "@/types/auth.types";
 import "../../styles/globals.css";
 import "./Navbar.css";
@@ -18,12 +16,13 @@ import RouteGuard from "../RouteGuard/RouteGuard";
 import { authLogout } from "@/services/auth";
 import { authDefaultState, setAuthData } from "@/store/authSlice";
 import Spinner from "@/commons/Spinner/Spinner";
+import useModal from "@/hooks/useModal";
+import { ChangeProducerModal } from "../Modals/ChangeProducerModal/ChangeProducerModal";
 
 interface NavbarProps {
   children: ReactNode;
 }
 const Navbar: FC<NavbarProps> = ({ children }) => {
-  const dispatch = useAppDispatch();
   const pathname = usePathname();
   const authData = useAppSelector((state) => state.auth);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
@@ -52,22 +51,6 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
   const handleMenuOpen = () => {
     setIsMenuOpen((prevState: boolean) => !prevState);
   };
-
-  const openProductionCompanySelection = () => {
-    if (window && window.localStorage) {
-      const company = localStorage.getItem("company");
-
-      if (!company && authData.id_usuario) {
-        dispatch(
-          setModal({ type: ModalNames.CHANGE_PRODUCER, isActive: true })
-        );
-      }
-    }
-  };
-
-  useEffect(() => {
-    openProductionCompanySelection();
-  }, []);
 
   return (
     <>
@@ -168,9 +151,10 @@ const NavbarMenu: FC<{ closeMenu: () => void; isEnabledUser: boolean }> = ({
   const dispatch = useAppDispatch();
   const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
+  const { openModal } = useModal();
 
   const handleChangeProducer = () => {
-    dispatch(setModal({ type: ModalNames.CHANGE_PRODUCER, isActive: true }));
+    openModal(<ChangeProducerModal />);
     closeMenu();
   };
 

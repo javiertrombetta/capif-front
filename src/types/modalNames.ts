@@ -1,12 +1,8 @@
 export enum ModalNames {
   COMPLETE_REGISTRATION = "CompleteRegistration",
-  REJECT_REGISTRATION = "RejectRegistration",
-  ACCEPT_APPLICATION = "AcceptApplication",
-  CHANGE_PRODUCER = "ChangeProducer",
   ACCEPT_REGISTRATION = "AcceptRegistration",
   ADD_TERRITORIALITY = "AddTerritoriality",
   SEARCH_CONFLICTS_FILTERS = "SearchConflictsFilters",
-
   FIRST_INSTANCE = "FirstInstance",
   SECOND_INSTANCE = "SecondInstance",
   REVISION = "Revision",

@@ -45,12 +45,7 @@ const Sidebar: FC = () => {
 
     usersOptions:
       authData.rol === ROLES.EMPLOYEE
-        ? [
-            {
-              name: "Buscar",
-              link: "/users",
-            },
-          ]
+        ? []
         : [
             {
               name: "Altas",
@@ -79,13 +74,17 @@ const Sidebar: FC = () => {
       icon: FaMusic,
       height: "6",
     },
-    {
-      id: 3,
-      title: "USUARIOS",
-      items: userProducerMenuOptions.usersOptions,
-      icon: FaUsers,
-      height: authData.rol === ROLES.USER_PRODUCER ? "4" : "2",
-    },
+    ...(authData.rol === ROLES.USER_PRODUCER
+      ? [
+          {
+            id: 3,
+            title: "USUARIOS",
+            items: userProducerMenuOptions.usersOptions,
+            icon: FaUsers,
+            height: "4",
+          },
+        ]
+      : []),
     {
       id: 4,
       title: "CUENTAS CORRIENTES",
