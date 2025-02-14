@@ -1,25 +1,23 @@
 "use client";
 import React, { FC, useState } from "react";
+import { toast } from "react-toastify";
+import { AxiosError } from "axios";
+import { Formik, Form, Field } from "formik";
 import Image from "next/image";
 import Link from "next/link";
-import gitLogo from "../../assets/GIT LOGO.png";
-import { Formik, Form, Field } from "formik";
-import CustomField from "@/commons/CustomField/CustomField";
-import CustomButton from "@/commons/CustomButton/CustomButton";
-import { validationSignUpForm } from "@/utils/formValidations";
 import { useRouter } from "next/navigation";
+import CustomButton from "@/commons/CustomButton/CustomButton";
+import CustomField from "@/commons/CustomField/CustomField";
+import Spinner from "@/commons/Spinner/Spinner";
 import { useAppDispatch } from "@/hooks/storeHooks";
+import { authSignUp, validateCuit } from "@/services/auth";
+import { setSignupData } from "@/store/signupSlice";
+import { validationSignUpForm } from "@/utils/formValidations";
+import gitLogo from "../../assets/GIT LOGO.png";
 import "./SignUpView.css";
 import "../../styles/globals.css";
-import { setSignupData } from "@/store/signupSlice";
-import Spinner from "@/commons/Spinner/Spinner";
-import { FaCheckCircle } from "react-icons/fa";
-import { authSignUp } from "@/services/auth";
 
 interface RegisterFormValues {
-  // name: string;
-  // lastname: string;
-  // phone: string;
   email: string;
   password: string;
   repeat_password: string;
@@ -72,101 +70,75 @@ const VerifyCuit: FC<VerifyCuitProps> = ({ onSubmit }) => {
   };
 
   const [verificationCuitState, setVerificationCuitState] = useState<
-    "request" | "verify" | "response"
+    "request" | "verify"
   >("request");
 
-  const verifiyCuitMock = () => {
+  const onSubmitVerifyCuit = async (values: typeof initialValues) => {
     setVerificationCuitState("verify");
 
-    setTimeout(() => {
-      setVerificationCuitState("response");
-
-      setTimeout(() => {
-        onSubmit();
-      }, 3000);
-    }, 3000);
-  };
-
-  const submitForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    verifiyCuitMock();
-  };
-
-  const renderCuitInstance = () => {
-    switch (verificationCuitState) {
-      case "request":
-        return (
-          <Formik initialValues={initialValues} onSubmit={verifiyCuitMock}>
-            {({ isSubmitting, isValid, dirty }) => (
-              <Form
-                onSubmit={submitForm}
-                id="cuit_request"
-                className="bg-white w-[25rem] h-[100%] pt-[1rem] flex flex-col items-center overflow-y-scroll pr-[2rem] pl-[2rem] pt-[1rem] pb-[2rem]"
-              >
-                <div className="w-[100%] flex flex-col justify-center mt-[1rem] mb-[1rem]">
-                  <p className="text-black font-bold text-[1.1rem] text-center">
-                    Ingrese el CUIT/CUIL del productor fonográfico
-                  </p>
-
-                  <p className="text-[#7b7d7d] font-bold text-[0.9rem] text-center mt-[1rem]">
-                    Si Ud. Es una persona física consigne su CUIT, si se ha
-                    registrado en representación de una persona jurídica
-                    (sociedad anónima, fundación, etc.) consigne el CUIT de la
-                    persona jurídica.
-                  </p>
-                </div>
-
-                <CustomField
-                  type="text"
-                  id="cuit"
-                  name="cuit"
-                  labelText="Cuit"
-                />
-
-                <div className="w-[100%] flex justify-center ">
-                  <CustomButton
-                    type="submit"
-                    disabled={isSubmitting || !isValid || !dirty}
-                    width="w-[100%]"
-                    className="h-[2.5rem]"
-                  >
-                    Verificar
-                  </CustomButton>
-                </div>
-              </Form>
-            )}
-          </Formik>
-        );
-      case "verify":
-        return (
-          <div className="bg-white w-[25rem] h-[100%] pt-[1rem] flex flex-col items-center gap-[0.5rem] overflow-y-scroll pr-[2rem] pl-[2rem] pt-[1rem] pb-[1rem]">
-            <div className="w-[100%] flex justify-center mt-[1rem] mb-[1rem]">
-              <p className="text-black font-bold text-[1.5rem] text-center">
-                Verificando CUIT
-              </p>
-            </div>
-            <Spinner color="#1280e1" />
-            <div className="h-[2rem]"></div>
-          </div>
-        );
-
-      case "response":
-        return (
-          <div className="bg-white w-[25rem] h-[100%] pt-[1rem] flex flex-col items-center gap-[0.5rem] overflow-y-scroll pr-[2rem] pl-[2rem] pt-[1rem] pb-[1rem]">
-            <FaCheckCircle color="#1280e1" size={40} />
-            <div className="w-[100%] flex justify-center mt-[0.5  rem] mb-[1rem]">
-              <p className="text-black font-bold text-[1.5rem] text-center">
-                ¡CUIT Verificado con exito!
-              </p>
-            </div>
-          </div>
-        );
+    try {
+      await validateCuit(values.cuit);
+      toast.success("El CUIT está disponible para registro.");
+      onSubmit();
+    } catch (error) {
+      console.error(error);
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.error || error.response?.data.message);
+      } else {
+        toast.error("Error al validar CUIT");
+      }
+      setVerificationCuitState("request");
     }
   };
 
   return (
     <div className="w-[25rem] h-full overflow-hidden ">
-      {renderCuitInstance()}
+      {verificationCuitState === "request" ? (
+        <Formik initialValues={initialValues} onSubmit={onSubmitVerifyCuit}>
+          {({ isSubmitting, isValid, dirty }) => (
+            <Form
+              id="cuit_request"
+              className="bg-white w-[25rem] h-[100%] px-[2rem] pb-[2rem] pt-[1rem] flex flex-col items-center overflow-y-scroll"
+            >
+              <div className="w-[100%] flex flex-col justify-center mt-[1rem] mb-[1rem]">
+                <p className="text-black font-bold text-[1.1rem] text-center">
+                  Ingrese el CUIT/CUIL del productor fonográfico
+                </p>
+
+                <p className="text-[#7b7d7d] font-bold text-[0.9rem] text-center mt-[1rem]">
+                  Si Ud. Es una persona física consigne su CUIT, si se ha
+                  registrado en representación de una persona jurídica (sociedad
+                  anónima, fundación, etc.) consigne el CUIT de la persona
+                  jurídica.
+                </p>
+              </div>
+
+              <CustomField type="text" id="cuit" name="cuit" labelText="Cuit" />
+
+              <div className="w-[100%] flex justify-center ">
+                <CustomButton
+                  type="submit"
+                  disabled={isSubmitting || !isValid || !dirty}
+                  width="w-[100%]"
+                  className="h-[2.5rem]"
+                >
+                  Verificar
+                </CustomButton>
+              </div>
+            </Form>
+          )}
+        </Formik>
+      ) : (
+        <div className="bg-white w-[25rem] h-[100%] pt-[1rem] flex flex-col items-center gap-[0.5rem] overflow-y-scroll">
+          <div className="w-[100%] flex justify-center px-[2rem] pb-[1rem] mt-[1rem] mb-[1rem]">
+            <p className="text-black font-bold text-[1.5rem] text-center">
+              Verificando CUIT
+            </p>
+          </div>
+          <Spinner color="#1280e1" />
+          <div className="h-[2rem]"></div>
+        </div>
+      )}
     </div>
   );
 };
@@ -174,22 +146,19 @@ const VerifyCuit: FC<VerifyCuitProps> = ({ onSubmit }) => {
 const SignUpForm: FC = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+
   const initialValues: RegisterFormValues = {
-    // name: "",
-    // lastname: "",
-    // phone: "",
     email: "",
     password: "",
     repeat_password: "",
     accept_terms: false,
   };
+
   const goToVerifyEmail = async (values: RegisterFormValues): Promise<void> => {
     const response = await authSignUp({
       email: values.email,
       password: values.password,
     });
-
-    console.log(response);
 
     dispatch(
       setSignupData({
@@ -212,7 +181,7 @@ const SignUpForm: FC = () => {
         {({ isSubmitting, isValid, dirty }) => (
           <Form
             id="signup"
-            className="bg-white w-[25rem] h-[100%] pt-[1rem] flex flex-col items-center gap-[0.5rem] overflow-y-scroll pr-[2rem] pl-[2rem] pt-[1rem] pb-[1rem]"
+            className="bg-white w-[25rem] h-[100%] px-[2rem] pb-[1rem] pt-[1rem] flex flex-col items-center gap-[0.5rem] overflow-y-scroll"
           >
             <div className="w-[100%] flex justify-center mt-[1rem] mb-[1rem]">
               <p className="text-black font-bold text-[1.1rem] text-center">
