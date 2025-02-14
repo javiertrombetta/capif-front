@@ -64,6 +64,13 @@ export const authLogout = async () => {
   }
 };
 
+export const validateCuit = async (cuit: string) => {
+  const response = await axiosInstance.get<{ message: string }>(
+    "auth/validate/" + cuit
+  );
+  return response.status;
+};
+
 export const getAuthData = async (): Promise<AuthProps> => {
   try {
     const { data } = await axiosInstance.get<GetAuthDataResponse>("users/me");
