@@ -5,6 +5,7 @@ import {
   GetRepertoireByIdResponse,
   GetRepertoiresResponse,
   GetRepertoireTerritorialityResponse,
+  GetRepertoireTitularityResponse,
 } from "@/types/repertoire.types";
 import { axiosInstance } from "./axiosInstance";
 
@@ -105,4 +106,11 @@ export const updateRepertoireTerritory = async (
     { is_activo: isActive }
   );
   return response;
+};
+
+export const getRepertoireTitularity = async (id: string) => {
+  const response = await axiosInstance.get<GetRepertoireTitularityResponse>(
+    `/repertoires/${id}/shares`
+  );
+  return response.data.participaciones;
 };
