@@ -3,7 +3,7 @@ import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomTable from "@/commons/CustomTable/CustomTable";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import { RiProhibited2Line } from "react-icons/ri";
 import { MdEdit } from "react-icons/md";
@@ -14,6 +14,7 @@ import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropd
 
 function page() {
   const router = useRouter();
+  const { id } = useParams();
   const dispatch = useAppDispatch();
 
   const handleOpenModal = (type: ModalNames) => {
@@ -36,7 +37,7 @@ function page() {
         <CustomInput label="Buscar Titular" type="text" />
         <CustomButton
           onClick={() =>
-            redirectToOption("/titularity-phonogram/10/add-titular")
+            redirectToOption(`/repertoires/${id}/titularity/add-titular`)
           }
         >
           Agregar Titular
@@ -90,7 +91,9 @@ function page() {
                     label: "Editar",
                     icon: <MdEdit />,
                     onClick: () =>
-                      redirectToOption("/titularity-phonogram/1/edit-titular"),
+                      redirectToOption(
+                        `/repertoires/${id}/titularity/edit-titular`
+                      ),
                   },
                   {
                     label: "Editar",
@@ -112,7 +115,9 @@ function page() {
                     label: "Editar",
                     icon: <MdEdit />,
                     onClick: () =>
-                      redirectToOption("/titularity-phonogram/1/edit-titular"),
+                      redirectToOption(
+                        `/repertoires/${id}/titularity/edit-titular`
+                      ),
                   },
                   {
                     label: "Editar",
@@ -134,7 +139,9 @@ function page() {
                     label: "Editar",
                     icon: <MdEdit />,
                     onClick: () =>
-                      redirectToOption("/titularity-phonogram/1/edit-titular"),
+                      redirectToOption(
+                        `/repertoires/${id}/titularity/edit-titular`
+                      ),
                   },
                   {
                     label: "Editar",

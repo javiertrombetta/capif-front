@@ -88,3 +88,15 @@ export interface EditRepertoireResponse {
     estado_fonograma: ESTADO_FONOGRAMA;
   };
 }
+
+export interface GetRepertoireTerritorialityResponse {
+  fonograma_id: string;
+  territorios: {
+    id_territorio_maestro: string;
+    id_territorio: string;
+    nombre_pais: string;
+    codigo_iso: string;
+    is_habilitado: boolean;
+    is_activo: boolean;
+  }[];
+}

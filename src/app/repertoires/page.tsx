@@ -37,7 +37,7 @@ function page() {
       {
         label: "Editar",
         onClick: () => {
-          router.push("/edit-phonogram/" + id);
+          router.push("/repertoires/" + id);
         },
       },
       ...(rol === ROLES.SUPER_ADMIN || rol === ROLES.CAPIF_ADMIN
@@ -45,7 +45,7 @@ function page() {
             {
               label: "Territorialidad",
               onClick: () => {
-                router.push("/territoriality-phonogram/" + id);
+                router.push(`/repertoires/${id}/territoriality`);
               },
             },
           ]
@@ -54,7 +54,7 @@ function page() {
         ? [
             {
               label: "Titularidad",
-              onClick: () => router.push("/titularity-phonogram/" + id),
+              onClick: () => router.push(`/repertoires/${id}/titularity`),
             },
           ]
         : []),
