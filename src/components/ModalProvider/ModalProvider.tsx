@@ -48,7 +48,6 @@ import {
   TitularityPhonogramEdit,
   TitularityPhonogramRemove,
 } from "../Modals/TitularityPhonogramActionModal/TitularityPhonogramActionModal";
-import TerritorialitySaveModal from "../Modals/TerritorialitySaveModal/TerritorialitySaveModal";
 import {
   SendAudioFile,
   SetSendError,
@@ -163,8 +162,6 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
         return <TitularityPhonogramEdit onCloseModal={onCloseModal} />;
       case ModalNames.TITULARITY_PHOGRAM_REMOVE:
         return <TitularityPhonogramRemove onCloseModal={onCloseModal} />;
-      case ModalNames.TERRITORIALITY_SAVE:
-        return <TerritorialitySaveModal onCloseModal={onCloseModal} />;
       case ModalNames.SEND_AUDIO_FILE:
         return <SendAudioFile onCloseModal={onCloseModal} />;
       case ModalNames.SEND_AUDIO_REJECT:

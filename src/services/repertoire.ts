@@ -4,6 +4,7 @@ import {
   EditRepertoireResponse,
   GetRepertoireByIdResponse,
   GetRepertoiresResponse,
+  GetRepertoireTerritorialityResponse,
 } from "@/types/repertoire.types";
 import { axiosInstance } from "./axiosInstance";
 
@@ -84,4 +85,24 @@ export const editRepertoire = async (
     phonogramFields
   );
   return response.data;
+};
+
+export const getRepertoireTerritoriality = async (id: string) => {
+  const response = await axiosInstance.get<GetRepertoireTerritorialityResponse>(
+    `/repertoires/${id}/territories`
+  );
+
+  return response.data;
+};
+
+export const updateRepertoireTerritory = async (
+  id: string,
+  idTerritory: string,
+  isActive: boolean
+) => {
+  const response = await axiosInstance.put(
+    `/repertoires/${id}/territories/${idTerritory}/state`,
+    { is_activo: isActive }
+  );
+  return response;
 };

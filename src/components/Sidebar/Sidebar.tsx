@@ -31,7 +31,7 @@ const Sidebar: FC = () => {
     fonogramsOptions: [
       {
         name: "Declaración Repertorio",
-        link: "/new-phonogram",
+        link: "/repertoires/new",
       },
       {
         name: "Buscar",
@@ -54,7 +54,7 @@ const Sidebar: FC = () => {
         : [
             {
               name: "Altas",
-              link: "/users/add-user",
+              link: "/users/new",
             },
 
             {
@@ -96,53 +96,32 @@ const Sidebar: FC = () => {
   ];
 
   const adminMenuOptions = {
-    fonogramsOptions:
-      authData.rol === ROLES.SUPER_ADMIN
+    fonogramsOptions: [
+      {
+        name: "Buscar",
+        link: "/repertoires",
+      },
+      ...(authData.vistas.find((v) => v.nombre === "Declaración Repertorio")
         ? [
             {
-              name: "Buscar",
-              link: "/repertoires",
-            },
-            {
               name: "Declaración Repertorio",
-              link: "/new-phonogram",
-            },
-
-            {
-              name: "Conflictos",
-              link: "/conflicts",
-            },
-            {
-              name: "Envio Archivo Audio",
-              link: "/send-audio-file",
-            },
-            {
-              name: "Territorialidad",
-              link: "/territoriality",
+              link: "/repertoires/new",
             },
           ]
-        : [
-            {
-              name: "Buscar",
-              link: "/repertoires",
-            },
-            {
-              name: "Declaración Repertorio",
-              link: "/new-phonogram",
-            },
-            {
-              name: "Conflictos",
-              link: "/conflicts",
-            },
-            {
-              name: "Envio Archivo Audio",
-              link: "/send-audio-file",
-            },
-            {
-              name: "Territorialidad",
-              link: "/territoriality",
-            },
-          ],
+        : []),
+      {
+        name: "Conflictos",
+        link: "/conflicts",
+      },
+      {
+        name: "Envio Archivo Audio",
+        link: "/send-audio-file",
+      },
+      {
+        name: "Territorialidad",
+        link: "/territoriality",
+      },
+    ],
 
     producersOptions: [
       {
@@ -161,7 +140,7 @@ const Sidebar: FC = () => {
       },
       {
         name: "Altas",
-        link: "/users/add-user",
+        link: "/users/new",
       },
     ],
     cashFlowOptions: [
