@@ -155,7 +155,7 @@ const SignUpForm: FC = () => {
   };
 
   const goToVerifyEmail = async (values: RegisterFormValues): Promise<void> => {
-    const response = await authSignUp({
+    await authSignUp({
       email: values.email,
       password: values.password,
     });
