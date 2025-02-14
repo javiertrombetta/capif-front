@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
-import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomTable from "@/commons/CustomTable/CustomTable";
 import {
   getRepertoireTerritoriality,

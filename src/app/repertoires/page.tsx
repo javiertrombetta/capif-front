@@ -170,7 +170,7 @@ const SearchPhonogramForm: FC = () => {
           labelText="AÑO DE PUBLICACIÓN"
         />
       </div>
-      <div className="w-[100%] flex justify-center items-end pl-[2rem] pr-[2rem] gap-[2rem]">
+      <div className="w-[100%] flex justify-start items-end pl-[2rem] pr-[2rem] gap-[2rem]">
         <CustomSearchField name="isrc" id="isrc" type="text" labelText="ISRC" />
         <CustomSearchField
           name="productora"

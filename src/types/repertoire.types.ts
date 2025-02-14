@@ -100,3 +100,23 @@ export interface GetRepertoireTerritorialityResponse {
     is_activo: boolean;
   }[];
 }
+
+export interface GetRepertoireTitularityResponse {
+  fonograma_id: string;
+  participaciones: {
+    porcentaje_participacion: number;
+    fecha_participacion_inicio: Date;
+    fecha_participacion_hasta: Date;
+    id_participacion: string;
+    fonograma_id: string;
+    productora_id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    productoraDeParticipante: {
+      id_productora: string;
+      nombre_productora: string;
+      cuit_cuil: string;
+    };
+  }[];
+  momentosClave: Record<string, number>;
+}
