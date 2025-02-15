@@ -114,3 +114,23 @@ export const getRepertoireTitularity = async (id: string) => {
   );
   return response.data.participaciones;
 };
+
+export interface AddRepertoireTitularities {
+  participaciones: {
+    cuit: string;
+    porcentaje_participacion: number;
+    fecha_inicio: string;
+    fecha_hasta: string;
+  }[];
+}
+
+export const addRepertoireTitularities = async (
+  id: string,
+  payload: AddRepertoireTitularities
+) => {
+  const response = await axiosInstance.post(
+    `/repertoires/${id}/shares`,
+    payload
+  );
+  return response;
+};
