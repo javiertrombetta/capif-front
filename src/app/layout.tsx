@@ -31,12 +31,14 @@ export default function RootLayout({
           initialModal={initialStateModal}
           initialSignup={initialStateSignup}
         >
-          <AuthProvider>
-            <Navbar>
-              <ModalProvider>{children}</ModalProvider>
-              <ToastContainer position="bottom-right" />
-            </Navbar>
-          </AuthProvider>
+          <ModalProvider>
+            <AuthProvider>
+              <Navbar>
+                {children}
+                <ToastContainer position="bottom-right" />
+              </Navbar>
+            </AuthProvider>
+          </ModalProvider>
         </StoreProvider>
       </body>
     </html>
