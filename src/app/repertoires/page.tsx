@@ -184,10 +184,12 @@ const SearchPhonogramForm: FC = () => {
           type="text"
           labelText="SELLO"
         />
-        <CustomButton type="submit">
-          <FaSearch />
-          Buscar
-        </CustomButton>
+        <div className="w-[100%]">
+          <CustomButton type="submit">
+            <FaSearch />
+            Buscar
+          </CustomButton>
+        </div>
       </div>
     </Form>
   );
