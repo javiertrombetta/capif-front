@@ -152,3 +152,13 @@ export const updateRepertoireTitularity = async (
   );
   return response;
 };
+
+export const deleteRepertoireTitularity = async (
+  idRepertoire: string,
+  idTitularity: string
+) => {
+  const response = await axiosInstance.delete(
+    `/repertoires/${idRepertoire}/shares/${idTitularity}`
+  );
+  return response;
+};
