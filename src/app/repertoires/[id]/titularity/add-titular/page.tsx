@@ -1,14 +1,14 @@
 "use client";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
+import { AxiosError } from "axios";
+import { Form, Formik } from "formik";
+import { useParams, useRouter } from "next/navigation";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
 import CustomButton from "@/commons/CustomButton/CustomButton";
-import { Form, Formik } from "formik";
 import CustomField from "@/commons/CustomField/CustomField";
-import { useParams, useRouter } from "next/navigation";
 import { addRepertoireTitularities } from "@/services/repertoire";
-import { toast } from "react-toastify";
-import { AxiosError } from "axios";
 
 export default function page() {
   const [percentage, setPercentage] = useState<string | number>("0");
@@ -23,10 +23,10 @@ export default function page() {
   };
 
   const handleChangePercentage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = parseFloat(e.target.value ? e.target.value : "0");
+    const inputValue = parseInt(e.target.value ? e.target.value : "0");
 
     if (inputValue <= 100) {
-      setPercentage(parseFloat(inputValue.toFixed(2)) || "");
+      setPercentage(inputValue || "");
     }
   };
 
@@ -79,7 +79,6 @@ export default function page() {
               </label>
               <input
                 type="number"
-                step={0.01}
                 min={0}
                 max={100}
                 value={percentage}

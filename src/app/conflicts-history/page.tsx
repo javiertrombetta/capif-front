@@ -22,7 +22,7 @@ function page() {
       {
         label: "Modificar",
         onClick: () =>
-          router.push(`/repertoires/${id}/titularity/edit-titular`),
+          router.push(`/repertoires/${id}/titularity/:idtitularity`),
       },
       {
         label: "Fijar Porcentaje",

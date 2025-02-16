@@ -115,7 +115,7 @@ export const getRepertoireTitularity = async (id: string) => {
   return response.data.participaciones;
 };
 
-export interface AddRepertoireTitularities {
+interface AddRepertoireTitularities {
   participaciones: {
     cuit: string;
     porcentaje_participacion: number;
@@ -130,6 +130,24 @@ export const addRepertoireTitularities = async (
 ) => {
   const response = await axiosInstance.post(
     `/repertoires/${id}/shares`,
+    payload
+  );
+  return response;
+};
+
+interface UpdateRepertoireTitularity {
+  porcentaje_participacion: number;
+  fecha_participacion_inicio: string;
+  fecha_participacion_hasta: string;
+}
+
+export const updateRepertoireTitularity = async (
+  idRepertoire: string,
+  idTitularity: string,
+  payload: UpdateRepertoireTitularity
+) => {
+  const response = await axiosInstance.put(
+    `/repertoires/${idRepertoire}/shares/${idTitularity}`,
     payload
   );
   return response;

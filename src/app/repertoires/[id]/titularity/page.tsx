@@ -35,8 +35,8 @@ function page() {
 
   const getTitularityData = async () => {
     try {
-      const titularity = await getRepertoireTitularity(id as string);
-      setTitularities(titularity);
+      const titularityData = await getRepertoireTitularity(id as string);
+      setTitularities(titularityData);
     } catch (error) {
       console.error(error);
       toast.error("Error al obtener las productoras");
@@ -81,11 +81,11 @@ function page() {
                       icon: <MdEdit />,
                       onClick: () =>
                         redirectToOption(
-                          `/repertoires/${id}/titularity/edit-titular`
+                          `/repertoires/${id}/titularity/${t.id_participacion}`
                         ),
                     },
                     {
-                      label: "Editar",
+                      label: "Eliminar",
                       icon: <RiProhibited2Line />,
                       onClick: () =>
                         handleOpenModal(ModalNames.TITULARITY_PHOGRAM_REMOVE),
