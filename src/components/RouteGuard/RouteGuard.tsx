@@ -20,7 +20,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/repertoires/:id",
       "/repertoires/:id/titularity",
       "/repertoires/:id/titularity/add-titular",
-      "/repertoires/:id/titularity/edit-titular",
+      "/repertoires/:id/titularity/:idtitularity",
       "/send-audio-file",
       "/territoriality",
       "/repertoires/:id/territoriality",

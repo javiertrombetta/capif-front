@@ -599,12 +599,12 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
   >([]);
 
   const handleChangePercentage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = parseFloat(e.target.value ? e.target.value : "0");
+    const inputValue = parseInt(e.target.value ? e.target.value : "0");
 
     if (inputValue <= 100) {
       setParticipacion({
         ...participacion,
-        porcentaje_participacion: parseFloat(inputValue.toFixed(2)) || "",
+        porcentaje_participacion: inputValue || "",
       });
     }
   };
@@ -718,7 +718,6 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
           </label>
           <input
             type="number"
-            step={0.01}
             min={0}
             max={100}
             value={participacion.porcentaje_participacion}
