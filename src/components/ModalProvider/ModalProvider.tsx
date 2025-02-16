@@ -38,10 +38,7 @@ import {
   SaveEditPhonogramModal,
   CancelEditPhonogramModal,
 } from "../Modals/EditPhonogramModals/EditPhonogramModals";
-import {
-  TitularityPhonogramEdit,
-  TitularityPhonogramRemove,
-} from "../Modals/TitularityPhonogramActionModal/TitularityPhonogramActionModal";
+import TitularityPhonogramRemove from "../Modals/TitularityPhonogramRemove/TitularityPhonogramRemove";
 import {
   SendAudioFile,
   SetSendError,
@@ -147,10 +144,6 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
         return <SaveEditPhonogramModal onCloseModal={onCloseModal} />;
       case ModalNames.EDIT_PHONOGRAM_CANCEL:
         return <CancelEditPhonogramModal onCloseModal={onCloseModal} />;
-      case ModalNames.TITULARITY_PHOGRAM_EDIT:
-        return <TitularityPhonogramEdit onCloseModal={onCloseModal} />;
-      case ModalNames.TITULARITY_PHOGRAM_REMOVE:
-        return <TitularityPhonogramRemove onCloseModal={onCloseModal} />;
       case ModalNames.SEND_AUDIO_FILE:
         return <SendAudioFile onCloseModal={onCloseModal} />;
       case ModalNames.SEND_AUDIO_REJECT:

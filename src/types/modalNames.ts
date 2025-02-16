@@ -28,8 +28,6 @@ export enum ModalNames {
   FINISH_NEW_PHONOGRAM = "FinishNewPhonogram",
   EDIT_PHONOGRAM_SAVE = "EditPhonogramSave",
   EDIT_PHONOGRAM_CANCEL = "EditPhonogramCancel",
-  TITULARITY_PHOGRAM_EDIT = "TitularityPhonogramEdit",
-  TITULARITY_PHOGRAM_REMOVE = "TitularityPhonogramRemove",
   TERRITORIALITY_SAVE = "TerritorialitySave",
   SEND_AUDIO_FILE = "SendAudioFile",
   SEND_AUDIO_REJECT = "SendAudioReject",
