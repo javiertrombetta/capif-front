@@ -1,11 +1,13 @@
 import {
-  CreatePhonogramRequest,
-  EditRepertoireRequest,
+  CreatePhonogramPayload,
+  EditRepertoirePayload,
   EditRepertoireResponse,
   GetRepertoireByIdResponse,
   GetRepertoiresResponse,
   GetRepertoireTerritorialityResponse,
   GetRepertoireTitularityResponse,
+  GetSendAudioFilesResponse,
+  UpdateSendAudiFilePayload,
 } from "@/types/repertoire.types";
 import { axiosInstance } from "./axiosInstance";
 
@@ -32,7 +34,7 @@ export const getRepertoires = async (
 };
 
 export const createPhonogram = async (
-  repertoireData: CreatePhonogramRequest
+  repertoireData: CreatePhonogramPayload
 ) => {
   const response = await axiosInstance.post("/repertoires", repertoireData);
   console.log(response.data);
@@ -79,7 +81,7 @@ export const getPrefixIsrc = async () => {
 
 export const editRepertoire = async (
   id: string,
-  phonogramFields: EditRepertoireRequest
+  phonogramFields: EditRepertoirePayload
 ) => {
   const response = await axiosInstance.put<EditRepertoireResponse>(
     `/repertoires/${id}`,
@@ -159,6 +161,42 @@ export const deleteRepertoireTitularity = async (
 ) => {
   const response = await axiosInstance.delete(
     `/repertoires/${idRepertoire}/shares/${idTitularity}`
+  );
+  return response;
+};
+
+interface GetSendAudioFilesParams {
+  page?: number;
+  limit?: number;
+  nombre_tema?: string;
+  estado_envio?: string;
+  fecha_desde?: string;
+  fecha_hasta?: string;
+}
+
+export const getSendAudioFiles = async (params?: GetSendAudioFilesParams) => {
+  const response = await axiosInstance.get<GetSendAudioFilesResponse>(
+    "/repertoires/send",
+    { params }
+  );
+  return response.data.data;
+};
+
+export const sendAudioFiles = async (fonograma_ids: string[]) => {
+  const response = await axiosInstance.post("/repertoires/send", {
+    fonograma_ids,
+  });
+  return response;
+};
+
+export const updateSendAudioFile = async (
+  idRepertoire: string,
+  idSend: string,
+  payload: UpdateSendAudiFilePayload
+) => {
+  const response = await axiosInstance.put(
+    `/repertoires/${idRepertoire}/send/${idSend}`,
+    payload
   );
   return response;
 };

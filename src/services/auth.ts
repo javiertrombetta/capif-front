@@ -79,8 +79,8 @@ export const getAuthData = async (): Promise<AuthProps> => {
       id_usuario: data.usuario.id,
       productoras: data.productoras,
       vistas: data.vistas.map((vista) => ({
-        nombre: vista.nombre_vista,
-        nombre_vista_superior: vista.nombre_vista_superior,
+        nombre: vista.vista,
+        nombre_vista_superior: vista.vista_superior,
       })),
       productoraActiva: data.usuario.productora_activa || data.productoras[0], //ToDo: traer productora activa eventualmente
       loading: false,

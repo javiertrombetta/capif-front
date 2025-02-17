@@ -1,4 +1,4 @@
-export interface CreatePhonogramRequest {
+export interface CreatePhonogramPayload {
   productora_id: string | null;
   titulo: string | null;
   artista: string | null;
@@ -65,7 +65,7 @@ export interface GetRepertoireByIdResponse {
   }[];
 }
 
-export interface EditRepertoireRequest {
+export interface EditRepertoirePayload {
   titulo?: string;
   artista?: string;
   album?: string;
@@ -119,4 +119,36 @@ export interface GetRepertoireTitularityResponse {
     };
   }[];
   momentosClave: Record<string, number>;
+}
+
+export const ESTADOS_ENVIO = [
+  "PENDIENTE DE ENVIO",
+  "ENVIADO SIN AUDIO",
+  "ENVIADO CON AUDIO",
+  "RECHAZADO POR VERICAST",
+  "ERROR EN EL ENVIO",
+] as const;
+
+export type EstadoEnvio = (typeof ESTADOS_ENVIO)[number];
+
+export interface GetSendAudioFilesResponse {
+  message: string;
+  total: number;
+  totalPages: number;
+  currentPage: number;
+  limit: number;
+  data: {
+    id_envio_vericast: string;
+    fonogramaDelEnvio: { titulo: string };
+    tipo_estado: EstadoEnvio;
+    fecha_envio_inicial: string;
+    fecha_envio_ultimo: string;
+    createdAt: string;
+    updatedAt: string;
+  }[];
+}
+
+export interface UpdateSendAudiFilePayload {
+  nuevoEstado: EstadoEnvio;
+  comentario?: string;
 }

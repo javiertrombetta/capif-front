@@ -38,11 +38,6 @@ import {
   SaveEditPhonogramModal,
   CancelEditPhonogramModal,
 } from "../Modals/EditPhonogramModals/EditPhonogramModals";
-import {
-  SendAudioFile,
-  SetSendError,
-  RejectAudio,
-} from "../Modals/SendAudioFileModals/SendAudioFileModals";
 import TerritorialityUnableModal from "../Modals/TerritorialityUnableModal/TerritorialityUnableModal";
 
 import {
@@ -143,12 +138,6 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
         return <SaveEditPhonogramModal onCloseModal={onCloseModal} />;
       case ModalNames.EDIT_PHONOGRAM_CANCEL:
         return <CancelEditPhonogramModal onCloseModal={onCloseModal} />;
-      case ModalNames.SEND_AUDIO_FILE:
-        return <SendAudioFile onCloseModal={onCloseModal} />;
-      case ModalNames.SEND_AUDIO_REJECT:
-        return <RejectAudio onCloseModal={onCloseModal} />;
-      case ModalNames.SEND_AUDIO_SET_ERROR_SEND:
-        return <SetSendError onCloseModal={onCloseModal} />;
       case ModalNames.TERRITORIALITY_UNABLE:
         return <TerritorialityUnableModal onCloseModal={onCloseModal} />;
       case ModalNames.CASHFLOW_TRANSFERS_EXPORT:
