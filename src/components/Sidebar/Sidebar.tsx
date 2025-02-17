@@ -122,7 +122,7 @@ const Sidebar: FC = () => {
         : []),
       {
         name: "Territorialidad",
-        link: "/territoriality",
+        link: "/repertoires/territoriality",
       },
     ],
 
