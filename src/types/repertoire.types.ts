@@ -105,8 +105,8 @@ export interface GetRepertoireTitularityResponse {
   fonograma_id: string;
   participaciones: {
     porcentaje_participacion: number;
-    fecha_participacion_inicio: Date;
-    fecha_participacion_hasta: Date;
+    fecha_participacion_inicio: string;
+    fecha_participacion_hasta: string;
     id_participacion: string;
     fonograma_id: string;
     productora_id: string;

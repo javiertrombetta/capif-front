@@ -6,37 +6,38 @@ import CustomTable from "@/commons/CustomTable/CustomTable";
 import { useParams, useRouter } from "next/navigation";
 import { RiProhibited2Line } from "react-icons/ri";
 import { MdEdit } from "react-icons/md";
-import { useAppDispatch } from "@/hooks/storeHooks";
-import { ModalNames } from "@/types/modalNames";
-import { setModal } from "@/store/modalSlice";
 import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
 import { GetRepertoireTitularityResponse } from "@/types/repertoire.types";
 import { useEffect, useState } from "react";
 import { getRepertoireTitularity } from "@/services/repertoire";
 import { toast } from "react-toastify";
 import Spinner from "@/commons/Spinner/Spinner";
+import useModal from "@/hooks/useModal";
+import TitularityPhonogramRemove from "@/components/Modals/TitularityPhonogramRemove/TitularityPhonogramRemove";
 
 function page() {
   const router = useRouter();
   const { id } = useParams();
-  const dispatch = useAppDispatch();
+  const { openModal } = useModal();
   const [loading, setLoading] = useState(true);
   const [titularities, setTitularities] = useState<
     GetRepertoireTitularityResponse["participaciones"]
   >([]);
 
-  const handleOpenModal = (type: ModalNames) => {
-    dispatch(setModal({ type, isActive: true }));
-  };
-
   const redirectToOption = (route: string): void => {
     router.push(route);
   };
 
+  const handleOnRemove = (idTitularity: string) => {
+    setTitularities(
+      titularities.filter((t) => t.id_participacion !== idTitularity)
+    );
+  };
+
   const getTitularityData = async () => {
     try {
-      const titularity = await getRepertoireTitularity(id as string);
-      setTitularities(titularity);
+      const titularityData = await getRepertoireTitularity(id as string);
+      setTitularities(titularityData);
     } catch (error) {
       console.error(error);
       toast.error("Error al obtener las productoras");
@@ -81,14 +82,20 @@ function page() {
                       icon: <MdEdit />,
                       onClick: () =>
                         redirectToOption(
-                          `/repertoires/${id}/titularity/edit-titular`
+                          `/repertoires/${id}/titularity/${t.id_participacion}`
                         ),
                     },
                     {
-                      label: "Editar",
+                      label: "Eliminar",
                       icon: <RiProhibited2Line />,
                       onClick: () =>
-                        handleOpenModal(ModalNames.TITULARITY_PHOGRAM_REMOVE),
+                        openModal(
+                          <TitularityPhonogramRemove
+                            idRepertoire={id as string}
+                            idTitularity={t.id_participacion}
+                            onRemove={() => handleOnRemove(t.id_participacion)}
+                          />
+                        ),
                     },
                   ]}
                 />,
