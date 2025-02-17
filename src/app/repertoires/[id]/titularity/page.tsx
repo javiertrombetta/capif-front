@@ -104,7 +104,7 @@ function page() {
           )
         )}
       </div>
-      <div className="w-[100%] py-[1rem] px-[2rem] flex items-center justify-end ">
+      <div className="w-[100%] py-[1rem] px-[2rem] flex items-center justify-end">
         <CustomButton
           onClick={() =>
             redirectToOption(`/repertoires/${id}/titularity/add-titular`)

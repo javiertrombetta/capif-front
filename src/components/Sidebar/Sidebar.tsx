@@ -112,10 +112,14 @@ const Sidebar: FC = () => {
         name: "Conflictos",
         link: "/conflicts",
       },
-      {
-        name: "Envio Archivo Audio",
-        link: "/send-audio-file",
-      },
+      ...(authData.vistas.find((v) => v.nombre === "Envío Archivo Audio")
+        ? [
+            {
+              name: "Envio Archivo Audio",
+              link: "/repertoires/send-audio-file",
+            },
+          ]
+        : []),
       {
         name: "Territorialidad",
         link: "/territoriality",
