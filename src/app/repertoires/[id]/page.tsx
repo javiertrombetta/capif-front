@@ -88,6 +88,7 @@ function page() {
         toast.success(message);
       }
     } catch (error) {
+      console.error(error);
       toast.error("Error al editar fonograma.");
     }
   };

@@ -31,7 +31,7 @@ const Sidebar: FC = () => {
     fonogramsOptions: [
       {
         name: "Declaración Repertorio",
-        link: "/new-phonogram",
+        link: "/repertoires/new",
       },
       {
         name: "Buscar",
@@ -45,16 +45,11 @@ const Sidebar: FC = () => {
 
     usersOptions:
       authData.rol === ROLES.EMPLOYEE
-        ? [
-            {
-              name: "Buscar",
-              link: "/users",
-            },
-          ]
+        ? []
         : [
             {
               name: "Altas",
-              link: "/users/add-user",
+              link: "/users/new",
             },
 
             {
@@ -79,13 +74,17 @@ const Sidebar: FC = () => {
       icon: FaMusic,
       height: "6",
     },
-    {
-      id: 3,
-      title: "USUARIOS",
-      items: userProducerMenuOptions.usersOptions,
-      icon: FaUsers,
-      height: authData.rol === ROLES.USER_PRODUCER ? "4" : "2",
-    },
+    ...(authData.rol === ROLES.USER_PRODUCER
+      ? [
+          {
+            id: 3,
+            title: "USUARIOS",
+            items: userProducerMenuOptions.usersOptions,
+            icon: FaUsers,
+            height: "4",
+          },
+        ]
+      : []),
     {
       id: 4,
       title: "CUENTAS CORRIENTES",
@@ -96,53 +95,36 @@ const Sidebar: FC = () => {
   ];
 
   const adminMenuOptions = {
-    fonogramsOptions:
-      authData.rol === ROLES.SUPER_ADMIN
+    fonogramsOptions: [
+      {
+        name: "Buscar",
+        link: "/repertoires",
+      },
+      ...(authData.vistas.find((v) => v.nombre === "Declaración Repertorio")
         ? [
             {
-              name: "Buscar",
-              link: "/repertoires",
-            },
-            {
               name: "Declaración Repertorio",
-              link: "/new-phonogram",
-            },
-
-            {
-              name: "Conflictos",
-              link: "/conflicts",
-            },
-            {
-              name: "Envio Archivo Audio",
-              link: "/send-audio-file",
-            },
-            {
-              name: "Territorialidad",
-              link: "/territoriality",
+              link: "/repertoires/new",
             },
           ]
-        : [
-            {
-              name: "Buscar",
-              link: "/repertoires",
-            },
-            {
-              name: "Declaración Repertorio",
-              link: "/new-phonogram",
-            },
-            {
-              name: "Conflictos",
-              link: "/conflicts",
-            },
+        : []),
+      {
+        name: "Conflictos",
+        link: "/conflicts",
+      },
+      ...(authData.vistas.find((v) => v.nombre === "Envío Archivo Audio")
+        ? [
             {
               name: "Envio Archivo Audio",
-              link: "/send-audio-file",
+              link: "/repertoires/send-audio-file",
             },
-            {
-              name: "Territorialidad",
-              link: "/territoriality",
-            },
-          ],
+          ]
+        : []),
+      {
+        name: "Territorialidad",
+        link: "/repertoires/territoriality",
+      },
+    ],
 
     producersOptions: [
       {
@@ -161,7 +143,7 @@ const Sidebar: FC = () => {
       },
       {
         name: "Altas",
-        link: "/users/add-user",
+        link: "/users/new",
       },
     ],
     cashFlowOptions: [
