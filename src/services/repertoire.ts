@@ -1,4 +1,5 @@
 import {
+  AddTerritoryPayload,
   CreatePhonogramPayload,
   EditRepertoirePayload,
   EditRepertoireResponse,
@@ -7,6 +8,7 @@ import {
   GetRepertoireTerritorialityResponse,
   GetRepertoireTitularityResponse,
   GetSendAudioFilesResponse,
+  GetTerritoriesResponse,
   UpdateSendAudiFilePayload,
 } from "@/types/repertoire.types";
 import { axiosInstance } from "./axiosInstance";
@@ -198,5 +200,27 @@ export const updateSendAudioFile = async (
     `/repertoires/${idRepertoire}/send/${idSend}`,
     payload
   );
+  return response;
+};
+
+export const getTerritories = async () => {
+  const response =
+    await axiosInstance.get<GetTerritoriesResponse>("/misc/territories");
+  return response.data.data;
+};
+
+export const updateTerritoryStatus = async (
+  idTerritory: string,
+  payload: { is_habilitado: boolean }
+) => {
+  const response = await axiosInstance.put(
+    `/misc/territories/${idTerritory}/status`,
+    payload
+  );
+  return response;
+};
+
+export const addTerritory = async (payload: AddTerritoryPayload) => {
+  const response = await axiosInstance.post("/misc/territories", payload);
   return response;
 };

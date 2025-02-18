@@ -22,7 +22,6 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/repertoires/:id/titularity/add-titular",
       "/repertoires/:id/titularity/:idtitularity",
       "/repertoires/:id/territoriality",
-      "/territoriality",
       "/conflicts",
       "/conflicts-history",
       "/users",
@@ -61,7 +60,6 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/repertoires/:id/territoriality",
       "/conflicts",
       "/conflicts-history",
-      "/territoriality",
       "/users",
       "/users/:id",
       "/users/:id/application",
@@ -120,7 +118,9 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
     auth.vistas.find((v) => v.nombre === "Declaración Repertorio") &&
       "/repertoires/new",
     auth.vistas.find((v) => v.nombre === "Envío Archivo Audio") &&
-      "/repertorios/send-audio-file",
+      "/repertoires/send-audio-file",
+    auth.vistas.find((v) => v.nombre === "Territorialidad") &&
+      "/repertoires/territoriality",
   ];
 
   const isRouteAllowed = (path: string, routes: string[]) => {

@@ -3,9 +3,7 @@ import React, { createContext, FC, ReactNode, useState } from "react";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { ModalNames } from "@/types/modalNames";
-import { IoClose } from "react-icons/io5";
 import { setModal } from "@/store/modalSlice";
-import CustomInput from "@/commons/CustomInput/CustomInput";
 import SearchConflictsFilters from "../Modals/Conflicts/SearchConflictsFilters";
 import {
   FirstInstance,
@@ -38,8 +36,6 @@ import {
   SaveEditPhonogramModal,
   CancelEditPhonogramModal,
 } from "../Modals/EditPhonogramModals/EditPhonogramModals";
-import TerritorialityUnableModal from "../Modals/TerritorialityUnableModal/TerritorialityUnableModal";
-
 import {
   GrantExtension,
   ConfirmPercentage,
@@ -85,8 +81,6 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
     switch (modalData.type) {
       case ModalNames.COMPLETE_REGISTRATION:
         return <EndRegisterUserModal />;
-      case ModalNames.ADD_TERRITORIALITY:
-        return <AddTerritorialityModal onCloseModal={onCloseModal} />;
       case ModalNames.SEARCH_CONFLICTS_FILTERS:
         return <SearchConflictsFilters onCloseModal={onCloseModal} />;
       case ModalNames.FIRST_INSTANCE:
@@ -138,8 +132,6 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
         return <SaveEditPhonogramModal onCloseModal={onCloseModal} />;
       case ModalNames.EDIT_PHONOGRAM_CANCEL:
         return <CancelEditPhonogramModal onCloseModal={onCloseModal} />;
-      case ModalNames.TERRITORIALITY_UNABLE:
-        return <TerritorialityUnableModal onCloseModal={onCloseModal} />;
       case ModalNames.CASHFLOW_TRANSFERS_EXPORT:
         return <CashflowTransfersExportModal onCloseModal={onCloseModal} />;
 
@@ -192,30 +184,6 @@ const EndRegisterUserModal: FC = () => {
       </p>
 
       <CustomButton>Completar Registro</CustomButton>
-    </div>
-  );
-};
-
-const AddTerritorialityModal: FC<{ onCloseModal: () => void }> = ({
-  onCloseModal,
-}) => {
-  return (
-    <div className="relative bg-white h-[19rem] w-[30rem] mb-[6rem] rounded-[2rem] flex flex-col gap-[1rem] justify-center items-center">
-      <button onClick={onCloseModal} className="absolute top-[5%] right-[5%]">
-        <IoClose size={25} color="black" />
-      </button>
-      <div className="w-[100%] flex flex-col justify-center items-center gap-[1rem]">
-        <p className="text-black font-bold text-[1.2rem] text-center w-[95%]">
-          Agregar Territorio
-        </p>
-        <CustomInput className="w-[19rem]" type="text" label="ISO del País" />
-        <CustomInput
-          className="w-[19rem]"
-          type="text"
-          label="Nombre del País"
-        />
-        <CustomButton>Aceptar</CustomButton>
-      </div>
     </div>
   );
 };
