@@ -60,6 +60,10 @@ export const blockOrUnlockUser = async (
   });
 };
 
+export const disableOrEnableUser = async (id_usuario: string) => {
+  await axiosInstance.put(`users/${id_usuario}/status`);
+};
+
 export const changePassword = async (data_request: {
   id_usuario: string;
   newPassword: string;
