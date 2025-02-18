@@ -50,9 +50,10 @@ const SendAudioFile = ({ ids }: { ids: string[] }) => {
 interface RejectAudioProps {
   idRepertoire: string;
   idSend: string;
+  onSuccess: () => void;
 }
 
-const RejectAudio = ({ idRepertoire, idSend }: RejectAudioProps) => {
+const RejectAudio = ({ idRepertoire, idSend, onSuccess }: RejectAudioProps) => {
   const { closeModal } = useModal();
 
   const handleOnAccept = async (values: { comment: string }) => {
@@ -61,6 +62,7 @@ const RejectAudio = ({ idRepertoire, idSend }: RejectAudioProps) => {
         nuevoEstado: "RECHAZADO POR VERICAST",
         comentario: values.comment,
       });
+      onSuccess();
       toast.success("Archivo actualizado correctamente.");
     } catch (error) {
       console.error(error);
@@ -113,11 +115,13 @@ const RejectAudio = ({ idRepertoire, idSend }: RejectAudioProps) => {
 interface SetSendAudioErrorProps {
   idRepertoire: string;
   idSend: string;
+  onSuccess: () => void;
 }
 
 const SetSendAudioError = ({
   idRepertoire,
   idSend,
+  onSuccess,
 }: SetSendAudioErrorProps) => {
   const { closeModal } = useModal();
 
@@ -126,6 +130,7 @@ const SetSendAudioError = ({
       await updateSendAudioFile(idRepertoire, idSend, {
         nuevoEstado: "ERROR EN EL ENVIO",
       });
+      onSuccess();
       toast.success("Archivo enviado correctamente.");
     } catch (error) {
       console.error(error);

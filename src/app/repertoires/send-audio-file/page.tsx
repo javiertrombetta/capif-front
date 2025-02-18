@@ -44,7 +44,6 @@ function page() {
   };
 
   const handleOnSubmit = async (values: typeof initialValues) => {
-    setLoading(true);
     for (const key in values) {
       if (!values[key as keyof typeof values])
         delete values[key as keyof typeof values];
@@ -53,6 +52,7 @@ function page() {
   };
 
   const getSendAudioFilesData = async (values?: typeof initialValues) => {
+    setLoading(true);
     try {
       const response = await getSendAudioFiles(values);
       setAudioFiles(response);
@@ -124,11 +124,13 @@ function page() {
               ]}
               columnValues={audioFiles.map((a) => [
                 <input
-                  id={a.id_envio_vericast}
+                  id={a.fonogramaDelEnvio.id_fonograma}
                   type="checkbox"
                   className="scale-[1.5]"
                   onChange={handleOnChange}
-                  checked={seleccionados.includes(a.id_envio_vericast)}
+                  checked={seleccionados.includes(
+                    a.fonogramaDelEnvio.id_fonograma
+                  )}
                 />,
                 a.fonogramaDelEnvio.titulo,
                 a.tipo_estado,
@@ -142,7 +144,8 @@ function page() {
                         openModal(
                           <RejectAudio
                             idSend={a.id_envio_vericast}
-                            idRepertoire=""
+                            idRepertoire={a.fonogramaDelEnvio.id_fonograma}
+                            onSuccess={() => getSendAudioFilesData()}
                           />
                         ),
                     },
@@ -152,7 +155,8 @@ function page() {
                         openModal(
                           <SetSendAudioError
                             idSend={a.id_envio_vericast}
-                            idRepertoire=""
+                            idRepertoire={a.fonogramaDelEnvio.id_fonograma}
+                            onSuccess={() => getSendAudioFilesData()}
                           />
                         ),
                     },
