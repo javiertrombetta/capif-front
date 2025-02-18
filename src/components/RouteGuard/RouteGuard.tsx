@@ -26,7 +26,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/territoriality",
       "/territoriality-phonogram/:id",
       "/conflicts",
-      "/conflicts-history",
+      "/conflicts-history/:id",
       "/users",
       "/users/:id",
       "/users/:id/application",
