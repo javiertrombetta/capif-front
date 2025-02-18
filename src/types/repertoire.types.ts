@@ -161,3 +161,19 @@ export interface UpdateSendAudiFilePayload {
   nuevoEstado: EstadoEnvio;
   comentario?: string;
 }
+
+export interface GetTerritoriesResponse {
+  message: string;
+  data: {
+    id_territorio: string;
+    nombre_pais: string;
+    codigo_iso: string;
+    is_habilitado: boolean;
+  }[];
+}
+
+export interface AddTerritoryPayload {
+  nombre_pais: string;
+  codigo_iso: string;
+  is_habilitado: boolean;
+}
