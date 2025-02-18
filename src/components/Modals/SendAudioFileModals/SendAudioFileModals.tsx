@@ -131,7 +131,7 @@ const SetSendAudioError = ({
         nuevoEstado: "ERROR EN EL ENVIO",
       });
       onSuccess();
-      toast.success("Archivo enviado correctamente.");
+      toast.success("Archivo actualizado correctamente.");
     } catch (error) {
       console.error(error);
       toast.error("Error al actualizar archivo.");
@@ -167,4 +167,59 @@ const SetSendAudioError = ({
   );
 };
 
-export { SendAudioFile, RejectAudio, SetSendAudioError };
+interface SetSendAudioPendingProps {
+  idRepertoire: string;
+  idSend: string;
+  onSuccess: () => void;
+}
+
+const SetSendAudioPending = ({
+  idRepertoire,
+  idSend,
+  onSuccess,
+}: SetSendAudioPendingProps) => {
+  const { closeModal } = useModal();
+
+  const handleOnAccept = async () => {
+    try {
+      await updateSendAudioFile(idRepertoire, idSend, {
+        nuevoEstado: "PENDIENTE DE ENVIO",
+      });
+      onSuccess();
+      toast.success("Archivo actualizado correctamente.");
+    } catch (error) {
+      console.error(error);
+      toast.error("Error al actualizar archivo.");
+    } finally {
+      closeModal();
+    }
+  };
+
+  return (
+    <div
+      className={
+        "relative bg-white h-[16rem] w-[30rem] mb-[6rem] rounded-[2rem] gap-[0.5rem] flex flex-col justify-center items-center"
+      }
+    >
+      <button onClick={closeModal} className="absolute top-[5%] right-[5%]">
+        <IoCloseSharp size={25} color="black" />
+      </button>
+
+      <div className="w-[100%] pr-[1rem] pl-[1rem] flex flex-col items-center gap-[2rem] justify-center">
+        <p className="text-black font-bold text-[1.3rem] text-center w-[90%]">
+          ¿Estás seguro de que deseas marcar como "Pendiente de Envio" el/los
+          archivo(s)?
+        </p>
+
+        <div className="flex gap-[3rem] w-[100%] justify-center">
+          <CustomButton onClick={handleOnAccept}>Aceptar</CustomButton>
+          <CustomButton background="delete" onClick={closeModal}>
+            Cancelar
+          </CustomButton>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export { SendAudioFile, RejectAudio, SetSendAudioError, SetSendAudioPending };

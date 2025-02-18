@@ -13,6 +13,7 @@ import {
   RejectAudio,
   SendAudioFile,
   SetSendAudioError,
+  SetSendAudioPending,
 } from "@/components/Modals/SendAudioFileModals/SendAudioFileModals";
 import useModal from "@/hooks/useModal";
 import { getSendAudioFiles } from "@/services/repertoire";
@@ -154,6 +155,17 @@ function page() {
                       onClick: () =>
                         openModal(
                           <SetSendAudioError
+                            idSend={a.id_envio_vericast}
+                            idRepertoire={a.fonogramaDelEnvio.id_fonograma}
+                            onSuccess={() => getSendAudioFilesData()}
+                          />
+                        ),
+                    },
+                    {
+                      label: "Error",
+                      onClick: () =>
+                        openModal(
+                          <SetSendAudioPending
                             idSend={a.id_envio_vericast}
                             idRepertoire={a.fonogramaDelEnvio.id_fonograma}
                             onSuccess={() => getSendAudioFilesData()}
