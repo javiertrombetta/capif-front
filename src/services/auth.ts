@@ -64,6 +64,13 @@ export const authLogout = async () => {
   }
 };
 
+export const validateCuit = async (cuit: string) => {
+  const response = await axiosInstance.get<{ message: string }>(
+    "auth/validate/" + cuit
+  );
+  return response.status;
+};
+
 export const getAuthData = async (): Promise<AuthProps> => {
   try {
     const { data } = await axiosInstance.get<GetAuthDataResponse>("users/me");
@@ -72,8 +79,8 @@ export const getAuthData = async (): Promise<AuthProps> => {
       id_usuario: data.usuario.id,
       productoras: data.productoras,
       vistas: data.vistas.map((vista) => ({
-        nombre: vista.nombre_vista,
-        nombre_vista_superior: vista.nombre_vista_superior,
+        nombre: vista.vista,
+        nombre_vista_superior: vista.vista_superior,
       })),
       productoraActiva: data.usuario.productora_activa || data.productoras[0], //ToDo: traer productora activa eventualmente
       loading: false,

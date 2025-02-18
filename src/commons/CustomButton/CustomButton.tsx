@@ -20,31 +20,22 @@ const CustomButton: FC<CustomButtonProps> = ({
   background,
 }) => {
   const handleSetBackground = (): React.CSSProperties => {
-    if (background) {
-      switch (background) {
-        case "disabled":
-          return {
-            backgroundColor: "#979797",
-            color: "white",
-          };
-
-        case "warn":
-          return {
-            backgroundColor: "#f39c12",
-            color: "white",
-          };
-        case "delete":
-          return {
-            backgroundColor: "#e74c3c",
-            color: "white",
-          };
-      }
-    } else {
-      return {
-        backgroundColor: "#1280e1",
-        color: "white",
-      };
+    let backgroundColor = "";
+    switch (background) {
+      case "disabled":
+        backgroundColor = "#979797";
+        break;
+      case "warn":
+        backgroundColor = "#f39c12";
+        break;
+      case "delete":
+        backgroundColor = "#e74c3c";
+        break;
+      default:
+        backgroundColor = "#1280e1";
     }
+
+    return { backgroundColor, color: "white" };
   };
 
   return (

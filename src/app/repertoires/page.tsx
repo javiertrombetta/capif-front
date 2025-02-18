@@ -37,7 +37,7 @@ function page() {
       {
         label: "Editar",
         onClick: () => {
-          router.push("/edit-phonogram/" + id);
+          router.push("/repertoires/" + id);
         },
       },
       ...(rol === ROLES.SUPER_ADMIN || rol === ROLES.CAPIF_ADMIN
@@ -45,7 +45,7 @@ function page() {
             {
               label: "Territorialidad",
               onClick: () => {
-                router.push("/territoriality-phonogram/" + id);
+                router.push(`/repertoires/${id}/territoriality`);
               },
             },
           ]
@@ -54,7 +54,7 @@ function page() {
         ? [
             {
               label: "Titularidad",
-              onClick: () => router.push("/titularity-phonogram/" + id),
+              onClick: () => router.push(`/repertoires/${id}/titularity`),
             },
           ]
         : []),
@@ -170,7 +170,7 @@ const SearchPhonogramForm: FC = () => {
           labelText="AÑO DE PUBLICACIÓN"
         />
       </div>
-      <div className="w-[100%] flex justify-center items-end pl-[2rem] pr-[2rem] gap-[2rem]">
+      <div className="w-[100%] flex justify-start items-end pl-[2rem] pr-[2rem] gap-[2rem]">
         <CustomSearchField name="isrc" id="isrc" type="text" labelText="ISRC" />
         <CustomSearchField
           name="productora"
@@ -184,10 +184,12 @@ const SearchPhonogramForm: FC = () => {
           type="text"
           labelText="SELLO"
         />
-        <CustomButton type="submit">
-          <FaSearch />
-          Buscar
-        </CustomButton>
+        <div className="w-[100%]">
+          <CustomButton type="submit">
+            <FaSearch />
+            Buscar
+          </CustomButton>
+        </div>
       </div>
     </Form>
   );
