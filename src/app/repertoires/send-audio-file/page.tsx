@@ -162,7 +162,7 @@ function page() {
                         ),
                     },
                     {
-                      label: "Error",
+                      label: "Pendiente",
                       onClick: () =>
                         openModal(
                           <SetSendAudioPending
