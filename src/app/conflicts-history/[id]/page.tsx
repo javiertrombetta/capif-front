@@ -50,14 +50,18 @@ function page() {
   };
 
   const handleMenuOptions = (
-    id: string,
+    _id: string,
     participationId: string,
-    confirmedPercentage: number
+    confirmedPercentage: number,
+    idPhonogram: string
   ) => {
     return [
       {
         label: "Modificar",
-        onClick: () => router.push(`/titularity-phonogram/${id}/edit-titular`),
+        onClick: () =>
+          router.push(
+            `/repertoires/${idPhonogram}/titularity/${participationId}`
+          ),
       },
       {
         label: "Fijar Porcentaje",
@@ -81,6 +85,8 @@ function page() {
   useEffect(() => {
     handleGetConflict();
   }, []);
+
+  console.log(conflict);
 
   return (
     <CustomLayout>
@@ -134,7 +140,8 @@ function page() {
                 menuOptions={handleMenuOptions(
                   p.id_conflicto_participacion,
                   p.participacionDeLaParte.id_participacion,
-                  p.participacionDeLaParte.porcentaje_participacion
+                  p.participacionDeLaParte.porcentaje_participacion,
+                  conflict.fonograma_id
                 )}
               />,
             ])}
