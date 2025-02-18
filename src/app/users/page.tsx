@@ -61,10 +61,7 @@ export default function page() {
     <CustomLayout>
       <Header title="Usuarios" />
       <div className="w-[100%] flex-1 flex flex-col overflow-y-auto">
-        <Formik
-          initialValues={initialValues}
-          onSubmit={(values) => handleOnSubmit(values)}
-        >
+        <Formik initialValues={initialValues} onSubmit={handleOnSubmit}>
           <Form className="h-[4rem] w-[100%] flex items-end mt-[1rem] gap-[2rem] pl-[1rem] pr-[2rem]">
             <CustomSearchField
               id="email"

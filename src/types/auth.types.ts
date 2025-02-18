@@ -64,8 +64,8 @@ export interface GetAuthDataResponse {
   }[];
   vistas: [
     {
-      nombre_vista: string;
-      nombre_vista_superior: string;
+      vista: string;
+      vista_superior: string;
     },
   ];
 }
