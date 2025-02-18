@@ -1,7 +1,6 @@
 export enum ModalNames {
   COMPLETE_REGISTRATION = "CompleteRegistration",
   ACCEPT_REGISTRATION = "AcceptRegistration",
-  ADD_TERRITORIALITY = "AddTerritoriality",
   SEARCH_CONFLICTS_FILTERS = "SearchConflictsFilters",
   FIRST_INSTANCE = "FirstInstance",
   SECOND_INSTANCE = "SecondInstance",
@@ -29,10 +28,6 @@ export enum ModalNames {
   EDIT_PHONOGRAM_SAVE = "EditPhonogramSave",
   EDIT_PHONOGRAM_CANCEL = "EditPhonogramCancel",
   TERRITORIALITY_SAVE = "TerritorialitySave",
-  SEND_AUDIO_FILE = "SendAudioFile",
-  SEND_AUDIO_REJECT = "SendAudioReject",
-  SEND_AUDIO_SET_ERROR_SEND = "SendAudioSetErrorSend",
-  TERRITORIALITY_UNABLE = "TerritorialityUnable",
   AUDIT_SESSIONS_PURGE = "AuditSessionsPurge",
   SUBMIT_SEND_APPILICATION = "SubmitSendApplication",
 }
