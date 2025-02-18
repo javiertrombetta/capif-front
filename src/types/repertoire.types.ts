@@ -139,7 +139,16 @@ export interface GetSendAudioFilesResponse {
   limit: number;
   data: {
     id_envio_vericast: string;
-    fonogramaDelEnvio: { titulo: string };
+    fonogramaDelEnvio: {
+      id_fonograma: string;
+      isrc: string;
+      titulo: string;
+      artista: string;
+      album: string;
+      duracion: string;
+      sello_discografico: string;
+      anio_lanzamiento: number;
+    };
     tipo_estado: EstadoEnvio;
     fecha_envio_inicial: string;
     fecha_envio_ultimo: string;
