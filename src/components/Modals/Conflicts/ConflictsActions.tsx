@@ -2,7 +2,14 @@ import React, { FC } from "react";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import { IoCloseSharp } from "react-icons/io5";
 
-const GrantExtension: FC<{ onCloseModal: () => void }> = ({ onCloseModal }) => {
+const GrantExtension: FC<{
+  onCloseModal: () => void;
+  onGrantExtension: () => void;
+}> = ({ onCloseModal, onGrantExtension }) => {
+  const onAccept = () => {
+    onGrantExtension();
+    onCloseModal();
+  };
   return (
     <div
       className={
@@ -19,7 +26,7 @@ const GrantExtension: FC<{ onCloseModal: () => void }> = ({ onCloseModal }) => {
         </p>
 
         <div className="flex gap-[3rem] w-[100%] justify-center">
-          <CustomButton>Aceptar</CustomButton>
+          <CustomButton onClick={onAccept}>Aceptar</CustomButton>
           <CustomButton background="delete" onClick={onCloseModal}>
             Cancelar
           </CustomButton>
@@ -29,9 +36,14 @@ const GrantExtension: FC<{ onCloseModal: () => void }> = ({ onCloseModal }) => {
   );
 };
 
-const ConfirmPercentage: FC<{ onCloseModal: () => void }> = ({
-  onCloseModal,
-}) => {
+const ConfirmPercentage: FC<{
+  onCloseModal: () => void;
+  handleConfirmPercentage: () => void;
+}> = ({ onCloseModal, handleConfirmPercentage }) => {
+  const handleAccept = async () => {
+    await handleConfirmPercentage();
+    onCloseModal();
+  };
   return (
     <div
       className={
@@ -48,7 +60,7 @@ const ConfirmPercentage: FC<{ onCloseModal: () => void }> = ({
         </p>
 
         <div className="flex gap-[3rem] w-[100%] justify-center">
-          <CustomButton>Aceptar</CustomButton>
+          <CustomButton onClick={handleAccept}>Aceptar</CustomButton>
           <CustomButton background="delete" onClick={onCloseModal}>
             Cancelar
           </CustomButton>
@@ -85,7 +97,15 @@ const Accept: FC<{ onCloseModal: () => void }> = ({ onCloseModal }) => {
   );
 };
 
-const Desist: FC<{ onCloseModal: () => void }> = ({ onCloseModal }) => {
+const Desist: FC<{
+  onCloseModal: () => void;
+  onDesistConflict: () => void;
+}> = ({ onCloseModal, onDesistConflict }) => {
+  const onAccept = () => {
+    onDesistConflict();
+    onCloseModal();
+  };
+
   return (
     <div
       className={
@@ -102,7 +122,7 @@ const Desist: FC<{ onCloseModal: () => void }> = ({ onCloseModal }) => {
         </p>
 
         <div className="flex gap-[3rem] w-[100%] justify-center">
-          <CustomButton>Aceptar</CustomButton>
+          <CustomButton onClick={onAccept}>Aceptar</CustomButton>
           <CustomButton background="delete" onClick={onCloseModal}>
             Cancelar
           </CustomButton>
