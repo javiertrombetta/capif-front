@@ -1,5 +1,5 @@
 "use client";
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
 import CustomTable from "@/commons/CustomTable/CustomTable";
@@ -11,56 +11,114 @@ import { useRouter } from "next/navigation";
 import { setModal } from "@/store/modalSlice";
 import { ModalNames } from "@/types/modalNames";
 import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
+import {
+  desistConflict,
+  getConflicts,
+  grantExtension,
+} from "@/services/conflicts";
+import { Conflicto } from "@/types/conflicts.types";
+import { toast } from "react-toastify";
+import useModal from "@/hooks/useModal";
+import {
+  GrantExtension,
+  Desist,
+} from "@/components/Modals/Conflicts/ConflictsActions";
 
 function page() {
+  const [conflicts, setConflicts] = useState<Conflicto[]>([]);
   const dispatch = useAppDispatch();
   const authData = useAppSelector((state) => state.auth);
   const router = useRouter();
+  const { openModal, closeModal } = useModal();
+
+  const handleGetConflicts = async () => {
+    try {
+      const response = await getConflicts();
+      setConflicts(response.data);
+    } catch (error) {
+      toast.error(`${error}`);
+    }
+  };
 
   const handleOpenModal = (modalType: ModalNames) => {
     dispatch(setModal({ isActive: true, type: modalType }));
   };
 
-  const menuOptions = [
-    ...(authData.rol === ROLES.SUPER_ADMIN || authData.rol === ROLES.CAPIF_ADMIN
-      ? [
-          {
-            label: "Otorgar Prórroga",
-            onClick: () =>
-              handleOpenModal(ModalNames.CONFLICTS_GRANT_EXTENSION),
-          },
-          {
-            label: "Ver Titulares",
-            onClick: () => router.push("/conflicts-history"),
-          },
-        ]
-      : []),
-    ...(authData.rol === ROLES.USER_PRODUCER || authData.rol === ROLES.EMPLOYEE
-      ? [
-          {
-            label: "Confirmar Porcentaje",
-            onClick: () =>
-              handleOpenModal(ModalNames.CONFLICTS_CONFIRM_PERCENTAGE),
-          },
-          {
-            label: "Enviar Documentación",
-            onClick: () =>
-              handleOpenModal(ModalNames.CONFLICTS_SEND_DOCUMENTATION),
-          },
-        ]
-      : []),
-    {
-      label: "Desistir conflicto",
-      onClick: () => handleOpenModal(ModalNames.CONFLICTS_DESIST),
-    },
-  ];
+  const onGrantExtension = async (id: string) => {
+    try {
+      const response = await grantExtension(id);
+      toast.success(response.message);
+    } catch (error) {
+      toast.error(error as string);
+    }
+  };
+
+  const onDesistConflict = async (id: string) => {
+    try {
+      const response = await desistConflict(id);
+      toast.success(response.message);
+    } catch (error) {
+      toast.error(error as string);
+    }
+  };
+
+  const handleMenuOptions = (id: string) => {
+    return [
+      ...(authData.rol === ROLES.SUPER_ADMIN ||
+      authData.rol === ROLES.CAPIF_ADMIN
+        ? [
+            {
+              label: "Otorgar Prórroga",
+              onClick: () =>
+                openModal(
+                  <GrantExtension
+                    onGrantExtension={() => onGrantExtension(id)}
+                    onCloseModal={closeModal}
+                  />
+                ),
+            },
+            {
+              label: "Ver Titulares",
+              onClick: () => router.push(`/conflicts-history/${id}`),
+            },
+          ]
+        : []),
+      ...(authData.rol === ROLES.USER_PRODUCER ||
+      authData.rol === ROLES.EMPLOYEE
+        ? [
+            {
+              label: "Confirmar Porcentaje",
+              onClick: () =>
+                handleOpenModal(ModalNames.CONFLICTS_CONFIRM_PERCENTAGE),
+            },
+            {
+              label: "Enviar Documentación",
+              onClick: () =>
+                handleOpenModal(ModalNames.CONFLICTS_SEND_DOCUMENTATION),
+            },
+          ]
+        : []),
+      {
+        label: "Desistir conflicto",
+        onClick: () =>
+          openModal(
+            <Desist
+              onDesistConflict={() => onDesistConflict(id)}
+              onCloseModal={closeModal}
+            />
+          ),
+      },
+    ];
+  };
+
+  useEffect(() => {
+    handleGetConflicts();
+  }, []);
 
   return (
     <CustomLayout>
       <Header title="Conflictos" />
-
       <SearchConflictForm />
-
       <div className="w-[100%] mt-[2rem] pr-[2rem] pl-[2rem] overflow-y-auto">
         <CustomTable
           columnNames={[
@@ -71,32 +129,26 @@ function page() {
             { name: "Estado del Conflicto", isSortable: true },
             { name: "Acción", isSortable: false },
           ]}
-          columnValues={[
-            [
-              "SONY MUSIC",
-              "ARF100300069",
-              "21/11/24",
-              "21/11/24",
-              "Resuelto",
-              <ActionDropdownButton menuOptions={menuOptions} />,
-            ],
-            [
-              "SONY MUSIC",
-              "ARF100300069",
-              "21/11/24",
-              "21/11/24",
-              "Resuelto",
-              <ActionDropdownButton menuOptions={menuOptions} />,
-            ],
-            [
-              "SONY MUSIC",
-              "ARF100300069",
-              "21/11/24",
-              "21/11/24",
-              "Resuelto",
-              <ActionDropdownButton menuOptions={menuOptions} />,
-            ],
-          ]}
+          // columnValues={[
+          //   [
+          //     "SONY MUSIC",
+          //     "ARF100300069",
+          //     "21/11/24",
+          //     "21/11/24",
+          //     "Resuelto",
+          //     <ActionDropdownButton menuOptions={menuOptions} />,
+          //   ],
+          // ]}
+          columnValues={conflicts.map((c) => [
+            c.productoraDelConflicto.nombre_productora,
+            c.fonogramaDelConflicto.isrc,
+            c.fecha_periodo_desde,
+            c.fecha_periodo_hasta,
+            c.estado_conflicto,
+            <ActionDropdownButton
+              menuOptions={handleMenuOptions(c.id_conflicto)}
+            />,
+          ])}
         />
       </div>
     </CustomLayout>

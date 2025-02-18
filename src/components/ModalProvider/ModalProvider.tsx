@@ -37,10 +37,7 @@ import {
   CancelEditPhonogramModal,
 } from "../Modals/EditPhonogramModals/EditPhonogramModals";
 import {
-  GrantExtension,
-  ConfirmPercentage,
   SendDocumentation,
-  Desist,
   Accept,
 } from "../Modals/Conflicts/ConflictsActions";
 import AuditSessionsPurgeModal from "../Modals/AuditSessionsPurgeModal/AuditSessionsPurgeModal";
@@ -134,17 +131,10 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
         return <CancelEditPhonogramModal onCloseModal={onCloseModal} />;
       case ModalNames.CASHFLOW_TRANSFERS_EXPORT:
         return <CashflowTransfersExportModal onCloseModal={onCloseModal} />;
-
-      case ModalNames.CONFLICTS_GRANT_EXTENSION:
-        return <GrantExtension onCloseModal={onCloseModal} />;
-      case ModalNames.CONFLICTS_CONFIRM_PERCENTAGE:
-        return <ConfirmPercentage onCloseModal={onCloseModal} />;
       case ModalNames.CONFLICTS_ACCEPT:
         return <Accept onCloseModal={onCloseModal} />;
       case ModalNames.CONFLICTS_SEND_DOCUMENTATION:
         return <SendDocumentation onCloseModal={onCloseModal} />;
-      case ModalNames.CONFLICTS_DESIST:
-        return <Desist onCloseModal={onCloseModal} />;
       case ModalNames.AUDIT_SESSIONS_PURGE:
         return <AuditSessionsPurgeModal onCloseModal={onCloseModal} />;
     }
