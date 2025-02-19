@@ -9,6 +9,7 @@ export interface CreatePhonogramSliceProps {
   anio_lanzamiento: number | null;
   sello_discografico: string | null;
   codigo_designacion: string | null;
+  id_repertorio: string | null;
   participaciones:
     | {
         cuit: string | null;
@@ -29,6 +30,7 @@ export const initialStateCreatePhonogram: CreatePhonogramSliceProps = {
   anio_lanzamiento: null,
   sello_discografico: null,
   codigo_designacion: null,
+  id_repertorio: null,
   participaciones: null,
   territorios: [],
 };
