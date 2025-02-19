@@ -61,6 +61,7 @@ export interface GetAuthDataResponse {
   productoras: {
     id: string;
     productora: string;
+    cuit: string;
   }[];
   vistas: [
     {
