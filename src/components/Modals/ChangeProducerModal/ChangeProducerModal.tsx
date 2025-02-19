@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { IoClose } from "react-icons/io5";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { selectProductionCompany } from "@/services/auth";
-import { getProducerById } from "@/services/producers";
 import { setAuthData } from "@/store/authSlice";
 import useModal from "@/hooks/useModal";
 
@@ -17,14 +16,10 @@ export const ChangeProducerModal = () => {
   }) => {
     try {
       await selectProductionCompany(element.id);
-      const company = await getProducerById(element.id);
-      const productionCompany = { ...element, cuit_cuil: company.cuit_cuil };
       if (window && window.localStorage) {
-        localStorage.setItem("company", JSON.stringify(productionCompany));
+        localStorage.setItem("company", JSON.stringify(element));
       }
-      dispatch(
-        setAuthData({ ...authData, productoraActiva: productionCompany })
-      );
+      dispatch(setAuthData({ ...authData, productoraActiva: element }));
     } catch (error) {
       console.log(error);
     } finally {
