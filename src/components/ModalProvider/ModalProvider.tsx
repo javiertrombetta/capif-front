@@ -33,10 +33,6 @@ import {
 import FinishNewPhonogram from "../Modals/FinishNewPhonogram/FinishNewPhonogram";
 import GardelAwardsPurge from "../Modals/GardelAwardsPurge/GardelAwardsPurge";
 import {
-  SaveEditPhonogramModal,
-  CancelEditPhonogramModal,
-} from "../Modals/EditPhonogramModals/EditPhonogramModals";
-import {
   SendDocumentation,
   Accept,
 } from "../Modals/Conflicts/ConflictsActions";
@@ -44,7 +40,7 @@ import AuditSessionsPurgeModal from "../Modals/AuditSessionsPurgeModal/AuditSess
 
 interface ModalContextType {
   modal: ReactNode | null;
-  openModal: (name: ReactNode) => void;
+  openModal: (modal: ReactNode) => void;
   closeModal: () => void;
 }
 
@@ -125,10 +121,6 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
         return <FinishNewPhonogram onCloseModal={onCloseModal} />;
       case ModalNames.GARDEL_AWARDS_PURGE:
         return <GardelAwardsPurge onCloseModal={onCloseModal} />;
-      case ModalNames.EDIT_PHONOGRAM_SAVE:
-        return <SaveEditPhonogramModal onCloseModal={onCloseModal} />;
-      case ModalNames.EDIT_PHONOGRAM_CANCEL:
-        return <CancelEditPhonogramModal onCloseModal={onCloseModal} />;
       case ModalNames.CASHFLOW_TRANSFERS_EXPORT:
         return <CashflowTransfersExportModal onCloseModal={onCloseModal} />;
       case ModalNames.CONFLICTS_ACCEPT:
