@@ -21,8 +21,8 @@ import TimerInput from "@/components/TimerInput/TimerInput";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { setCreatePhonogram } from "@/store/createPhonogramSlice";
 import {
+  addRepertoireTitularities,
   createRepertoire,
-  getPrefixIsrc,
   uploadPhonogramFile,
   validateISRC,
 } from "@/services/repertoire";
@@ -30,21 +30,21 @@ import { isrcValidation } from "@/utils/formValidations";
 
 function page() {
   const router = useRouter();
-  const [isNewPhonogram, setIsNewPhonogram] = useState<boolean>(true);
   const [flowState, setFlowState] = useState<
     | "start"
-    | "existing_phonogram"
+    | "existing_repertoire"
     | "new_phonogram"
     | "load_audio"
     | "add_participation"
     | "edit_territoriality"
-  >("start");
+  >("add_participation");
   const [audio, setAudio] = useState<File | null>(null);
   const authData = useAppSelector((state) => state.auth);
   const createPhonogramData = useAppSelector((state) => state.createPhonogram);
+
   const handleGoBack = () => {
     switch (flowState) {
-      case "existing_phonogram":
+      case "existing_repertoire":
         setFlowState("start");
         break;
 
@@ -57,12 +57,7 @@ function page() {
         break;
 
       case "add_participation":
-        if (isNewPhonogram) {
-          setFlowState("load_audio");
-        } else {
-          setFlowState("existing_phonogram");
-        }
-
+        setFlowState("load_audio");
         break;
 
       case "edit_territoriality":
@@ -97,6 +92,8 @@ function page() {
         codigo_designacion: "00001",
       });
       return response;
+    } else {
+      throw new Error("Uno o mas campos estan incompletos.");
     }
   };
 
@@ -124,13 +121,13 @@ function page() {
     <CustomLayout>
       <Header title="Declaración de Repertorio" />
 
-      {flowState === "start" ? null : (
+      {flowState === "start" || flowState === "existing_repertoire" ? null : (
         <>
           <div className="w-[100%] pr-[2rem] pl-[2rem] flex justify-center items-center mt-[2rem] gap-[0.6rem] relative">
             <p className="text-[#a6acaf] font-bold">Ingresar ISRC</p>
             <IoIosArrowForward color="#a6acaf" size={20} />
             <p
-              className={`${flowState === "existing_phonogram" || flowState === "new_phonogram" ? "text-black" : "text-[#a6acaf]"} font-bold`}
+              className={`${flowState === "new_phonogram" ? "text-black" : "text-[#a6acaf]"} font-bold`}
             >
               Crear/Verificar Fonograma
             </p>
@@ -148,16 +145,11 @@ function page() {
               Territorialidad
             </p>
             <IoIosArrowForward color="#a6acaf" size={20} />
-
-            {isNewPhonogram && (
-              <>
-                <p
-                  className={`${flowState === "load_audio" ? "text-black" : "text-[#a6acaf]"} font-bold`}
-                >
-                  Cargar Audio
-                </p>
-              </>
-            )}
+            <p
+              className={`${flowState === "load_audio" ? "text-black" : "text-[#a6acaf]"} font-bold`}
+            >
+              Cargar Audio
+            </p>
           </div>
           <div className="relative mt-[0.5rem]">
             <div className="absolute left-[3%] top-[20%]">
@@ -174,13 +166,12 @@ function page() {
 
       {flowState === "start" ? (
         <SearchForISRC
-          setExisting={() => {
-            setFlowState("existing_phonogram");
-            setIsNewPhonogram(false);
-          }}
-          setNew={() => {
-            setFlowState("new_phonogram");
-            setIsNewPhonogram(true);
+          onSubmit={(isrc: string) => {
+            if (isrc) {
+              setFlowState("existing_repertoire");
+            } else {
+              setFlowState("new_phonogram");
+            }
           }}
         />
       ) : null}
@@ -193,12 +184,8 @@ function page() {
         />
       )}
 
-      {flowState === "existing_phonogram" && (
-        <ExistingPhonogram
-          onSubmit={() => {
-            setFlowState("add_participation");
-          }}
-        />
+      {flowState === "existing_repertoire" && (
+        <ExistingPhonogram handleGoBack={handleGoBack} />
       )}
 
       {flowState === "add_participation" && (
@@ -222,90 +209,56 @@ function page() {
   );
 }
 
-const SearchForISRC: FC<{ setExisting: () => void; setNew: () => void }> = ({
-  setExisting,
-  setNew,
+const SearchForISRC: FC<{ onSubmit: (isrc: string) => void }> = ({
+  onSubmit,
 }) => {
-  const [prefixIsrc, setPrefixIsrc] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   const createPhogramCurrentData = useAppSelector(
     (state) => state.createPhonogram
   );
 
-  const handleGetPrefixIsrc = async () => {
-    const prefix = await getPrefixIsrc();
-    setPrefixIsrc(prefix.data);
-  };
   const initialValues = {
     ISRC: "",
   };
 
-  const onSubmit = async (
-    e: React.FormEvent<HTMLFormElement>,
-    values: { ISRC: string }
-  ) => {
-    e.preventDefault();
-
-    const available = await validateISRC(`${prefixIsrc}${values.ISRC}`);
-    if (available) {
-      setNew();
-    } else {
-      setExisting();
+  const handleOnSubmit = async (values: { ISRC: string }) => {
+    try {
+      const { available, id_repertorio } = await validateISRC(`${values.ISRC}`);
+      onSubmit(available ? "" : values.ISRC);
+      dispatch(
+        setCreatePhonogram({
+          ...createPhogramCurrentData,
+          codigo_designacion: values.ISRC,
+          id_repertorio: id_repertorio ?? "",
+        })
+      );
+    } catch (error) {
+      console.error(error);
     }
-    dispatch(
-      setCreatePhonogram({
-        ...createPhogramCurrentData,
-        codigo_designacion: values.ISRC,
-      })
-    );
   };
 
-  useEffect(() => {
-    handleGetPrefixIsrc();
-  }, []);
-
   return (
-    <div className="w-[100%] h-[20%] flex flex-col justify-center items-center mt-[3rem] pl-[3rem] pr-[3rem]">
+    <div className="w-[100%] h-[20%] flex flex-col justify-center items-center mt-[3rem] px-[3rem]">
       <p className="text-black font-bold">Ingresa el ISRC del fonograma.</p>
-      {prefixIsrc ? (
-        <Formik
-          onSubmit={() => {}}
-          validationSchema={isrcValidation}
-          initialValues={initialValues}
-        >
-          {({ isSubmitting, isValid, dirty, values }) => (
-            <Form
-              onSubmit={(e: React.FormEvent<HTMLFormElement>) =>
-                onSubmit(e, values)
-              }
-              className="w-[60%] flex flex-col justify-center items-center"
+      <Formik
+        onSubmit={(values) => handleOnSubmit(values)}
+        validationSchema={isrcValidation}
+        initialValues={initialValues}
+      >
+        {({ isSubmitting, isValid, dirty }) => (
+          <Form className="w-[60%] flex flex-col justify-center items-center space-x-[1rem]">
+            <CustomField id="ISRC" name="ISRC" type="text" />
+            <CustomButton
+              type="submit"
+              {...(isSubmitting || !isValid || !dirty
+                ? { disabled: true, background: "disabled" }
+                : {})}
             >
-              <div className="mt-[2rem] flex items-start gap-[0.5rem]">
-                <p className="text-black text-[1.3rem] font-bold">
-                  {prefixIsrc}
-                </p>
-                <CustomField
-                  width="w-[10rem]"
-                  type="text"
-                  id="ISRC"
-                  name="ISRC"
-                />
-              </div>
-              {isSubmitting || !isValid || !dirty ? (
-                <CustomButton
-                  type="submit"
-                  background="disabled"
-                  disabled={isSubmitting || !isValid || !dirty}
-                >
-                  Buscar ISRC
-                </CustomButton>
-              ) : (
-                <CustomButton type="submit">Buscar ISRC</CustomButton>
-              )}
-            </Form>
-          )}
-        </Formik>
-      ) : null}
+              Buscar ISRC
+            </CustomButton>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };
@@ -456,72 +409,115 @@ const NewPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
   );
 };
 
-const ExistingPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
+const ExistingPhonogram: FC<{
+  handleGoBack: () => void;
+}> = ({ handleGoBack }) => {
+  const router = useRouter();
+  const authData = useAppSelector((state) => state.auth);
+  const { codigo_designacion, id_repertorio } = useAppSelector(
+    (state) => state.createPhonogram
+  );
+  const [percentage, setPercentage] = useState<string | number>("0");
+
   const initialValues = {
-    titulo: "Cae el Sol",
-    artista: "Airbag",
-    album: "Voragine",
-    duracion: "00:03:57",
-    productor_originario: "Sony Music",
-    año_lanzamiento: "2011",
-    registro_desde: "21/11/2024",
-    registro_hasta: "15/06/2025",
+    productora: authData.productoraActiva?.productora || "",
+    porcentaje_participacion: "",
+    fecha_inicio: `${new Date().getFullYear()}-01-01`,
+    fecha_hasta: "2099-12-31",
+  };
+
+  const handleChangePercentage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputValue = parseInt(e.target.value ? e.target.value : "0");
+
+    if (inputValue <= 100) {
+      setPercentage(inputValue || "");
+    }
+  };
+
+  const onSubmit = async (values: typeof initialValues) => {
+    if (id_repertorio) {
+      try {
+        await addRepertoireTitularities(id_repertorio, {
+          participaciones: [
+            {
+              fecha_inicio: values.fecha_inicio,
+              fecha_hasta: values.fecha_hasta,
+              porcentaje_participacion: parseFloat(percentage.toString()),
+            },
+          ],
+        });
+        toast.success("Titularidad agregada correctamente");
+        router.push("/repertoires");
+      } catch (error) {
+        console.error(error);
+        toast.error("Error al agregar titularidad");
+      }
+    }
   };
 
   return (
     <div className="w-[100%] flex flex-col justify-center items-center mt-[3rem] pl-[3rem] pr-[3rem]">
-      <p className="text-black font-bold">Fonograma Existente.</p>
-
-      <Formik onSubmit={onSubmit} initialValues={initialValues}>
-        {() => (
-          <Form className="w-[60%] flex flex-col justify-center items-center">
+      <p className="text-black font-bold text-3xl">Agregar Titularidad</p>
+      <p className="text-black font-normal">
+        Fonograma Existente ({codigo_designacion})
+      </p>
+      {authData && (
+        <Formik onSubmit={onSubmit} initialValues={initialValues}>
+          <Form className="max-w-[30rem] w-[100%] p-[2rem] mt-[2rem] flex flex-col items-center gap-[1rem] border-[1px] border-[#c8c8c8]">
             <CustomField
-              type="text"
-              id="titulo"
-              name="titulo"
-              labelText="Titulo"
               disabled
+              id="productora"
+              name="productora"
+              type="text"
+              labelText="PRODUCTORA"
             />
             <CustomField
-              type="text"
-              id="artista"
-              name="artista"
-              labelText="Artista"
-              disabled
+              id="fecha_inicio"
+              name="fecha_inicio"
+              type="date"
+              labelText="DESDE"
             />
             <CustomField
-              type="text"
-              id="album"
-              name="album"
-              labelText="Album"
-              disabled
+              id="fecha_hasta"
+              name="fecha_hasta"
+              type="date"
+              labelText="HASTA"
             />
-            <CustomField
-              type="text"
-              id="duracion"
-              name="duracion"
-              labelText="Duración"
-              disabled
-            />
-            <CustomField
-              type="text"
-              id="productor_originario"
-              name="productor_originario"
-              labelText="Productor Originario"
-              disabled
-            />
-            <CustomField
-              type="text"
-              id="año_lanzamiento"
-              name="año_lanzamiento"
-              labelText="Año de lanzamiento"
-              disabled
-            />
-
-            <CustomButton type="submit">Continuar</CustomButton>
+            <div className={"w-[100%] container flex flex-col"}>
+              <label style={{ color: "black" }} className="font-bold">
+                Porcentaje
+              </label>
+              <input
+                type="number"
+                min={0}
+                max={100}
+                value={percentage}
+                onChange={handleChangePercentage}
+                className={
+                  "padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-[black]"
+                }
+              />
+              <div className="w-[100%] flex justify-center items-center h-[1rem]">
+                {Number(percentage) > 100 && (
+                  <p className="text-[#e74c3c] text-[0.9rem] w-[100%] mt-[0.5rem] text-center top-[100%]">
+                    Estás excediendo el porcentaje disponible del fonograma.
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="w-[100%] flex flex-row justify-between">
+              <CustomButton type="submit">Agregar</CustomButton>
+              <CustomButton
+                type="button"
+                background="delete"
+                onClick={handleGoBack}
+              >
+                Cancelar
+              </CustomButton>
+            </div>
           </Form>
-        )}
-      </Formik>
+        </Formik>
+      )}
     </div>
   );
 };
@@ -574,29 +570,22 @@ const LoadAudio: FC<{
 };
 
 const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
-  const authData = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
+  const authData = useAppSelector((state) => state.auth);
   const createPhogramCurrentData = useAppSelector(
     (state) => state.createPhonogram
   );
+
   const year = new Date().getFullYear();
-  const initialValues: {
-    cuit_productora: string;
-    porcentaje_participacion: number | string;
-    fecha_participacion_inicio: string;
-    fecha_participacion_hasta: string;
-  } = {
-    cuit_productora: authData.productoraActiva?.cuit_cuil || "",
+  const initialValues = {
+    productora: authData.productoraActiva?.productora,
     porcentaje_participacion: "",
-    fecha_participacion_inicio: `${year}-01-01`,
-    fecha_participacion_hasta: "2099-12-31",
+    fecha_inicio: `${year}-01-01`,
+    fecha_hasta: "2099-12-31",
   };
 
   const [participacion, setParticipacion] =
     useState<typeof initialValues>(initialValues);
-  const [participaciones, setParticipaciones] = useState<
-    Array<typeof initialValues>
-  >([]);
 
   const handleChangePercentage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = parseInt(e.target.value ? e.target.value : "0");
@@ -604,156 +593,84 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
     if (inputValue <= 100) {
       setParticipacion({
         ...participacion,
-        porcentaje_participacion: inputValue || "",
+        porcentaje_participacion: inputValue.toString() || "",
       });
     }
   };
 
   const handleSubmit = () => {
-    if (participaciones.length > 0) {
-      const titulares = participaciones.map((participacion) => {
-        return {
-          cuit: participacion.cuit_productora,
-          porcentaje_participacion: Number(
-            participacion.porcentaje_participacion
-          ),
-          fecha_inicio: participacion.fecha_participacion_inicio,
-          fecha_hasta: participacion.fecha_participacion_hasta,
-        };
-      });
-
+    if (participacion) {
       dispatch(
         setCreatePhonogram({
           ...createPhogramCurrentData,
-          participaciones: titulares,
+          participaciones: [
+            {
+              cuit: "",
+              porcentaje_participacion: Number(
+                participacion.porcentaje_participacion
+              ),
+              fecha_inicio: participacion.fecha_inicio,
+              fecha_hasta: participacion.fecha_hasta,
+            },
+          ],
         })
       );
 
       onSubmit();
     }
   };
-  /*
-  const handleSetCuitCuilCompany = () => {
-    setParticipacion({
-      ...participacion,
-      cuit_productora: authData.productoraActiva?.cuit_cuil || "",
-    });
-  };
-
-  useEffect(() => {
-    handleSetCuitCuilCompany();
-  }, []);
-*/
 
   return (
     <div className="w-[100%] flex flex-col justify-center items-center mt-[3rem] pl-[3rem] pr-[3rem]">
       <p className="text-black font-bold text-[1.3rem]">Agregar Titulares</p>
       <div className="w-[100%] flex flex-row justify-center items-end space-x-3 py-[1rem]">
-        <div className={" w-[100%] flex flex-col"}>
-          <label style={{ color: "black" }} className="font-bold">
-            CUIT Productora
-          </label>
-
-          <input
-            value={participacion.cuit_productora}
-            onChange={(e) =>
-              setParticipacion({
-                ...participacion,
-                cuit_productora: e.target.value,
-              })
-            }
-            type="text"
-            id="nombre_productora"
-            name="nombre_productora"
-            className={
-              "padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-[black]"
-            }
-          />
-        </div>
-        <div className={" w-[100%] flex flex-col"}>
-          <label style={{ color: "black" }} className="font-bold">
-            Fecha Inicio de Titularidad
-          </label>
-
-          <input
-            value={participacion.fecha_participacion_inicio}
-            onChange={(e) =>
-              setParticipacion({
-                ...participacion,
-                fecha_participacion_inicio: e.target.value,
-              })
-            }
-            type="date"
-            id="fecha_participacion_inicio"
-            name="fecha_participacion_inicio"
-            className={
-              "padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-[black]"
-            }
-          />
-        </div>
-        <div className={" w-[100%] flex flex-col"}>
-          <label style={{ color: "black" }} className="font-bold">
-            Fecha Hasta de Titularidad
-          </label>
-
-          <input
-            value={participacion.fecha_participacion_hasta}
-            onChange={(e) =>
-              setParticipacion({
-                ...participacion,
-                fecha_participacion_hasta: e.target.value,
-              })
-            }
-            type="date"
-            id="fecha_participacion_hasta"
-            name="fecha_participacion_hasta"
-            className={
-              "padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-[black]"
-            }
-          />
-        </div>
-        <div className={"w-[100%] flex flex-col"}>
-          <label style={{ color: "black" }} className="font-bold">
-            Porcentaje de Titularidad
-          </label>
-          <input
-            type="number"
-            min={0}
-            max={100}
-            value={participacion.porcentaje_participacion}
-            onChange={handleChangePercentage}
-            className={
-              "padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-[black]"
-            }
-          />
-        </div>
-        <CustomButton
-          onClick={() =>
-            setParticipaciones([...participaciones, participacion])
-          }
-        >
-          Agregar
-        </CustomButton>
+        <Formik onSubmit={handleSubmit} initialValues={initialValues}>
+          <Form className="max-w-[30rem] w-[100%] p-[2rem] mt-[2rem] flex flex-col items-center gap-[1rem] border-[1px] border-[#c8c8c8]">
+            <CustomField
+              disabled
+              id="productora"
+              name="productora"
+              type="text"
+              labelText="PRODUCTORA"
+            />
+            <CustomField
+              id="fecha_inicio"
+              name="fecha_inicio"
+              type="date"
+              labelText="DESDE"
+            />
+            <CustomField
+              id="fecha_hasta"
+              name="fecha_hasta"
+              type="date"
+              labelText="HASTA"
+            />
+            <div className={"w-[100%] container flex flex-col"}>
+              <label style={{ color: "black" }} className="font-bold">
+                Porcentaje
+              </label>
+              <input
+                type="number"
+                min={0}
+                max={100}
+                value={participacion.porcentaje_participacion}
+                onChange={handleChangePercentage}
+                className={
+                  "padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-[black]"
+                }
+              />
+              <div className="w-[100%] flex justify-center items-center h-[1rem]">
+                {Number(participacion.porcentaje_participacion) > 100 && (
+                  <p className="text-[#e74c3c] text-[0.9rem] w-[100%] mt-[0.5rem] text-center top-[100%]">
+                    Estás excediendo el porcentaje disponible del fonograma.
+                  </p>
+                )}
+              </div>
+              <CustomButton type="submit">Continuar</CustomButton>
+            </div>
+          </Form>
+        </Formik>
       </div>
-      <div className="w-[100%] my-[1rem]">
-        <CustomTable
-          columnNames={[
-            { name: "CUIT", isSortable: true },
-            { name: "PORCENTAJE", isSortable: true },
-            { name: "REGISTRO DESDE", isSortable: true },
-            { name: "REGISTRO HASTA", isSortable: true },
-          ]}
-          columnValues={participaciones.map((p) => [
-            p.cuit_productora,
-            p.porcentaje_participacion,
-            p.fecha_participacion_inicio,
-            p.fecha_participacion_hasta,
-          ])}
-        />
-      </div>
-      <CustomButton onClick={() => handleSubmit()} type="button">
-        Continuar
-      </CustomButton>
     </div>
   );
 };
@@ -791,6 +708,8 @@ const EditTerritoriality: React.FC<{
       )
     );
   };
+
+  console.log(createPhogramCurrentData);
 
   const handleSubmit = () => {
     const selectedISOs = countries.filter((c) => c.selected).map((c) => c.iso);
