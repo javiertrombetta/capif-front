@@ -1,6 +1,6 @@
 import {
   AddTerritoryPayload,
-  CreatePhonogramPayload,
+  CreateRepertoirePayload,
   EditRepertoirePayload,
   EditRepertoireResponse,
   GetRepertoireByIdResponse,
@@ -35,8 +35,15 @@ export const getRepertoires = async (
   return response.data.data;
 };
 
-export const createPhonogram = async (
-  repertoireData: CreatePhonogramPayload
+export const getRepertoireById = async (id: string) => {
+  const response = (await axiosInstance.get(`/repertoires/${id}`)) as {
+    data: GetRepertoireByIdResponse;
+  };
+  return response.data.data.data;
+};
+
+export const createRepertoire = async (
+  repertoireData: CreateRepertoirePayload
 ) => {
   const response = await axiosInstance.post("/repertoires", repertoireData);
   console.log(response.data);
@@ -62,13 +69,6 @@ export const validateISRC = async (isrc: string) => {
     };
   };
   return response.data.available;
-};
-
-export const getPhonogramById = async (id: string) => {
-  const response = (await axiosInstance.get(`/repertoires/${id}`)) as {
-    data: { data: GetRepertoireByIdResponse; message: string };
-  };
-  return response.data.data;
 };
 
 export const getPrefixIsrc = async () => {
