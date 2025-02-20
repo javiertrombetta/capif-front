@@ -10,7 +10,11 @@ import gitLogo from "../../assets/GIT LOGO.png";
 import CustomField from "@/commons/CustomField/CustomField";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import { validationLoginForm } from "@/utils/formValidations";
-import { authLogin, getAuthData } from "@/services/auth";
+import {
+  authLogin,
+  getAuthData,
+  selectProductionCompany,
+} from "@/services/auth";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { setAuthData } from "@/store/authSlice";
 import { ROLES } from "@/types/auth.types";
@@ -47,7 +51,7 @@ const LoginForm: FC = () => {
     }
 
     const data = await getAuthData();
-    dispatch(setAuthData(data));
+
     if (data.estado === "HABILITADO") {
       router.push("/repertoires");
     } else {
@@ -60,6 +64,17 @@ const LoginForm: FC = () => {
     ) {
       openModal(<ChangeProducerModal />);
     }
+
+    if (data.productoras?.length === 1) {
+      await selectProductionCompany(data.productoras[0].id);
+      if (window && window.localStorage) {
+        localStorage.setItem("company", JSON.stringify(data.productoras[0]));
+      }
+    }
+
+    dispatch(
+      setAuthData({ ...data, productoraActiva: data.productoras?.[0] ?? null })
+    );
   };
 
   return (
@@ -72,7 +87,7 @@ const LoginForm: FC = () => {
         {({ isSubmitting, isValid, dirty }) => (
           <Form
             id="signup"
-            className="bg-white w-[25rem] flex flex-col justify-center items-center gap-[0.5rem] overflow-y-scroll pr-[2rem] pl-[2rem] pb-[1rem]"
+            className="bg-white w-[25rem] flex flex-col justify-center items-center gap-[0.5rem] overflow-y-auto pr-[2rem] pl-[2rem] pb-[1rem]"
           >
             <div className="w-[100%] flex justify-center mt-[1rem] mb-[1rem]">
               <p className="text-black font-bold text-[1.1rem] text-center">

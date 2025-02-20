@@ -64,7 +64,7 @@ export interface GetRepertoiresResponse {
 }
 
 export interface GetRepertoireByIdResponse {
-  data: { data: Repertoire; message: string };
+  data: Repertoire;
   message: string;
 }
 

@@ -83,7 +83,7 @@ function page() {
           />
         ) : (
           <div className="text-black justify-self-center pt-[4rem]">
-            No se encontraron archivos
+            No se encontraron territorios
           </div>
         )}
       </div>
