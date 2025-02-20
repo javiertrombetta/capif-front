@@ -108,6 +108,16 @@ const Sidebar: FC = () => {
             },
           ]
         : []),
+      ...(authData.vistas.find(
+        (v) => v.nombre === "Declaración Bulk Repertorio"
+      )
+        ? [
+            {
+              name: "Declaración Masiva",
+              link: "/repertoires/bulk",
+            },
+          ]
+        : []),
       {
         name: "Conflictos",
         link: "/conflicts",

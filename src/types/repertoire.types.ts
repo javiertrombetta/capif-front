@@ -177,3 +177,14 @@ export interface AddTerritoryPayload {
   codigo_iso: string;
   is_habilitado: boolean;
 }
+
+export interface DeclareRepertoiresBulkResponse {
+  message: string;
+  registrosCreados: {
+    titulo: string;
+    isrc: string;
+  }[];
+  isrcExistentes: string[];
+  conflictos: string[];
+  errores: string[];
+}
