@@ -86,8 +86,6 @@ function page() {
     handleGetConflict();
   }, []);
 
-  console.log(conflict);
-
   return (
     <CustomLayout>
       <Header back title="Titulares de Conflicto" />

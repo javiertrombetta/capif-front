@@ -12,7 +12,7 @@ import Spinner from "@/commons/Spinner/Spinner";
 import { useAppDispatch } from "@/hooks/storeHooks";
 import { authSignUp, validateCuit } from "@/services/auth";
 import { setSignupData } from "@/store/signupSlice";
-import { validationSignUpForm } from "@/utils/formValidations";
+import { cuitValidation, validationSignUpForm } from "@/utils/formValidations";
 import gitLogo from "../../assets/GIT LOGO.png";
 import "./SignUpView.css";
 import "../../styles/globals.css";
@@ -92,13 +92,17 @@ const VerifyCuit: FC<VerifyCuitProps> = ({ onSubmit }) => {
   };
 
   return (
-    <div className="w-[25rem] h-full overflow-hidden ">
+    <div className="h-full overflow-hidden ">
       {verificationCuitState === "request" ? (
-        <Formik initialValues={initialValues} onSubmit={onSubmitVerifyCuit}>
+        <Formik
+          initialValues={initialValues}
+          onSubmit={onSubmitVerifyCuit}
+          validationSchema={cuitValidation}
+        >
           {({ isSubmitting, isValid, dirty }) => (
             <Form
               id="cuit_request"
-              className="bg-white w-[25rem] h-[100%] px-[2rem] pb-[2rem] pt-[1rem] flex flex-col items-center overflow-y-scroll"
+              className="bg-white w-[30rem] h-[100%] px-[2rem] pb-[2rem] pt-[1rem] flex flex-col items-center space-y-[1rem]"
             >
               <div className="w-[100%] flex flex-col justify-center mt-[1rem] mb-[1rem]">
                 <p className="text-black font-bold text-[1.1rem] text-center">
@@ -113,12 +117,19 @@ const VerifyCuit: FC<VerifyCuitProps> = ({ onSubmit }) => {
                 </p>
               </div>
 
-              <CustomField type="text" id="cuit" name="cuit" labelText="Cuit" />
+              <CustomField
+                type="text"
+                id="cuit"
+                name="cuit"
+                labelText="CUIT (Solo números)"
+              />
 
               <div className="w-[100%] flex justify-center ">
                 <CustomButton
                   type="submit"
-                  disabled={isSubmitting || !isValid || !dirty}
+                  {...(isSubmitting || !isValid || !dirty
+                    ? { disabled: true, background: "disabled" }
+                    : {})}
                   width="w-[100%]"
                   className="h-[2.5rem]"
                 >
@@ -162,9 +173,6 @@ const SignUpForm: FC = () => {
 
     dispatch(
       setSignupData({
-        // name: values.name,
-        // lastname: values.lastname,
-        // phone: values.phone,
         email: values.email,
       })
     );
@@ -181,7 +189,7 @@ const SignUpForm: FC = () => {
         {({ isSubmitting, isValid, dirty }) => (
           <Form
             id="signup"
-            className="bg-white w-[25rem] h-[100%] px-[2rem] pb-[1rem] pt-[1rem] flex flex-col items-center gap-[0.5rem] overflow-y-scroll"
+            className="bg-white w-[25rem] h-[100%] px-[2rem] pb-[1rem] pt-[1rem] flex flex-col items-center gap-[0.5rem] overflow-y-auto"
           >
             <div className="w-[100%] flex justify-center mt-[1rem] mb-[1rem]">
               <p className="text-black font-bold text-[1.1rem] text-center">

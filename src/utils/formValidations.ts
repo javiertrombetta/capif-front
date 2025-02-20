@@ -20,8 +20,9 @@ const validacionEmail = Yup.string()
   .required("El correo electrónico es requerido");
 
 const validacionCuitCuil = Yup.string()
-  .required("El CUIT/CUIL es requerido")
-  .matches(/^\d{11}$/, "El CUIT/CUIL debe contener exactamente 11 dígitos");
+  .required("El CUIT/CUIL es requerido.")
+  .matches(/^\d+$/, "El CUIT/CUIL debe contener solo números.")
+  .matches(/^\d{11}$/, "El CUIT/CUIL debe contener exactamente 11 dígitos.");
 
 export const validationSignUpForm = Yup.object({
   email: Yup.string().email("Email inválido").required("El email es requerido"),
@@ -220,4 +221,8 @@ export const isrcValidation = Yup.object({
     .min(12, "El código de designación debe tener 11 caracteres.")
     .max(12, "El código de designación debe tener 11 caracteres.")
     .required("El código de designación es requerido."),
+});
+
+export const cuitValidation = Yup.object({
+  cuit: validacionCuitCuil,
 });
