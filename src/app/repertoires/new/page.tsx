@@ -41,21 +41,18 @@ function page() {
       case "existing_repertoire":
         setFlowState("start");
         break;
-
       case "new_phonogram":
         setFlowState("start");
         break;
-
-      case "load_audio":
+      case "add_participation":
         setFlowState("new_phonogram");
         break;
-
-      case "add_participation":
-        setFlowState("load_audio");
-        break;
-
       case "edit_territoriality":
         setFlowState("add_participation");
+        break;
+      case "load_audio":
+        setFlowState("edit_territoriality");
+        break;
     }
   };
 
@@ -275,17 +272,16 @@ const NewPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
     (state) => state.createPhonogram
   );
   const initialValues = {
-    titulo: "",
-    artista: "",
-    album: "",
+    titulo: createPhogramCurrentData.titulo || "",
+    artista: createPhogramCurrentData.artista || "",
+    album: createPhogramCurrentData.album || "",
     productor_originario: authData.productoraActiva?.productora || "",
-    sello_discografico: "",
-    año_lanzamiento: "",
-    registro_desde: "",
-    registro_hasta: "",
+    sello_discografico: createPhogramCurrentData.sello_discografico || "",
   };
 
-  const [year, setYear] = useState("");
+  const [year, setYear] = useState(
+    createPhogramCurrentData.anio_lanzamiento || ""
+  );
   const [time, setTime] = useState<string>("");
   const currentYear = new Date().getFullYear();
 
@@ -299,17 +295,7 @@ const NewPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
     }
   };
 
-  const handleSubmit = (
-    e: React.FormEvent<HTMLFormElement>,
-    values: {
-      titulo: string;
-      artista: string;
-      album: string;
-      año_lanzamiento: string;
-      sello_discografico: string;
-    }
-  ) => {
-    e.preventDefault();
+  const handleSubmit = (values: typeof initialValues) => {
     if (authData?.productoras && authData.productoraActiva)
       dispatch(
         setCreatePhonogram({
@@ -335,20 +321,12 @@ const NewPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
       <p className="text-black font-bold">
         Complete los campos para crear el fonograma.
       </p>
-      <Formik onSubmit={() => {}} initialValues={initialValues}>
-        {({ isSubmitting, isValid, dirty, values }) => (
-          <Form
-            onSubmit={(e) =>
-              handleSubmit(e, {
-                titulo: values.titulo,
-                artista: values.artista,
-                album: values.album,
-                año_lanzamiento: values.año_lanzamiento as string,
-                sello_discografico: values.sello_discografico,
-              })
-            }
-            className="w-[60%] flex flex-col justify-center items-center mb-[2rem]"
-          >
+      <Formik
+        onSubmit={(values) => handleSubmit(values)}
+        initialValues={initialValues}
+      >
+        {({ isSubmitting, isValid, dirty }) => (
+          <Form className="w-[60%] flex flex-col justify-center items-center mb-[2rem]">
             <CustomField
               type="text"
               id="titulo"
@@ -370,7 +348,10 @@ const NewPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
 
             <div className="w-[100%] mb-[1.5rem]">
               <p className="text-black font-bold">Duración del Repertorio</p>
-              <TimerInput onChange={handleTime} />
+              <TimerInput
+                defaultTime={createPhogramCurrentData.duracion || ""}
+                onChange={handleTime}
+              />
             </div>
             <CustomField
               type="text"
