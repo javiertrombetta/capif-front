@@ -57,7 +57,6 @@ function page() {
   };
 
   const sendPhonogram = async () => {
-    console.log(createPhonogramData);
     const {
       titulo,
       album,
