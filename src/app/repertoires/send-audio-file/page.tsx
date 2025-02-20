@@ -44,6 +44,12 @@ function page() {
     );
   };
 
+  const handleOnCheckAll = (checked: boolean) => {
+    setSeleccionados(
+      checked ? audioFiles.map((a) => a.fonogramaDelEnvio.id_fonograma) : []
+    );
+  };
+
   const handleOnSubmit = async (values: typeof initialValues) => {
     for (const key in values) {
       if (!values[key as keyof typeof values])
@@ -116,7 +122,12 @@ function page() {
           ) : audioFiles.length > 0 ? (
             <CustomTable
               columnNames={[
-                { name: "SELECCIONAR", isSortable: false, selectBox: true },
+                {
+                  name: "SELECCIONAR",
+                  isSortable: false,
+                  selectBox: true,
+                  onChecked: handleOnCheckAll,
+                },
                 { name: "TEMA", isSortable: true },
                 { name: "ESTADO", isSortable: true },
                 { name: "FECHA DESDE", isSortable: true },
