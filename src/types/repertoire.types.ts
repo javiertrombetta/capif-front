@@ -190,6 +190,17 @@ export interface AddTerritoryPayload {
   is_habilitado: boolean;
 }
 
+export interface DeclareRepertoiresBulkResponse {
+  message: string;
+  registrosCreados: {
+    titulo: string;
+    isrc: string;
+  }[];
+  isrcExistentes: string[];
+  conflictos: string[];
+  errores: string[];
+}
+
 export interface ValidateISRCResponse {
   available?: boolean;
   isrc?: string;
