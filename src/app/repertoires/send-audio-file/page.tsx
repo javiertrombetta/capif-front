@@ -63,6 +63,7 @@ function page() {
     try {
       const response = await getSendAudioFiles(values);
       setAudioFiles(response);
+      setSeleccionados(response.map((a) => a.fonogramaDelEnvio.id_fonograma));
     } catch (error) {
       console.error(error);
       toast.error("Error al obtener los archivos enviados");
