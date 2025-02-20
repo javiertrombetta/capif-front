@@ -12,6 +12,7 @@ import {
   GetTerritoriesResponse,
   UpdateSendAudiFilePayload,
   ValidateISRCResponse,
+  DeclareRepertoiresBulkResponse,
 } from "@/types/repertoire.types";
 import { axiosInstance } from "./axiosInstance";
 
@@ -202,4 +203,13 @@ export const updateTerritoryStatus = async (
 export const addTerritory = async (payload: AddTerritoryPayload) => {
   const response = await axiosInstance.post("/misc/territories", payload);
   return response;
+};
+
+export const declareRepertoiresBulk = async (formData: FormData) => {
+  const response = (await axiosInstance.post("/repertoires/bulk", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  })) as { data: DeclareRepertoiresBulkResponse };
+  return response.data;
 };
