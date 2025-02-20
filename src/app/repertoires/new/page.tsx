@@ -1,12 +1,6 @@
 "use client";
 import { Form, Formik } from "formik";
-import React, {
-  Dispatch,
-  FC,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import React, { Dispatch, FC, SetStateAction, useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 import { toast } from "react-toastify";
 import { RxCross2 } from "react-icons/rx";
@@ -37,7 +31,7 @@ function page() {
     | "load_audio"
     | "add_participation"
     | "edit_territoriality"
-  >("add_participation");
+  >("start");
   const [audio, setAudio] = useState<File | null>(null);
   const authData = useAppSelector((state) => state.auth);
   const createPhonogramData = useAppSelector((state) => state.createPhonogram);
@@ -73,8 +67,10 @@ function page() {
       productora_id,
       duracion,
       anio_lanzamiento,
+      sello_discografico,
       participaciones,
       territorios,
+      isrc,
     } = createPhonogramData;
 
     if (
@@ -85,11 +81,20 @@ function page() {
       productora_id &&
       artista &&
       album &&
-      titulo
+      titulo &&
+      isrc
     ) {
       const response = await createRepertoire({
-        ...createPhonogramData,
-        codigo_designacion: "00001",
+        productora_id,
+        titulo,
+        artista,
+        album,
+        duracion,
+        anio_lanzamiento,
+        sello_discografico,
+        participaciones,
+        territorios,
+        isrc,
       });
       return response;
     } else {
@@ -228,7 +233,7 @@ const SearchForISRC: FC<{ onSubmit: (isrc: string) => void }> = ({
       dispatch(
         setCreatePhonogram({
           ...createPhogramCurrentData,
-          codigo_designacion: values.ISRC,
+          isrc: values.ISRC,
           id_repertorio: id_repertorio ?? "",
         })
       );
@@ -414,7 +419,7 @@ const ExistingPhonogram: FC<{
 }> = ({ handleGoBack }) => {
   const router = useRouter();
   const authData = useAppSelector((state) => state.auth);
-  const { codigo_designacion, id_repertorio } = useAppSelector(
+  const { isrc, id_repertorio } = useAppSelector(
     (state) => state.createPhonogram
   );
   const [percentage, setPercentage] = useState<string | number>("0");
@@ -440,6 +445,7 @@ const ExistingPhonogram: FC<{
         await addRepertoireTitularities(id_repertorio, {
           participaciones: [
             {
+              cuit: authData.productoraActiva?.cuit,
               fecha_inicio: values.fecha_inicio,
               fecha_hasta: values.fecha_hasta,
               porcentaje_participacion: parseFloat(percentage.toString()),
@@ -458,9 +464,7 @@ const ExistingPhonogram: FC<{
   return (
     <div className="w-[100%] flex flex-col justify-center items-center mt-[3rem] pl-[3rem] pr-[3rem]">
       <p className="text-black font-bold text-3xl">Agregar Titularidad</p>
-      <p className="text-black font-normal">
-        Fonograma Existente ({codigo_designacion})
-      </p>
+      <p className="text-black font-normal">Fonograma Existente ({isrc})</p>
       {authData && (
         <Formik onSubmit={onSubmit} initialValues={initialValues}>
           <Form className="max-w-[30rem] w-[100%] p-[2rem] mt-[2rem] flex flex-col items-center gap-[1rem] border-[1px] border-[#c8c8c8]">
@@ -605,7 +609,7 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
           ...createPhogramCurrentData,
           participaciones: [
             {
-              cuit: "",
+              cuit: authData.productoraActiva?.cuit ?? "",
               porcentaje_participacion: Number(
                 participacion.porcentaje_participacion
               ),
