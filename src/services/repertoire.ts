@@ -1,4 +1,5 @@
 import {
+  AddRepertoireTitularitiesPayload,
   AddTerritoryPayload,
   CreateRepertoirePayload,
   EditRepertoirePayload,
@@ -10,6 +11,7 @@ import {
   GetSendAudioFilesResponse,
   GetTerritoriesResponse,
   UpdateSendAudiFilePayload,
+  ValidateISRCResponse,
 } from "@/types/repertoire.types";
 import { axiosInstance } from "./axiosInstance";
 
@@ -58,25 +60,12 @@ export const uploadPhonogramFile = async (formData: FormData, id: string) => {
 };
 
 export const validateISRC = async (isrc: string) => {
-  const response = (await axiosInstance.post("/repertoires/isrc/validate", {
-    isrc,
-  })) as {
-    data: {
-      isrc: string;
-      available: boolean;
-      message: string;
-    };
-  };
-  return response.data.available;
-};
-
-export const getPrefixIsrc = async () => {
-  const response = (await axiosInstance.get("/repertoires/isrc/prefix")) as {
-    data: {
-      message: string;
-      data: string;
-    };
-  };
+  const response = await axiosInstance.post<ValidateISRCResponse>(
+    "/repertoires/isrc/validate",
+    {
+      isrc,
+    }
+  );
   return response.data;
 };
 
@@ -118,18 +107,9 @@ export const getRepertoireTitularity = async (id: string) => {
   return response.data.participaciones;
 };
 
-interface AddRepertoireTitularities {
-  participaciones: {
-    cuit: string;
-    porcentaje_participacion: number;
-    fecha_inicio: string;
-    fecha_hasta: string;
-  }[];
-}
-
 export const addRepertoireTitularities = async (
   id: string,
-  payload: AddRepertoireTitularities
+  payload: AddRepertoireTitularitiesPayload
 ) => {
   const response = await axiosInstance.post(
     `/repertoires/${id}/shares`,

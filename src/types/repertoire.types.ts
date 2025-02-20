@@ -6,7 +6,7 @@ export interface CreateRepertoirePayload {
   duracion: string | null;
   anio_lanzamiento: number | null;
   sello_discografico: string | null;
-  codigo_designacion: string | null;
+  isrc: string;
   participaciones:
     | {
         cuit: string | null;
@@ -124,6 +124,15 @@ export interface GetRepertoireTitularityResponse {
   momentosClave: Record<string, number>;
 }
 
+export interface AddRepertoireTitularitiesPayload {
+  participaciones: {
+    cuit?: string;
+    porcentaje_participacion: number;
+    fecha_inicio: string;
+    fecha_hasta: string;
+  }[];
+}
+
 export const ESTADOS_ENVIO = [
   "PENDIENTE DE ENVIO",
   "ENVIADO SIN AUDIO",
@@ -179,4 +188,11 @@ export interface AddTerritoryPayload {
   nombre_pais: string;
   codigo_iso: string;
   is_habilitado: boolean;
+}
+
+export interface ValidateISRCResponse {
+  available?: boolean;
+  isrc?: string;
+  id_repertorio?: string;
+  message: string;
 }
