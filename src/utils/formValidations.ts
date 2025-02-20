@@ -20,24 +20,12 @@ const validacionEmail = Yup.string()
   .required("El correo electrónico es requerido");
 
 const validacionCuitCuil = Yup.string()
-  .required("El CUIT/CUIL es requerido")
-  .matches(/^\d{11}$/, "El CUIT/CUIL debe contener exactamente 11 dígitos");
+  .required("El CUIT/CUIL es requerido.")
+  .matches(/^\d+$/, "El CUIT/CUIL debe contener solo números.")
+  .matches(/^\d{11}$/, "El CUIT/CUIL debe contener exactamente 11 dígitos.");
 
 export const validationSignUpForm = Yup.object({
-  // name: Yup.string()
-  //   .min(2, "El nombre debe tener al menos 2 caracteres.")
-  //   .max(100, "No puedes escribir más de 100 caracteres en este campo.")
-  //   .required("El nombre es requerido."),
-  // lastname: Yup.string()
-  //   .min(2, "El apellido debe tener al menos 2 caracteres.")
-  //   .max(100, "No puedes escribir más de 100 caracteres en este campo.")
-  //   .required("El apellido es requerido."),
   email: Yup.string().email("Email inválido").required("El email es requerido"),
-  // phone: Yup.string()
-  //   .max(50, "El teléfono no puede exceder los 50 caracteres")
-  //   .matches(/^[0-9\-+() ]+$/, "El teléfono contiene caracteres inválidos")
-  //   .required("El teléfono es requerido.")
-  //   .nullable(),
   password: Yup.string()
     .min(8, "La contraseña debe tener al menos 8 caracteres.")
     .required("La contraseña es requerida."),
@@ -227,9 +215,14 @@ export const validationEditProducer = Yup.object({
   telefono: validacionTelefono,
   nacionalidad: Yup.string().required("La nacionalidad es requerida"),
 });
+
 export const isrcValidation = Yup.object({
   ISRC: Yup.string()
-    .min(5, "El código de designación debe tener 5 caracteres.")
-    .max(5, "El código de designación debe tener 5 caracteres.")
+    .min(12, "El código de designación debe tener 11 caracteres.")
+    .max(12, "El código de designación debe tener 11 caracteres.")
     .required("El código de designación es requerido."),
+});
+
+export const cuitValidation = Yup.object({
+  cuit: validacionCuitCuil,
 });

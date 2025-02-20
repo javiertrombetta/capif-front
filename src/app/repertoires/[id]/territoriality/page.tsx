@@ -68,7 +68,7 @@ function page() {
         ) : (
           <CustomTable
             columnNames={[
-              { name: "ACTIVO", isSortable: false, selectBox: true },
+              { name: "ACTIVO", isSortable: false },
               { name: "PAÍS", isSortable: true },
               { name: "ISO", isSortable: true },
             ]}
