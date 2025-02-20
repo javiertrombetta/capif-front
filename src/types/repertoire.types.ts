@@ -6,6 +6,7 @@ export interface CreateRepertoirePayload {
   duracion: string | null;
   anio_lanzamiento: number | null;
   sello_discografico: string | null;
+  isrc: string;
   participaciones:
     | {
         cuit: string | null;
