@@ -21,7 +21,7 @@ import TimerInput from "@/components/TimerInput/TimerInput";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { setCreatePhonogram } from "@/store/createPhonogramSlice";
 import {
-  createPhonogram,
+  createRepertoire,
   getPrefixIsrc,
   uploadPhonogramFile,
   validateISRC,
@@ -92,7 +92,7 @@ function page() {
       album &&
       titulo
     ) {
-      const response = await createPhonogram({
+      const response = await createRepertoire({
         ...createPhonogramData,
         codigo_designacion: "00001",
       });
