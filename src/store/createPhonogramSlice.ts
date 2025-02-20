@@ -18,7 +18,7 @@ export interface CreatePhonogramSliceProps {
         fecha_hasta: string;
       }[]
     | null;
-  territorios: string[] | [];
+  territorios: string[];
 }
 
 export const initialStateCreatePhonogram: CreatePhonogramSliceProps = {
