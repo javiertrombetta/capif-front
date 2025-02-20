@@ -25,8 +25,6 @@ export enum ModalNames {
   GARDEL_AWARDS_PURGE = "GardelAwardsPurge",
   EXPORT_CHANGES_LIST = "ExportChangesList",
   FINISH_NEW_PHONOGRAM = "FinishNewPhonogram",
-  EDIT_PHONOGRAM_SAVE = "EditPhonogramSave",
-  EDIT_PHONOGRAM_CANCEL = "EditPhonogramCancel",
   TERRITORIALITY_SAVE = "TerritorialitySave",
   AUDIT_SESSIONS_PURGE = "AuditSessionsPurge",
   SUBMIT_SEND_APPILICATION = "SubmitSendApplication",
