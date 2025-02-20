@@ -135,8 +135,8 @@ function page() {
                 />,
                 a.fonogramaDelEnvio.titulo,
                 a.tipo_estado,
-                a.fecha_envio_inicial,
-                a.fecha_envio_ultimo,
+                a.fecha_envio_inicial ?? "",
+                a.fecha_envio_ultimo ?? "",
                 <ActionDropdownButton
                   menuOptions={[
                     {
@@ -186,6 +186,9 @@ function page() {
       <div className="w-[100%] py-[1rem] px-[2rem] flex items-center justify-end space-x-[0.5rem]">
         <CustomButton
           onClick={() => openModal(<SendAudioFile ids={seleccionados} />)}
+          {...(seleccionados.length === 0
+            ? { disabled: true, background: "disabled" }
+            : {})}
         >
           ENVIAR SELECCIONADOS
         </CustomButton>
