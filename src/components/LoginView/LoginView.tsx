@@ -87,7 +87,7 @@ const LoginForm: FC = () => {
         {({ isSubmitting, isValid, dirty }) => (
           <Form
             id="signup"
-            className="bg-white w-[25rem] flex flex-col justify-center items-center gap-[0.5rem] overflow-y-scroll pr-[2rem] pl-[2rem] pb-[1rem]"
+            className="bg-white w-[25rem] flex flex-col justify-center items-center gap-[0.5rem] overflow-y-auto pr-[2rem] pl-[2rem] pb-[1rem]"
           >
             <div className="w-[100%] flex justify-center mt-[1rem] mb-[1rem]">
               <p className="text-black font-bold text-[1.1rem] text-center">

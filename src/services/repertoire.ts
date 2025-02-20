@@ -36,17 +36,16 @@ export const getRepertoires = async (
 };
 
 export const getRepertoireById = async (id: string) => {
-  const response = (await axiosInstance.get(`/repertoires/${id}`)) as {
-    data: GetRepertoireByIdResponse;
-  };
-  return response.data.data.data;
+  const response = await axiosInstance.get<GetRepertoireByIdResponse>(
+    `/repertoires/${id}`
+  );
+  return response.data.data;
 };
 
 export const createRepertoire = async (
   repertoireData: CreateRepertoirePayload
 ) => {
   const response = await axiosInstance.post("/repertoires", repertoireData);
-  console.log(response.data);
   return response.data.data;
 };
 
