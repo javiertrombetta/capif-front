@@ -6,7 +6,12 @@ import "./CustomTable.css";
 type columnValueType = string | number | Date | ReactNode;
 
 interface CustomTableProps {
-  columnNames: { name: string; isSortable: boolean; selectBox?: boolean }[];
+  columnNames: {
+    name: string;
+    isSortable: boolean;
+    selectBox?: boolean;
+    onChecked?: (checked: boolean) => void;
+  }[];
   columnValues: columnValueType[][];
 }
 
@@ -72,6 +77,7 @@ const CustomTable: FC<CustomTableProps> = ({ columnNames, columnValues }) => {
                   name: string;
                   isSortable: boolean;
                   selectBox?: boolean;
+                  onChecked?: (checked: boolean) => void;
                 },
                 index: number
               ) => (
@@ -81,22 +87,36 @@ const CustomTable: FC<CustomTableProps> = ({ columnNames, columnValues }) => {
                   className={`${element.selectBox ? "px-1 py-3" : "px-1 py-3"} font-bold cursor-pointer`}
                   onClick={() => handleSort(index)}
                 >
-                  <div className="flex justify-center items-center gap-[0.3rem] relative h-[100%] w-[100%] pr-[2rem]">
-                    <p className="text-center w-[100%] flex justify-center ml-[2rem]">
-                      {element.name}
-                    </p>
-                    {element.isSortable && (
-                      <span className="absolute right-0">
-                        {sortConfig.key === index ? (
-                          sortConfig.direction === "asc" ? (
-                            <IoMdArrowDropup size={20} />
-                          ) : (
-                            <IoMdArrowDropdown size={20} />
-                          )
-                        ) : (
-                          <IoMdArrowDropdown size={20} color="#c5c5c5" />
+                  <div className="flex justify-center items-center gap-[0.3rem] relative h-[100%] w-[100%]">
+                    {element.selectBox ? (
+                      <input
+                        className="w-4 h-4"
+                        type="checkbox"
+                        defaultChecked={true}
+                        onChange={(e) =>
+                          element.onChecked &&
+                          element.onChecked(e.target.checked)
+                        }
+                      ></input>
+                    ) : (
+                      <>
+                        <p className="text-center w-[100%] flex justify-center">
+                          {element.name}
+                        </p>
+                        {element.isSortable && (
+                          <span className="absolute right-0">
+                            {sortConfig.key === index ? (
+                              sortConfig.direction === "asc" ? (
+                                <IoMdArrowDropup size={20} />
+                              ) : (
+                                <IoMdArrowDropdown size={20} />
+                              )
+                            ) : (
+                              <IoMdArrowDropdown size={20} color="#c5c5c5" />
+                            )}
+                          </span>
                         )}
-                      </span>
+                      </>
                     )}
                   </div>
                 </th>

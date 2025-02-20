@@ -57,6 +57,7 @@ function page() {
   };
 
   const sendPhonogram = async () => {
+    console.log(createPhonogramData);
     const {
       titulo,
       album,
@@ -640,7 +641,16 @@ const EditTerritoriality: React.FC<{
   const createPhogramCurrentData = useAppSelector(
     (state) => state.createPhonogram
   );
-  const [countries, setCountries] = useState(initialCountries);
+  const [countries, setCountries] = useState(
+    createPhogramCurrentData.territorios.length > 0
+      ? initialCountries.map((c) => ({
+          ...c,
+          selected: createPhogramCurrentData.territorios.includes(c.iso)
+            ? true
+            : false,
+        }))
+      : initialCountries
+  );
 
   const handleCheckboxChange = (iso: string) => {
     setCountries((prev) =>
@@ -650,6 +660,10 @@ const EditTerritoriality: React.FC<{
           : country
       )
     );
+  };
+
+  const handleCheckAll = (checked: boolean) => {
+    setCountries(countries.map((c) => ({ ...c, selected: checked })));
   };
 
   const handleSubmit = () => {
@@ -672,7 +686,12 @@ const EditTerritoriality: React.FC<{
 
       <CustomTable
         columnNames={[
-          { name: "", isSortable: false, selectBox: true },
+          {
+            name: "",
+            isSortable: false,
+            selectBox: true,
+            onChecked: handleCheckAll,
+          },
           { name: "PAÍS", isSortable: true },
           { name: "ISO", isSortable: true },
         ]}
