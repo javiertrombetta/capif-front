@@ -1,35 +1,31 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { Form, Formik } from "formik";
+import { useParams } from "next/navigation";
+import CustomButton from "@/commons/CustomButton/CustomButton";
+import CustomField from "@/commons/CustomField/CustomField";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
-import { useAppDispatch } from "@/hooks/storeHooks";
-import { Form, Formik } from "formik";
-import CustomField from "@/commons/CustomField/CustomField";
 import TimerInput from "@/components/TimerInput/TimerInput";
-import CustomButton from "@/commons/CustomButton/CustomButton";
-import { setModal } from "@/store/modalSlice";
-import { ModalNames } from "@/types/modalNames";
-import { editRepertoire, getPhonogramById } from "@/services/repertoire";
-import { useParams } from "next/navigation";
-import { GetRepertoireByIdResponse } from "@/types/repertoire.types";
-import { toast } from "react-toastify";
+import useModal from "@/hooks/useModal";
+import { editRepertoire, getRepertoireById } from "@/services/repertoire";
+import { Repertoire } from "@/types/repertoire.types";
+import { CancelEditPhonogramModal } from "@/components/Modals/EditPhonogramModals/EditPhonogramModals";
+
 function page() {
   const params = useParams();
-  // const authData = useAppSelector((state) => state.auth);
-  const [phonogram, setPhonogram] = useState<GetRepertoireByIdResponse | null>(
-    null
-  );
-
-  const dispatch = useAppDispatch();
+  const { openModal } = useModal();
+  const [repertoire, setRepertoire] = useState<Repertoire | null>(null);
   const [year, setYear] = useState("");
   const [time, setTime] = useState<string>("");
   const currentYear = new Date().getFullYear();
 
   const initialValues = {
-    titulo: phonogram?.titulo || "",
-    artista: phonogram?.artista || "",
-    album: phonogram?.album || "",
-    duracion: phonogram?.duracion || "",
+    titulo: repertoire?.titulo || "",
+    artista: repertoire?.artista || "",
+    album: repertoire?.album || "",
+    duracion: repertoire?.duracion || "",
   };
 
   const handleTime = (formatedTime: string) => {
@@ -46,24 +42,15 @@ function page() {
     }
   };
 
-  const handleGetPhonogram = async () => {
-    const response = await getPhonogramById(params.id as string);
-    setPhonogram(response);
+  const handleGetRepertoire = async () => {
+    const response = await getRepertoireById(params.id as string);
+    setRepertoire(response);
     setYear(`${response.anio_lanzamiento}`);
     setTime(response.duracion);
   };
 
-  const handleSubmit = async (
-    e: React.FormEvent<HTMLFormElement>,
-    values: {
-      titulo: string;
-      artista: string;
-      album: string;
-      duracion: string;
-    }
-  ) => {
+  const handleSubmit = async (values: typeof initialValues) => {
     try {
-      e.preventDefault();
       if (params.id && !Array.isArray(params.id)) {
         const { data, message } = await editRepertoire(params.id, {
           titulo: values.titulo,
@@ -72,7 +59,7 @@ function page() {
           duracion: time,
           anio_lanzamiento: Number(year),
         });
-        setPhonogram((prevState: GetRepertoireByIdResponse | null) => {
+        setRepertoire((prevState: Repertoire | null) => {
           if (prevState) {
             return {
               ...prevState,
@@ -93,27 +80,18 @@ function page() {
     }
   };
 
-  const handleOpenModal = (type: ModalNames) => {
-    dispatch(setModal({ type, isActive: true }));
-  };
-
   useEffect(() => {
-    handleGetPhonogram();
+    handleGetRepertoire();
   }, []);
 
   return (
     <CustomLayout>
       <Header back title="Editar Fonograma" />
       <div className="w-[100%] pr-[2rem] pl-[2rem] flex justify-center items-center">
-        {!phonogram ? null : (
-          <Formik onSubmit={() => {}} initialValues={initialValues}>
-            {({ isSubmitting, isValid, dirty, values }) => (
-              <Form
-                onSubmit={async (e: React.FormEvent<HTMLFormElement>) =>
-                  await handleSubmit(e, values)
-                }
-                className="w-[60%] flex flex-col justify-center items-center mt-[3rem]"
-              >
+        {!repertoire ? null : (
+          <Formik onSubmit={handleSubmit} initialValues={initialValues}>
+            {({ isSubmitting, isValid, dirty }) => (
+              <Form className="w-[60%] flex flex-col justify-center items-center mt-[3rem]">
                 <CustomField
                   type="text"
                   id="titulo"
@@ -132,25 +110,15 @@ function page() {
                   name="album"
                   labelText="Album"
                 />
-
                 <div className="w-[100%] mb-[1.5rem]">
                   <p className="text-black font-bold">
                     Duración del Repertorio
                   </p>
                   <TimerInput
                     onChange={handleTime}
-                    defaultTime={phonogram.duracion}
+                    defaultTime={repertoire.duracion}
                   />
                 </div>
-
-                {/* <CustomField
-                  type="text"
-                  id="productor_originario"
-                  name="productor_originario"
-                  labelText="Productor Originario"
-                  disabled
-                /> */}
-
                 <div className="w-[100%] flex flex-col">
                   <label style={{ color: "black" }} className="font-bold">
                     Año de Lanzamiento
@@ -167,9 +135,6 @@ function page() {
                 </div>
                 <div className="w-[100%] flex justify-center gap-[1rem] mb-[2rem]">
                   <CustomButton
-                    // onClick={() =>
-                    //   handleOpenModal(ModalNames.EDIT_PHONOGRAM_SAVE)
-                    // }
                     type="submit"
                     disabled={isSubmitting || !isValid || !dirty}
                     className="mt-[3rem]"
@@ -178,9 +143,7 @@ function page() {
                   </CustomButton>
 
                   <CustomButton
-                    onClick={() =>
-                      handleOpenModal(ModalNames.EDIT_PHONOGRAM_CANCEL)
-                    }
+                    onClick={() => openModal(<CancelEditPhonogramModal />)}
                     type="button"
                     className="mt-[3rem]"
                   >

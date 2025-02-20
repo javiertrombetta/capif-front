@@ -1,4 +1,4 @@
-export interface CreatePhonogramPayload {
+export interface CreateRepertoirePayload {
   productora_id: string | null;
   titulo: string | null;
   artista: string | null;
@@ -6,7 +6,7 @@ export interface CreatePhonogramPayload {
   duracion: string | null;
   anio_lanzamiento: number | null;
   sello_discografico: string | null;
-  codigo_designacion: string | null;
+  isrc: string;
   participaciones:
     | {
         cuit: string | null;
@@ -22,47 +22,50 @@ export type ESTADO_FONOGRAMA = "ACTIVO" | "BAJA";
 
 export interface Repertoire {
   id_fonograma: string;
-  titulo: string;
-  isrc: string;
-  artista: string;
-  album: string;
-  anio_lanzamiento: number;
-  sello_discografico: string;
-  nombre_productora: string;
   estado_fonograma: ESTADO_FONOGRAMA;
-}
-export interface GetRepertoiresResponse {
-  data: Repertoire[];
-  total: number;
-}
-
-export interface GetRepertoireByIdResponse {
-  id_fonograma: string;
-  titulo: string;
   isrc: string;
+  titulo: string;
   artista: string;
   album: string;
   duracion: string;
   anio_lanzamiento: number;
   sello_discografico: string;
   is_dominio_publico: boolean;
-  estado_fonograma: ESTADO_FONOGRAMA;
-  archivos: {
-    id_fonograma_archivo: string;
-    ruta_archivo_audio: string;
-  }[];
-  participaciones: {
-    id_fonograma_participacion: string;
+  cantidad_conflictos_activos: number;
+  archivoDelFonograma: string;
+  participantesDelFonograma: {
+    id_participacion: string;
     productora_id: string;
-    porcentaje_participacion: number;
     fecha_participacion_inicio: string;
     fecha_participacion_hasta: string;
+    porcentaje_participacion: number;
   }[];
-  territorios: {
+  vinculosDelFonograma: {
     id_territorio_maestro: string;
     territorio_id: string;
     is_activo: boolean;
+    territorioDelVinculo: {
+      id_territorio: string;
+      nombre_pais: string;
+      codigo_iso: string;
+      is_habilitado: boolean;
+    };
   }[];
+  productoraDelFonograma: {
+    id_productora: string;
+    nombre_productora: string;
+    cuit_cuil: string;
+  };
+}
+
+export interface GetRepertoiresResponse {
+  data: Repertoire[];
+  total: number;
+}
+
+export interface GetRepertoireByIdResponse {
+  data: Repertoire;
+  message: string;
 }
 
 export interface EditRepertoirePayload {
@@ -119,6 +122,15 @@ export interface GetRepertoireTitularityResponse {
     };
   }[];
   momentosClave: Record<string, number>;
+}
+
+export interface AddRepertoireTitularitiesPayload {
+  participaciones: {
+    cuit?: string;
+    porcentaje_participacion: number;
+    fecha_inicio: string;
+    fecha_hasta: string;
+  }[];
 }
 
 export const ESTADOS_ENVIO = [
@@ -187,4 +199,11 @@ export interface DeclareRepertoiresBulkResponse {
   isrcExistentes: string[];
   conflictos: string[];
   errores: string[];
+}
+
+export interface ValidateISRCResponse {
+  available?: boolean;
+  isrc?: string;
+  id_repertorio?: string;
+  message: string;
 }
