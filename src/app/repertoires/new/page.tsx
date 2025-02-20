@@ -507,53 +507,6 @@ const ExistingPhonogram: FC<{
   );
 };
 
-const LoadAudio: FC<{
-  audio: File | null;
-  setAudio: Dispatch<SetStateAction<File | null>>;
-  onSubmit: () => Promise<void>;
-}> = ({ audio, setAudio, onSubmit }) => {
-  const loadAudio = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setAudio(e.target.files[0]);
-    }
-  };
-
-  const deleteAudio = () => {
-    setAudio(null);
-  };
-
-  return (
-    <div className="w-[100%] flex flex-col justify-center items-center mt-[3rem] pl-[3rem] pr-[3rem]">
-      <p className="text-black font-bold">
-        Seleccione el archivo de audio (opcional)
-      </p>
-
-      <div className="w-[60%] flex flex-col justify-center items-center gap-[0.8rem] mt-[0.5rem]">
-        {audio ? (
-          <div className="flex gap-[1rem]">
-            <p className="text-black">{audio.name}</p>
-            <button onClick={deleteAudio}>
-              <RxCross2 color="#979797" size={15} />
-            </button>
-          </div>
-        ) : (
-          <button className="relative overflow-hidden p-[0.4rem] text-white cursor-pointer font-bold flex justify-center items-center bg-[#2ecc71] rounded-[0.3rem]">
-            Seleccionar Audio
-            <input
-              onChange={loadAudio}
-              className="absolute opacity-0 cursor-pointer w-[100%] h-[100%]"
-              type="file"
-            />
-          </button>
-        )}
-        <CustomButton onClick={onSubmit} type="submit">
-          Guardar y Finalizar
-        </CustomButton>
-      </div>
-    </div>
-  );
-};
-
 const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
   const dispatch = useAppDispatch();
   const authData = useAppSelector((state) => state.auth);
@@ -564,9 +517,14 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
   const year = new Date().getFullYear();
   const initialValues = {
     productora: authData.productoraActiva?.productora,
-    porcentaje_participacion: "",
-    fecha_inicio: `${year}-01-01`,
-    fecha_hasta: "2099-12-31",
+    porcentaje_participacion:
+      createPhogramCurrentData.participaciones?.[0]?.porcentaje_participacion ||
+      "",
+    fecha_inicio:
+      createPhogramCurrentData.participaciones?.[0].fecha_inicio ||
+      `${year}-01-01`,
+    fecha_hasta:
+      createPhogramCurrentData.participaciones?.[0].fecha_hasta || "2099-12-31",
   };
 
   const [participacion, setParticipacion] =
@@ -694,8 +652,6 @@ const EditTerritoriality: React.FC<{
     );
   };
 
-  console.log(createPhogramCurrentData);
-
   const handleSubmit = () => {
     const selectedISOs = countries.filter((c) => c.selected).map((c) => c.iso);
     dispatch(
@@ -731,6 +687,53 @@ const EditTerritoriality: React.FC<{
           country.iso,
         ])}
       />
+    </div>
+  );
+};
+
+const LoadAudio: FC<{
+  audio: File | null;
+  setAudio: Dispatch<SetStateAction<File | null>>;
+  onSubmit: () => Promise<void>;
+}> = ({ audio, setAudio, onSubmit }) => {
+  const loadAudio = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setAudio(e.target.files[0]);
+    }
+  };
+
+  const deleteAudio = () => {
+    setAudio(null);
+  };
+
+  return (
+    <div className="w-[100%] flex flex-col justify-center items-center mt-[3rem] pl-[3rem] pr-[3rem]">
+      <p className="text-black font-bold">
+        Seleccione el archivo de audio (opcional)
+      </p>
+
+      <div className="w-[60%] flex flex-col justify-center items-center gap-[0.8rem] mt-[0.5rem]">
+        {audio ? (
+          <div className="flex gap-[1rem]">
+            <p className="text-black">{audio.name}</p>
+            <button onClick={deleteAudio}>
+              <RxCross2 color="#979797" size={15} />
+            </button>
+          </div>
+        ) : (
+          <button className="relative overflow-hidden p-[0.4rem] text-white cursor-pointer font-bold flex justify-center items-center bg-[#2ecc71] rounded-[0.3rem]">
+            Seleccionar Audio
+            <input
+              onChange={loadAudio}
+              className="absolute opacity-0 cursor-pointer w-[100%] h-[100%]"
+              type="file"
+            />
+          </button>
+        )}
+        <CustomButton onClick={onSubmit} type="submit">
+          Guardar y Finalizar
+        </CustomButton>
+      </div>
     </div>
   );
 };
