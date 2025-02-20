@@ -20,8 +20,9 @@ const validacionEmail = Yup.string()
   .required("El correo electrónico es requerido");
 
 const validacionCuitCuil = Yup.string()
-  .required("El CUIT/CUIL es requerido")
-  .matches(/^\d{11}$/, "El CUIT/CUIL debe contener exactamente 11 dígitos");
+  .required("El CUIT/CUIL es requerido.")
+  .matches(/^\d+$/, "El CUIT/CUIL debe contener solo números.")
+  .matches(/^\d{11}$/, "El CUIT/CUIL debe contener exactamente 11 dígitos.");
 
 export const validationSignUpForm = Yup.object({
   // name: Yup.string()
@@ -227,9 +228,14 @@ export const validationEditProducer = Yup.object({
   telefono: validacionTelefono,
   nacionalidad: Yup.string().required("La nacionalidad es requerida"),
 });
+
 export const isrcValidation = Yup.object({
   ISRC: Yup.string()
     .min(5, "El código de designación debe tener 5 caracteres.")
     .max(5, "El código de designación debe tener 5 caracteres.")
     .required("El código de designación es requerido."),
+});
+
+export const cuitValidation = Yup.object({
+  cuit: validacionCuitCuil,
 });
