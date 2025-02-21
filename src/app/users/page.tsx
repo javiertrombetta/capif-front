@@ -78,7 +78,7 @@ export default function page() {
         <Formik initialValues={initialValues} onSubmit={handleOnSubmit}>
           {({ submitForm }) => (
             <>
-              <Form className="h-[4rem] w-[100%] flex items-end mt-[1rem] gap-[2rem] pl-[1rem] pr-[2rem]">
+              <Form className="h-[4rem] w-[100%] flex items-end gap-[2rem] mt-[1rem] px-[2rem]">
                 <CustomSearchField
                   id="email"
                   labelText="EMAIL"
