@@ -10,13 +10,17 @@ import gitLogo from "../../assets/GIT LOGO.png";
 import CustomField from "@/commons/CustomField/CustomField";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import { validationLoginForm } from "@/utils/formValidations";
-import { authLogin, getAuthData } from "@/services/auth";
+import {
+  authLogin,
+  getAuthData,
+  selectProductionCompany,
+} from "@/services/auth";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { setAuthData } from "@/store/authSlice";
-import { setModal } from "@/store/modalSlice";
-import { ModalNames } from "@/types/modalNames";
 import { ROLES } from "@/types/auth.types";
 import { toast } from "react-toastify";
+import useModal from "@/hooks/useModal";
+import { ChangeProducerModal } from "../Modals/ChangeProducerModal/ChangeProducerModal";
 
 interface LoginFormValues {
   email: string;
@@ -31,6 +35,7 @@ const initialValues: LoginFormValues = {
 const LoginForm: FC = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const { openModal } = useModal();
 
   const handleSubmit = async (values: { email: string; password: string }) => {
     if (window && window.localStorage) {
@@ -46,18 +51,30 @@ const LoginForm: FC = () => {
     }
 
     const data = await getAuthData();
-    dispatch(setAuthData(data));
+
     if (data.estado === "HABILITADO") {
-      router.push("/users");
+      router.push("/repertoires");
     } else {
-      router.push("/register-production-company");
+      router.push("/producers/register");
     }
     if (
       data.estado === "HABILITADO" &&
-      (data.rol === ROLES.USER_PRODUCER || data.rol === ROLES.EMPLOYEE)
+      data.rol === ROLES.EMPLOYEE &&
+      (data.productoras?.length ?? 0) > 1
     ) {
-      dispatch(setModal({ type: ModalNames.CHANGE_PRODUCER, isActive: true }));
+      openModal(<ChangeProducerModal />);
     }
+
+    if (data.productoras?.length === 1) {
+      await selectProductionCompany(data.productoras[0].id);
+      if (window && window.localStorage) {
+        localStorage.setItem("company", JSON.stringify(data.productoras[0]));
+      }
+    }
+
+    dispatch(
+      setAuthData({ ...data, productoraActiva: data.productoras?.[0] ?? null })
+    );
   };
 
   return (
@@ -70,7 +87,7 @@ const LoginForm: FC = () => {
         {({ isSubmitting, isValid, dirty }) => (
           <Form
             id="signup"
-            className="bg-white w-[25rem] flex flex-col justify-center items-center gap-[0.5rem] overflow-y-scroll pr-[2rem] pl-[2rem] pb-[1rem]"
+            className="bg-white w-[25rem] flex flex-col justify-center items-center gap-[0.5rem] overflow-y-auto pr-[2rem] pl-[2rem] pb-[1rem]"
           >
             <div className="w-[100%] flex justify-center mt-[1rem] mb-[1rem]">
               <p className="text-black font-bold text-[1.1rem] text-center">

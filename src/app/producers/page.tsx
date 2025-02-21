@@ -1,6 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { FaMusic, FaUserAlt } from "react-icons/fa";
+import { toast } from "react-toastify";
+import { Form, Formik } from "formik";
 import { useRouter } from "next/navigation";
 import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
 import CustomButton from "@/commons/CustomButton/CustomButton";
@@ -8,19 +10,13 @@ import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import CustomTable from "@/commons/CustomTable/CustomTable";
 import Header from "@/commons/Header/Header";
 import Spinner from "@/commons/Spinner/Spinner";
-import { useAppSelector } from "@/hooks/storeHooks";
-import { getAllCompanies } from "@/services/productionCompanies";
-import { ROLES } from "@/types/auth.types";
+import { getProducers } from "@/services/producers";
 import { ProductionCompany } from "@/types/productionCompany.types";
 import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
-import { Form, Formik } from "formik";
 
 export default function page() {
-  const authData = useAppSelector((state) => state.auth);
   const [loading, setLoading] = useState(true);
-  const [productionCompanies, setProductionCompanies] = useState<
-    ProductionCompany[] | null
-  >(null);
+  const [producers, setProducers] = useState<ProductionCompany[]>([]);
   const router = useRouter();
 
   const initialValues = {
@@ -34,32 +30,30 @@ export default function page() {
     router.push(route);
   };
 
-  const getProductionCompanies = async () => {
-    const companies = await getAllCompanies();
-    setProductionCompanies(companies);
-    setLoading(false);
+  const getProducersData = async (values: Record<string, string>) => {
+    setLoading(true);
+    try {
+      const companies = await getProducers(values);
+      setProducers(companies);
+    } catch (error) {
+      console.error(error);
+      toast.error("Error al obtener las productoras");
+      setProducers([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleOnSubmit = async (values: Record<string, string>) => {
-    setLoading(true);
     for (const key in values) {
       if (!values[key]) delete values[key];
     }
-
-    await getProductionCompanies();
+    await getProducersData({ ...values, estado: "Autorizada" });
   };
 
   useEffect(() => {
-    getProductionCompanies();
+    getProducersData({ estado: "Autorizada" });
   }, []);
-
-  if (loading) {
-    return (
-      <div className="w-full h-full flex justify-center items-center">
-        <Spinner color="black" />
-      </div>
-    );
-  }
 
   return (
     <CustomLayout>
@@ -83,44 +77,30 @@ export default function page() {
               labelText="CUIT"
               type="text"
             />
-            {authData.rol === ROLES.SUPER_ADMIN ||
-            authData.rol === ROLES.CAPIF_ADMIN ? (
-              <CustomSearchField
-                id="estado"
-                name="estado"
-                labelText="ESTADO"
-                type="select"
-                options={[
-                  { name: "", value: "" },
-                  { name: "Autorizada", value: "Autorizada" },
-                  { name: "Pendiente", value: "Pendiente" },
-                ]}
-              />
-            ) : (
-              <></>
-            )}
             <CustomButton type="submit">Buscar</CustomButton>
             <CustomButton type="button">
               <p className="whitespace-nowrap">Descargar CSV</p>
             </CustomButton>
           </Form>
         </Formik>
-        {productionCompanies && productionCompanies.length > 0 ? (
+        {loading ? (
+          <div className="w-full h-full flex justify-center items-center">
+            <Spinner color="black" />
+          </div>
+        ) : producers && producers.length > 0 ? (
           <CustomTable
             columnNames={[
+              { name: "NOMBRE", isSortable: true },
               { name: "EMAIL", isSortable: true },
               { name: "CUIT", isSortable: true },
-              { name: "RAZON SOCIAL/NOMBRE", isSortable: true },
-              { name: "TELÉFONO", isSortable: true },
               { name: "SELLO", isSortable: true },
               { name: "FONOGRAMAS", isSortable: true },
               { name: "FECHA CREACIÓN", isSortable: true },
-              { name: "FECHA ACTUALIZACIÓN", isSortable: true },
               { name: "ISRC AUDIO", isSortable: true },
               { name: "ISRC VIDEO", isSortable: true },
               { name: "ACCIÓN", isSortable: false },
             ]}
-            columnValues={productionCompanies?.map((element) => {
+            columnValues={producers?.map((element) => {
               let ISRCAudio: string | undefined = "";
               let ISRCVideo: string | undefined = "";
               if (
@@ -137,14 +117,12 @@ export default function page() {
                   )?.codigo_productora || "";
               }
               return [
+                element.nombre_productora,
                 element.email,
                 element.cuit_cuil,
-                element.razon_social || "",
-                element.telefono,
                 element.denominacion_sello || "",
                 element.cantidad_fonogramas,
-                `${element.createdAt}`,
-                `${element.updatedAt}`,
+                `${new Date(element.createdAt).toLocaleString()}`,
                 ISRCAudio || "",
                 ISRCVideo || "",
                 <ActionDropdownButton
@@ -165,7 +143,11 @@ export default function page() {
               ];
             })}
           />
-        ) : null}
+        ) : (
+          <div className="text-black mx-auto pt-[4rem]">
+            No se encontraron productoras
+          </div>
+        )}
       </div>
     </CustomLayout>
   );

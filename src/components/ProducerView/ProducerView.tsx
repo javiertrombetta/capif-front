@@ -4,7 +4,7 @@ import { Field, Form, Formik, FormikErrors } from "formik";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import { validationEditProducer } from "@/utils/formValidations";
 import CustomField from "@/commons/CustomField/CustomField";
-import { getCompanyById, updateProducer } from "@/services/productionCompanies";
+import { getProducerById, updateProducer } from "@/services/producers";
 import {
   ProductionCompanyByIdResponse,
   TipoPersona,
@@ -106,7 +106,7 @@ const ProducerView = ({
 
   const getCompanyData = async () => {
     if (idProducer && !Array.isArray(idProducer)) {
-      const company = await getCompanyById(idProducer);
+      const company = await getProducerById(idProducer);
       setCompanyData(company);
     }
   };

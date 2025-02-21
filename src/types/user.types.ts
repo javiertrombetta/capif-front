@@ -38,6 +38,7 @@ export const ESTADOS = [
   "PENDIENTE",
   "ENVIADO",
   "HABILITADO",
+  "RECHAZADO",
   "DESHABILITADO",
 ] as const;
 
@@ -60,7 +61,7 @@ export interface User {
   }[];
   productoras: {
     id: string;
-    productora: string;
+    nombre: string;
   }[];
 }
 

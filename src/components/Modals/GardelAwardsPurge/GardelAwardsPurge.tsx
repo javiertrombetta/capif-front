@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import { IoCloseSharp } from "react-icons/io5";
-import { deleteAllNominations } from "@/services/productionCompanies";
+import { deleteAllNominations } from "@/services/producers";
 
 const GardelAwardsPurge: FC<{ onCloseModal: () => void }> = ({
   onCloseModal,

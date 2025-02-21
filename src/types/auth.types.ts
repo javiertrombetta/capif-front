@@ -61,11 +61,12 @@ export interface GetAuthDataResponse {
   productoras: {
     id: string;
     productora: string;
+    cuit: string;
   }[];
   vistas: [
     {
-      nombre_vista: string;
-      nombre_vista_superior: string;
+      vista: string;
+      vista_superior: string;
     },
   ];
 }
@@ -86,7 +87,7 @@ export interface AuthProps {
   productoraActiva: {
     id: string;
     productora: string;
-    cuit_cuil?: string;
+    cuit?: string;
   } | null;
   loading: boolean;
 }
