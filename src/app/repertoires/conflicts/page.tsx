@@ -23,20 +23,26 @@ import {
   GrantExtension,
   Desist,
 } from "@/components/Modals/Conflicts/ConflictsActions";
+import Spinner from "@/commons/Spinner/Spinner";
 
 function page() {
   const [conflicts, setConflicts] = useState<Conflicto[]>([]);
+  const [loading, setLoading] = useState(true);
   const dispatch = useAppDispatch();
   const authData = useAppSelector((state) => state.auth);
   const router = useRouter();
   const { openModal, closeModal } = useModal();
 
-  const handleGetConflicts = async () => {
+  const getConflictsData = async () => {
     try {
       const response = await getConflicts();
       setConflicts(response.data);
     } catch (error) {
+      console.error(error);
       toast.error(`${error}`);
+      setConflicts([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -79,7 +85,8 @@ function page() {
             },
             {
               label: "Ver Titulares",
-              onClick: () => router.push(`/conflicts-history/${id}`),
+              onClick: () =>
+                router.push(`/repertoires/conflicts/${id}/history`),
             },
           ]
         : []),
@@ -112,44 +119,44 @@ function page() {
   };
 
   useEffect(() => {
-    handleGetConflicts();
+    getConflictsData();
   }, []);
 
   return (
     <CustomLayout>
       <Header title="Conflictos" />
-      <SearchConflictForm />
-      <div className="w-[100%] mt-[2rem] pr-[2rem] pl-[2rem] overflow-y-auto">
-        <CustomTable
-          columnNames={[
-            { name: "Productora", isSortable: true },
-            { name: "ISRC", isSortable: true },
-            { name: "Fecha de Inicio", isSortable: true },
-            { name: "Fecha de Finalización", isSortable: true },
-            { name: "Estado del Conflicto", isSortable: true },
-            { name: "Acción", isSortable: false },
-          ]}
-          // columnValues={[
-          //   [
-          //     "SONY MUSIC",
-          //     "ARF100300069",
-          //     "21/11/24",
-          //     "21/11/24",
-          //     "Resuelto",
-          //     <ActionDropdownButton menuOptions={menuOptions} />,
-          //   ],
-          // ]}
-          columnValues={conflicts.map((c) => [
-            c.productoraDelConflicto.nombre_productora,
-            c.fonogramaDelConflicto.isrc,
-            c.fecha_periodo_desde,
-            c.fecha_periodo_hasta,
-            c.estado_conflicto,
-            <ActionDropdownButton
-              menuOptions={handleMenuOptions(c.id_conflicto)}
-            />,
-          ])}
-        />
+      <div className="w-[100%] flex-1 flex flex-col space-y-[1rem] overflow-y-auto">
+        <SearchConflictForm />
+        {loading ? (
+          <div className="w-full h-full flex justify-center items-center">
+            <Spinner color="black" />
+          </div>
+        ) : conflicts && conflicts.length > 0 ? (
+          <CustomTable
+            columnNames={[
+              { name: "Productora", isSortable: true },
+              { name: "ISRC", isSortable: true },
+              { name: "Fecha de Inicio", isSortable: true },
+              { name: "Fecha de Finalización", isSortable: true },
+              { name: "Estado del Conflicto", isSortable: true },
+              { name: "Acción", isSortable: false },
+            ]}
+            columnValues={conflicts.map((c) => [
+              c.productoraDelConflicto.nombre_productora,
+              c.fonogramaDelConflicto.isrc,
+              c.fecha_periodo_desde,
+              c.fecha_periodo_hasta,
+              c.estado_conflicto,
+              <ActionDropdownButton
+                menuOptions={handleMenuOptions(c.id_conflicto)}
+              />,
+            ])}
+          />
+        ) : (
+          <div className="text-black mx-auto pt-[4rem]">
+            No se encontraron fonogramas
+          </div>
+        )}
       </div>
     </CustomLayout>
   );
