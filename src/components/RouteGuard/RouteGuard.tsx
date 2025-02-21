@@ -1,9 +1,7 @@
 import React, { FC, ReactNode, useEffect } from "react";
 import { useAppSelector } from "@/hooks/storeHooks";
 import { usePathname, useRouter } from "next/navigation";
-import { ROLES } from "@/types/auth.types";
 import { match } from "path-to-regexp";
-
 interface RouteGuardProps {
   children: ReactNode;
 }
@@ -13,129 +11,78 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
   const pathname = usePathname();
   const router = useRouter();
 
-  const allowedRoutes = {
-    [ROLES.SUPER_ADMIN]: [
-      "/",
-      "/repertoires",
-      "/repertoires/:id",
+  const mapVistasToUrls: Record<string, string[]> = {
+    "Buscar Repertorio": ["/repertoires", "/repertoires/:id"],
+    "Declaración Repertorio": ["/repertoires/new"],
+    "Declaración Bulk Repertorio": ["/repertoires/bulk"],
+    "Envío Archivo Audio": ["/repertoires/send-audio-file"],
+    Territorialidad: [
+      "/repertoires/territoriality",
+      "/repertoires/:id/territoriality",
+    ],
+    Titularidad: [
+      "/repertoires/titularity",
       "/repertoires/:id/titularity",
       "/repertoires/:id/titularity/add-titular",
       "/repertoires/:id/titularity/:idtitularity",
-      "/repertoires/:id/territoriality",
-      "/conflicts",
-      "/conflicts-history/:id",
-      "/users",
-      "/users/:id",
-      "/users/:id/application",
-      "/users/new",
+    ],
+    Conflictos: [
+      "/repertoires/conflicts",
+      "/repertoires/conflicts/:id/history",
+    ],
+    "Buscar Usuario": ["/users"],
+    "Alta Usuario": ["/users/new", "/users/:id", "/users/:id/application"], // Probablemente crear vista "Editar Usuario"
+    "Buscar Productora": [
       "/producers",
       "/producers/:id",
-      "/producers/register",
-      "/gardel-awards",
-      "/audit-changes",
-      "/audit-sessions",
-      "/audit-phonogram",
+      "/producers/register", // Crear vista nueva "Crear Productora"
+    ],
+    "Premios Gardel": ["/gardel-awards"],
+    Sesiones: ["/audit-sessions"],
+    "Cambios de Repertorios": ["/audit-phonogram"],
+    "Historial de Cambios": ["/audit-changes"],
+    Liquidacioens: [
       "/cashflow-payouts",
       "/cashflow-payouts/list",
       "/cashflow-payouts/export",
-      "/cashflow-transfers",
-      "/cashflow-transfers/list",
-      "/cashflow-transfers/export",
-      "/cashflow-account-statement",
-      "/cashflow-account-statement/history",
+    ],
+    Pagos: [
       "/cashflow-payments",
       "/cashflow-payments/list",
       "/cashflow-payments/export",
-      "/cashflow-rejections",
-      "/cashflow-rejections/list",
-      "/cashflow-rejections/export",
-      "/my-profile",
-      "/change-password",
-      "/privacy-policy",
     ],
-    [ROLES.CAPIF_ADMIN]: [
-      "/",
-      "/repertoires",
-      "/repertoires/:id",
-      "/repertoires/:id/territoriality",
-      "/conflicts",
-      "/conflicts-history",
-      "/users",
-      "/users/:id",
-      "/users/:id/application",
-      "/users/new",
-      "/producers",
-      "/producers/:id",
-      "/producers/register",
-      "/gardel-awards",
-      "/audit-changes",
-      "/audit-sessions",
-      "/audit-phonogram",
-      "/cashflow-payouts",
-      "/cashflow-payouts/list",
-      "/cashflow-payouts/export",
+    Traspasos: [
       "/cashflow-transfers",
       "/cashflow-transfers/list",
       "/cashflow-transfers/export",
-      "/cashflow-account-statement",
-      "/cashflow-account-statement/history",
-      "/cashflow-payments",
-      "/cashflow-payments/list",
-      "/cashflow-payments/export",
+    ],
+    Rechazos: [
       "/cashflow-rejections",
       "/cashflow-rejections/list",
       "/cashflow-rejections/export",
-      "/my-profile",
-      "/change-password",
     ],
-    [ROLES.USER_PRODUCER]: [
-      "/",
-      "/repertoires",
-      "/repertoires/:id",
-      "/repertoires/:id/territoriality",
-      "/conflicts",
-      "/users",
-      "/users/new",
+    "Estado de Cuenta": [
       "/cashflow-account-statement",
-      "/producers/register",
-      "/my-profile",
-      "/change-password",
-    ],
-    [ROLES.EMPLOYEE]: [
-      "/",
-      "/repertoires",
-      "/repertoires/:id",
-      "/repertoires/:id/territoriality",
-      "/conflicts",
-      "/cashflow-account-statement",
-      "/producers/register",
-      "/my-profile",
-      "/change-password",
+      "/cashflow-account-statement/history",
     ],
   };
 
-  const allowedViews = [
-    auth.vistas.find((v) => v.nombre === "Declaración Repertorio") &&
-      "/repertoires/new",
-    auth.vistas.find((v) => v.nombre === "Envío Archivo Audio") &&
-      "/repertoires/send-audio-file",
-    auth.vistas.find((v) => v.nombre === "Territorialidad") &&
-      "/repertoires/territoriality",
-  ];
+  const allowedViews = auth.vistas
+    .map((v) => mapVistasToUrls[v.nombre])
+    .flat()
+    .concat(["/my-profile", "/change-password", "/privacy-policy"]);
 
-  const isRouteAllowed = (path: string, routes: string[]) => {
-    return (
-      routes.some((route) => match(route)(path)) || allowedViews.includes(path)
-    );
+  const isRouteAllowed = (path: string) => {
+    return allowedViews.some((r) => match(r)(path));
   };
 
   useEffect(() => {
-    if (auth.rol && !isRouteAllowed(pathname, allowedRoutes[auth.rol] || [])) {
+    if (auth.rol && !isRouteAllowed(pathname)) {
       router.push("/repertoires");
     }
   }, [auth.rol, pathname, router, auth]);
 
-  if (!auth.rol || !isRouteAllowed(pathname, allowedRoutes[auth.rol] || [])) {
+  if (!auth.rol || !isRouteAllowed(pathname)) {
     return null;
   }
 
