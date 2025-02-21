@@ -31,11 +31,11 @@ const Sidebar: FC = () => {
     fonogramsOptions: [
       {
         name: "Declaración Repertorio",
-        link: "/new-phonogram",
+        link: "/repertoires/new",
       },
       {
         name: "Buscar",
-        link: "/search-phonogram",
+        link: "/repertoires",
       },
       {
         name: "Conflictos",
@@ -45,16 +45,11 @@ const Sidebar: FC = () => {
 
     usersOptions:
       authData.rol === ROLES.EMPLOYEE
-        ? [
-            {
-              name: "Buscar",
-              link: "/users",
-            },
-          ]
+        ? []
         : [
             {
               name: "Altas",
-              link: "/users/add-user",
+              link: "/users/new",
             },
 
             {
@@ -79,13 +74,17 @@ const Sidebar: FC = () => {
       icon: FaMusic,
       height: "6",
     },
-    {
-      id: 3,
-      title: "USUARIOS",
-      items: userProducerMenuOptions.usersOptions,
-      icon: FaUsers,
-      height: authData.rol === ROLES.USER_PRODUCER ? "4" : "2",
-    },
+    ...(authData.rol === ROLES.USER_PRODUCER
+      ? [
+          {
+            id: 3,
+            title: "USUARIOS",
+            items: userProducerMenuOptions.usersOptions,
+            icon: FaUsers,
+            height: "4",
+          },
+        ]
+      : []),
     {
       id: 4,
       title: "CUENTAS CORRIENTES",
@@ -96,53 +95,46 @@ const Sidebar: FC = () => {
   ];
 
   const adminMenuOptions = {
-    fonogramsOptions:
-      authData.rol === ROLES.SUPER_ADMIN
+    fonogramsOptions: [
+      {
+        name: "Buscar",
+        link: "/repertoires",
+      },
+      ...(authData.vistas.find((v) => v.nombre === "Declaración Repertorio")
         ? [
             {
-              name: "Buscar",
-              link: "/search-phonogram",
-            },
-            {
               name: "Declaración Repertorio",
-              link: "/new-phonogram",
-            },
-
-            {
-              name: "Conflictos",
-              link: "/conflicts",
-            },
-            {
-              name: "Envio Archivo Audio",
-              link: "/send-audio-file",
-            },
-            {
-              name: "Territorialidad",
-              link: "/territoriality",
+              link: "/repertoires/new",
             },
           ]
-        : [
+        : []),
+      ...(authData.vistas.find(
+        (v) => v.nombre === "Declaración Bulk Repertorio"
+      )
+        ? [
             {
-              name: "Buscar",
-              link: "/search-phonogram",
+              name: "Declaración Masiva",
+              link: "/repertoires/bulk",
             },
-            {
-              name: "Declaración Repertorio",
-              link: "/new-phonogram",
-            },
-            {
-              name: "Conflictos",
-              link: "/conflicts",
-            },
+          ]
+        : []),
+      {
+        name: "Conflictos",
+        link: "/conflicts",
+      },
+      ...(authData.vistas.find((v) => v.nombre === "Envío Archivo Audio")
+        ? [
             {
               name: "Envio Archivo Audio",
-              link: "/send-audio-file",
+              link: "/repertoires/send-audio-file",
             },
-            {
-              name: "Territorialidad",
-              link: "/territoriality",
-            },
-          ],
+          ]
+        : []),
+      {
+        name: "Territorialidad",
+        link: "/repertoires/territoriality",
+      },
+    ],
 
     producersOptions: [
       {
@@ -161,7 +153,7 @@ const Sidebar: FC = () => {
       },
       {
         name: "Altas",
-        link: "/users/add-user",
+        link: "/users/new",
       },
     ],
     cashFlowOptions: [
@@ -243,11 +235,11 @@ const Sidebar: FC = () => {
   return (
     <div className="w-[100%]">
       <div className="w-[100%] h-[3rem] bg-[#1a2226] flex items-center pl-[1rem]">
-        {pathname === "/register-production-company" ? null : (
+        {pathname === "/producers/register" ? null : (
           <p className="text-[#4b646f] text-[0.8rem]">MENU</p>
         )}
       </div>
-      {pathname === "/register-production-company" ? null : (
+      {pathname === "/producers/register" ? null : (
         <>
           {authData.rol === ROLES.USER_PRODUCER ||
           authData.rol === ROLES.EMPLOYEE

@@ -1,5 +1,5 @@
 "use client";
-import React, { FC, ReactNode, useEffect, useState } from "react";
+import React, { FC, ReactNode, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import gitLogo from "../../assets/GIT LOGO.png";
@@ -9,8 +9,6 @@ import { match } from "path-to-regexp";
 import { FaUser, FaBuilding } from "react-icons/fa";
 import { CiLogout } from "react-icons/ci";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
-import { setModal } from "@/store/modalSlice";
-import { ModalNames } from "@/types/modalNames";
 import { ROLES } from "@/types/auth.types";
 import "../../styles/globals.css";
 import "./Navbar.css";
@@ -18,12 +16,13 @@ import RouteGuard from "../RouteGuard/RouteGuard";
 import { authLogout } from "@/services/auth";
 import { authDefaultState, setAuthData } from "@/store/authSlice";
 import Spinner from "@/commons/Spinner/Spinner";
+import useModal from "@/hooks/useModal";
+import { ChangeProducerModal } from "../Modals/ChangeProducerModal/ChangeProducerModal";
 
 interface NavbarProps {
   children: ReactNode;
 }
 const Navbar: FC<NavbarProps> = ({ children }) => {
-  const dispatch = useAppDispatch();
   const pathname = usePathname();
   const authData = useAppSelector((state) => state.auth);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
@@ -53,22 +52,6 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
     setIsMenuOpen((prevState: boolean) => !prevState);
   };
 
-  const openProductionCompanySelection = () => {
-    if (window && window.localStorage) {
-      const company = localStorage.getItem("company");
-
-      if (!company && authData.id_usuario) {
-        dispatch(
-          setModal({ type: ModalNames.CHANGE_PRODUCER, isActive: true })
-        );
-      }
-    }
-  };
-
-  useEffect(() => {
-    openProductionCompanySelection();
-  }, []);
-
   return (
     <>
       {checkForbbidenPathname(noUserPathnames, pathname) ? (
@@ -88,7 +71,7 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
                 src={gitLogo}
               />
             </a>
-            {pathname === "/register-production-company" ? (
+            {pathname === "/producers/register" ? (
               <div className="h-[100%] flex-grow flex justify-end items-center pr-[2rem]">
                 <button
                   onClick={handleMenuOpen}
@@ -164,15 +147,19 @@ const NavbarMenu: FC<{ closeMenu: () => void; isEnabledUser: boolean }> = ({
   closeMenu,
   isEnabledUser,
 }) => {
+  const { rol } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const ref = useRef<HTMLDivElement>(null);
+  const { openModal } = useModal();
 
   const handleChangeProducer = () => {
-    dispatch(setModal({ type: ModalNames.CHANGE_PRODUCER, isActive: true }));
+    openModal(<ChangeProducerModal />);
     closeMenu();
   };
 
   const handleGoToProfile = () => {
+    closeMenu();
     router.push("/my-profile");
   };
 
@@ -189,8 +176,25 @@ const NavbarMenu: FC<{ closeMenu: () => void; isEnabledUser: boolean }> = ({
     }
   };
 
+  const handleClick = (event: MouseEvent) => {
+    if (ref.current && !ref.current.contains(event.target as HTMLElement)) {
+      closeMenu();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("click", handleClick);
+
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  });
+
   return (
-    <div className="pt-[0.6rem] pb-[0.6rem] absolute w-[15rem] h-[auto] bg-[#0F172A] right-[1%] top-[100%] rounded-b-[0.5rem] flex flex-col gap-[0.2rem] overflow-hidden">
+    <div
+      ref={ref}
+      className="pt-[0.6rem] pb-[0.6rem] absolute w-[15rem] h-[auto] bg-[#0F172A] right-[1%] top-[100%] rounded-b-[0.5rem] flex flex-col gap-[0.2rem] overflow-hidden"
+    >
       {isEnabledUser && (
         <>
           <div
@@ -200,13 +204,15 @@ const NavbarMenu: FC<{ closeMenu: () => void; isEnabledUser: boolean }> = ({
             <FaUser size={13} />
             <p>Mi Perfil</p>
           </div>
-          <div
-            onClick={handleChangeProducer}
-            className="w-[100%] hover:bg-[#29395e] pl-[0.4rem] cursor-pointer flex items-center gap-[0.4rem]"
-          >
-            <FaBuilding size={13} />
-            <p>Cambiar de Productora </p>
-          </div>
+          {rol === ROLES.EMPLOYEE && (
+            <div
+              onClick={handleChangeProducer}
+              className="w-[100%] hover:bg-[#29395e] pl-[0.4rem] cursor-pointer flex items-center gap-[0.4rem]"
+            >
+              <FaBuilding size={13} />
+              <p>Cambiar de Productora </p>
+            </div>
+          )}
         </>
       )}
       <div

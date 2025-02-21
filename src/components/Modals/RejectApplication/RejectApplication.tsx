@@ -1,16 +1,29 @@
 "use client";
 import React, { FC } from "react";
+import { IoClose } from "react-icons/io5";
+import { toast } from "react-toastify";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useRouter } from "next/navigation";
 import * as Yup from "yup";
 import CustomButton from "@/commons/CustomButton/CustomButton";
-import { IoClose } from "react-icons/io5";
-import { useParams } from "next/navigation";
+import useModal from "@/hooks/useModal";
 import { rejectApplication } from "@/services/auth";
 
-const RejectApplication: FC<{ onCloseModal: () => void }> = ({
-  onCloseModal,
-}) => {
-  const id_usuario = useParams().id;
+const RejectApplication: FC<{ idUsuario: string }> = ({ idUsuario }) => {
+  const { closeModal } = useModal();
+  const router = useRouter();
+
+  const handleSubmit = async (values: { comentario: string }) => {
+    try {
+      await rejectApplication(idUsuario, values.comentario);
+      toast.success("La solicitud fue aceptada correctamente");
+      closeModal();
+      router.push("/users");
+    } catch (error) {
+      toast.error("Error al aceptar la solicitud");
+      console.error("Error al aceptar la solicitud:", error);
+    }
+  };
 
   const initialValues = {
     comentario: "",
@@ -22,21 +35,9 @@ const RejectApplication: FC<{ onCloseModal: () => void }> = ({
       .required("El comentario es obligatorio"),
   });
 
-  const handleSubmit = async (values: { comentario: string }) => {
-    if (!Array.isArray(id_usuario)) {
-      try {
-        await rejectApplication(id_usuario, values.comentario);
-        alert("La solicitud fue rechazada correctamente");
-        onCloseModal();
-      } catch (error) {
-        console.error("Error al rechazar la solicitud:", error);
-      }
-    }
-  };
-
   return (
     <div className="relative bg-white h-[13rem] w-[30rem] mb-[6rem] rounded-[2rem] flex flex-col gap-[1rem] justify-center items-center">
-      <button onClick={onCloseModal} className="absolute top-[5%] right-[5%]">
+      <button onClick={closeModal} className="absolute top-[5%] right-[5%]">
         <IoClose size={25} color="black" />
       </button>
       <p className="text-black font-bold text-[1.2rem] text-center w-[95%]">

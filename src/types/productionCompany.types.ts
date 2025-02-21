@@ -1,5 +1,7 @@
 export type TipoPersona = "FISICA" | "JURIDICA";
 
+export type EstadoProductora = "Autorizada" | "Pendiente";
+
 export const TIPO_DOCUMENTOS = [
   "dni_persona_fisica",
   "contrato_social",
@@ -18,7 +20,7 @@ export interface Document {
 export interface ProductionCompany {
   id_productora: string | null;
   usuarioPrincipal: string | null;
-  estado: string;
+  estado: EstadoProductora;
   documentos: Document[];
   cuit_cuil: string;
   nombre_productora: string;

@@ -1,12 +1,7 @@
 export enum ModalNames {
   COMPLETE_REGISTRATION = "CompleteRegistration",
-  REJECT_REGISTRATION = "RejectRegistration",
-  ACCEPT_APPLICATION = "AcceptApplication",
-  CHANGE_PRODUCER = "ChangeProducer",
   ACCEPT_REGISTRATION = "AcceptRegistration",
-  ADD_TERRITORIALITY = "AddTerritoriality",
   SEARCH_CONFLICTS_FILTERS = "SearchConflictsFilters",
-
   FIRST_INSTANCE = "FirstInstance",
   SECOND_INSTANCE = "SecondInstance",
   REVISION = "Revision",
@@ -30,15 +25,7 @@ export enum ModalNames {
   GARDEL_AWARDS_PURGE = "GardelAwardsPurge",
   EXPORT_CHANGES_LIST = "ExportChangesList",
   FINISH_NEW_PHONOGRAM = "FinishNewPhonogram",
-  EDIT_PHONOGRAM_SAVE = "EditPhonogramSave",
-  EDIT_PHONOGRAM_CANCEL = "EditPhonogramCancel",
-  TITULARITY_PHOGRAM_EDIT = "TitularityPhonogramEdit",
-  TITULARITY_PHOGRAM_REMOVE = "TitularityPhonogramRemove",
   TERRITORIALITY_SAVE = "TerritorialitySave",
-  SEND_AUDIO_FILE = "SendAudioFile",
-  SEND_AUDIO_REJECT = "SendAudioReject",
-  SEND_AUDIO_SET_ERROR_SEND = "SendAudioSetErrorSend",
-  TERRITORIALITY_UNABLE = "TerritorialityUnable",
   AUDIT_SESSIONS_PURGE = "AuditSessionsPurge",
   SUBMIT_SEND_APPILICATION = "SubmitSendApplication",
 }

@@ -16,25 +16,21 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
   const allowedRoutes = {
     [ROLES.SUPER_ADMIN]: [
       "/",
-      "/search-phonogram",
-      "/new-phonogram",
-      "/edit-phonogram/:id",
-      "/titularity-phonogram/:id",
-      "/titularity-phonogram/:id/add-titular",
-      "/titularity-phonogram/:id/edit-titular",
-      "/send-audio-file",
-      "/territoriality",
-      "/territoriality-phonogram/:id",
+      "/repertoires",
+      "/repertoires/:id",
+      "/repertoires/:id/titularity",
+      "/repertoires/:id/titularity/add-titular",
+      "/repertoires/:id/titularity/:idtitularity",
+      "/repertoires/:id/territoriality",
       "/conflicts",
-      "/conflicts-history",
+      "/conflicts-history/:id",
       "/users",
       "/users/:id",
       "/users/:id/application",
-      "/users/add-user",
+      "/users/new",
       "/producers",
       "/producers/:id",
-      "/edit-production-company",
-      "/register-production-company",
+      "/producers/register",
       "/gardel-awards",
       "/audit-changes",
       "/audit-sessions",
@@ -59,22 +55,18 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
     ],
     [ROLES.CAPIF_ADMIN]: [
       "/",
-      "/search-phonogram",
-      "/new-phonogram",
-      "/edit-phonogram/:id",
-      "/send-audio-file",
+      "/repertoires",
+      "/repertoires/:id",
+      "/repertoires/:id/territoriality",
       "/conflicts",
       "/conflicts-history",
-      "/territoriality",
-      "/territoriality-phonogram/:id",
       "/users",
       "/users/:id",
       "/users/:id/application",
-      "/users/add-user",
+      "/users/new",
       "/producers",
       "/producers/:id",
-      "/register-production-company",
-      "/edit-production-company",
+      "/producers/register",
       "/gardel-awards",
       "/audit-changes",
       "/audit-sessions",
@@ -98,40 +90,48 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
     ],
     [ROLES.USER_PRODUCER]: [
       "/",
-      "/new-phonogram",
-      "/search-phonogram",
-      "/edit-phonogram/:id",
-      "/territoriality-phonogram/:id",
+      "/repertoires",
+      "/repertoires/:id",
+      "/repertoires/:id/territoriality",
       "/conflicts",
       "/users",
-      "/users/add-user",
+      "/users/new",
       "/cashflow-account-statement",
-      "/register-production-company",
+      "/producers/register",
       "/my-profile",
       "/change-password",
     ],
     [ROLES.EMPLOYEE]: [
       "/",
-      "/new-phonogram",
-      "/search-phonogram",
-      "/edit-phonogram/:id",
-      "/territoriality-phonogram/:id",
+      "/repertoires",
+      "/repertoires/:id",
+      "/repertoires/:id/territoriality",
       "/conflicts",
-      "/users",
       "/cashflow-account-statement",
-      "/register-production-company",
+      "/producers/register",
       "/my-profile",
       "/change-password",
     ],
   };
 
+  const allowedViews = [
+    auth.vistas.find((v) => v.nombre === "Declaración Repertorio") &&
+      "/repertoires/new",
+    auth.vistas.find((v) => v.nombre === "Envío Archivo Audio") &&
+      "/repertoires/send-audio-file",
+    auth.vistas.find((v) => v.nombre === "Territorialidad") &&
+      "/repertoires/territoriality",
+  ];
+
   const isRouteAllowed = (path: string, routes: string[]) => {
-    return routes.some((route) => match(route)(path));
+    return (
+      routes.some((route) => match(route)(path)) || allowedViews.includes(path)
+    );
   };
 
   useEffect(() => {
     if (auth.rol && !isRouteAllowed(pathname, allowedRoutes[auth.rol] || [])) {
-      router.push("/users");
+      router.push("/repertoires");
     }
   }, [auth.rol, pathname, router, auth]);
 

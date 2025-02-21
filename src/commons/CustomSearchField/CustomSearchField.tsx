@@ -34,6 +34,7 @@ const CustomSearchField: FC<CustomSearchFieldProps> = ({
       </label>
       <Field
         disabled={disabled}
+        type={type}
         {...(type === "select" ? { as: "select" } : {})}
         id={id}
         name={name}

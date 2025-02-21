@@ -21,7 +21,8 @@ function page() {
     return [
       {
         label: "Modificar",
-        onClick: () => router.push(`/titularity-phonogram/${id}/edit-titular`),
+        onClick: () =>
+          router.push(`/repertoires/${id}/titularity/:idtitularity`),
       },
       {
         label: "Fijar Porcentaje",
