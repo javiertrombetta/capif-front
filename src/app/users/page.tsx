@@ -1,26 +1,27 @@
 "use client";
+import React, { useEffect, useState } from "react";
+import { FaEdit, FaTimes, FaUserAlt } from "react-icons/fa";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import { FaCircle, FaEdit, FaTimes, FaUserAlt } from "react-icons/fa";
-import Header from "@/commons/Header/Header";
-import { useAppSelector } from "@/hooks/storeHooks";
-import { ROLES } from "@/types/auth.types";
-import CustomTable from "@/commons/CustomTable/CustomTable";
-import { disableOrEnableUser, getUsers } from "@/services/users";
-import { ESTADOS, User } from "@/types/user.types";
-import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
-import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
-import Spinner from "@/commons/Spinner/Spinner";
 import CustomButton from "@/commons/CustomButton/CustomButton";
-import { toast } from "react-toastify";
+import CustomLayout from "@/commons/CustomLayout/CustomLayout";
+import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
+import CustomTable from "@/commons/CustomTable/CustomTable";
+import Header from "@/commons/Header/Header";
+import Spinner from "@/commons/Spinner/Spinner";
+import RemoveUserModal from "@/components/Modals/RemoveUserModal/RemoveUserModal";
+import { useAppSelector } from "@/hooks/storeHooks";
+import useModal from "@/hooks/useModal";
+import { getUsers } from "@/services/users";
+import { ESTADOS, User } from "@/types/user.types";
 
 export default function page() {
   const authData = useAppSelector((state) => state.auth);
+  const router = useRouter();
+  const { openModal } = useModal();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
 
   const initialValues = {
     nombre: "",
@@ -29,20 +30,8 @@ export default function page() {
     estado: "",
   };
 
-  const handleEnableDisableUser = async (id: string) => {
-    setLoading(true);
-    try {
-      await disableOrEnableUser(id);
-      toast.success("Usuario deshabilitado/habilitado correctamente");
-    } catch (error) {
-      console.error(error);
-      toast.error("Error al deshabilitar/habilitar el usuario");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const getUsersData = async (values?: Record<string, string>) => {
+    setLoading(true);
     try {
       const users = await getUsers(values);
       setUsers(users);
@@ -85,35 +74,29 @@ export default function page() {
                   name="email"
                   type="text"
                 />
-                {authData.rol === ROLES.SUPER_ADMIN ||
-                authData.rol === ROLES.CAPIF_ADMIN ? (
-                  <>
-                    <CustomSearchField
-                      id="nombre"
-                      name="nombre"
-                      labelText="NOMBRE"
-                      type="text"
-                    />
-                    <CustomSearchField
-                      id="apellido"
-                      name="apellido"
-                      labelText="APELLIDO"
-                      type="text"
-                    />
-                    <CustomSearchField
-                      id="estado"
-                      name="estado"
-                      labelText="ESTADO"
-                      type="select"
-                      options={[
-                        { name: "", value: "" },
-                        ...ESTADOS.map((t) => ({ name: t, value: t })),
-                      ]}
-                    />
-                  </>
-                ) : (
-                  <></>
-                )}
+                <CustomSearchField
+                  id="nombre"
+                  name="nombre"
+                  labelText="NOMBRE"
+                  type="text"
+                />
+                <CustomSearchField
+                  id="apellido"
+                  name="apellido"
+                  labelText="APELLIDO"
+                  type="text"
+                />
+                <CustomSearchField
+                  id="estado"
+                  name="estado"
+                  labelText="ESTADO"
+                  type="select"
+                  options={[
+                    { name: "", value: "" },
+                    ...ESTADOS.map((t) => ({ name: t, value: t })),
+                  ]}
+                />
+
                 <CustomButton type="submit">Buscar</CustomButton>
               </Form>
               <div className="w-[100%] mt-[2rem] flex-1 overflow-y-auto">
@@ -151,22 +134,24 @@ export default function page() {
                                 redirectToOption(`/users/${element.id}`);
                               },
                             },
-                            {
-                              label:
-                                element.estado === "DESHABILITADO"
-                                  ? "Habilitar"
-                                  : "Deshabilitar",
-                              icon:
-                                element.estado === "DESHABILITADO" ? (
-                                  <FaCircle />
-                                ) : (
-                                  <FaTimes />
-                                ),
-                              onClick: async () => {
-                                await handleEnableDisableUser(element.id);
-                                await submitForm();
-                              },
-                            },
+                            ...(authData.vistas.some(
+                              (v) => v.nombre === "Desvincular Usuario"
+                            )
+                              ? [
+                                  {
+                                    label: "Desvincular",
+                                    icon: <FaTimes />,
+                                    onClick: async () => {
+                                      openModal(
+                                        <RemoveUserModal
+                                          idUsuario={element.id}
+                                          onSuccess={submitForm}
+                                        />
+                                      );
+                                    },
+                                  },
+                                ]
+                              : []),
                             ...(element.estado === "ENVIADO"
                               ? [
                                   {
