@@ -2,6 +2,7 @@ import {
   EstadoProductora,
   GetCompaniesResponse,
   GetDocumentsResponse,
+  GetNominationsResponse,
   NominationsResponse,
   ProductionCompanyByIdResponse,
   UpdateProducerByIdResponse,
@@ -40,40 +41,27 @@ export const updateProducer = async (
   return updatedCompany.data;
 };
 
-export const getAllNominations = async () => {
-  const nominations: { data: { postulaciones: NominationsResponse[] } } =
-    await axiosInstance.get("producers/postulaciones");
-  return nominations.data.postulaciones;
-};
+interface GetNominationsParams {
+  productoraName?: string;
+  startDate?: string;
+  endDate?: string;
+}
 
-export const getFilteredNominations = async (filters: {
-  productoraName?: string | null;
-  startDate?: Date | null;
-  endDate?: Date | null;
-}): Promise<NominationsResponse[]> => {
-  const params = new URLSearchParams();
-
-  if (filters.productoraName) {
-    params.append("productoraName", filters.productoraName);
+export const getNominations = async (params?: GetNominationsParams) => {
+  for (const key in params) {
+    if (!params[key as keyof GetNominationsParams])
+      delete params[key as keyof GetNominationsParams];
   }
-  if (filters.startDate) {
-    params.append("startDate", filters.startDate.toISOString());
-  }
-  if (filters.endDate) {
-    params.append("endDate", filters.endDate.toISOString());
-  }
+  const { data } = await axiosInstance.get<GetNominationsResponse>(
+    "producers/awards",
+    { params }
+  );
 
-  const url = `producers/postulaciones?${params.toString()}`;
-
-  const { data } = await axiosInstance.get<{
-    postulaciones: NominationsResponse[];
-  }>(url);
-
-  return data.postulaciones;
+  return data.data;
 };
 
 export const deleteAllNominations = async () => {
-  await axiosInstance.delete("producers/postulaciones");
+  await axiosInstance.delete("producers/awards");
 };
 
 export const getProducerDocuments = async (companyId: string) => {
