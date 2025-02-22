@@ -60,8 +60,8 @@ export const blockOrUnlockUser = async (
   });
 };
 
-export const disableOrEnableUser = async (id_usuario: string) => {
-  await axiosInstance.put(`users/${id_usuario}/status`);
+export const removeUserFromProducer = async (id_usuario: string) => {
+  await axiosInstance.delete(`users/${id_usuario}/relationship`);
 };
 
 export const changePassword = async (data_request: {
