@@ -33,11 +33,9 @@ export default function RootLayout({
         >
           <ModalProvider>
             <AuthProvider>
-              <Navbar>
-                {children}
-                <ToastContainer position="bottom-right" />
-              </Navbar>
+              <Navbar>{children}</Navbar>
             </AuthProvider>
+            <ToastContainer position="bottom-right" />
           </ModalProvider>
         </StoreProvider>
       </body>

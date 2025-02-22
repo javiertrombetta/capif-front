@@ -16,7 +16,6 @@ import {
   CashflowPayoutsMatchReportModal,
   CashflowPayoutsExportPayoutsModal,
 } from "../Modals/CashflowPayoutsModals/CashflowPayoutsModals";
-import GardelAwardsModal from "../Modals/GardelAwardsModal/GardelAwardsModal";
 import SearchPhonogramsExportModal from "../Modals/SearchPhonogramsExportModal/SearchPhonogramsExportModal";
 import CashflowTransfersImportModal, {
   CashflowTransfersExportModal,
@@ -31,7 +30,6 @@ import {
   CashflowRejectionsReversePayment,
 } from "../Modals/CashflowRejectionsModals/CashflowRejectionsModals";
 import FinishNewPhonogram from "../Modals/FinishNewPhonogram/FinishNewPhonogram";
-import GardelAwardsPurge from "../Modals/GardelAwardsPurge/GardelAwardsPurge";
 import {
   SendDocumentation,
   Accept,
@@ -94,23 +92,18 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
         return (
           <CashflowPayoutsExportPayoutsModal onCloseModal={onCloseModal} />
         );
-      case ModalNames.GARDEL_AWARDS:
-        return <GardelAwardsModal onCloseModal={onCloseModal} />;
       case ModalNames.EXPORT_CHANGES_LIST:
         return <SearchPhonogramsExportModal onCloseModal={onCloseModal} />;
       case ModalNames.CASHFLOW_TRANSFERS:
         return <CashflowTransfersImportModal onCloseModal={onCloseModal} />;
-
       case ModalNames.CASHFLOW_IMPORT_PAYMENT:
         return <CashflowPaymentsImportPayment onCloseModal={onCloseModal} />;
       case ModalNames.CASHFLOW_EXPORT_PAYMENTS:
         return <CashflowPaymentsExportPayments onCloseModal={onCloseModal} />;
-
       case ModalNames.CASHFLOW_IMPORT_REJECTIONS:
         return (
           <CashflowRejectionsImportRejection onCloseModal={onCloseModal} />
         );
-
       case ModalNames.CASHFLOW_EXPORT_REJECTIONS:
         return (
           <CashflowRejectionsExportRejections onCloseModal={onCloseModal} />
@@ -119,8 +112,6 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
         return <CashflowRejectionsReversePayment onCloseModal={onCloseModal} />;
       case ModalNames.FINISH_NEW_PHONOGRAM:
         return <FinishNewPhonogram onCloseModal={onCloseModal} />;
-      case ModalNames.GARDEL_AWARDS_PURGE:
-        return <GardelAwardsPurge onCloseModal={onCloseModal} />;
       case ModalNames.CASHFLOW_TRANSFERS_EXPORT:
         return <CashflowTransfersExportModal onCloseModal={onCloseModal} />;
       case ModalNames.CONFLICTS_ACCEPT:

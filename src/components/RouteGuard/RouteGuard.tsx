@@ -2,6 +2,7 @@ import React, { FC, ReactNode, useEffect } from "react";
 import { useAppSelector } from "@/hooks/storeHooks";
 import { usePathname, useRouter } from "next/navigation";
 import { match } from "path-to-regexp";
+import { toast } from "react-toastify";
 interface RouteGuardProps {
   children: ReactNode;
 }
@@ -20,12 +21,9 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/repertoires/territoriality",
       "/repertoires/:id/territoriality",
     ],
-    Titularidad: [
-      "/repertoires/titularity",
-      "/repertoires/:id/titularity",
-      "/repertoires/:id/titularity/add-titular",
-      "/repertoires/:id/titularity/:idtitularity",
-    ],
+    "Ver Titularidad": ["/repertoires/:id/titularity"],
+    "Crear Titularidad": ["/repertoires/:id/titularity/add-titular"],
+    "Editar Titularidad": ["/repertoires/:id/titularity/:idtitularity"],
     Conflictos: [
       "/repertoires/conflicts",
       "/repertoires/conflicts/:id/history",
@@ -69,6 +67,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
 
   const allowedViews = auth.vistas
     .map((v) => mapVistasToUrls[v.nombre])
+    .filter(Boolean)
     .flat()
     .concat(["/my-profile", "/change-password", "/privacy-policy"]);
 
@@ -78,6 +77,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
 
   useEffect(() => {
     if (auth.rol && !isRouteAllowed(pathname)) {
+      toast.error("No tienes permisos para acceder a esta vista");
       router.push("/repertoires");
     }
   }, [auth.rol, pathname, router, auth]);
