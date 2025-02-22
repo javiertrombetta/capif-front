@@ -94,8 +94,8 @@ export default function page() {
                 {titularity?.productoraDeParticipante.cuit_cuil}
               </div>
               <CustomField
-                id="fecha__participacion_inicio"
-                name="fecha__participacion_inicio"
+                id="fecha_participacion_inicio"
+                name="fecha_participacion_inicio"
                 type="date"
                 labelText="DESDE"
               />

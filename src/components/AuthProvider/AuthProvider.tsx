@@ -29,6 +29,10 @@ const AuthProvider: FC<AuthProvider> = ({ children }) => {
       dispatch(setAuthData(data));
     }
 
+    if (pathname === "/privacy-policy") {
+      return;
+    }
+
     if (!data.id_usuario) {
       router.push("/login");
     } else {

@@ -1,115 +1,112 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { Form, Formik } from "formik";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import CustomTable from "@/commons/CustomTable/CustomTable";
 import Header from "@/commons/Header/Header";
-import { useAppDispatch } from "@/hooks/storeHooks";
-import { setModal } from "@/store/modalSlice";
-import { ModalNames } from "@/types/modalNames";
+import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
+import Spinner from "@/commons/Spinner/Spinner";
+import GardelAwardsModal from "@/components/Modals/GardelAwardsModal/GardelAwardsModal";
+import GardelAwardsPurge from "@/components/Modals/GardelAwardsPurge/GardelAwardsPurge";
+import { useAppSelector } from "@/hooks/storeHooks";
+import useModal from "@/hooks/useModal";
+import { getNominations } from "@/services/producers";
 import { NominationsResponse } from "@/types/productionCompany.types";
-import {
-  getAllNominations,
-  getFilteredNominations,
-} from "@/services/producers";
-import CustomField from "@/commons/CustomField/CustomField";
-import { Form, Formik } from "formik";
-
-interface SearchInitialValues {
-  search_name?: string;
-  start_date?: Date | string;
-  end_date?: Date | string;
-}
 
 function page() {
-  const dispatch = useAppDispatch();
-  const [nominations, setNominations] = useState<NominationsResponse[] | null>(
-    null
-  );
-  const searchInitialValues: SearchInitialValues = {
-    search_name: "",
-    start_date: "",
-    end_date: "",
-  };
-  const openModal = () => {
-    dispatch(setModal({ type: ModalNames.GARDEL_AWARDS, isActive: true }));
+  const { vistas } = useAppSelector((state) => state.auth);
+  const { openModal } = useModal();
+  const [nominations, setNominations] = useState<NominationsResponse[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const searchInitialValues = {
+    productoraName: "",
+    startDate: "",
+    endDate: "",
   };
 
-  const openPurgeModal = () => {
-    dispatch(
-      setModal({ type: ModalNames.GARDEL_AWARDS_PURGE, isActive: true })
-    );
+  const handleOnSubmit = async (values: typeof searchInitialValues) => {
+    setLoading(true);
+    await getNominationsData(values);
   };
 
-  const handleGetAllNominations = async () => {
-    const response = await getAllNominations();
-    setNominations(response);
-  };
-
-  const handleGetFilteredNominations = async (values: SearchInitialValues) => {
-    const response = await getFilteredNominations({
-      productoraName:
-        values.search_name && values.search_name.length > 0
-          ? values.search_name
-          : null,
-      startDate: values.start_date instanceof Date ? values.start_date : null,
-      endDate: values.end_date instanceof Date ? values.end_date : null,
-    });
-
-    setNominations(response);
+  const getNominationsData = async (values?: typeof searchInitialValues) => {
+    setLoading(true);
+    try {
+      const response = await getNominations(values);
+      setNominations(response);
+    } catch (error) {
+      console.error(error);
+      setNominations([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    handleGetAllNominations();
+    getNominationsData();
   }, []);
 
   return (
     <CustomLayout>
       <Header title="Premios Gardel" />
-
-      <div className="w-[100%] mt-[2rem] pr-[2rem] pl-[2rem] flex justify-between">
-        <Formik initialValues={searchInitialValues} onSubmit={() => {}}>
-          {({ values }) => (
-            <Form className="flex gap-[1rem]">
-              <CustomField
+      <div className="w-[100%] flex-1 flex flex-col space-y-[1rem] overflow-y-auto">
+        <Formik initialValues={searchInitialValues} onSubmit={handleOnSubmit}>
+          {({ submitForm }) => (
+            <Form className="h-[4rem] w-[100%] flex items-end gap-[1rem] mt-[1rem] px-[2rem]">
+              <CustomSearchField
                 type="text"
-                id="search_name"
-                name="search_name"
-                labelText="Buscar Productora"
+                id="productoraName"
+                name="productoraName"
+                labelText="Nombre Productora"
               />
-              <CustomField
+              <CustomSearchField
                 type="date"
-                id="start_date"
-                name="start_date"
+                id="startDate"
+                name="startDate"
                 labelText="Fecha Desde"
               />
-              <CustomField
+              <CustomSearchField
                 type="date"
-                id="end_date"
-                name="end_date"
+                id="endDate"
+                name="endDate"
                 labelText="Fecha Hasta"
               />
-              <CustomButton
-                onClick={() => {
-                  handleGetFilteredNominations(values);
-                }}
-                className="mt-[1.43rem]"
-              >
-                Buscar
-              </CustomButton>
+              <CustomButton type="submit">Buscar</CustomButton>
+              <div className="flex-1 flex flex-row space-x-[0.5rem] pl-[1rem]">
+                {vistas.some((v) => v.nombre === "Crear Postulaciones") && (
+                  <CustomButton
+                    className="whitespace-nowrap"
+                    type="button"
+                    onClick={() => {
+                      openModal(<GardelAwardsModal onSuccess={submitForm} />);
+                    }}
+                  >
+                    Generar Códigos
+                  </CustomButton>
+                )}
+                {vistas.some((v) => v.nombre === "Purgar Postulaciones") && (
+                  <CustomButton
+                    className="whitespace-nowrap"
+                    type="button"
+                    background="warn"
+                    onClick={() =>
+                      openModal(<GardelAwardsPurge onSuccess={submitForm} />)
+                    }
+                  >
+                    Depurar Códigos
+                  </CustomButton>
+                )}
+              </div>
             </Form>
           )}
         </Formik>
-
-        <div className="flex gap-[2rem]">
-          <CustomButton onClick={openModal}>Generar Códigos</CustomButton>
-          <CustomButton background="warn" onClick={openPurgeModal}>
-            Depurar Códigos
-          </CustomButton>
-        </div>
-      </div>
-      {nominations ? (
-        <div className="w-[100%] mt-[2rem] flex justify-center">
+        {loading ? (
+          <div className="w-full h-full flex justify-center items-center">
+            <Spinner color="black" />
+          </div>
+        ) : nominations ? (
           <CustomTable
             columnNames={[
               {
@@ -137,17 +134,22 @@ function page() {
               nominations.length > 0
                 ? nominations.map((element) => [
                     element.productoraDelPremio.nombre_productora,
-                    "AR12312",
-                    `${element.productoraDelPremio.fecha_ultimo_fonograma}` ||
-                      "",
+                    "",
+                    element.productoraDelPremio.fecha_ultimo_fonograma || "",
                     element.codigo_postulacion,
-                    element.fecha_asignacion,
+                    new Date(
+                      Date.parse(element.fecha_asignacion.toString())
+                    ).toLocaleString(),
                   ])
                 : []
             }
           />
-        </div>
-      ) : null}
+        ) : (
+          <div className="text-black justify-self-center pt-[4rem]">
+            No se encontraron nominaciones
+          </div>
+        )}
+      </div>
     </CustomLayout>
   );
 }
