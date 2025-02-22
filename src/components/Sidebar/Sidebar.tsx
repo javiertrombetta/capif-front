@@ -1,22 +1,20 @@
 import React, { FC, useState } from "react";
-import { IoIosArrowBack } from "react-icons/io";
-import { ItemSidebarType } from "@/types/types";
-import ItemSidebar from "@/commons/ItemSidebar/ItemSidebar";
-// import { AdminSidebarDropdownMenus } from "@/utils/sidebarDropdownMenus";
-import "./Sidebar.css";
 import { IconType } from "react-icons";
-import { useAppSelector } from "@/hooks/storeHooks";
-import { ROLES } from "@/types/auth.types";
-import { FaBuilding, FaMusic, FaPercentage, FaUsers } from "react-icons/fa";
+import { IoIosArrowBack } from "react-icons/io";
 import { IoDocumentText } from "react-icons/io5";
+import { FaBuilding, FaMusic, FaPercentage, FaUsers } from "react-icons/fa";
 import { usePathname } from "next/navigation";
+import ItemSidebar from "@/commons/ItemSidebar/ItemSidebar";
+import { useAppSelector } from "@/hooks/storeHooks";
+import { ItemSidebarType } from "@/types/types";
+import "./Sidebar.css";
 
 interface DropdownMenusProps {
   id: number;
   title: string;
   items: ItemSidebarType[];
   icon: IconType;
-  height: string;
+  height?: string;
 }
 
 const Sidebar: FC = () => {
@@ -27,208 +25,118 @@ const Sidebar: FC = () => {
     setOpenDropdownId((prev) => (prev === id ? null : id));
   };
 
-  const userProducerMenuOptions = {
-    fonogramsOptions: [
-      {
-        name: "Declaración Repertorio",
-        link: "/repertoires/new",
-      },
-      {
-        name: "Buscar",
-        link: "/repertoires",
-      },
-      {
-        name: "Conflictos",
-        link: "/conflicts",
-      },
-    ],
-
-    usersOptions:
-      authData.rol === ROLES.EMPLOYEE
-        ? []
-        : [
-            {
-              name: "Altas",
-              link: "/users/new",
-            },
-
-            {
-              name: "Buscar",
-              link: "/users",
-            },
-          ],
-
-    cashFlowOptions: [
-      {
-        name: "Estado de Cuenta",
-        link: "/cashflow-account-statement",
-      },
-    ],
+  const mapVistaUrl: Record<string, { name: string; link: string }> = {
+    "Declaración Repertorio": {
+      name: "Declaración Repertorio",
+      link: "/repertoires/new",
+    },
+    "Envío Archivo Audio": {
+      name: "Envío Archivo Audio",
+      link: "/repertoires/send-audio-file",
+    },
+    Territorialidad: {
+      name: "Territorialidad",
+      link: "/repertoires/territoriality",
+    },
+    "Declaración Bulk Repertorio": {
+      name: "Declaración Masiva",
+      link: "/repertoires/bulk",
+    },
+    "Buscar Repertorio": {
+      name: "Buscar Repertorio",
+      link: "/repertoires",
+    },
+    Conflictos: {
+      name: "Conflictos",
+      link: "/repertoires/conflicts",
+    },
+    "Buscar Usuario": {
+      name: "Buscar",
+      link: "/users",
+    },
+    "Alta Usuario": {
+      name: "Altas",
+      link: "/users/new",
+    },
+    "Buscar Productora": {
+      name: "Buscar",
+      link: "/producers",
+    },
+    "Premios Gardel": {
+      name: "Permios Gardel",
+      link: "/gardel-awards",
+    },
+    Liquidaciones: {
+      name: "Liquidaciones",
+      link: "/cashflow-payouts",
+    },
+    Pagos: {
+      name: "Pagos",
+      link: "/cashflow-payments",
+    },
+    Traspasos: {
+      name: "Traspasos",
+      link: "/cashflow-transfers",
+    },
+    Rechazos: {
+      name: "Pagos Rechazados",
+      link: "/cashflow-rejections",
+    },
+    "Estado de Cuenta": {
+      name: "Estado de Cuenta",
+      link: "/cashflow-account-statement",
+    },
+    "Historial de Cambios": {
+      name: "Historial de Cambios",
+      link: "/audit-changes",
+    },
+    "Cambios de Repertorios": {
+      name: "Cambios en Repertorios",
+      link: "/audit-phonogram",
+    },
+    Sesiones: {
+      name: "Sesiones",
+      link: "/audit-sessions",
+    },
   };
 
-  const UserProducerDropdownMenus: DropdownMenusProps[] = [
+  const getItems = (menu: string) => {
+    return authData.vistas
+      .filter((v) => v.nombre_vista_superior === menu)
+      .map((v) => mapVistaUrl[v.nombre])
+      .filter(Boolean);
+  };
+
+  const SidebarDropdownMenus: DropdownMenusProps[] = [
     {
       id: 1,
       title: "REPERTORIO",
-      items: userProducerMenuOptions.fonogramsOptions,
+      items: getItems("Repertorio"),
       icon: FaMusic,
-      height: "6",
-    },
-    ...(authData.rol === ROLES.USER_PRODUCER
-      ? [
-          {
-            id: 3,
-            title: "USUARIOS",
-            items: userProducerMenuOptions.usersOptions,
-            icon: FaUsers,
-            height: "4",
-          },
-        ]
-      : []),
-    {
-      id: 4,
-      title: "CUENTAS CORRIENTES",
-      items: userProducerMenuOptions.cashFlowOptions,
-      icon: FaPercentage,
-      height: "2",
-    },
-  ];
-
-  const adminMenuOptions = {
-    fonogramsOptions: [
-      {
-        name: "Buscar",
-        link: "/repertoires",
-      },
-      ...(authData.vistas.find((v) => v.nombre === "Declaración Repertorio")
-        ? [
-            {
-              name: "Declaración Repertorio",
-              link: "/repertoires/new",
-            },
-          ]
-        : []),
-      ...(authData.vistas.find(
-        (v) => v.nombre === "Declaración Bulk Repertorio"
-      )
-        ? [
-            {
-              name: "Declaración Masiva",
-              link: "/repertoires/bulk",
-            },
-          ]
-        : []),
-      {
-        name: "Conflictos",
-        link: "/conflicts",
-      },
-      ...(authData.vistas.find((v) => v.nombre === "Envío Archivo Audio")
-        ? [
-            {
-              name: "Envio Archivo Audio",
-              link: "/repertoires/send-audio-file",
-            },
-          ]
-        : []),
-      {
-        name: "Territorialidad",
-        link: "/repertoires/territoriality",
-      },
-    ],
-
-    producersOptions: [
-      {
-        name: "Buscar",
-        link: "/producers",
-      },
-      {
-        name: "Permios Gardel",
-        link: "/gardel-awards",
-      },
-    ],
-    usersOptions: [
-      {
-        name: "Buscar",
-        link: "/users",
-      },
-      {
-        name: "Altas",
-        link: "/users/new",
-      },
-    ],
-    cashFlowOptions: [
-      {
-        name: "Liquidaciones",
-        link: "/cashflow-payouts",
-      },
-      {
-        name: "Pagos",
-        link: "/cashflow-payments",
-      },
-      {
-        name: "Traspasos",
-        link: "/cashflow-transfers",
-      },
-      {
-        name: "Pagos Rechazados",
-        link: "/cashflow-rejections",
-      },
-      {
-        name: "Estado de Cuenta",
-        link: "/cashflow-account-statement",
-      },
-    ],
-    auditoryOptions: [
-      {
-        name: "Historial de Cambios",
-        link: "/audit-changes",
-      },
-      {
-        name: "Cambios en Repertorios",
-        link: "/audit-phonogram",
-      },
-      {
-        name: "Sesiones",
-        link: "/audit-sessions",
-      },
-    ],
-  };
-
-  const AdminSidebarDropdownMenus: DropdownMenusProps[] = [
-    {
-      id: 1,
-      title: "REPERTORIO",
-      items: adminMenuOptions.fonogramsOptions,
-      icon: FaMusic,
-      height: authData.rol === ROLES.SUPER_ADMIN ? "10" : "10",
     },
     {
       id: 2,
-      title: "PRODUCTORES",
-      items: adminMenuOptions.producersOptions,
+      title: "PRODUCTORAS",
+      items: getItems("Productoras"),
       icon: FaBuilding,
-      height: "4",
     },
     {
       id: 3,
       title: "USUARIOS",
-      items: adminMenuOptions.usersOptions,
+      items: getItems("Usuarios"),
       icon: FaUsers,
-      height: "4",
     },
     {
       id: 4,
       title: "CUENTAS CORRIENTES",
-      items: adminMenuOptions.cashFlowOptions,
+      items: getItems("Cuentas Corrientes"),
       icon: FaPercentage,
-      height: "10",
     },
     {
       id: 5,
       title: "AUDITORIA",
-      items: adminMenuOptions.auditoryOptions,
+      items: getItems("Auditoría"),
       icon: IoDocumentText,
-      height: "6",
     },
   ];
 
@@ -239,36 +147,22 @@ const Sidebar: FC = () => {
           <p className="text-[#4b646f] text-[0.8rem]">MENU</p>
         )}
       </div>
-      {pathname === "/producers/register" ? null : (
-        <>
-          {authData.rol === ROLES.USER_PRODUCER ||
-          authData.rol === ROLES.EMPLOYEE
-            ? UserProducerDropdownMenus.map((item, key) => (
-                <GenericMenu
-                  icon={item.icon}
-                  isOpen={openDropdownId === item.id}
-                  key={key}
-                  id={item.id}
-                  title={item.title}
-                  onToggle={handleToggle}
-                  items={item.items}
-                  height={item.height}
-                />
-              ))
-            : AdminSidebarDropdownMenus.map((item, key) => (
-                <GenericMenu
-                  icon={item.icon}
-                  isOpen={openDropdownId === item.id}
-                  key={key}
-                  id={item.id}
-                  title={item.title}
-                  onToggle={handleToggle}
-                  items={item.items}
-                  height={item.height}
-                />
-              ))}
-        </>
-      )}
+      {pathname === "/producers/register"
+        ? null
+        : SidebarDropdownMenus.filter((s) => s.items.length !== 0).map(
+            (item, key) => (
+              <GenericMenu
+                icon={item.icon}
+                isOpen={openDropdownId === item.id}
+                key={key}
+                id={item.id}
+                title={item.title}
+                onToggle={handleToggle}
+                items={item.items}
+                height={(item.items.length * 2).toString() ?? item.height}
+              />
+            )
+          )}
       <div className="w-[100%] h-[3rem] bg-[#1a2226] flex flex-col items-center justify-center absolute bottom-0">
         <p className="text-[#4b646f] text-[0.8rem]">GIT 2.0</p>
         <p className="text-[#4b646f] text-[0.8rem]">

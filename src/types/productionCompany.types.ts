@@ -179,6 +179,14 @@ export interface NominationsResponse {
   };
 }
 
+export interface GetNominationsResponse {
+  message: string;
+  total: number;
+  page: number;
+  limit: number;
+  data: NominationsResponse[];
+}
+
 export interface GetDocumentsResponse {
   message: string;
   documentos: Document[];

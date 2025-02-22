@@ -58,13 +58,12 @@ export default function page() {
   return (
     <CustomLayout>
       <Header title="Buscar Productora" />
-
       <div className="w-[100%] flex-1 flex flex-col space-y-[1rem] overflow-y-auto">
         <Formik
           initialValues={initialValues}
           onSubmit={(values) => handleOnSubmit(values)}
         >
-          <Form className="h-[4rem] w-[100%] flex items-end mt-[1rem] gap-[2rem] pl-[1rem] pr-[2rem]">
+          <Form className="h-[4rem] w-[100%] flex items-end gap-[2rem] mt-[1rem] px-[2rem]">
             <CustomSearchField
               id="nombre"
               name="nombre"

@@ -2,7 +2,7 @@ import {
   EstadoProductora,
   GetCompaniesResponse,
   GetDocumentsResponse,
-  NominationsResponse,
+  GetNominationsResponse,
   ProductionCompanyByIdResponse,
   UpdateProducerByIdResponse,
   UpdateProducerPayload,
@@ -40,40 +40,41 @@ export const updateProducer = async (
   return updatedCompany.data;
 };
 
-export const getAllNominations = async () => {
-  const nominations: { data: { postulaciones: NominationsResponse[] } } =
-    await axiosInstance.get("producers/postulaciones");
-  return nominations.data.postulaciones;
+interface GetNominationsParams {
+  productoraName?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
+export const getNominations = async (params?: GetNominationsParams) => {
+  for (const key in params) {
+    if (!params[key as keyof GetNominationsParams])
+      delete params[key as keyof GetNominationsParams];
+  }
+  const { data } = await axiosInstance.get<GetNominationsResponse>(
+    "producers/awards",
+    { params }
+  );
+
+  return data.data;
 };
 
-export const getFilteredNominations = async (filters: {
-  productoraName?: string | null;
-  startDate?: Date | null;
-  endDate?: Date | null;
-}): Promise<NominationsResponse[]> => {
-  const params = new URLSearchParams();
+interface CreateNominationsParams {
+  startDate: string;
+  endDate: string;
+}
 
-  if (filters.productoraName) {
-    params.append("productoraName", filters.productoraName);
-  }
-  if (filters.startDate) {
-    params.append("startDate", filters.startDate.toISOString());
-  }
-  if (filters.endDate) {
-    params.append("endDate", filters.endDate.toISOString());
-  }
-
-  const url = `producers/postulaciones?${params.toString()}`;
-
-  const { data } = await axiosInstance.get<{
-    postulaciones: NominationsResponse[];
-  }>(url);
-
-  return data.postulaciones;
+export const createNominations = async (params?: CreateNominationsParams) => {
+  const response = await axiosInstance.post<{ message: string; total: number }>(
+    "producers/awards",
+    {},
+    { params }
+  );
+  return response.data;
 };
 
 export const deleteAllNominations = async () => {
-  await axiosInstance.delete("producers/postulaciones");
+  await axiosInstance.delete("producers/awards");
 };
 
 export const getProducerDocuments = async (companyId: string) => {
