@@ -57,7 +57,7 @@ function page() {
       <div className="w-[100%] flex-1 flex flex-col space-y-[1rem] overflow-y-auto">
         <Formik initialValues={searchInitialValues} onSubmit={handleOnSubmit}>
           {({ submitForm }) => (
-            <Form className="h-[4rem] w-[100%] flex items-end gap-[2rem] mt-[1rem] px-[2rem]">
+            <Form className="h-[4rem] w-[100%] flex items-end gap-[1rem] mt-[1rem] px-[2rem]">
               <CustomSearchField
                 type="text"
                 id="productoraName"
