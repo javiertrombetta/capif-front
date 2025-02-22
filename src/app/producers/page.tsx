@@ -58,7 +58,6 @@ export default function page() {
   return (
     <CustomLayout>
       <Header title="Buscar Productora" />
-
       <div className="w-[100%] flex-1 flex flex-col space-y-[1rem] overflow-y-auto">
         <Formik
           initialValues={initialValues}
