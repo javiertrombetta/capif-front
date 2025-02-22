@@ -1,14 +1,22 @@
-import React, { FC } from "react";
-import CustomButton from "@/commons/CustomButton/CustomButton";
+import { toast } from "react-toastify";
 import { IoCloseSharp } from "react-icons/io5";
+import CustomButton from "@/commons/CustomButton/CustomButton";
+import useModal from "@/hooks/useModal";
 import { deleteAllNominations } from "@/services/producers";
 
-const GardelAwardsPurge: FC<{ onCloseModal: () => void }> = ({
-  onCloseModal,
-}) => {
+const GardelAwardsPurge = ({ onSuccess }: { onSuccess: () => void }) => {
+  const { closeModal } = useModal();
+
   const handleDeleteAllNominations = async () => {
-    await deleteAllNominations();
-    onCloseModal();
+    try {
+      await deleteAllNominations();
+      await onSuccess();
+    } catch (error) {
+      console.error(error);
+      toast.error("Error al depurar los códigos");
+    } finally {
+      closeModal();
+    }
   };
 
   return (
@@ -17,7 +25,7 @@ const GardelAwardsPurge: FC<{ onCloseModal: () => void }> = ({
         "relative bg-white h-[16rem] w-[30rem] mb-[6rem] rounded-[2rem] gap-[0.5rem] flex flex-col justify-center items-center"
       }
     >
-      <button onClick={onCloseModal} className="absolute top-[5%] right-[5%]">
+      <button onClick={closeModal} className="absolute top-[5%] right-[5%]">
         <IoCloseSharp size={25} color="black" />
       </button>
 
@@ -33,7 +41,7 @@ const GardelAwardsPurge: FC<{ onCloseModal: () => void }> = ({
           >
             Depurar
           </CustomButton>
-          <CustomButton onClick={onCloseModal}>Cancelar</CustomButton>
+          <CustomButton onClick={closeModal}>Cancelar</CustomButton>
         </div>
       </div>
     </div>

@@ -3,7 +3,6 @@ import {
   GetCompaniesResponse,
   GetDocumentsResponse,
   GetNominationsResponse,
-  NominationsResponse,
   ProductionCompanyByIdResponse,
   UpdateProducerByIdResponse,
   UpdateProducerPayload,
@@ -58,6 +57,20 @@ export const getNominations = async (params?: GetNominationsParams) => {
   );
 
   return data.data;
+};
+
+interface CreateNominationsParams {
+  startDate: string;
+  endDate: string;
+}
+
+export const createNominations = async (params?: CreateNominationsParams) => {
+  const response = await axiosInstance.post<{ message: string; total: number }>(
+    "producers/awards",
+    {},
+    { params }
+  );
+  return response.data;
 };
 
 export const deleteAllNominations = async () => {
