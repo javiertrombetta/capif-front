@@ -29,8 +29,8 @@ const TycPrivacyPolicy: FC = () => {
   }
 
   return (
-    <CustomLayout>
-      <Header back title="Terminos y Políticas de Privacidad" />
+    <CustomLayout className="bg-white">
+      <Header title="Terminos y Políticas de Privacidad" />
       <div className="w-[100%] flex-1 flex flex-col items-center overflow-y-auto">
         <Document
           file="/tyc-privacy-policy/tyc.pdf"
