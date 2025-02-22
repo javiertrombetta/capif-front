@@ -21,7 +21,6 @@ export enum ModalNames {
   CASHFLOW_IMPORT_REJECTIONS = "CashflowImportRejections",
   CASHFLOW_EXPORT_REJECTIONS = "CashflowExportRejections",
   CASHFLOW_EXPORT_REJECTIONS_REVERSE_PAYMENT = "CashflowExportRejectionsReversePayment",
-  GARDEL_AWARDS_PURGE = "GardelAwardsPurge",
   EXPORT_CHANGES_LIST = "ExportChangesList",
   FINISH_NEW_PHONOGRAM = "FinishNewPhonogram",
   TERRITORIALITY_SAVE = "TerritorialitySave",
