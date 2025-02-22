@@ -223,14 +223,14 @@ const SignUpForm: FC = () => {
                 type="checkbox"
                 className="w-[1.7rem] h-[1.7rem] border-[2px] border-[#c8c8c8]"
               />
-              <a
+              <Link
                 href="/privacy-policy"
                 target="_blank"
                 className="text-[#1280e1] text-[0.8rem]"
               >
                 Leí y acepto los términos y condiciones y las políticas de
                 privacidad de datos
-              </a>
+              </Link>
             </div>
             <div className="flex border-[#c8c8c8] border-[2px] p-[1rem] w-[100%] h-[5rem] gap-[1rem] items-center justify-start mt-[1rem]">
               <input

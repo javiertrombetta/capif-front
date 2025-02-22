@@ -31,7 +31,7 @@ function page() {
     | "load_audio"
     | "add_participation"
     | "edit_territoriality"
-  >("load_audio");
+  >("start");
   const [audio, setAudio] = useState<File | null>(null);
   const authData = useAppSelector((state) => state.auth);
   const createPhonogramData = useAppSelector((state) => state.createPhonogram);
