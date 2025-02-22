@@ -1,23 +1,20 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { Form, Formik } from "formik";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import CustomTable from "@/commons/CustomTable/CustomTable";
 import Header from "@/commons/Header/Header";
-import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
-import { setModal } from "@/store/modalSlice";
-import { ModalNames } from "@/types/modalNames";
-import { NominationsResponse } from "@/types/productionCompany.types";
-import { getNominations } from "@/services/producers";
-import { Form, Formik } from "formik";
 import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
 import Spinner from "@/commons/Spinner/Spinner";
-import useModal from "@/hooks/useModal";
 import GardelAwardsModal from "@/components/Modals/GardelAwardsModal/GardelAwardsModal";
 import GardelAwardsPurge from "@/components/Modals/GardelAwardsPurge/GardelAwardsPurge";
+import { useAppSelector } from "@/hooks/storeHooks";
+import useModal from "@/hooks/useModal";
+import { getNominations } from "@/services/producers";
+import { NominationsResponse } from "@/types/productionCompany.types";
 
 function page() {
-  const dispatch = useAppDispatch();
   const { vistas } = useAppSelector((state) => state.auth);
   const { openModal } = useModal();
   const [nominations, setNominations] = useState<NominationsResponse[]>([]);
