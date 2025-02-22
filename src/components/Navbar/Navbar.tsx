@@ -36,6 +36,7 @@ const Navbar: FC<NavbarProps> = ({ children }) => {
     "/verify-account/:token",
     "/confirm-account/:token",
     "/password-recovery/:token",
+    "/privacy-policy",
   ];
 
   const checkForbbidenPathname = (

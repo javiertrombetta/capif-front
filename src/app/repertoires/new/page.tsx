@@ -31,7 +31,7 @@ function page() {
     | "load_audio"
     | "add_participation"
     | "edit_territoriality"
-  >("start");
+  >("load_audio");
   const [audio, setAudio] = useState<File | null>(null);
   const authData = useAppSelector((state) => state.auth);
   const createPhonogramData = useAppSelector((state) => state.createPhonogram);
@@ -715,9 +715,18 @@ const LoadAudio: FC<{
   onSubmit: () => Promise<void>;
 }> = ({ audio, setAudio, onSubmit }) => {
   const loadAudio = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setAudio(e.target.files[0]);
+    if (!e.target.files || e.target.files.length <= 0) {
+      return;
     }
+    if (
+      !["mp3", "wav", "ogg", "flac", "aac", "pdf"].includes(
+        e.target.files[0].name.split(".").at(-1) ?? ""
+      )
+    ) {
+      toast.error("Por favor ingrese un archivo de audio.");
+      return;
+    }
+    setAudio(e.target.files[0]);
   };
 
   const deleteAudio = () => {
