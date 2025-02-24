@@ -39,11 +39,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
     Sesiones: ["/audit-sessions"],
     "Cambios de Repertorios": ["/audit-phonogram"],
     "Historial de Cambios": ["/audit-changes"],
-    Liquidaciones: [
-      "/cashflow-payouts",
-      "/cashflow-payouts/list",
-      "/cashflow-payouts/export",
-    ],
+    Liquidaciones: ["/cashflow/settlements"],
     Pagos: [
       "/cashflow-payments",
       "/cashflow-payments/list",

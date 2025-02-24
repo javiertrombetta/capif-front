@@ -1,4 +1,8 @@
-import { GetCashflowResponse, TipoTransaccion } from "@/types/cashflow";
+import {
+  GetCashflowResponse,
+  GetPendingSettlementsResponse,
+  TipoTransaccion,
+} from "@/types/cashflow";
 import { axiosInstance } from "./axiosInstance";
 
 interface GetCashflowParams {
@@ -9,8 +13,20 @@ interface GetCashflowParams {
 }
 
 export const getCashflow = async (params?: GetCashflowParams) => {
-  const companies = await axiosInstance.get<GetCashflowResponse>("producers", {
+  for (const key in params) {
+    if (!params[key as keyof GetCashflowParams])
+      delete params[key as keyof GetCashflowParams];
+  }
+
+  const companies = await axiosInstance.get<GetCashflowResponse>("cashflow", {
     params,
   });
   return companies.data.transactions;
+};
+
+export const getPendingSettlements = async () => {
+  const response = await axiosInstance.get<GetPendingSettlementsResponse>(
+    "cashflow/settlements/pending"
+  );
+  return response.data.data;
 };

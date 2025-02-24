@@ -2,33 +2,126 @@
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
+import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
 import CustomTable from "@/commons/CustomTable/CustomTable";
 import Header from "@/commons/Header/Header";
+import Spinner from "@/commons/Spinner/Spinner";
+import { getCashflow } from "@/services/cashflow";
+import { GetCashflowResponse, TIPOS_TRANSACCION } from "@/types/cashflow";
+import { Formik, Form } from "formik";
 import { useRouter } from "next/navigation";
-import React, { FC } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
+const initialValues = {
+  cuit: "",
+  tipo_transaccion: undefined,
+  fecha_desde: "",
+  fecha_hasta: "",
+};
 
 function page() {
+  const [transactions, setTransactions] = useState<
+    GetCashflowResponse["transactions"]
+  >([]);
+  const [loading, setLoading] = useState(true);
+
+  const handleOnSubmit = (values: typeof initialValues) => {};
+
+  const getCashflowData = async (values?: typeof initialValues) => {
+    setLoading(true);
+    try {
+      const response = await getCashflow(values);
+      setTransactions(response);
+    } catch (error) {
+      console.error(error);
+      toast.error("Error al obtener las transacciones");
+      setTransactions([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getCashflowData();
+  }, []);
+
   return (
     <CustomLayout>
       <Header title="Resumen de Cuenta" />
-      <div className="w-[100%] pr-[2rem] pl-[2rem] mt-[2rem]">
-        <CustomInput type="text" label="Buscar Productora" />
+      <div className="w-[100%] flex-1 flex flex-col space-y-[1rem] overflow-y-auto">
+        <Formik
+          initialValues={initialValues}
+          onSubmit={(values) => handleOnSubmit(values)}
+        >
+          <Form className="h-[4rem] w-[100%] flex items-end gap-[2rem] mt-[1rem] px-[2rem]">
+            <CustomSearchField
+              id="cuit"
+              name="cuit"
+              labelText="CUIT"
+              type="text"
+            />
+            <CustomSearchField
+              id="tipo_transaccion"
+              name="tipo_transaccion"
+              labelText="TIPO TRANSACCIÓN"
+              type="select"
+              options={[
+                { name: "", value: "" },
+                ...TIPOS_TRANSACCION.map((t) => ({ name: t, value: t })),
+              ]}
+            />
+            <CustomSearchField
+              id="fecha_desde"
+              name="fecha_desde"
+              labelText="FECHA DESDE"
+              type="date"
+            />
+            <CustomSearchField
+              id="fecha_hasta"
+              name="fecha_hasta"
+              labelText="FECHA HASTA"
+              type="date"
+            />
+            <CustomButton type="submit">Buscar</CustomButton>
+          </Form>
+        </Formik>
+        <div className="w-[100%] mt-[2rem] flex-1 overflow-y-auto">
+          {loading ? (
+            <div className="w-full h-full flex justify-center items-center">
+              <Spinner color="black" />
+            </div>
+          ) : transactions.length > 0 ? (
+            <CustomTable
+              columnNames={[
+                { name: "TIPO", isSortable: true },
+                { name: "MONTO", isSortable: true },
+                { name: "SALDO RESULTANTE", isSortable: true },
+                { name: "REFERENCIA", isSortable: false },
+                { name: "FECHA TRANSACCIÓN", isSortable: true },
+              ]}
+              columnValues={transactions.map((t) => [
+                t.tipo_transaccion,
+                t.monto,
+                t.saldo_resultante ?? "",
+                t.referencia ?? "",
+                t.fecha_transaccion,
+              ])}
+            />
+          ) : (
+            <div className="text-black justify-self-center pt-[4rem]">
+              No se encontraron transacciones
+            </div>
+          )}
+        </div>
       </div>
-      <div className="w-[100%] mt-[2rem]">
-        <CustomTable
-          columnNames={[
-            { name: "PRODUCTORA", isSortable: true },
-            { name: "CUIT", isSortable: true },
-            { name: "CUENTA CORRIENTE", isSortable: true },
-            { name: "SALDO", isSortable: true },
-            { name: "ACCIÓN", isSortable: false },
-          ]}
-          columnValues={[
-            ["Sony Music", "10947124", "156234899", "$800.000"],
-            ["Warner", "10947124", "156234899", "$400.000"],
-            ["Universal Records", "10947124", "156234899", "$900.000"],
-          ]}
-        />
+      <div className="w-[100%] py-[1rem] px-[2rem] flex items-center justify-start space-x-[0.5rem]">
+        <p className="text-black font-bold">PROCESAR: </p>
+        <CustomButton onClick={() => {}}>TRASPASOS</CustomButton>
+        <CustomButton onClick={() => {}}>LIQUIDACIONES</CustomButton>
+        <CustomButton onClick={() => {}}>PASADAS</CustomButton>
+        <CustomButton onClick={() => {}}>RECHAZOS</CustomButton>
+        <CustomButton onClick={() => {}}>PAGOS</CustomButton>
       </div>
     </CustomLayout>
   );

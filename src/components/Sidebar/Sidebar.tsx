@@ -68,7 +68,7 @@ const Sidebar: FC = () => {
     },
     Liquidaciones: {
       name: "Liquidaciones",
-      link: "/cashflow-payouts",
+      link: "/cashflow/settlements",
     },
     Pagos: {
       name: "Pagos",
