@@ -30,3 +30,43 @@ export const getPendingSettlements = async () => {
   );
   return response.data.data;
 };
+
+export const uploadTransfersFile = async (formData: FormData) => {
+  await axiosInstance.post("cashflow/transfers", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
+export const uploadSettlementsFile = async (formData: FormData) => {
+  await axiosInstance.post("cashflow/settlements", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
+export const uploadReproductionsFile = async (formData: FormData) => {
+  await axiosInstance.post("cashflow/reproductions", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
+export const uploadRejectionsFile = async (formData: FormData) => {
+  await axiosInstance.post("cashflow/rejections", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
+export const uploadPaymentsFile = async (formData: FormData) => {
+  await axiosInstance.post("cashflow/payments", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
