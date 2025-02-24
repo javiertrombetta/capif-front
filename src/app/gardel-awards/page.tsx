@@ -12,7 +12,7 @@ import GardelAwardsPurge from "@/components/Modals/GardelAwardsPurge/GardelAward
 import { useAppSelector } from "@/hooks/storeHooks";
 import useModal from "@/hooks/useModal";
 import { getNominations } from "@/services/producers";
-import { NominationsResponse } from "@/types/productionCompany.types";
+import { NominationsResponse } from "@/types/producers.types";
 
 function page() {
   const { vistas } = useAppSelector((state) => state.auth);

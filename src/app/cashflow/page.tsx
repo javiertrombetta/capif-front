@@ -1,25 +1,10 @@
 "use client";
-import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import CustomTable from "@/commons/CustomTable/CustomTable";
 import Header from "@/commons/Header/Header";
-import { useRouter } from "next/navigation";
-import React, { FC } from "react";
 
 function page() {
-  const HistoryButton: FC = () => {
-    const router = useRouter();
-
-    return (
-      <CustomButton
-        onClick={() => router.push("/cashflow-account-statement/history")}
-      >
-        Historial
-      </CustomButton>
-    );
-  };
-
   return (
     <CustomLayout>
       <Header title="Resumen de Cuenta" />
@@ -36,21 +21,9 @@ function page() {
             { name: "ACCIÓN", isSortable: false },
           ]}
           columnValues={[
-            [
-              "Sony Music",
-              "10947124",
-              "156234899",
-              "$800.000",
-              <HistoryButton />,
-            ],
-            ["Warner", "10947124", "156234899", "$400.000", <HistoryButton />],
-            [
-              "Universal Records",
-              "10947124",
-              "156234899",
-              "$900.000",
-              <HistoryButton />,
-            ],
+            ["Sony Music", "10947124", "156234899", "$800.000"],
+            ["Warner", "10947124", "156234899", "$400.000"],
+            ["Universal Records", "10947124", "156234899", "$900.000"],
           ]}
         />
       </div>
