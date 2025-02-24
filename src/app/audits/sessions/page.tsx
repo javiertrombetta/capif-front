@@ -1,15 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import CustomLayout from "@/commons/CustomLayout/CustomLayout";
-import Header from "@/commons/Header/Header";
+import { toast } from "react-toastify";
+import { Formik, Form } from "formik";
 import CustomButton from "@/commons/CustomButton/CustomButton";
-import CustomTable from "@/commons/CustomTable/CustomTable";
+import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
+import CustomTable from "@/commons/CustomTable/CustomTable";
+import Header from "@/commons/Header/Header";
 import Spinner from "@/commons/Spinner/Spinner";
 import { getAuditSessions } from "@/services/audits";
 import { GetAuditSessionsResponse } from "@/types/audits.types";
-import { Formik, Form } from "formik";
-import { toast } from "react-toastify";
 
 const initialValues = {
   nombre: "",
@@ -24,17 +24,18 @@ function page() {
   const [loading, setLoading] = useState(true);
 
   const handleOnSubmit = async (values: typeof initialValues) => {
-    await getAuditChangesData(values);
+    await getAuditSessionsData(values);
   };
 
-  const getAuditChangesData = async (values?: typeof initialValues) => {
+  const getAuditSessionsData = async (values?: typeof initialValues) => {
     setLoading(true);
     try {
       const response = await getAuditSessions(values);
       setAudit(response);
     } catch (error) {
-      console.error(error);
-      toast.error("Error al obtener los datos de auditoria.");
+      toast.error(
+        (error as Error).message || "Error al obtener datos de auditoria."
+      );
       setAudit([]);
     } finally {
       setLoading(false);
@@ -42,7 +43,7 @@ function page() {
   };
 
   useEffect(() => {
-    getAuditChangesData();
+    getAuditSessionsData();
   }, []);
 
   return (

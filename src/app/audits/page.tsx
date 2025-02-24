@@ -1,15 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import CustomLayout from "@/commons/CustomLayout/CustomLayout";
-import Header from "@/commons/Header/Header";
-import CustomTable from "@/commons/CustomTable/CustomTable";
-import CustomButton from "@/commons/CustomButton/CustomButton";
-import { Form, Formik } from "formik";
-import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
-import { GetAuditChangesResponse, TIPOS_AUDITORIA } from "@/types/audits.types";
-import { getAuditChanges } from "@/services/audits";
 import { toast } from "react-toastify";
+import { Form, Formik } from "formik";
+import CustomButton from "@/commons/CustomButton/CustomButton";
+import CustomLayout from "@/commons/CustomLayout/CustomLayout";
+import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
+import CustomTable from "@/commons/CustomTable/CustomTable";
+import Header from "@/commons/Header/Header";
 import Spinner from "@/commons/Spinner/Spinner";
+import { getAuditChanges } from "@/services/audits";
+import { GetAuditChangesResponse, TIPOS_AUDITORIA } from "@/types/audits.types";
 
 const initialValues = {
   emailUsuario: "",
@@ -33,8 +33,9 @@ function page() {
       const response = await getAuditChanges(values);
       setAudit(response);
     } catch (error) {
-      console.error(error);
-      toast.error("Error al obtener los datos de auditoria.");
+      toast.error(
+        (error as Error).message || "Error al obtener datos de auditoria."
+      );
       setAudit([]);
     } finally {
       setLoading(false);
