@@ -91,7 +91,7 @@ function page() {
               labelText="NOMBRE"
             />
             <CustomSearchField
-              id="estado_envii"
+              id="estado_envio"
               name="estado_envio"
               type="select"
               labelText="ESTADO"
