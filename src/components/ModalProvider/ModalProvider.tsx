@@ -34,7 +34,6 @@ import {
   SendDocumentation,
   Accept,
 } from "../Modals/Conflicts/ConflictsActions";
-import AuditSessionsPurgeModal from "../Modals/AuditSessionsPurgeModal/AuditSessionsPurgeModal";
 
 interface ModalContextType {
   modal: ReactNode | null;
