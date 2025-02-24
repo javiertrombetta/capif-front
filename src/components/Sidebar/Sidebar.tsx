@@ -84,7 +84,7 @@ const Sidebar: FC = () => {
     },
     "Estado de Cuenta": {
       name: "Estado de Cuenta",
-      link: "/cashflow-account-statement",
+      link: "/cashflow",
     },
     "Historial de Cambios": {
       name: "Historial de Cambios",
