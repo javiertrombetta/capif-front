@@ -9,7 +9,7 @@ import {
   ProductionCompanyByIdResponse,
   TipoPersona,
   UpdateProducerPayload,
-} from "@/types/productionCompany.types";
+} from "@/types/producers.types";
 import { Documents } from "./DocumentsView";
 import { toast } from "react-toastify";
 
