@@ -1,17 +1,17 @@
 "use client";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { Formik, Form } from "formik";
 import CustomButton from "@/commons/CustomButton/CustomButton";
-import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
 import CustomTable from "@/commons/CustomTable/CustomTable";
 import Header from "@/commons/Header/Header";
 import Spinner from "@/commons/Spinner/Spinner";
+import CashflowImportModal from "@/components/Modals/CashflowImportModal/CashflowImportModal";
+import useModal from "@/hooks/useModal";
 import { getCashflow } from "@/services/cashflow";
 import { GetCashflowResponse, TIPOS_TRANSACCION } from "@/types/cashflow";
-import { Formik, Form } from "formik";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 
 const initialValues = {
   cuit: "",
@@ -21,12 +21,16 @@ const initialValues = {
 };
 
 function page() {
+  const { openModal } = useModal();
   const [transactions, setTransactions] = useState<
     GetCashflowResponse["transactions"]
   >([]);
   const [loading, setLoading] = useState(true);
 
-  const handleOnSubmit = (values: typeof initialValues) => {};
+  const handleOnSubmit = async (values: typeof initialValues) => {
+    console.log("refresh");
+    await getCashflowData(values);
+  };
 
   const getCashflowData = async (values?: typeof initialValues) => {
     setLoading(true);
@@ -50,10 +54,7 @@ function page() {
     <CustomLayout>
       <Header title="Resumen de Cuenta" />
       <div className="w-[100%] flex-1 flex flex-col space-y-[1rem] overflow-y-auto">
-        <Formik
-          initialValues={initialValues}
-          onSubmit={(values) => handleOnSubmit(values)}
-        >
+        <Formik initialValues={initialValues} onSubmit={handleOnSubmit}>
           <Form className="h-[4rem] w-[100%] flex items-end gap-[2rem] mt-[1rem] px-[2rem]">
             <CustomSearchField
               id="cuit"
@@ -117,11 +118,33 @@ function page() {
       </div>
       <div className="w-[100%] py-[1rem] px-[2rem] flex items-center justify-start space-x-[0.5rem]">
         <p className="text-black font-bold">PROCESAR: </p>
-        <CustomButton onClick={() => {}}>TRASPASOS</CustomButton>
-        <CustomButton onClick={() => {}}>LIQUIDACIONES</CustomButton>
-        <CustomButton onClick={() => {}}>PASADAS</CustomButton>
-        <CustomButton onClick={() => {}}>RECHAZOS</CustomButton>
-        <CustomButton onClick={() => {}}>PAGOS</CustomButton>
+        <CustomButton
+          onClick={() => openModal(<CashflowImportModal type="TRANSFERS" />)}
+        >
+          TRASPASOS
+        </CustomButton>
+        <CustomButton
+          onClick={() => openModal(<CashflowImportModal type="SETTLEMENTS" />)}
+        >
+          LIQUIDACIONES
+        </CustomButton>
+        <CustomButton
+          onClick={() =>
+            openModal(<CashflowImportModal type="REPRODUCTIONS" />)
+          }
+        >
+          PASADAS
+        </CustomButton>
+        <CustomButton
+          onClick={() => openModal(<CashflowImportModal type="REJECTIONS" />)}
+        >
+          RECHAZOS
+        </CustomButton>
+        <CustomButton
+          onClick={() => openModal(<CashflowImportModal type="PAYMENTS" />)}
+        >
+          PAGOS
+        </CustomButton>
       </div>
     </CustomLayout>
   );

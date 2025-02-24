@@ -35,26 +35,11 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/producers/:id",
       "/producers/register", // Crear vista nueva "Crear Productora"
     ],
-    "Premios Gardel": ["/gardel-awards"],
+    "Premios Gardel": ["/producers/gardel-awards"],
     Sesiones: ["/audit-sessions"],
     "Cambios de Repertorios": ["/audit-phonogram"],
     "Historial de Cambios": ["/audit-changes"],
     Liquidaciones: ["/cashflow/settlements"],
-    Pagos: [
-      "/cashflow-payments",
-      "/cashflow-payments/list",
-      "/cashflow-payments/export",
-    ],
-    Traspasos: [
-      "/cashflow-transfers",
-      "/cashflow-transfers/list",
-      "/cashflow-transfers/export",
-    ],
-    Rechazos: [
-      "/cashflow-rejections",
-      "/cashflow-rejections/list",
-      "/cashflow-rejections/export",
-    ],
     "Estado de Cuenta": ["/cashflow"],
   };
 

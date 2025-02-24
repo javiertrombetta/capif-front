@@ -52,7 +52,6 @@ export default function page() {
   };
 
   const handleOnSubmit = async (values: Record<string, string>) => {
-    setLoading(true);
     for (const key in values) {
       if (!values[key]) delete values[key];
     }
