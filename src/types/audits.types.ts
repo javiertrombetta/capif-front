@@ -36,7 +36,7 @@ export interface GetAuditChangesResponse {
 
 export interface Sesion {
   id_sesion: string;
-  usuario: UsuarioAuditoria;
+  registranteDeSesion: UsuarioAuditoria;
   ip_origen: string;
   navegador: string;
   fecha_inicio_sesion: string;
@@ -50,4 +50,40 @@ export interface GetAuditSessionsResponse {
   limit: number;
   totalPages: number;
   data: Sesion[];
+}
+
+export const TIPOS_CAMBIO = [
+  "ALTA",
+  "BAJA",
+  "CAMBIO",
+  "ERROR",
+  "SISTEMA",
+] as const;
+
+export type TipoCambio = (typeof TIPOS_CAMBIO)[number];
+
+export interface Fonograma {
+  id_fonograma: string;
+  isrc: string;
+  titulo: string;
+  artista: string;
+  productora: string;
+}
+
+export interface AuditRepertoire {
+  id_auditoria: string;
+  fonograma: Fonograma;
+  tipo_auditoria: TipoCambio;
+  detalle: string;
+  usuario_originario: UsuarioAuditoria;
+  createdAt: string;
+}
+
+export interface GetAuditRepertoireResponse {
+  message: string;
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  data: AuditRepertoire[];
 }
