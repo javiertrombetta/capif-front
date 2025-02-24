@@ -88,15 +88,15 @@ const Sidebar: FC = () => {
     },
     "Historial de Cambios": {
       name: "Historial de Cambios",
-      link: "/audit-changes",
+      link: "/audits",
     },
-    "Cambios de Repertorios": {
+    "Cambios en Repertorios": {
       name: "Cambios en Repertorios",
-      link: "/audit-phonogram",
+      link: "/audits/repertoire",
     },
     Sesiones: {
       name: "Sesiones",
-      link: "/audit-sessions",
+      link: "/audits/sessions",
     },
   };
 

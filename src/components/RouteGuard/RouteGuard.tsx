@@ -36,9 +36,9 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/producers/register", // Crear vista nueva "Crear Productora"
     ],
     "Premios Gardel": ["/gardel-awards"],
-    Sesiones: ["/audit-sessions"],
-    "Cambios de Repertorios": ["/audit-phonogram"],
-    "Historial de Cambios": ["/audit-changes"],
+    Sesiones: ["/audits/sessions"],
+    "Cambios de Repertorios": ["/audits/repertoire"],
+    "Historial de Cambios": ["/audits"],
     Liquidaciones: [
       "/cashflow-payouts",
       "/cashflow-payouts/list",

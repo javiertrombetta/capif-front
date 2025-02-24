@@ -11,7 +11,7 @@ import CustomTable from "@/commons/CustomTable/CustomTable";
 import Header from "@/commons/Header/Header";
 import Spinner from "@/commons/Spinner/Spinner";
 import { getProducers } from "@/services/producers";
-import { ProductionCompany } from "@/types/productionCompany.types";
+import { ProductionCompany } from "@/types/producers.types";
 import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
 
 export default function page() {
