@@ -36,11 +36,11 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/producers/register", // Crear vista nueva "Crear Productora"
     ],
     "Premios Gardel": ["/producers/gardel-awards"],
-    Sesiones: ["/audit-sessions"],
-    "Cambios de Repertorios": ["/audit-phonogram"],
-    "Historial de Cambios": ["/audit-changes"],
     Liquidaciones: ["/cashflow/settlements"],
     "Estado de Cuenta": ["/cashflow"],
+    Sesiones: ["/audits/sessions"],
+    "Cambios en Repertorios": ["/audits/repertoire"],
+    "Historial de Cambios": ["/audits"],
   };
 
   const allowedViews = auth.vistas

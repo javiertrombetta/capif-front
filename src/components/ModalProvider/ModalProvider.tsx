@@ -17,7 +17,6 @@ import {
   SendDocumentation,
   Accept,
 } from "../Modals/Conflicts/ConflictsActions";
-import AuditSessionsPurgeModal from "../Modals/AuditSessionsPurgeModal/AuditSessionsPurgeModal";
 
 interface ModalContextType {
   modal: ReactNode | null;
@@ -73,8 +72,6 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
         return <Accept onCloseModal={onCloseModal} />;
       case ModalNames.CONFLICTS_SEND_DOCUMENTATION:
         return <SendDocumentation onCloseModal={onCloseModal} />;
-      case ModalNames.AUDIT_SESSIONS_PURGE:
-        return <AuditSessionsPurgeModal onCloseModal={onCloseModal} />;
     }
   };
 
