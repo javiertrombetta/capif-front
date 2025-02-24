@@ -1,4 +1,4 @@
-import { TipoPersona } from "./productionCompany.types";
+import { TipoPersona } from "./producers.types";
 
 export interface SendApplication {
   nombre: string;

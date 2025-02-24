@@ -24,6 +24,5 @@ export enum ModalNames {
   EXPORT_CHANGES_LIST = "ExportChangesList",
   FINISH_NEW_PHONOGRAM = "FinishNewPhonogram",
   TERRITORIALITY_SAVE = "TerritorialitySave",
-  AUDIT_SESSIONS_PURGE = "AuditSessionsPurge",
   SUBMIT_SEND_APPILICATION = "SubmitSendApplication",
 }

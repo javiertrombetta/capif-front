@@ -6,7 +6,7 @@ import {
   ProductionCompanyByIdResponse,
   UpdateProducerByIdResponse,
   UpdateProducerPayload,
-} from "@/types/productionCompany.types";
+} from "@/types/producers.types";
 import { axiosInstance } from "./axiosInstance";
 
 interface GetProducersParams {
