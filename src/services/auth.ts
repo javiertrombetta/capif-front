@@ -25,6 +25,7 @@ interface AuthSignUpRequest {
 interface AuthLoginRequest {
   email: string;
   password: string;
+  recaptchaToken: string;
 }
 
 export const authSignUp = async (authSignUpData: AuthSignUpRequest) => {
