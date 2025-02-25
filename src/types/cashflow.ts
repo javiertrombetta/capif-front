@@ -22,3 +22,11 @@ export interface GetCashflowResponse {
     fecha_transaccion: string;
   }[];
 }
+
+export interface GetPendingSettlementsResponse {
+  message: string;
+  data: {
+    isrc: string;
+    monto: number;
+  }[];
+}

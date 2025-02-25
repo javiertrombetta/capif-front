@@ -11,24 +11,7 @@ import {
   Revision,
   Definition,
 } from "../Modals/ActionConflictsDropdown/ActionConflictsDropdown";
-import {
-  CashflowPayoutsImportPayoutsModal,
-  CashflowPayoutsMatchReportModal,
-  CashflowPayoutsExportPayoutsModal,
-} from "../Modals/CashflowPayoutsModals/CashflowPayoutsModals";
 import SearchPhonogramsExportModal from "../Modals/SearchPhonogramsExportModal/SearchPhonogramsExportModal";
-import CashflowTransfersImportModal, {
-  CashflowTransfersExportModal,
-} from "../Modals/CashflowTransfersImportModal/CashflowTransfersImportModal";
-import {
-  CashflowPaymentsImportPayment,
-  CashflowPaymentsExportPayments,
-} from "../Modals/CashflowPayments/CashflowPayments";
-import {
-  CashflowRejectionsImportRejection,
-  CashflowRejectionsExportRejections,
-  CashflowRejectionsReversePayment,
-} from "../Modals/CashflowRejectionsModals/CashflowRejectionsModals";
 import FinishNewPhonogram from "../Modals/FinishNewPhonogram/FinishNewPhonogram";
 import {
   SendDocumentation,
@@ -81,38 +64,10 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
         return <Revision onCloseModal={onCloseModal} />;
       case ModalNames.DEFINITION:
         return <Definition onCloseModal={onCloseModal} />;
-      case ModalNames.CASHFLOW_PAYOUTS_MATCH_REPORT:
-        return <CashflowPayoutsMatchReportModal onCloseModal={onCloseModal} />;
-      case ModalNames.CASHFLOW_PAYOUTS_IMPORT_PAYOUTS:
-        return (
-          <CashflowPayoutsImportPayoutsModal onCloseModal={onCloseModal} />
-        );
-      case ModalNames.CASHFLOW_PAYOUTS_EXPORT_PAYOUTS:
-        return (
-          <CashflowPayoutsExportPayoutsModal onCloseModal={onCloseModal} />
-        );
       case ModalNames.EXPORT_CHANGES_LIST:
         return <SearchPhonogramsExportModal onCloseModal={onCloseModal} />;
-      case ModalNames.CASHFLOW_TRANSFERS:
-        return <CashflowTransfersImportModal onCloseModal={onCloseModal} />;
-      case ModalNames.CASHFLOW_IMPORT_PAYMENT:
-        return <CashflowPaymentsImportPayment onCloseModal={onCloseModal} />;
-      case ModalNames.CASHFLOW_EXPORT_PAYMENTS:
-        return <CashflowPaymentsExportPayments onCloseModal={onCloseModal} />;
-      case ModalNames.CASHFLOW_IMPORT_REJECTIONS:
-        return (
-          <CashflowRejectionsImportRejection onCloseModal={onCloseModal} />
-        );
-      case ModalNames.CASHFLOW_EXPORT_REJECTIONS:
-        return (
-          <CashflowRejectionsExportRejections onCloseModal={onCloseModal} />
-        );
-      case ModalNames.CASHFLOW_EXPORT_REJECTIONS_REVERSE_PAYMENT:
-        return <CashflowRejectionsReversePayment onCloseModal={onCloseModal} />;
       case ModalNames.FINISH_NEW_PHONOGRAM:
         return <FinishNewPhonogram onCloseModal={onCloseModal} />;
-      case ModalNames.CASHFLOW_TRANSFERS_EXPORT:
-        return <CashflowTransfersExportModal onCloseModal={onCloseModal} />;
       case ModalNames.CONFLICTS_ACCEPT:
         return <Accept onCloseModal={onCloseModal} />;
       case ModalNames.CONFLICTS_SEND_DOCUMENTATION:
