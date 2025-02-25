@@ -64,23 +64,11 @@ const Sidebar: FC = () => {
     },
     "Premios Gardel": {
       name: "Permios Gardel",
-      link: "/gardel-awards",
+      link: "/producers/gardel-awards",
     },
     Liquidaciones: {
       name: "Liquidaciones",
-      link: "/cashflow-payouts",
-    },
-    Pagos: {
-      name: "Pagos",
-      link: "/cashflow-payments",
-    },
-    Traspasos: {
-      name: "Traspasos",
-      link: "/cashflow-transfers",
-    },
-    Rechazos: {
-      name: "Pagos Rechazados",
-      link: "/cashflow-rejections",
+      link: "/cashflow/settlements",
     },
     "Estado de Cuenta": {
       name: "Estado de Cuenta",

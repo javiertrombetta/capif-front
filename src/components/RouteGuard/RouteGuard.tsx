@@ -35,31 +35,12 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/producers/:id",
       "/producers/register", // Crear vista nueva "Crear Productora"
     ],
-    "Premios Gardel": ["/gardel-awards"],
+    "Premios Gardel": ["/producers/gardel-awards"],
+    Liquidaciones: ["/cashflow/settlements"],
+    "Estado de Cuenta": ["/cashflow"],
     Sesiones: ["/audits/sessions"],
     "Cambios en Repertorios": ["/audits/repertoire"],
     "Historial de Cambios": ["/audits"],
-    Liquidaciones: [
-      "/cashflow-payouts",
-      "/cashflow-payouts/list",
-      "/cashflow-payouts/export",
-    ],
-    Pagos: [
-      "/cashflow-payments",
-      "/cashflow-payments/list",
-      "/cashflow-payments/export",
-    ],
-    Traspasos: [
-      "/cashflow-transfers",
-      "/cashflow-transfers/list",
-      "/cashflow-transfers/export",
-    ],
-    Rechazos: [
-      "/cashflow-rejections",
-      "/cashflow-rejections/list",
-      "/cashflow-rejections/export",
-    ],
-    "Estado de Cuenta": ["/cashflow"],
   };
 
   const allowedViews = auth.vistas
