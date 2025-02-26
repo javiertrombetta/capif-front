@@ -4,7 +4,7 @@ import "./CustomSwitch.css";
 interface CustomSwitchProps {
   label: string;
   checked: boolean;
-  handleOnCheck: (isChecked: boolean) => void;
+  handleOnCheck: (isChecked: boolean) => Promise<boolean>;
 }
 
 const CustomSwitch: FC<CustomSwitchProps> = ({
@@ -14,9 +14,11 @@ const CustomSwitch: FC<CustomSwitchProps> = ({
 }) => {
   const [isChecked, setIsChecked] = useState(checked);
 
-  const onChange = () => {
-    handleOnCheck(isChecked);
-    setIsChecked(!isChecked);
+  const onChange = async () => {
+    const changed = await handleOnCheck(isChecked);
+    if (changed) {
+      setIsChecked(!isChecked);
+    }
   };
 
   return (
