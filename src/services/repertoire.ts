@@ -15,6 +15,7 @@ import {
   DeclareRepertoiresBulkResponse,
 } from "@/types/repertoire.types";
 import { axiosInstance } from "./axiosInstance";
+import { AxiosError } from "axios";
 
 interface GetRepertoiresParams {
   titulo: string;
@@ -203,6 +204,44 @@ export const updateTerritoryStatus = async (
 export const addTerritory = async (payload: AddTerritoryPayload) => {
   const response = await axiosInstance.post("/misc/territories", payload);
   return response;
+};
+
+export interface DownloadTerritoriesReportParams {
+  fecha_desde?: string;
+  fecha_hasta?: string;
+  titulo?: string;
+  isrc?: string;
+  productora?: string;
+  tipo_modificacion?:
+    | "ALTA"
+    | "DATOS"
+    | "ARCHIVO"
+    | "TERRITORIO"
+    | "PARTICIPACION";
+}
+
+export const downloadTerritoriesReport = async (
+  params?: DownloadTerritoriesReportParams
+) => {
+  for (const key in params) {
+    if (!params[key as keyof DownloadTerritoriesReportParams])
+      delete params[key as keyof DownloadTerritoriesReportParams];
+  }
+  try {
+    const response = await axiosInstance.get("/misc/territories/reports", {
+      params,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    if (error instanceof AxiosError) {
+      throw new Error(
+        error.response?.data.message ?? error.response?.data.error
+      );
+    } else {
+      throw error;
+    }
+  }
 };
 
 export const declareRepertoiresBulk = async (formData: FormData) => {
