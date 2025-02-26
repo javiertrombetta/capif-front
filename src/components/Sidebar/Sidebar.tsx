@@ -154,7 +154,7 @@ const Sidebar: FC = () => {
       <div className="w-[100%] h-[3rem] bg-[#1a2226] flex flex-col items-center justify-center absolute bottom-0">
         <p className="text-[#4b646f] text-[0.8rem]">GIT 2.0</p>
         <p className="text-[#4b646f] text-[0.8rem]">
-          Developed by KEIRETSU 2024
+          Developed by KEIRETSU 2025
         </p>
       </div>
     </div>

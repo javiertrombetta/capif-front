@@ -719,7 +719,7 @@ const LoadAudio: FC<{
       return;
     }
     if (
-      !["mp3", "wav", "ogg", "flac", "aac", "pdf"].includes(
+      !["mp3", "wav", "ogg", "flac", "aac"].includes(
         e.target.files[0].name.split(".").at(-1) ?? ""
       )
     ) {

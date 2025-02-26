@@ -11,6 +11,7 @@ interface CustomTableProps {
     isSortable: boolean;
     selectBox?: boolean;
     onChecked?: (checked: boolean) => void;
+    defaultChecked?: boolean;
   }[];
   columnValues: columnValueType[][];
 }
@@ -78,6 +79,7 @@ const CustomTable: FC<CustomTableProps> = ({ columnNames, columnValues }) => {
                   isSortable: boolean;
                   selectBox?: boolean;
                   onChecked?: (checked: boolean) => void;
+                  defaultChecked?: boolean;
                 },
                 index: number
               ) => (
@@ -92,7 +94,7 @@ const CustomTable: FC<CustomTableProps> = ({ columnNames, columnValues }) => {
                       <input
                         className="w-4 h-4"
                         type="checkbox"
-                        defaultChecked={true}
+                        defaultChecked={element.defaultChecked ?? true}
                         onChange={(e) =>
                           element.onChecked &&
                           element.onChecked(e.target.checked)
