@@ -14,6 +14,7 @@ import CashflowImportModal from "@/components/Modals/CashflowImportModal/Cashflo
 import useModal from "@/hooks/useModal";
 import { getCashflow } from "@/services/cashflow";
 import { GetCashflowResponse } from "@/types/cashflow";
+import { useAppSelector } from "@/hooks/storeHooks";
 
 const initialValues = {
   cuit: "",
@@ -25,6 +26,8 @@ const initialValues = {
 function page() {
   const { openModal } = useModal();
   const router = useRouter();
+  const { vistas } = useAppSelector((state) => state.auth);
+
   const [transactions, setTransactions] = useState<
     GetCashflowResponse["cashflows"]
   >([]);
@@ -57,24 +60,12 @@ function page() {
       <Header title="Resumen de Cuenta" />
       <div className="w-[100%] flex-1 flex flex-col space-y-[1rem] overflow-y-auto">
         <Formik initialValues={initialValues} onSubmit={handleOnSubmit}>
-          <Form className="h-[4rem] w-[100%] flex items-end gap-[2rem] mt-[1rem] px-[2rem]">
+          <Form className="h-[4rem] w-[100%] max-w-[20rem] flex items-end gap-[2rem] mt-[1rem] px-[2rem]">
             <CustomSearchField
               id="cuit"
               name="cuit"
               labelText="CUIT"
               type="text"
-            />
-            <CustomSearchField
-              id="fecha_desde"
-              name="fecha_desde"
-              labelText="FECHA DESDE"
-              type="date"
-            />
-            <CustomSearchField
-              id="fecha_hasta"
-              name="fecha_hasta"
-              labelText="FECHA HASTA"
-              type="date"
             />
             <CustomButton type="submit">Buscar</CustomButton>
           </Form>
@@ -97,7 +88,7 @@ function page() {
                 t.productoraDeCC?.nombre_productora || "",
                 t.productoraDeCC?.cuit_cuil || "",
                 t.saldo_actual_productora ?? "",
-                t.createdAt,
+                new Date(t.createdAt).toLocaleString(),
                 <ActionDropdownButton
                   menuOptions={[
                     {
@@ -118,36 +109,40 @@ function page() {
           )}
         </div>
       </div>
-      <div className="w-[100%] py-[1rem] px-[2rem] flex items-center justify-start space-x-[0.5rem]">
-        <p className="text-black font-bold">PROCESAR: </p>
-        <CustomButton
-          onClick={() => openModal(<CashflowImportModal type="TRANSFERS" />)}
-        >
-          TRASPASOS
-        </CustomButton>
-        <CustomButton
-          onClick={() => openModal(<CashflowImportModal type="SETTLEMENTS" />)}
-        >
-          LIQUIDACIONES
-        </CustomButton>
-        <CustomButton
-          onClick={() =>
-            openModal(<CashflowImportModal type="REPRODUCTIONS" />)
-          }
-        >
-          PASADAS
-        </CustomButton>
-        <CustomButton
-          onClick={() => openModal(<CashflowImportModal type="REJECTIONS" />)}
-        >
-          RECHAZOS
-        </CustomButton>
-        <CustomButton
-          onClick={() => openModal(<CashflowImportModal type="PAYMENTS" />)}
-        >
-          PAGOS
-        </CustomButton>
-      </div>
+      {vistas.some((v) => v.nombre === "Procesar Archivos") && (
+        <div className="w-[100%] py-[1rem] px-[2rem] flex items-center justify-start space-x-[0.5rem]">
+          <p className="text-black font-bold">PROCESAR: </p>
+          <CustomButton
+            onClick={() => openModal(<CashflowImportModal type="TRANSFERS" />)}
+          >
+            TRASPASOS
+          </CustomButton>
+          <CustomButton
+            onClick={() =>
+              openModal(<CashflowImportModal type="SETTLEMENTS" />)
+            }
+          >
+            LIQUIDACIONES
+          </CustomButton>
+          <CustomButton
+            onClick={() =>
+              openModal(<CashflowImportModal type="REPRODUCTIONS" />)
+            }
+          >
+            PASADAS
+          </CustomButton>
+          <CustomButton
+            onClick={() => openModal(<CashflowImportModal type="REJECTIONS" />)}
+          >
+            RECHAZOS
+          </CustomButton>
+          <CustomButton
+            onClick={() => openModal(<CashflowImportModal type="PAYMENTS" />)}
+          >
+            PAGOS
+          </CustomButton>
+        </div>
+      )}
     </CustomLayout>
   );
 }

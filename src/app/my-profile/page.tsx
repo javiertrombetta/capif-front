@@ -7,6 +7,9 @@ import { Form, Formik } from "formik";
 import CustomField from "@/commons/CustomField/CustomField";
 import { useAppSelector } from "@/hooks/storeHooks";
 import { useRouter } from "next/navigation";
+import { updateUserById } from "@/services/users";
+import { toast } from "react-toastify";
+import { validationEditUser } from "@/utils/formValidations";
 
 function page() {
   const authData = useAppSelector((state) => state.auth);
@@ -59,18 +62,34 @@ const UserDataForm: FC = () => {
   const authData = useAppSelector((state) => state.auth);
 
   const initialValues = {
-    nombre: authData.nombre,
-    apellido: authData.apellido,
-    telefono: authData.telefono,
-    email: authData.email,
+    nombre: authData?.nombre || "",
+    apellido: authData?.apellido || "",
+    telefono: authData?.telefono || "",
+    email: authData?.email || "",
+  };
+
+  const handleSubmitChanges = async (values: typeof initialValues) => {
+    try {
+      const { nombre, apellido, telefono } = values;
+      if (authData?.id_usuario) {
+        await updateUserById(authData?.id_usuario, {
+          nombre,
+          apellido,
+          telefono,
+        });
+      }
+      toast.success("Usuario actualizado correctamente");
+    } catch (error) {
+      toast.error("Error al actualizar el usuario");
+      console.error(error);
+    }
   };
 
   return (
-    // { isSubmitting, isValid, dirty }
     <Formik
       initialValues={initialValues}
-      // validationSchema={}
-      onSubmit={() => {}}
+      validationSchema={validationEditUser}
+      onSubmit={handleSubmitChanges}
     >
       {({ isSubmitting, isValid, dirty }) => (
         <Form id="user-data" className="w-[30rem] pl-[3rem] pr-[3rem]">
@@ -100,11 +119,11 @@ const UserDataForm: FC = () => {
             labelText="Email"
             disabled
           />
-
           <CustomButton
-            disabled={isSubmitting || !isValid || !dirty}
-            width="w-[100%]"
-            className="h-[2.5rem]"
+            {...(isSubmitting || !isValid || !dirty
+              ? { disabled: true, background: "disabled" }
+              : {})}
+            type="submit"
           >
             Guardar
           </CustomButton>
