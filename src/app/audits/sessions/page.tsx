@@ -10,6 +10,7 @@ import Header from "@/commons/Header/Header";
 import Spinner from "@/commons/Spinner/Spinner";
 import { getAuditSessions } from "@/services/audits";
 import { GetAuditSessionsResponse } from "@/types/audits.types";
+import { formatDate } from "@/utils/formatDate";
 
 const initialValues = {
   nombre: "",
@@ -30,7 +31,11 @@ function page() {
   const getAuditSessionsData = async (values?: typeof initialValues) => {
     setLoading(true);
     try {
-      const response = await getAuditSessions(values);
+      const response = await getAuditSessions({
+        ...values,
+        fechaDesde: values?.fechaDesde ? formatDate(values?.fechaDesde) : "",
+        fechaHasta: values?.fechaHasta ? formatDate(values?.fechaHasta) : "",
+      });
       setAudit(response);
     } catch (error) {
       toast.error(

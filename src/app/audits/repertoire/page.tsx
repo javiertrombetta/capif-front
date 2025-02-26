@@ -10,6 +10,7 @@ import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
 import Spinner from "@/commons/Spinner/Spinner";
 import { getAuditRepertoire } from "@/services/audits";
 import { GetAuditRepertoireResponse, TIPOS_CAMBIO } from "@/types/audits.types";
+import { formatDate } from "@/utils/formatDate";
 
 const initialValues = {
   emailUsuario: "",
@@ -32,7 +33,11 @@ function page() {
   const getAuditRepertoireData = async (values?: typeof initialValues) => {
     setLoading(true);
     try {
-      const response = await getAuditRepertoire(values);
+      const response = await getAuditRepertoire({
+        ...values,
+        fechaDesde: values?.fechaDesde ? formatDate(values?.fechaDesde) : "",
+        fechaHasta: values?.fechaHasta ? formatDate(values?.fechaHasta) : "",
+      });
       setAudit(response);
     } catch (error) {
       toast.error(
@@ -126,11 +131,11 @@ function page() {
                 { name: "FECHA", isSortable: true },
               ]}
               columnValues={audit.map((a) => [
-                a.usuario_originario.email,
-                a.fonograma.isrc,
-                a.fonograma.titulo,
-                a.fonograma.artista,
-                a.fonograma.productora,
+                a.registranteDeRepertorio.email,
+                a.fonogramaAuditado.isrc,
+                a.fonogramaAuditado.titulo,
+                a.fonogramaAuditado.artista,
+                a.fonogramaAuditado.productoraDelFonograma.nombre_productora,
                 a.tipo_auditoria,
                 a.detalle,
                 a.createdAt

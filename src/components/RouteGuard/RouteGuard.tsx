@@ -37,7 +37,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
     ],
     "Premios Gardel": ["/producers/gardel-awards"],
     Liquidaciones: ["/cashflow/settlements"],
-    "Estado de Cuenta": ["/cashflow"],
+    "Estado de Cuenta": ["/cashflow", "/cashflow/transactions"],
     Sesiones: ["/audits/sessions"],
     "Cambios en Repertorios": ["/audits/repertoire"],
     "Historial de Cambios": ["/audits"],
