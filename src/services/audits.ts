@@ -11,8 +11,8 @@ import { AxiosError } from "axios";
 interface GetAuditChangesParams {
   page?: number;
   limit?: number;
-  fecha_desde?: string;
-  fecha_hasta?: string;
+  fechaDesde?: string;
+  fechaHasta?: string;
   emailUsuario?: string;
   tipoAuditoria?: TipoAuditoria;
   tablaDb?: string;
@@ -47,8 +47,8 @@ export const getAuditChanges = async (params?: GetAuditChangesParams) => {
 interface GetAuditsSessionsParams {
   page?: number;
   limit?: number;
-  fecha_desde?: string;
-  fecha_hasta?: string;
+  fechaDesde?: string;
+  fechaHasta?: string;
   email?: string;
   nombre?: string;
   apellido?: string;
@@ -83,8 +83,8 @@ export const getAuditSessions = async (params?: GetAuditsSessionsParams) => {
 interface GetAuditRepertoireParams {
   page?: number;
   limit?: number;
-  fecha_desde?: string;
-  fecha_hasta?: string;
+  fechaDesde?: string;
+  fechaHasta?: string;
   emailUsuario?: string;
   isrc?: string;
   productora?: string;

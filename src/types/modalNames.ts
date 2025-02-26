@@ -1,5 +1,4 @@
 export enum ModalNames {
-  COMPLETE_REGISTRATION = "CompleteRegistration",
   ACCEPT_REGISTRATION = "AcceptRegistration",
   SEARCH_CONFLICTS_FILTERS = "SearchConflictsFilters",
   FIRST_INSTANCE = "FirstInstance",

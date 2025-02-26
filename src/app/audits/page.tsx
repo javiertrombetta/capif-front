@@ -10,6 +10,7 @@ import Header from "@/commons/Header/Header";
 import Spinner from "@/commons/Spinner/Spinner";
 import { getAuditChanges } from "@/services/audits";
 import { GetAuditChangesResponse, TIPOS_AUDITORIA } from "@/types/audits.types";
+import { formatDate } from "@/utils/formatDate";
 
 const initialValues = {
   emailUsuario: "",
@@ -30,7 +31,11 @@ function page() {
   const getAuditChangesData = async (values?: typeof initialValues) => {
     setLoading(true);
     try {
-      const response = await getAuditChanges(values);
+      const response = await getAuditChanges({
+        ...values,
+        fechaDesde: values?.fechaDesde ? formatDate(values?.fechaDesde) : "",
+        fechaHasta: values?.fechaHasta ? formatDate(values?.fechaHasta) : "",
+      });
       setAudit(response);
     } catch (error) {
       toast.error(
@@ -100,14 +105,16 @@ function page() {
                 { name: "TIPO DE AUDITORIA", isSortable: true },
                 { name: "TABLA DB", isSortable: true },
                 { name: "DETALLE", isSortable: true },
-                { name: "EMAIL DE USUARIO", isSortable: true },
+                { name: "EMAIL USUARIO AUDITADO", isSortable: true },
+                { name: "EMAIL USUARIO REGISTRANTE", isSortable: true },
                 { name: "FECHA", isSortable: true },
               ]}
               columnValues={audit.map((a) => [
                 a.tipo_auditoria,
                 a.modelo,
                 a.detalle,
-                a.usuario_originario.email,
+                a.usuarioAuditado?.email || "",
+                a.registranteDeAuditoria.email,
                 new Date(Date.parse(a.createdAt)).toLocaleString(),
               ])}
             />

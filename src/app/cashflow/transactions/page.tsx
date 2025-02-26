@@ -2,8 +2,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Formik, Form } from "formik";
-import { useRouter } from "next/navigation";
-import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
@@ -12,21 +10,27 @@ import Header from "@/commons/Header/Header";
 import Spinner from "@/commons/Spinner/Spinner";
 import CashflowImportModal from "@/components/Modals/CashflowImportModal/CashflowImportModal";
 import useModal from "@/hooks/useModal";
-import { getCashflow } from "@/services/cashflow";
-import { GetCashflowResponse } from "@/types/cashflow";
+import { getCashflowTransactions } from "@/services/cashflow";
+import {
+  GetCashflowTransactionsResponse,
+  TIPOS_TRANSACCION,
+} from "@/types/cashflow";
+import { useSearchParams } from "next/navigation";
+import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
+import CashflowTransactionDetailsModal from "@/components/Modals/CashflowTransactionDetailsModal/CashflowTransactionDetailsModal";
 
 const initialValues = {
   cuit: "",
-  productora_id: "",
+  tipo_transaccion: undefined,
   fecha_desde: "",
   fecha_hasta: "",
 };
 
 function page() {
+  const searchParams = useSearchParams();
   const { openModal } = useModal();
-  const router = useRouter();
   const [transactions, setTransactions] = useState<
-    GetCashflowResponse["cashflows"]
+    GetCashflowTransactionsResponse["transactions"]
   >([]);
   const [loading, setLoading] = useState(true);
 
@@ -35,9 +39,13 @@ function page() {
   };
 
   const getCashflowData = async (values?: typeof initialValues) => {
+    console.log(searchParams.get("productora_id"));
     setLoading(true);
     try {
-      const response = await getCashflow(values);
+      const response = await getCashflowTransactions({
+        ...values,
+        productora_id: searchParams.get("productora_id") || "",
+      });
       setTransactions(response);
     } catch (error) {
       console.error(error);
@@ -65,6 +73,16 @@ function page() {
               type="text"
             />
             <CustomSearchField
+              id="tipo_transaccion"
+              name="tipo_transaccion"
+              labelText="TIPO TRANSACCIÓN"
+              type="select"
+              options={[
+                { name: "", value: "" },
+                ...TIPOS_TRANSACCION.map((t) => ({ name: t, value: t })),
+              ]}
+            />
+            <CustomSearchField
               id="fecha_desde"
               name="fecha_desde"
               labelText="FECHA DESDE"
@@ -87,25 +105,31 @@ function page() {
           ) : transactions.length > 0 ? (
             <CustomTable
               columnNames={[
-                { name: "PRODUCTORA", isSortable: true },
-                { name: "CUIT", isSortable: true },
-                { name: "SALDO ACTUAL", isSortable: true },
-                { name: "FECHA", isSortable: true },
+                { name: "TIPO", isSortable: true },
+                { name: "MONTO", isSortable: true },
+                { name: "SALDO RESULTANTE", isSortable: true },
+                { name: "REFERENCIA", isSortable: false },
+                { name: "FECHA TRANSACCIÓN", isSortable: true },
                 { name: "ACCIÓN", isSortable: false },
               ]}
               columnValues={transactions.map((t) => [
-                t.productoraDeCC.nombre_productora,
-                t.productoraDeCC.cuit_cuil,
-                t.saldo_actual_productora ?? "",
-                t.createdAt,
+                t.tipo_transaccion,
+                t.monto,
+                t.saldo_resultante ?? "",
+                t.referencia ?? "",
+                t.fecha_transaccion,
                 <ActionDropdownButton
                   menuOptions={[
                     {
-                      label: "Ver Transacciones",
-                      onClick: () =>
-                        router.push(
-                          `/cashflow/transactions?productora_id=${t.productoraDeCC.id_productora}`
-                        ),
+                      label: "Ver detalles",
+                      onClick: () => {
+                        openModal(
+                          <CashflowTransactionDetailsModal
+                            type={t.tipo_transaccion}
+                            transaction={t}
+                          />
+                        );
+                      },
                     },
                   ]}
                 />,
@@ -117,36 +141,6 @@ function page() {
             </div>
           )}
         </div>
-      </div>
-      <div className="w-[100%] py-[1rem] px-[2rem] flex items-center justify-start space-x-[0.5rem]">
-        <p className="text-black font-bold">PROCESAR: </p>
-        <CustomButton
-          onClick={() => openModal(<CashflowImportModal type="TRANSFERS" />)}
-        >
-          TRASPASOS
-        </CustomButton>
-        <CustomButton
-          onClick={() => openModal(<CashflowImportModal type="SETTLEMENTS" />)}
-        >
-          LIQUIDACIONES
-        </CustomButton>
-        <CustomButton
-          onClick={() =>
-            openModal(<CashflowImportModal type="REPRODUCTIONS" />)
-          }
-        >
-          PASADAS
-        </CustomButton>
-        <CustomButton
-          onClick={() => openModal(<CashflowImportModal type="REJECTIONS" />)}
-        >
-          RECHAZOS
-        </CustomButton>
-        <CustomButton
-          onClick={() => openModal(<CashflowImportModal type="PAYMENTS" />)}
-        >
-          PAGOS
-        </CustomButton>
       </div>
     </CustomLayout>
   );
