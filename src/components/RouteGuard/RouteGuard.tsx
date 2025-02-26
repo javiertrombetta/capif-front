@@ -41,6 +41,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
     Sesiones: ["/audits/sessions"],
     "Cambios en Repertorios": ["/audits/repertoire"],
     "Historial de Cambios": ["/audits"],
+    "Nueva productora": ["/producers/register"],
   };
 
   const allowedViews = auth.vistas
