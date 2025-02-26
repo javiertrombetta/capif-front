@@ -1,5 +1,4 @@
 export enum ModalNames {
-  ACCEPT_REGISTRATION = "AcceptRegistration",
   SEARCH_CONFLICTS_FILTERS = "SearchConflictsFilters",
   FIRST_INSTANCE = "FirstInstance",
   SECOND_INSTANCE = "SecondInstance",
@@ -10,8 +9,4 @@ export enum ModalNames {
   CONFLICTS_SEND_DOCUMENTATION = "ConflictSendDocumentation",
   CONFLICTS_DESIST = "ConflictDesist",
   CONFLICTS_ACCEPT = "ConflictsAccept",
-  EXPORT_CHANGES_LIST = "ExportChangesList",
-  FINISH_NEW_PHONOGRAM = "FinishNewPhonogram",
-  TERRITORIALITY_SAVE = "TerritorialitySave",
-  SUBMIT_SEND_APPILICATION = "SubmitSendApplication",
 }

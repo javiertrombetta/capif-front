@@ -10,7 +10,6 @@ import {
   Revision,
   Definition,
 } from "../Modals/ActionConflictsDropdown/ActionConflictsDropdown";
-import FinishNewPhonogram from "../Modals/FinishNewPhonogram/FinishNewPhonogram";
 import {
   SendDocumentation,
   Accept,
@@ -60,8 +59,6 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
         return <Revision onCloseModal={onCloseModal} />;
       case ModalNames.DEFINITION:
         return <Definition onCloseModal={onCloseModal} />;
-      case ModalNames.FINISH_NEW_PHONOGRAM:
-        return <FinishNewPhonogram onCloseModal={onCloseModal} />;
       case ModalNames.CONFLICTS_ACCEPT:
         return <Accept onCloseModal={onCloseModal} />;
       case ModalNames.CONFLICTS_SEND_DOCUMENTATION:

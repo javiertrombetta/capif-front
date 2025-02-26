@@ -10,6 +10,7 @@ import { TerritorialityAddModal } from "@/components/Modals/TerritorialityModals
 import useModal from "@/hooks/useModal";
 import { GetTerritoriesResponse } from "@/types/repertoire.types";
 import { getTerritories } from "@/services/repertoire";
+import { TerritorialityReportsModal } from "@/components/Modals/TerritorialityModals/TerritorialityReportsModal";
 
 function page() {
   const { openModal } = useModal();
@@ -17,6 +18,10 @@ function page() {
     GetTerritoriesResponse["data"]
   >([]);
   const [loading, setLoading] = useState(true);
+
+  const handleDownloadReport = async () => {
+    openModal(<TerritorialityReportsModal />);
+  };
 
   const handleAddTerritoriality = () => {
     openModal(
@@ -87,9 +92,12 @@ function page() {
           </div>
         )}
       </div>
-      <div className="w-[100%] py-[1rem] px-[2rem] flex items-center justify-end">
+      <div className="w-[100%] py-[1rem] px-[2rem] flex items-center justify-end space-x-[0.5rem]">
         <CustomButton onClick={handleAddTerritoriality}>
           Agregar Territorio
+        </CustomButton>
+        <CustomButton onClick={handleDownloadReport}>
+          Descargar Reporte
         </CustomButton>
       </div>
     </CustomLayout>
