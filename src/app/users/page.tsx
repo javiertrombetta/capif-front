@@ -91,7 +91,7 @@ export default function page() {
                   labelText="ESTADO"
                   type="select"
                   options={[
-                    { name: "", value: "" },
+                    { name: "TODOS", value: "" },
                     ...ESTADOS.map((t) => ({ name: t, value: t })),
                   ]}
                 />
