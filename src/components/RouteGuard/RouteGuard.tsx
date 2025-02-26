@@ -28,13 +28,9 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/repertoires/conflicts",
       "/repertoires/conflicts/:id/history",
     ],
-    "Buscar Usuario": ["/users"],
-    "Alta Usuario": ["/users/new", "/users/:id", "/users/:id/application"], // Probablemente crear vista "Editar Usuario"
-    "Buscar Productora": [
-      "/producers",
-      "/producers/:id",
-      "/producers/register", // Crear vista nueva "Crear Productora"
-    ],
+    "Buscar Usuario": ["/users", "/users/:id"],
+    "Alta Usuario": ["/users/new", "/users/:id/application"],
+    "Buscar Productora": ["/producers", "/producers/:id"],
     "Premios Gardel": ["/producers/gardel-awards"],
     Liquidaciones: ["/cashflow/settlements"],
     "Estado de Cuenta": ["/cashflow", "/cashflow/transactions"],

@@ -23,6 +23,7 @@ import UserFieldsView from "@/components/UserFieldsView/UserFieldsView";
 
 export default function page() {
   const userId = useParams().id as string;
+  const authData = useAppSelector((state) => state.auth);
   const [userData, setUserData] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -46,9 +47,11 @@ export default function page() {
     try {
       await blockOrUnlockUser(idUsuario, !isBlocked);
       toast.success("Se cambio el estado del usuario");
+      return true;
     } catch (error) {
       toast.error("No se pudo cambiar el estado del usuario");
       console.error(error);
+      return false;
     }
   };
 
@@ -66,12 +69,16 @@ export default function page() {
       <div className="flex flex-col space-y-[2rem] overflow-y-auto py-[1rem] px-[2rem]">
         {userData && (
           <>
-            <div className="p-[1rem] w-[100%] flex flex-col border-[1px] border-[#c8c8c8]">
-              <h3 className="text-black text-3xl font-black mb-[1rem]">
-                Datos
-              </h3>
-              <UserFieldsView userData={userData} />
-            </div>
+            {authData.vistas.some(
+              (v) => v.nombre === "Editar Datos Usuario"
+            ) && (
+              <div className="p-[1rem] w-[100%] flex flex-col border-[1px] border-[#c8c8c8]">
+                <h3 className="text-black text-3xl font-black mb-[1rem]">
+                  Datos
+                </h3>
+                <UserFieldsView userData={userData} />
+              </div>
+            )}
             <div className="w-[100%] gap-[0.5rem] flex flex-col text-black">
               <p className="font-bold ">ESTADO</p>
               <select
@@ -86,25 +93,35 @@ export default function page() {
                 ))}
               </select>
             </div>
-            <CustomSwitch
-              label="BLOQUEADO"
-              checked={userData.isBloqueado}
-              handleOnCheck={(isChecked) =>
-                handleBlockUser(userData.id, isChecked)
-              }
-            />
-            <div className="p-[1rem] w-[100%] flex flex-col border-[1px] border-[#c8c8c8]">
-              <h3 className="text-black text-3xl font-black mb-[1rem]">
-                Reestablecer Contraseña
-              </h3>
-              <ChangePasswordView idUsuario={userId} />
-            </div>
-            <div className="p-[1rem] w-[100%] flex flex-col border-[1px] border-[#c8c8c8]">
-              <h3 className="text-black text-3xl font-black mb-[1rem]">
-                Vistas
-              </h3>
-              <ViewsFields userData={userData} />
-            </div>
+            {authData.vistas.some((v) => v.nombre === "Bloquear Usuario") && (
+              <CustomSwitch
+                label="BLOQUEADO"
+                checked={userData.isBloqueado}
+                handleOnCheck={(isChecked) =>
+                  handleBlockUser(userData.id, isChecked)
+                }
+              />
+            )}
+            {authData.vistas.some(
+              (v) => v.nombre === "Restablecer Password Usuario"
+            ) && (
+              <div className="p-[1rem] w-[100%] flex flex-col border-[1px] border-[#c8c8c8]">
+                <h3 className="text-black text-3xl font-black mb-[1rem]">
+                  Reestablecer Contraseña
+                </h3>
+                <ChangePasswordView idUsuario={userId} />
+              </div>
+            )}
+            {authData.vistas.some(
+              (v) => v.nombre === "Editar Vistas Usuario"
+            ) && (
+              <div className="p-[1rem] w-[100%] flex flex-col border-[1px] border-[#c8c8c8]">
+                <h3 className="text-black text-3xl font-black mb-[1rem]">
+                  Vistas
+                </h3>
+                <ViewsFields userData={userData} />
+              </div>
+            )}
           </>
         )}
       </div>
