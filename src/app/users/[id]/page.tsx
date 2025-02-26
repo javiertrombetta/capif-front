@@ -69,16 +69,19 @@ export default function page() {
       <div className="flex flex-col space-y-[2rem] overflow-y-auto py-[1rem] px-[2rem]">
         {userData && (
           <>
-            {authData.vistas.some(
-              (v) => v.nombre === "Editar Datos Usuario"
-            ) && (
-              <div className="p-[1rem] w-[100%] flex flex-col border-[1px] border-[#c8c8c8]">
-                <h3 className="text-black text-3xl font-black mb-[1rem]">
-                  Datos
-                </h3>
-                <UserFieldsView userData={userData} />
-              </div>
-            )}
+            <div className="p-[1rem] w-[100%] flex flex-col border-[1px] border-[#c8c8c8]">
+              <h3 className="text-black text-3xl font-black mb-[1rem]">
+                Datos
+              </h3>
+              <UserFieldsView
+                userData={userData}
+                disabled={
+                  !authData.vistas.some(
+                    (v) => v.nombre === "Editar Datos Usuario"
+                  )
+                }
+              />
+            </div>
             <div className="w-[100%] gap-[0.5rem] flex flex-col text-black">
               <p className="font-bold ">ESTADO</p>
               <select

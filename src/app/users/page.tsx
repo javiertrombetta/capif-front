@@ -121,7 +121,7 @@ export default function page() {
                         element.estado,
                         element.nombre,
                         element.apellido,
-                        element.telefono,
+                        element.telefono || "",
                         element.rol,
                         element.productoras[0]?.nombre || "",
                         <ActionDropdownButton

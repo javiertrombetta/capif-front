@@ -52,56 +52,58 @@ function page() {
     <CustomLayout>
       <Header title="Premios Gardel" />
       <div className="w-[100%] flex-1 flex flex-col space-y-[1rem] overflow-y-auto">
-        <Formik initialValues={searchInitialValues} onSubmit={handleOnSubmit}>
-          {({ submitForm }) => (
-            <Form className="h-[4rem] w-[100%] flex items-end gap-[1rem] mt-[1rem] px-[2rem]">
-              <CustomSearchField
-                type="text"
-                id="productoraName"
-                name="productoraName"
-                labelText="Nombre Productora"
-              />
-              <CustomSearchField
-                type="date"
-                id="startDate"
-                name="startDate"
-                labelText="Fecha Desde"
-              />
-              <CustomSearchField
-                type="date"
-                id="endDate"
-                name="endDate"
-                labelText="Fecha Hasta"
-              />
-              <CustomButton type="submit">Buscar</CustomButton>
-              <div className="flex-1 flex flex-row space-x-[0.5rem] pl-[1rem]">
-                {vistas.some((v) => v.nombre === "Crear Postulaciones") && (
-                  <CustomButton
-                    className="whitespace-nowrap"
-                    type="button"
-                    onClick={() => {
-                      openModal(<GardelAwardsModal onSuccess={submitForm} />);
-                    }}
-                  >
-                    Generar Códigos
-                  </CustomButton>
-                )}
-                {vistas.some((v) => v.nombre === "Purgar Postulaciones") && (
-                  <CustomButton
-                    className="whitespace-nowrap"
-                    type="button"
-                    background="warn"
-                    onClick={() =>
-                      openModal(<GardelAwardsPurge onSuccess={submitForm} />)
-                    }
-                  >
-                    Depurar Códigos
-                  </CustomButton>
-                )}
-              </div>
-            </Form>
-          )}
-        </Formik>
+        {vistas.some((v) => v.nombre === "Filtrar Premios Gardel") && (
+          <Formik initialValues={searchInitialValues} onSubmit={handleOnSubmit}>
+            {({ submitForm }) => (
+              <Form className="h-[4rem] w-[100%] flex items-end gap-[1rem] mt-[1rem] px-[2rem]">
+                <CustomSearchField
+                  type="text"
+                  id="productoraName"
+                  name="productoraName"
+                  labelText="Nombre Productora"
+                />
+                <CustomSearchField
+                  type="date"
+                  id="startDate"
+                  name="startDate"
+                  labelText="Fecha Desde"
+                />
+                <CustomSearchField
+                  type="date"
+                  id="endDate"
+                  name="endDate"
+                  labelText="Fecha Hasta"
+                />
+                <CustomButton type="submit">Buscar</CustomButton>
+                <div className="flex-1 flex flex-row space-x-[0.5rem] pl-[1rem]">
+                  {vistas.some((v) => v.nombre === "Crear Postulaciones") && (
+                    <CustomButton
+                      className="whitespace-nowrap"
+                      type="button"
+                      onClick={() => {
+                        openModal(<GardelAwardsModal onSuccess={submitForm} />);
+                      }}
+                    >
+                      Generar Códigos
+                    </CustomButton>
+                  )}
+                  {vistas.some((v) => v.nombre === "Purgar Postulaciones") && (
+                    <CustomButton
+                      className="whitespace-nowrap"
+                      type="button"
+                      background="warn"
+                      onClick={() =>
+                        openModal(<GardelAwardsPurge onSuccess={submitForm} />)
+                      }
+                    >
+                      Depurar Códigos
+                    </CustomButton>
+                  )}
+                </div>
+              </Form>
+            )}
+          </Formik>
+        )}
         {loading ? (
           <div className="w-full h-full flex justify-center items-center">
             <Spinner color="black" />
