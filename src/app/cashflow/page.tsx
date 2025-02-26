@@ -94,8 +94,8 @@ function page() {
                 { name: "ACCIÓN", isSortable: false },
               ]}
               columnValues={transactions.map((t) => [
-                t.productoraDeCC.nombre_productora,
-                t.productoraDeCC.cuit_cuil,
+                t.productoraDeCC?.nombre_productora || "",
+                t.productoraDeCC?.cuit_cuil || "",
                 t.saldo_actual_productora ?? "",
                 t.createdAt,
                 <ActionDropdownButton
@@ -104,7 +104,7 @@ function page() {
                       label: "Ver Transacciones",
                       onClick: () =>
                         router.push(
-                          `/cashflow/transactions?productora_id=${t.productoraDeCC.id_productora}`
+                          `/cashflow/transactions?productora_id=${t.productora_id}`
                         ),
                     },
                   ]}
