@@ -26,7 +26,7 @@ function page() {
     titulo: "",
     artista: "",
     album: "",
-    nombre_prodcutora: "",
+    nombre_productora: "",
     sello_discografico: "",
     isrc: "",
     anio_lanzamiento: "",
@@ -175,14 +175,14 @@ const SearchPhonogramForm: FC = () => {
       <div className="w-[100%] flex justify-start items-end pl-[2rem] pr-[2rem] gap-[2rem]">
         <CustomSearchField name="isrc" id="isrc" type="text" labelText="ISRC" />
         <CustomSearchField
-          name="productora"
-          id="productora"
+          name="nombre_productora"
+          id="nombre_productora"
           type="text"
           labelText="PRODUCTORA"
         />
         <CustomSearchField
-          name="sello"
-          id="sello"
+          name="sello_discografico"
+          id="sello_discografico"
           type="text"
           labelText="SELLO"
         />
