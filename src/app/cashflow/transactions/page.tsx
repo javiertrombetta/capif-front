@@ -8,7 +8,6 @@ import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
 import CustomTable from "@/commons/CustomTable/CustomTable";
 import Header from "@/commons/Header/Header";
 import Spinner from "@/commons/Spinner/Spinner";
-import CashflowImportModal from "@/components/Modals/CashflowImportModal/CashflowImportModal";
 import useModal from "@/hooks/useModal";
 import { getCashflowTransactions } from "@/services/cashflow";
 import {
