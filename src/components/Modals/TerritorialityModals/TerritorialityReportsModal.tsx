@@ -8,7 +8,6 @@ import {
   DownloadTerritoriesReportParams,
 } from "@/services/repertoire";
 import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
-import { formatDate } from "@/utils/formatDate";
 
 const TIPOS_MODIFICACION: Array<
   DownloadTerritoriesReportParams["tipo_modificacion"]
