@@ -21,7 +21,8 @@ export interface AuditChange {
   modelo: string;
   tipo_auditoria: TipoAuditoria;
   detalle: string;
-  usuario_originario: UsuarioAuditoria;
+  registranteDeAuditoria: UsuarioAuditoria;
+  usuarioAuditado: UsuarioAuditoria;
   createdAt: string;
 }
 
@@ -67,15 +68,18 @@ export interface Fonograma {
   isrc: string;
   titulo: string;
   artista: string;
-  productora: string;
+  productoraDelFonograma: {
+    nombre_productora: string;
+    id_productora: string;
+  };
 }
 
 export interface AuditRepertoire {
   id_auditoria: string;
-  fonograma: Fonograma;
+  fonogramaAuditado: Fonograma;
   tipo_auditoria: TipoCambio;
   detalle: string;
-  usuario_originario: UsuarioAuditoria;
+  registranteDeRepertorio: UsuarioAuditoria;
   createdAt: string;
 }
 

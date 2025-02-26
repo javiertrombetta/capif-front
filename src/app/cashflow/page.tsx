@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Formik, Form } from "formik";
+import { useRouter } from "next/navigation";
+import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
@@ -11,24 +13,24 @@ import Spinner from "@/commons/Spinner/Spinner";
 import CashflowImportModal from "@/components/Modals/CashflowImportModal/CashflowImportModal";
 import useModal from "@/hooks/useModal";
 import { getCashflow } from "@/services/cashflow";
-import { GetCashflowResponse, TIPOS_TRANSACCION } from "@/types/cashflow";
+import { GetCashflowResponse } from "@/types/cashflow";
 
 const initialValues = {
   cuit: "",
-  tipo_transaccion: undefined,
+  productora_id: "",
   fecha_desde: "",
   fecha_hasta: "",
 };
 
 function page() {
   const { openModal } = useModal();
+  const router = useRouter();
   const [transactions, setTransactions] = useState<
-    GetCashflowResponse["transactions"]
+    GetCashflowResponse["cashflows"]
   >([]);
   const [loading, setLoading] = useState(true);
 
   const handleOnSubmit = async (values: typeof initialValues) => {
-    console.log("refresh");
     await getCashflowData(values);
   };
 
@@ -63,16 +65,6 @@ function page() {
               type="text"
             />
             <CustomSearchField
-              id="tipo_transaccion"
-              name="tipo_transaccion"
-              labelText="TIPO TRANSACCIÓN"
-              type="select"
-              options={[
-                { name: "", value: "" },
-                ...TIPOS_TRANSACCION.map((t) => ({ name: t, value: t })),
-              ]}
-            />
-            <CustomSearchField
               id="fecha_desde"
               name="fecha_desde"
               labelText="FECHA DESDE"
@@ -95,18 +87,28 @@ function page() {
           ) : transactions.length > 0 ? (
             <CustomTable
               columnNames={[
-                { name: "TIPO", isSortable: true },
-                { name: "MONTO", isSortable: true },
-                { name: "SALDO RESULTANTE", isSortable: true },
-                { name: "REFERENCIA", isSortable: false },
-                { name: "FECHA TRANSACCIÓN", isSortable: true },
+                { name: "PRODUCTORA", isSortable: true },
+                { name: "CUIT", isSortable: true },
+                { name: "SALDO ACTUAL", isSortable: true },
+                { name: "FECHA", isSortable: true },
+                { name: "ACCIÓN", isSortable: false },
               ]}
               columnValues={transactions.map((t) => [
-                t.tipo_transaccion,
-                t.monto,
-                t.saldo_resultante ?? "",
-                t.referencia ?? "",
-                t.fecha_transaccion,
+                t.productoraDeCC.nombre_productora,
+                t.productoraDeCC.cuit_cuil,
+                t.saldo_actual_productora ?? "",
+                t.createdAt,
+                <ActionDropdownButton
+                  menuOptions={[
+                    {
+                      label: "Ver Transacciones",
+                      onClick: () =>
+                        router.push(
+                          `/cashflow/transactions?productora_id=${t.productoraDeCC.id_productora}`
+                        ),
+                    },
+                  ]}
+                />,
               ])}
             />
           ) : (

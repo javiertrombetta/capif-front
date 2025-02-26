@@ -1,6 +1,5 @@
 "use client";
 import React, { createContext, FC, ReactNode, useState } from "react";
-import CustomButton from "@/commons/CustomButton/CustomButton";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { ModalNames } from "@/types/modalNames";
 import { setModal } from "@/store/modalSlice";
@@ -11,7 +10,6 @@ import {
   Revision,
   Definition,
 } from "../Modals/ActionConflictsDropdown/ActionConflictsDropdown";
-import SearchPhonogramsExportModal from "../Modals/SearchPhonogramsExportModal/SearchPhonogramsExportModal";
 import FinishNewPhonogram from "../Modals/FinishNewPhonogram/FinishNewPhonogram";
 import {
   SendDocumentation,
@@ -52,8 +50,6 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
 
   const renderModal = (): ReactNode => {
     switch (modalData.type) {
-      case ModalNames.COMPLETE_REGISTRATION:
-        return <EndRegisterUserModal />;
       case ModalNames.SEARCH_CONFLICTS_FILTERS:
         return <SearchConflictsFilters onCloseModal={onCloseModal} />;
       case ModalNames.FIRST_INSTANCE:
@@ -64,8 +60,6 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
         return <Revision onCloseModal={onCloseModal} />;
       case ModalNames.DEFINITION:
         return <Definition onCloseModal={onCloseModal} />;
-      case ModalNames.EXPORT_CHANGES_LIST:
-        return <SearchPhonogramsExportModal onCloseModal={onCloseModal} />;
       case ModalNames.FINISH_NEW_PHONOGRAM:
         return <FinishNewPhonogram onCloseModal={onCloseModal} />;
       case ModalNames.CONFLICTS_ACCEPT:
@@ -98,18 +92,6 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
 
       {children}
     </ModalContext.Provider>
-  );
-};
-
-const EndRegisterUserModal: FC = () => {
-  return (
-    <div className="bg-white h-[13rem] w-[30rem] mb-[6rem] rounded-[2rem] flex flex-col gap-[1rem] justify-center items-center">
-      <p className="text-black font-bold text-[1.2rem] text-center w-[95%]">
-        Debes terminar de completar el registro de tu usuario.
-      </p>
-
-      <CustomButton>Completar Registro</CustomButton>
-    </div>
   );
 };
 
