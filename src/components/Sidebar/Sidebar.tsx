@@ -67,7 +67,7 @@ const Sidebar: FC = () => {
       link: "/producers/gardel-awards",
     },
     Liquidaciones: {
-      name: "Liquidaciones",
+      name: "ISRCs No Asignados",
       link: "/cashflow/settlements",
     },
     "Estado de Cuenta": {
