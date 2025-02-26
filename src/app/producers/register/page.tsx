@@ -179,8 +179,6 @@ const page: FC = () => {
     await uploadProducerDocument(formData, idProductora);
   };
 
-  console.log(files);
-
   return (
     <CustomLayout>
       <Header title="Completar Registro" />
