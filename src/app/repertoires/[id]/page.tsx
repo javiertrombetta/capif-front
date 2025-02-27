@@ -40,7 +40,7 @@ function page() {
     if (
       e.target.files &&
       e.target.files.length > 0 &&
-      e.target.files[0].name.endsWith(".pdf")
+      e.target.files[0].name.endsWith(".mp3")
     ) {
       setFile(e.target.files[0]);
     } else {
