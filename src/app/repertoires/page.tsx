@@ -145,7 +145,7 @@ export default page;
 
 const SearchPhonogramForm: FC = () => {
   return (
-    <Form className="w-[100%]  mt-[2rem] flex flex-col gap-[1rem]">
+    <Form className="w-[100%] mt-[2rem] flex flex-col gap-[1rem]">
       <div className="w-[100%] flex justify-center items-center pl-[2rem] pr-[2rem] gap-[2rem]">
         <CustomSearchField
           name="titulo"
@@ -166,8 +166,8 @@ const SearchPhonogramForm: FC = () => {
           labelText="ALBUM"
         />
         <CustomSearchField
-          name="anio"
-          id="anio"
+          name="anio_lanzamiento"
+          id="anio_lanzamiento"
           type="text"
           labelText="AÑO DE PUBLICACIÓN"
         />
