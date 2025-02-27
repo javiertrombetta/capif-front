@@ -5,55 +5,40 @@ import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import CustomTable from "@/commons/CustomTable/CustomTable";
 import Header from "@/commons/Header/Header";
-import { useAppDispatch } from "@/hooks/storeHooks";
-import { setModal } from "@/store/modalSlice";
-import { ModalNames } from "@/types/modalNames";
-import { confirmPercentage, getConflict } from "@/services/conflicts";
+import { getConflict } from "@/services/conflicts";
 import { GetConflictResponse } from "@/types/conflicts.types";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useModal from "@/hooks/useModal";
 import { ConfirmPercentage } from "@/components/Modals/Conflicts/ConflictsActions";
+import Spinner from "@/commons/Spinner/Spinner";
+import { useAppSelector } from "@/hooks/storeHooks";
+
 function page() {
   const params = useParams();
   const router = useRouter();
-  const dispatch = useAppDispatch();
-  const { openModal, closeModal } = useModal();
+  const { openModal } = useModal();
+  const { vistas } = useAppSelector((state) => state.auth);
+  const [loading, setLoading] = useState(true);
   const [conflict, setConflict] = useState<GetConflictResponse | null>(null);
 
-  const handleGetConflict = async () => {
+  const getConflictData = async () => {
+    setLoading(true);
     try {
-      const id = params.id;
-      if (id && !Array.isArray(id)) {
-        const response = await getConflict(id);
-        setConflict(response.data);
-      }
+      const response = await getConflict(params.id as string);
+      setConflict(response.data);
     } catch (error) {
+      console.error(error);
       toast.error(error as string);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleOpenModal = (type: ModalNames) => {
-    dispatch(setModal({ type, isActive: true }));
-  };
-
-  const handleConfirmPercentage = async (
-    id: string,
-    confirmedPercentage: number
-  ) => {
-    try {
-      const response = await confirmPercentage(id, confirmedPercentage);
-      toast.success(response.message);
-    } catch (error) {
-      toast.error(error as string);
-    }
-  };
-
-  const handleMenuOptions = (
-    _id: string,
+  const menuOptions = (
     participationId: string,
-    confirmedPercentage: number,
-    idPhonogram: string
+    idPhonogram: string,
+    percentage: number
   ) => {
     return [
       {
@@ -63,89 +48,111 @@ function page() {
             `/repertoires/${idPhonogram}/titularity/${participationId}`
           ),
       },
-      {
-        label: "Fijar Porcentaje",
-        onClick: () =>
-          openModal(
-            <ConfirmPercentage
-              handleConfirmPercentage={() =>
-                handleConfirmPercentage(participationId, confirmedPercentage)
-              }
-              onCloseModal={closeModal}
-            />
-          ),
-      },
-      {
-        label: "Aceptar",
-        onClick: () => handleOpenModal(ModalNames.CONFLICTS_ACCEPT),
-      },
+      ...(vistas.some((v) => v.nombre === "Confirmar Porcentaje Conflicto")
+        ? [
+            {
+              label: "Fijar Porcentaje",
+              onClick: () =>
+                openModal(
+                  <ConfirmPercentage
+                    idConflicto={conflict?.id_conflicto ?? ""}
+                    idParticipacion={participationId}
+                    actualPercentage={percentage}
+                  />
+                ),
+            },
+          ]
+        : []),
     ];
   };
 
   useEffect(() => {
-    handleGetConflict();
+    getConflictData();
   }, []);
 
   return (
     <CustomLayout>
       <Header back title="Titulares de Conflicto" />
-
-      <div className="w-[100%] flex items-center pr-[2rem] pl-[2rem] mt-[2rem] gap-[1rem]">
-        <CustomInput type="text" label="Buscar Productora" />
-
-        <select className="w-[13rem] mt-[1.5rem] text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem]">
-          <option>PENDIENTE </option>
-          <option>RESPONDIDO</option>
-          <option>DESISTIDO</option>
-          <option>MODIFICADO </option>
-          <option>RETIRADO</option>
-          <option>ACEPTADO</option>
-        </select>
-      </div>
-      {conflict && conflict.partesDelConflicto.length > 0 ? (
-        <div className="mt-[2rem] w-[100%]">
+      {loading ? (
+        <div className="w-full h-full flex justify-center items-center">
+          <Spinner color="black" />
+        </div>
+      ) : conflict ? (
+        <div className="w-[100%] flex-1 flex flex-col space-y-[1rem] overflow-y-auto">
+          <h3 className="text-black font-black text-2xl pt-[1rem] px-[1rem]">
+            Fonograma
+          </h3>
+          <div className="w-[100%] flex flex-row space-x-[1rem] px-[1rem]">
+            <CustomInput
+              disabled
+              type="text"
+              label="ISRC"
+              initialValue={conflict.fonogramaDelConflicto.isrc}
+            />
+            <CustomInput
+              disabled
+              type="text"
+              label="Estado"
+              initialValue={conflict.estado_conflicto}
+            />
+            <CustomInput
+              disabled
+              className="w-[5rem]"
+              type="text"
+              label="Porcentaje"
+              initialValue={conflict.porcentaje_periodo.toString()}
+            />
+            <CustomInput
+              disabled
+              type="text"
+              label="Fecha Inicio"
+              initialValue={new Date(
+                conflict?.fecha_inicio_conflicto || ""
+              ).toLocaleString()}
+            />
+            <CustomInput
+              disabled
+              containerClassName="w-[100%]"
+              className="w-[100%]"
+              type="text"
+              label="Productora Originaria"
+              initialValue={conflict.productoraDelConflicto.nombre_productora}
+            />
+          </div>
           <CustomTable
             columnNames={[
               {
                 name: "PRODUCTORA",
                 isSortable: true,
               },
-              { name: "ISRC", isSortable: true },
               { name: "PORCENTAJE DECLARADO", isSortable: true },
               { name: "DOCUMENTACIÓN ENVIADA", isSortable: true },
               { name: "PORCENTAJE DEFINITIVO", isSortable: true },
               { name: "ESTADO", isSortable: true },
               { name: "ACCIÓN", isSortable: false },
             ]}
-            // columnValues={Array(4).fill([
-            //   "Sony Music",
-            //   "AR6548646",
-            //   "50%",
-            //   "NO",
-            //   "50%",
-            //   "PENDIENTE DE RESPUESTA",
-            //   <ActionDropdownButton menuOptions={menuOptions("1")} />,
-            // ])}
             columnValues={conflict.partesDelConflicto.map((p) => [
               p.participacionDeLaParte.productoraDeParticipante
                 .nombre_productora,
-              conflict.fonogramaDelConflicto.isrc,
               `${p.porcentaje_declarado}%`,
               p.is_documentos_enviados ? "SI" : "NO",
               p.porcentaje_confirmado || "",
               p.estado,
               <ActionDropdownButton
-                menuOptions={handleMenuOptions(
-                  p.id_conflicto_participacion,
+                menuOptions={menuOptions(
                   p.participacionDeLaParte.id_participacion,
-                  p.participacionDeLaParte.porcentaje_participacion,
-                  conflict.fonograma_id
+                  conflict.fonograma_id,
+                  p.participacionDeLaParte.porcentaje_participacion
                 )}
               />,
             ])}
           />
         </div>
-      ) : null}
+      ) : (
+        <div className="text-black justify-self-center pt-[4rem]">
+          No se encontraron datos
+        </div>
+      )}
     </CustomLayout>
   );
 }

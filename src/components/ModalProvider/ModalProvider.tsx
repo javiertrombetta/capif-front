@@ -3,17 +3,12 @@ import React, { createContext, FC, ReactNode, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { ModalNames } from "@/types/modalNames";
 import { setModal } from "@/store/modalSlice";
-import SearchConflictsFilters from "../Modals/Conflicts/SearchConflictsFilters";
 import {
   FirstInstance,
   SecondInstance,
   Revision,
   Definition,
 } from "../Modals/ActionConflictsDropdown/ActionConflictsDropdown";
-import {
-  SendDocumentation,
-  Accept,
-} from "../Modals/Conflicts/ConflictsActions";
 
 interface ModalContextType {
   modal: ReactNode | null;
@@ -49,8 +44,6 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
 
   const renderModal = (): ReactNode => {
     switch (modalData.type) {
-      case ModalNames.SEARCH_CONFLICTS_FILTERS:
-        return <SearchConflictsFilters onCloseModal={onCloseModal} />;
       case ModalNames.FIRST_INSTANCE:
         return <FirstInstance onCloseModal={onCloseModal} />;
       case ModalNames.SECOND_INSTANCE:
@@ -59,10 +52,6 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
         return <Revision onCloseModal={onCloseModal} />;
       case ModalNames.DEFINITION:
         return <Definition onCloseModal={onCloseModal} />;
-      case ModalNames.CONFLICTS_ACCEPT:
-        return <Accept onCloseModal={onCloseModal} />;
-      case ModalNames.CONFLICTS_SEND_DOCUMENTATION:
-        return <SendDocumentation onCloseModal={onCloseModal} />;
     }
   };
 
