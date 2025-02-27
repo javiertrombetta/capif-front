@@ -13,7 +13,10 @@ import CustomTable from "@/commons/CustomTable/CustomTable";
 import Header from "@/commons/Header/Header";
 import TimerInput from "@/components/TimerInput/TimerInput";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
-import { setCreatePhonogram } from "@/store/createPhonogramSlice";
+import {
+  initialStateCreatePhonogram,
+  setCreatePhonogram,
+} from "@/store/createPhonogramSlice";
 import {
   addRepertoireTitularities,
   createRepertoire,
@@ -33,6 +36,7 @@ function page() {
     | "edit_territoriality"
   >("start");
   const [audio, setAudio] = useState<File | null>(null);
+  const dispatch = useAppDispatch();
   const authData = useAppSelector((state) => state.auth);
   const createPhonogramData = useAppSelector((state) => state.createPhonogram);
 
@@ -110,8 +114,15 @@ function page() {
   const onSubmit = async () => {
     try {
       const phonogram = await sendPhonogram();
-      await sendPhonogramFile(phonogram.id_fonograma as string);
       toast.success("¡Fonograma creado correctamente!");
+      dispatch(setCreatePhonogram(initialStateCreatePhonogram));
+      setFlowState("start");
+      try {
+        await sendPhonogramFile(phonogram.id_fonograma as string);
+      } catch (error) {
+        console.error(error);
+        toast.error("Error al enviar archivo de audio.");
+      }
       router.push("/repertoires");
     } catch (error: unknown) {
       console.log(error);
@@ -718,11 +729,7 @@ const LoadAudio: FC<{
     if (!e.target.files || e.target.files.length <= 0) {
       return;
     }
-    if (
-      !["mp3", "wav", "ogg", "flac", "aac"].includes(
-        e.target.files[0].name.split(".").at(-1) ?? ""
-      )
-    ) {
+    if (!["mp3"].includes(e.target.files[0].name.split(".").at(-1) ?? "")) {
       toast.error("Por favor ingrese un archivo de audio.");
       return;
     }
