@@ -5,18 +5,20 @@ import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import CustomTable from "@/commons/CustomTable/CustomTable";
 import Header from "@/commons/Header/Header";
-import { confirmPercentage, getConflict } from "@/services/conflicts";
+import { getConflict } from "@/services/conflicts";
 import { GetConflictResponse } from "@/types/conflicts.types";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import useModal from "@/hooks/useModal";
 import { ConfirmPercentage } from "@/components/Modals/Conflicts/ConflictsActions";
 import Spinner from "@/commons/Spinner/Spinner";
+import { useAppSelector } from "@/hooks/storeHooks";
 
 function page() {
   const params = useParams();
   const router = useRouter();
-  const { openModal, closeModal } = useModal();
+  const { openModal } = useModal();
+  const { vistas } = useAppSelector((state) => state.auth);
   const [loading, setLoading] = useState(true);
   const [conflict, setConflict] = useState<GetConflictResponse | null>(null);
 
@@ -33,23 +35,10 @@ function page() {
     }
   };
 
-  const handleConfirmPercentage = async (
-    id: string,
-    confirmedPercentage: number
-  ) => {
-    try {
-      const response = await confirmPercentage(id, confirmedPercentage);
-      toast.success(response.message);
-    } catch (error) {
-      toast.error(error as string);
-    }
-  };
-
   const menuOptions = (
-    _id: string,
     participationId: string,
-    confirmedPercentage: number,
-    idPhonogram: string
+    idPhonogram: string,
+    percentage: number
   ) => {
     return [
       {
@@ -59,18 +48,21 @@ function page() {
             `/repertoires/${idPhonogram}/titularity/${participationId}`
           ),
       },
-      {
-        label: "Fijar Porcentaje",
-        onClick: () =>
-          openModal(
-            <ConfirmPercentage
-              handleConfirmPercentage={() =>
-                handleConfirmPercentage(participationId, confirmedPercentage)
-              }
-              onCloseModal={closeModal}
-            />
-          ),
-      },
+      ...(vistas.some((v) => v.nombre === "Confirmar Porcentaje Conflicto")
+        ? [
+            {
+              label: "Fijar Porcentaje",
+              onClick: () =>
+                openModal(
+                  <ConfirmPercentage
+                    idConflicto={conflict?.id_conflicto ?? ""}
+                    idParticipacion={participationId}
+                    actualPercentage={percentage}
+                  />
+                ),
+            },
+          ]
+        : []),
     ];
   };
 
@@ -148,10 +140,9 @@ function page() {
               p.estado,
               <ActionDropdownButton
                 menuOptions={menuOptions(
-                  p.id_conflicto_participacion,
                   p.participacionDeLaParte.id_participacion,
-                  p.participacionDeLaParte.porcentaje_participacion,
-                  conflict.fonograma_id
+                  conflict.fonograma_id,
+                  p.participacionDeLaParte.porcentaje_participacion
                 )}
               />,
             ])}
