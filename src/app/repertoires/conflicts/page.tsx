@@ -21,6 +21,7 @@ import useModal from "@/hooks/useModal";
 import {
   GrantExtension,
   Desist,
+  SendConflictDocumentation,
 } from "@/components/Modals/Conflicts/ConflictsActions";
 import Spinner from "@/commons/Spinner/Spinner";
 import { Form, Formik } from "formik";
@@ -112,8 +113,7 @@ function page() {
         ? [
             {
               label: "Enviar Documentación",
-              onClick: () =>
-                handleOpenModal(ModalNames.CONFLICTS_SEND_DOCUMENTATION),
+              onClick: () => openModal(<SendConflictDocumentation />),
             },
           ]
         : []),
