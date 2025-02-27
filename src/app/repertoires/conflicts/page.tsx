@@ -1,31 +1,30 @@
 "use client";
 import React, { FC, useEffect, useState } from "react";
-import CustomLayout from "@/commons/CustomLayout/CustomLayout";
-import Header from "@/commons/Header/Header";
-import CustomTable from "@/commons/CustomTable/CustomTable";
-import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
-import { ROLES } from "@/types/auth.types";
 import { FaSearch } from "react-icons/fa";
+import { toast } from "react-toastify";
+import { Form, Formik } from "formik";
 import { useRouter } from "next/navigation";
-import { setModal } from "@/store/modalSlice";
-import { ModalNames } from "@/types/modalNames";
 import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
+import CustomButton from "@/commons/CustomButton/CustomButton";
+import CustomLayout from "@/commons/CustomLayout/CustomLayout";
+import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
+import CustomTable from "@/commons/CustomTable/CustomTable";
+import Header from "@/commons/Header/Header";
+import Spinner from "@/commons/Spinner/Spinner";
+import {
+  GrantExtension,
+  Desist,
+  SendConflictDocumentation,
+} from "@/components/Modals/Conflicts/ConflictsActions";
+import { useAppSelector } from "@/hooks/storeHooks";
+import useModal from "@/hooks/useModal";
 import {
   desistConflict,
   getConflicts,
   grantExtension,
 } from "@/services/conflicts";
+import { ROLES } from "@/types/auth.types";
 import { Conflicto, CONFLICTS_STATES } from "@/types/conflicts.types";
-import { toast } from "react-toastify";
-import useModal from "@/hooks/useModal";
-import {
-  GrantExtension,
-  Desist,
-} from "@/components/Modals/Conflicts/ConflictsActions";
-import Spinner from "@/commons/Spinner/Spinner";
-import { Form, Formik } from "formik";
-import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
-import CustomButton from "@/commons/CustomButton/CustomButton";
 
 const initialValues = {
   fecha_desde: "",
@@ -38,8 +37,7 @@ const initialValues = {
 function page() {
   const [conflicts, setConflicts] = useState<Conflicto[]>([]);
   const [loading, setLoading] = useState(true);
-  const dispatch = useAppDispatch();
-  const authData = useAppSelector((state) => state.auth);
+  const { vistas } = useAppSelector((state) => state.auth);
   const router = useRouter();
   const { openModal, closeModal } = useModal();
 
@@ -59,10 +57,6 @@ function page() {
 
   const handleOnSubmit = async (values: typeof initialValues) => {
     getConflictsData(values);
-  };
-
-  const handleOpenModal = (modalType: ModalNames) => {
-    dispatch(setModal({ isActive: true, type: modalType }));
   };
 
   const onGrantExtension = async (id: string) => {
@@ -85,8 +79,16 @@ function page() {
 
   const handleMenuOptions = (id: string) => {
     return [
-      ...(authData.rol === ROLES.SUPER_ADMIN ||
-      authData.rol === ROLES.CAPIF_ADMIN
+      ...(vistas.some((v) => v.nombre === "Ver Participaciones Conflicto")
+        ? [
+            {
+              label: "Ver Participaciones",
+              onClick: () =>
+                router.push(`/repertoires/conflicts/${id}/history`),
+            },
+          ]
+        : []),
+      ...(vistas.some((v) => v.nombre === "Otorgar Prórroga Conflicto")
         ? [
             {
               label: "Otorgar Prórroga",
@@ -98,25 +100,13 @@ function page() {
                   />
                 ),
             },
-            {
-              label: "Ver Titulares",
-              onClick: () =>
-                router.push(`/repertoires/conflicts/${id}/history`),
-            },
           ]
         : []),
-      ...(authData.rol === ROLES.USER_PRODUCER ||
-      authData.rol === ROLES.EMPLOYEE
+      ...(vistas.some((v) => v.nombre === "Enviar Documentación Conflicto")
         ? [
             {
-              label: "Confirmar Porcentaje",
-              onClick: () =>
-                handleOpenModal(ModalNames.CONFLICTS_CONFIRM_PERCENTAGE),
-            },
-            {
               label: "Enviar Documentación",
-              onClick: () =>
-                handleOpenModal(ModalNames.CONFLICTS_SEND_DOCUMENTATION),
+              onClick: () => openModal(<SendConflictDocumentation />),
             },
           ]
         : []),
