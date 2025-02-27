@@ -1,32 +1,30 @@
 "use client";
 import React, { FC, useEffect, useState } from "react";
-import CustomLayout from "@/commons/CustomLayout/CustomLayout";
-import Header from "@/commons/Header/Header";
-import CustomTable from "@/commons/CustomTable/CustomTable";
-import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
-import { ROLES } from "@/types/auth.types";
 import { FaSearch } from "react-icons/fa";
-import { useRouter } from "next/navigation";
-import { setModal } from "@/store/modalSlice";
-import { ModalNames } from "@/types/modalNames";
-import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
-import {
-  desistConflict,
-  getConflicts,
-  grantExtension,
-} from "@/services/conflicts";
-import { Conflicto, CONFLICTS_STATES } from "@/types/conflicts.types";
 import { toast } from "react-toastify";
-import useModal from "@/hooks/useModal";
+import { Form, Formik } from "formik";
+import { useRouter } from "next/navigation";
+import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
+import CustomButton from "@/commons/CustomButton/CustomButton";
+import CustomLayout from "@/commons/CustomLayout/CustomLayout";
+import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
+import CustomTable from "@/commons/CustomTable/CustomTable";
+import Header from "@/commons/Header/Header";
+import Spinner from "@/commons/Spinner/Spinner";
 import {
   GrantExtension,
   Desist,
   SendConflictDocumentation,
 } from "@/components/Modals/Conflicts/ConflictsActions";
-import Spinner from "@/commons/Spinner/Spinner";
-import { Form, Formik } from "formik";
-import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
-import CustomButton from "@/commons/CustomButton/CustomButton";
+import { useAppSelector } from "@/hooks/storeHooks";
+import useModal from "@/hooks/useModal";
+import {
+  desistConflict,
+  getConflicts,
+  grantExtension,
+} from "@/services/conflicts";
+import { ROLES } from "@/types/auth.types";
+import { Conflicto, CONFLICTS_STATES } from "@/types/conflicts.types";
 
 const initialValues = {
   fecha_desde: "",
@@ -39,7 +37,6 @@ const initialValues = {
 function page() {
   const [conflicts, setConflicts] = useState<Conflicto[]>([]);
   const [loading, setLoading] = useState(true);
-  const dispatch = useAppDispatch();
   const { vistas } = useAppSelector((state) => state.auth);
   const router = useRouter();
   const { openModal, closeModal } = useModal();
@@ -60,10 +57,6 @@ function page() {
 
   const handleOnSubmit = async (values: typeof initialValues) => {
     getConflictsData(values);
-  };
-
-  const handleOpenModal = (modalType: ModalNames) => {
-    dispatch(setModal({ isActive: true, type: modalType }));
   };
 
   const onGrantExtension = async (id: string) => {
