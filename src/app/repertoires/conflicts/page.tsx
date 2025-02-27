@@ -151,16 +151,16 @@ function page() {
         ) : conflicts && conflicts.length > 0 ? (
           <CustomTable
             columnNames={[
-              { name: "Productora", isSortable: true },
               { name: "ISRC", isSortable: true },
+              { name: "Productora Originaria", isSortable: true },
               { name: "Fecha de Inicio", isSortable: true },
               { name: "Fecha de Finalización", isSortable: true },
               { name: "Estado del Conflicto", isSortable: true },
               { name: "Acción", isSortable: false },
             ]}
             columnValues={conflicts.map((c) => [
-              c.productoraDelConflicto.nombre_productora,
               c.fonogramaDelConflicto.isrc,
+              c.productoraDelConflicto.nombre_productora,
               new Date(c.fecha_periodo_desde).toLocaleString(),
               new Date(c.fecha_periodo_hasta).toLocaleString(),
               c.estado_conflicto,
