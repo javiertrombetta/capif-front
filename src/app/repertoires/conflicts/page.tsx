@@ -5,7 +5,6 @@ import Header from "@/commons/Header/Header";
 import CustomTable from "@/commons/CustomTable/CustomTable";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { ROLES } from "@/types/auth.types";
-import CustomInput from "@/commons/CustomInput/CustomInput";
 import { FaSearch } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import { setModal } from "@/store/modalSlice";
@@ -16,7 +15,7 @@ import {
   getConflicts,
   grantExtension,
 } from "@/services/conflicts";
-import { Conflicto } from "@/types/conflicts.types";
+import { Conflicto, CONFLICTS_STATES } from "@/types/conflicts.types";
 import { toast } from "react-toastify";
 import useModal from "@/hooks/useModal";
 import {
@@ -24,6 +23,17 @@ import {
   Desist,
 } from "@/components/Modals/Conflicts/ConflictsActions";
 import Spinner from "@/commons/Spinner/Spinner";
+import { Form, Formik } from "formik";
+import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
+import CustomButton from "@/commons/CustomButton/CustomButton";
+
+const initialValues = {
+  fecha_desde: "",
+  fecha_hasta: "",
+  estado: undefined,
+  isrc: "",
+  productora_id: "",
+};
 
 function page() {
   const [conflicts, setConflicts] = useState<Conflicto[]>([]);
@@ -33,9 +43,10 @@ function page() {
   const router = useRouter();
   const { openModal, closeModal } = useModal();
 
-  const getConflictsData = async () => {
+  const getConflictsData = async (values?: typeof initialValues) => {
+    setLoading(true);
     try {
-      const response = await getConflicts();
+      const response = await getConflicts(values);
       setConflicts(response.data);
     } catch (error) {
       console.error(error);
@@ -44,6 +55,10 @@ function page() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleOnSubmit = async (values: typeof initialValues) => {
+    getConflictsData(values);
   };
 
   const handleOpenModal = (modalType: ModalNames) => {
@@ -126,7 +141,9 @@ function page() {
     <CustomLayout>
       <Header title="Conflictos" />
       <div className="w-[100%] flex-1 flex flex-col space-y-[1rem] overflow-y-auto">
-        <SearchConflictForm />
+        <Formik initialValues={initialValues} onSubmit={handleOnSubmit}>
+          <SearchConflictForm />
+        </Formik>
         {loading ? (
           <div className="w-full h-full flex justify-center items-center">
             <Spinner color="black" />
@@ -144,8 +161,8 @@ function page() {
             columnValues={conflicts.map((c) => [
               c.productoraDelConflicto.nombre_productora,
               c.fonogramaDelConflicto.isrc,
-              c.fecha_periodo_desde,
-              c.fecha_periodo_hasta,
+              new Date(c.fecha_periodo_desde).toLocaleString(),
+              new Date(c.fecha_periodo_hasta).toLocaleString(),
               c.estado_conflicto,
               <ActionDropdownButton
                 menuOptions={handleMenuOptions(c.id_conflicto)}
@@ -167,117 +184,47 @@ export default page;
 const SearchConflictForm: FC = () => {
   const authData = useAppSelector((state) => state.auth);
 
-  // const handleSearchButton = () => {
-  //   dispatch(
-  //     setModal({ isActive: true, type: ModalNames.SEARCH_CONFLICTS_FILTERS })
-  //   );
-  // };
-
   return (
-    <div className="w-[100%]  mt-[2rem] flex flex-col gap-[1rem]">
+    <Form className="w-[100%] mt-[2rem] flex flex-col gap-[1rem]">
       {authData.rol === ROLES.CAPIF_ADMIN ||
       authData.rol === ROLES.SUPER_ADMIN ? (
-        <>
-          <div className="w-[100%] flex justify-center items-center pl-[2rem] pr-[2rem] gap-[2rem]">
-            <CustomInput
-              containerClassName="w-[100%]"
-              className="w-[100%]"
-              type="text"
-              label="ISRC"
-            />
-            <CustomInput
-              containerClassName="w-[100%]"
-              className="w-[100%]"
-              type="text"
-              label="ALBUM"
-            />
-            <CustomInput
-              containerClassName="w-[100%]"
-              className="w-[100%]"
-              type="text"
-              label="ARTISTA"
-            />
-          </div>
-
-          <div className="w-[100%] flex justify-center items-center pl-[2rem] pr-[2rem] gap-[2rem]">
-            <CustomInput
-              containerClassName="w-[100%]"
-              className="w-[100%]"
-              type="text"
-              label="PARTES"
-            />
-            <CustomInput
-              containerClassName="w-[100%]"
-              className="w-[100%]"
-              type="text"
-              label="DESDE"
-            />
-            <CustomInput
-              containerClassName="w-[100%]"
-              className="w-[100%]"
-              type="text"
-              label="HASTA"
-            />
-          </div>
-        </>
-      ) : null}
-      <div className="w-[100%] flex justify-center items-center pl-[2rem] pr-[2rem] gap-[2rem]">
-        <div className="w-[100%]">
-          <p className="text-black font-bold">ESTADO</p>
-          <select className="w-[100%] text-black pl-[0.3rem] border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem]">
-            <option>PRIMERA INSTANCIA</option>
-            <option>PRIMERA PRORROGA</option>
-            <option>SEGUNDA INSTANCIA</option>
-            <option>SEGUNDA PRORROGA</option>
-            <option>VENCIDO</option>
-            <option>CERRADO</option>
-          </select>
+        <div className="w-[100%] flex justify-center items-center pl-[2rem] pr-[2rem] gap-[2rem]">
+          <CustomSearchField
+            id="isrc"
+            name="isrc"
+            type="text"
+            labelText="ISRC"
+          />
+          <CustomSearchField
+            id="fecha_desde"
+            name="fecha_desde"
+            type="date"
+            labelText="DESDE"
+          />
+          <CustomSearchField
+            id="fecha_hasta"
+            name="fecha_hasta"
+            type="date"
+            labelText="HASTA"
+          />
         </div>
-      </div>
-
-      <div className="w-[100%] flex justify-center items-center pl-[2rem] pr-[2rem] gap-[2rem]">
-        <button className="text-white w-[100%] h-[2.5rem] bg-mainblue text-[1rem] font-bold flex justify-center items-center gap-[0.3rem]">
+      ) : null}
+      <div className="w-[100%] flex justify-start items-end pl-[2rem] pr-[2rem] gap-[2rem]">
+        <CustomSearchField
+          id="estado"
+          name="estado"
+          labelText="ESTADO"
+          type="select"
+          options={[
+            { name: "TODOS", value: "" },
+            ...CONFLICTS_STATES.map((t) => ({ name: t, value: t })),
+          ]}
+        />
+        <CustomButton type="submit">
           <FaSearch />
           Buscar
-        </button>
+        </CustomButton>
       </div>
-    </div>
+    </Form>
   );
 };
-
-/*
- {userData.rol === ROLES.USER_PRODUCER ||
-        userData.rol === ROLES.EMPLOYEE ? (
-          <>
-            <li
-              onClick={() => handleOpenModal(ModalNames.FIRST_INSTANCE)}
-              className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]"
-            >
-              <p>Primera Instancia</p>
-            </li>
-            <li
-              onClick={() => handleOpenModal(ModalNames.SECOND_INSTANCE)}
-              className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]"
-            >
-              <p>Segunda Instancia</p>
-            </li>
-          </>
-        ) : (
-          <>
-            <li
-              onClick={() => handleOpenModal(ModalNames.REVISION)}
-              className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]"
-            >
-              <p>Revisión</p>
-            </li>
-
-            <li
-              onClick={() => handleOpenModal(ModalNames.DEFINITION)}
-              className="px-4 py-2 hover:bg-slate-800 cursor-pointer text-white flex items-center justify-center gap-[0.7rem]"
-            >
-              <p>Definición</p>
-            </li>
-          </>
-        )}
-
-*/

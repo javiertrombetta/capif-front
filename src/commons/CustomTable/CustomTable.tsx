@@ -11,6 +11,7 @@ interface CustomTableProps {
     isSortable: boolean;
     selectBox?: boolean;
     onChecked?: (checked: boolean) => void;
+    defaultChecked?: boolean;
   }[];
   columnValues: columnValueType[][];
 }
@@ -78,6 +79,7 @@ const CustomTable: FC<CustomTableProps> = ({ columnNames, columnValues }) => {
                   isSortable: boolean;
                   selectBox?: boolean;
                   onChecked?: (checked: boolean) => void;
+                  defaultChecked?: boolean;
                 },
                 index: number
               ) => (
@@ -92,19 +94,19 @@ const CustomTable: FC<CustomTableProps> = ({ columnNames, columnValues }) => {
                       <input
                         className="w-4 h-4"
                         type="checkbox"
-                        defaultChecked={true}
+                        defaultChecked={element.defaultChecked ?? true}
                         onChange={(e) =>
                           element.onChecked &&
                           element.onChecked(e.target.checked)
                         }
                       ></input>
                     ) : (
-                      <>
+                      <div className="flex flex-row justify-between">
                         <p className="text-center w-[100%] flex justify-center">
                           {element.name}
                         </p>
                         {element.isSortable && (
-                          <span className="absolute right-0">
+                          <span className="">
                             {sortConfig.key === index ? (
                               sortConfig.direction === "asc" ? (
                                 <IoMdArrowDropup size={20} />
@@ -116,7 +118,7 @@ const CustomTable: FC<CustomTableProps> = ({ columnNames, columnValues }) => {
                             )}
                           </span>
                         )}
-                      </>
+                      </div>
                     )}
                   </div>
                 </th>
@@ -133,7 +135,7 @@ const CustomTable: FC<CustomTableProps> = ({ columnNames, columnValues }) => {
                 key={index}
               >
                 {element.map((record: columnValueType, index: number) => (
-                  <td key={index} className="px-6 py-4 font-medium">
+                  <td key={index} className="p-2 font-medium">
                     <div className="flex justify-center">
                       {isValidElement(record) ? (
                         record

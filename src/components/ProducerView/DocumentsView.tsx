@@ -5,10 +5,7 @@ import {
   getProducerDocuments,
   downloadProducerDocuments,
 } from "@/services/producers";
-import {
-  TipoDocumento,
-  GetDocumentsResponse,
-} from "@/types/productionCompany.types";
+import { TipoDocumento, GetDocumentsResponse } from "@/types/producers.types";
 import { useState, useEffect, ReactNode, FC } from "react";
 import { IoMdDownload } from "react-icons/io";
 import { toast } from "react-toastify";

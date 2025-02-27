@@ -10,6 +10,7 @@ import { authDefaultState } from "@/store/authSlice";
 import AuthProvider from "@/components/AuthProvider/AuthProvider";
 import { ToastContainer } from "react-toastify";
 import { initialStateCreatePhonogram } from "@/store/createPhonogramSlice";
+import ReCaptchaProvider from "@/components/RecaptchProvider/RecaptchProvider";
 const ptSans = PT_Sans({ weight: ["400", "700"], subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -32,10 +33,12 @@ export default function RootLayout({
           initialSignup={initialStateSignup}
         >
           <ModalProvider>
-            <AuthProvider>
-              <Navbar>{children}</Navbar>
-            </AuthProvider>
-            <ToastContainer position="bottom-right" />
+            <ReCaptchaProvider>
+              <AuthProvider>
+                <Navbar>{children}</Navbar>
+              </AuthProvider>
+              <ToastContainer position="bottom-right" />
+            </ReCaptchaProvider>
           </ModalProvider>
         </StoreProvider>
       </body>

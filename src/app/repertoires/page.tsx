@@ -26,7 +26,7 @@ function page() {
     titulo: "",
     artista: "",
     album: "",
-    nombre_prodcutora: "",
+    nombre_productora: "",
     sello_discografico: "",
     isrc: "",
     anio_lanzamiento: "",
@@ -108,11 +108,11 @@ function page() {
               { name: "TITULO", isSortable: true },
               { name: "ARTISTA", isSortable: true },
               { name: "ÁLBUM", isSortable: true },
-              { name: "AÑO DE PUBLICACIÓN", isSortable: true },
+              { name: "AÑO", isSortable: true },
               { name: "ISRC", isSortable: true },
               { name: "PRODUCTORA", isSortable: true },
-              { name: "CANTIDAD CONFLICTOS", isSortable: true },
-              { name: "SELLO", isSortable: true },
+              { name: "SELLOS", isSortable: true },
+              { name: "# CONFLICTOS", isSortable: true },
               { name: "ESTADO", isSortable: true },
               { name: "Acción", isSortable: true },
             ]}
@@ -145,7 +145,7 @@ export default page;
 
 const SearchPhonogramForm: FC = () => {
   return (
-    <Form className="w-[100%]  mt-[2rem] flex flex-col gap-[1rem]">
+    <Form className="w-[100%] mt-[2rem] flex flex-col gap-[1rem]">
       <div className="w-[100%] flex justify-center items-center pl-[2rem] pr-[2rem] gap-[2rem]">
         <CustomSearchField
           name="titulo"
@@ -166,8 +166,8 @@ const SearchPhonogramForm: FC = () => {
           labelText="ALBUM"
         />
         <CustomSearchField
-          name="anio"
-          id="anio"
+          name="anio_lanzamiento"
+          id="anio_lanzamiento"
           type="text"
           labelText="AÑO DE PUBLICACIÓN"
         />
@@ -175,14 +175,14 @@ const SearchPhonogramForm: FC = () => {
       <div className="w-[100%] flex justify-start items-end pl-[2rem] pr-[2rem] gap-[2rem]">
         <CustomSearchField name="isrc" id="isrc" type="text" labelText="ISRC" />
         <CustomSearchField
-          name="productora"
-          id="productora"
+          name="nombre_productora"
+          id="nombre_productora"
           type="text"
           labelText="PRODUCTORA"
         />
         <CustomSearchField
-          name="sello"
-          id="sello"
+          name="sello_discografico"
+          id="sello_discografico"
           type="text"
           labelText="SELLO"
         />

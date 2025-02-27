@@ -64,39 +64,27 @@ const Sidebar: FC = () => {
     },
     "Premios Gardel": {
       name: "Permios Gardel",
-      link: "/gardel-awards",
+      link: "/producers/gardel-awards",
     },
     Liquidaciones: {
-      name: "Liquidaciones",
-      link: "/cashflow-payouts",
-    },
-    Pagos: {
-      name: "Pagos",
-      link: "/cashflow-payments",
-    },
-    Traspasos: {
-      name: "Traspasos",
-      link: "/cashflow-transfers",
-    },
-    Rechazos: {
-      name: "Pagos Rechazados",
-      link: "/cashflow-rejections",
+      name: "ISRCs No Asignados",
+      link: "/cashflow/settlements",
     },
     "Estado de Cuenta": {
       name: "Estado de Cuenta",
-      link: "/cashflow-account-statement",
+      link: "/cashflow",
     },
     "Historial de Cambios": {
       name: "Historial de Cambios",
-      link: "/audit-changes",
+      link: "/audits",
     },
-    "Cambios de Repertorios": {
+    "Cambios en Repertorios": {
       name: "Cambios en Repertorios",
-      link: "/audit-phonogram",
+      link: "/audits/repertoire",
     },
     Sesiones: {
       name: "Sesiones",
-      link: "/audit-sessions",
+      link: "/audits/sessions",
     },
   };
 
@@ -166,7 +154,7 @@ const Sidebar: FC = () => {
       <div className="w-[100%] h-[3rem] bg-[#1a2226] flex flex-col items-center justify-center absolute bottom-0">
         <p className="text-[#4b646f] text-[0.8rem]">GIT 2.0</p>
         <p className="text-[#4b646f] text-[0.8rem]">
-          Developed by KEIRETSU 2024
+          Developed by KEIRETSU 2025
         </p>
       </div>
     </div>
