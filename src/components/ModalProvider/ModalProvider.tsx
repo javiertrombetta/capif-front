@@ -10,10 +10,7 @@ import {
   Revision,
   Definition,
 } from "../Modals/ActionConflictsDropdown/ActionConflictsDropdown";
-import {
-  SendDocumentation,
-  Accept,
-} from "../Modals/Conflicts/ConflictsActions";
+import { SendDocumentation } from "../Modals/Conflicts/ConflictsActions";
 
 interface ModalContextType {
   modal: ReactNode | null;
@@ -59,8 +56,6 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
         return <Revision onCloseModal={onCloseModal} />;
       case ModalNames.DEFINITION:
         return <Definition onCloseModal={onCloseModal} />;
-      case ModalNames.CONFLICTS_ACCEPT:
-        return <Accept onCloseModal={onCloseModal} />;
       case ModalNames.CONFLICTS_SEND_DOCUMENTATION:
         return <SendDocumentation onCloseModal={onCloseModal} />;
     }

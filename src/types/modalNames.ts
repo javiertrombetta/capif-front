@@ -8,5 +8,4 @@ export enum ModalNames {
   CONFLICTS_CONFIRM_PERCENTAGE = "ConflictConfirmPercentage",
   CONFLICTS_SEND_DOCUMENTATION = "ConflictSendDocumentation",
   CONFLICTS_DESIST = "ConflictDesist",
-  CONFLICTS_ACCEPT = "ConflictsAccept",
 }
