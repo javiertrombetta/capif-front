@@ -21,6 +21,7 @@ import { ROLES } from "@/types/auth.types";
 import { toast } from "react-toastify";
 import useModal from "@/hooks/useModal";
 import { ChangeProducerModal } from "../Modals/ChangeProducerModal/ChangeProducerModal";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 interface LoginFormValues {
   email: string;
@@ -33,18 +34,26 @@ const initialValues: LoginFormValues = {
 };
 
 const LoginForm: FC = () => {
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { openModal } = useModal();
 
   const handleSubmit = async (values: { email: string; password: string }) => {
+    if (!executeRecaptcha) {
+      console.error("reCAPTCHA no está disponible");
+      return;
+    }
+
     if (window && window.localStorage) {
       localStorage.removeItem("company");
     }
 
     const { email, password } = values;
     try {
-      await authLogin({ email, password });
+      const recaptchaToken = await executeRecaptcha("login");
+
+      await authLogin({ email, password, recaptchaToken });
     } catch {
       toast.error("Usuario o contraseña incorrectos");
       return;
@@ -106,15 +115,7 @@ const LoginForm: FC = () => {
               name="password"
               labelText="Contraseña"
             />
-
-            <div className="flex border-[#c8c8c8] border-[2px] p-[1rem] w-[100%] h-[5rem] gap-[1rem] items-center justify-start">
-              <input
-                type="checkbox"
-                className="w-[2rem] h-[2rem] border-[2px] border-[#c8c8c8]"
-              />
-              <p className="text-customtext text-[1.1rem]">No soy un robot</p>
-            </div>
-            <div className="w-[100%] flex gap-[0.4rem] items-center mt-[1rem]">
+            <div className="w-[100%] flex gap-[0.4rem] items-center">
               <input
                 type="checkbox"
                 className="w-[1.7rem] h-[1.7rem] border-[2px] border-[#c8c8c8]"

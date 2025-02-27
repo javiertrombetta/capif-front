@@ -1,13 +1,28 @@
 import {
+  EstadoConflicto,
   GetConflictoResponse,
   GetConflictResponse,
 } from "@/types/conflicts.types";
 import { axiosInstance } from "./axiosInstance";
 
-export const getConflicts = async () => {
-  const response = (await axiosInstance.get("/conflicts")) as {
-    data: GetConflictoResponse;
-  };
+interface GetConflictsParams {
+  fecha_desde?: string;
+  fecha_hasta?: string;
+  estado?: EstadoConflicto;
+  isrc?: string;
+  productora_id?: string;
+  page?: string;
+  limit?: string;
+}
+
+export const getConflicts = async (params?: GetConflictsParams) => {
+  for (const key in params) {
+    if (!params[key as keyof GetConflictsParams])
+      delete params[key as keyof GetConflictsParams];
+  }
+  const response = await axiosInstance.get<GetConflictoResponse>("/conflicts", {
+    params,
+  });
 
   return response.data;
 };

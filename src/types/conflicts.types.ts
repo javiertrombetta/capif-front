@@ -1,29 +1,14 @@
-export enum CONFLICTS_STATES {
-  PENDIENTE_CAPIF = "PENDIENTE CAPIF",
-  PRIMERA_INSTANCIA = "PRIMERA INSTANCIA",
-  PRIMERA_PRORROGA = "PRIMERA PRORROGA",
-  SEGUNDA_INSTANCIA = "SEGUNDA INSTANCIA",
-  SEGUNDA_PRORROGA = "SEGUNDA PRORROGA",
-  VENCIDO = "VENCIDO",
-  CERRADO = "CERRADO",
-}
-/*
-export interface GetConflictsResponse {
-  id_conflicto: string;
-  estado_conflicto: CONFLICTS_STATES;
-  fonograma: {
-    id_fonograma: string;
-    isrc: string;
-    titulo: string;
-    artista: string;
-  };
-  productora: {
-    id_productora: string;
-    nombre: string;
-  };
-  porcentaje_periodo: number;
-}
-*/
+export const CONFLICTS_STATES = [
+  "PENDIENTE CAPIF",
+  "PRIMERA INSTANCIA",
+  "PRIMERA PRORROGA",
+  "SEGUNDA INSTANCIA",
+  "SEGUNDA PRORROGA",
+  "VENCIDO",
+  "CERRADO",
+] as const;
+
+export type EstadoConflicto = (typeof CONFLICTS_STATES)[number];
 
 export interface FonogramaConflicto {
   id_fonograma: string;
@@ -76,7 +61,7 @@ export interface GetConflictResponse {
   id_conflicto: string;
   productora_conflicto_id: string;
   fonograma_id: string;
-  estado_conflicto: string;
+  estado_conflicto: EstadoConflicto;
   fecha_periodo_desde: string | null;
   fecha_periodo_hasta: string | null;
   porcentaje_periodo: number;
@@ -121,5 +106,5 @@ export interface GetConflictResponse {
 
 export interface ConfirmPercentageResponse {
   id_conflicto: string;
-  estado_conflicto: string;
+  estado_conflicto: EstadoConflicto;
 }

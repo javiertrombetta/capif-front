@@ -232,15 +232,7 @@ const SignUpForm: FC = () => {
                 privacidad de datos
               </Link>
             </div>
-            <div className="flex border-[#c8c8c8] border-[2px] p-[1rem] w-[100%] h-[5rem] gap-[1rem] items-center justify-start mt-[1rem]">
-              <input
-                type="checkbox"
-                className="w-[2rem] h-[2rem] border-[2px] border-[#c8c8c8]"
-              />
-              <p className="text-customtext text-[1.1rem]">No soy un robot</p>
-            </div>
-
-            <div className="w-[100%] flex justify-center mt-[1rem]">
+            <div className="w-[100%] flex justify-center">
               {isSubmitting || !isValid || !dirty ? (
                 <CustomButton
                   type="submit"

@@ -28,41 +28,16 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
       "/repertoires/conflicts",
       "/repertoires/conflicts/:id/history",
     ],
-    "Buscar Usuario": ["/users"],
-    "Alta Usuario": ["/users/new", "/users/:id", "/users/:id/application"], // Probablemente crear vista "Editar Usuario"
-    "Buscar Productora": [
-      "/producers",
-      "/producers/:id",
-      "/producers/register", // Crear vista nueva "Crear Productora"
-    ],
-    "Premios Gardel": ["/gardel-awards"],
-    Sesiones: ["/audit-sessions"],
-    "Cambios de Repertorios": ["/audit-phonogram"],
-    "Historial de Cambios": ["/audit-changes"],
-    Liquidacioens: [
-      "/cashflow-payouts",
-      "/cashflow-payouts/list",
-      "/cashflow-payouts/export",
-    ],
-    Pagos: [
-      "/cashflow-payments",
-      "/cashflow-payments/list",
-      "/cashflow-payments/export",
-    ],
-    Traspasos: [
-      "/cashflow-transfers",
-      "/cashflow-transfers/list",
-      "/cashflow-transfers/export",
-    ],
-    Rechazos: [
-      "/cashflow-rejections",
-      "/cashflow-rejections/list",
-      "/cashflow-rejections/export",
-    ],
-    "Estado de Cuenta": [
-      "/cashflow-account-statement",
-      "/cashflow-account-statement/history",
-    ],
+    "Buscar Usuario": ["/users", "/users/:id"],
+    "Alta Usuario": ["/users/new", "/users/:id/application"],
+    "Buscar Productora": ["/producers", "/producers/:id"],
+    "Premios Gardel": ["/producers/gardel-awards"],
+    Liquidaciones: ["/cashflow/settlements"],
+    "Estado de Cuenta": ["/cashflow", "/cashflow/transactions"],
+    Sesiones: ["/audits/sessions"],
+    "Cambios en Repertorios": ["/audits/repertoire"],
+    "Historial de Cambios": ["/audits"],
+    "Nueva productora": ["/producers/register"],
   };
 
   const allowedViews = auth.vistas

@@ -63,7 +63,6 @@ function page() {
     try {
       const response = await getSendAudioFiles(values);
       setAudioFiles(response);
-      setSeleccionados(response.map((a) => a.fonogramaDelEnvio.id_fonograma));
     } catch (error) {
       console.error(error);
       toast.error("Error al obtener los archivos enviados");
@@ -91,7 +90,7 @@ function page() {
               labelText="NOMBRE"
             />
             <CustomSearchField
-              id="estado_envii"
+              id="estado_envio"
               name="estado_envio"
               type="select"
               labelText="ESTADO"
@@ -128,6 +127,7 @@ function page() {
                   isSortable: false,
                   selectBox: true,
                   onChecked: handleOnCheckAll,
+                  defaultChecked: false,
                 },
                 { name: "TEMA", isSortable: true },
                 { name: "ESTADO", isSortable: true },

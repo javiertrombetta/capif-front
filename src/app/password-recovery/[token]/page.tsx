@@ -67,7 +67,7 @@ const RecoveryForm: FC<{
               onSubmit(e, values)
             }
             id="signup"
-            className="bg-white w-[25rem] h-[100%] pt-[1rem] flex flex-col items-center gap-[0.5rem] overflow-y-auto pr-[2rem] pl-[2rem] pt-[1rem] pb-[1rem]"
+            className="bg-white w-[25rem] h-[100%] flex flex-col items-center gap-[0.5rem] overflow-y-auto pr-[2rem] pl-[2rem] pt-[1rem] pb-[1rem]"
           >
             <div className="w-[100%] flex justify-center mt-[1rem] mb-[1rem]">
               <p className="text-black font-bold text-[1.1rem] text-center">
@@ -88,14 +88,6 @@ const RecoveryForm: FC<{
               name="repeat_password"
               labelText="Repetir Contraseña"
             />
-
-            <div className="flex border-[#c8c8c8] border-[2px] p-[1rem] w-[100%] h-[5rem] gap-[1rem] items-center justify-start">
-              <input
-                type="checkbox"
-                className="w-[2rem] h-[2rem] border-[2px] border-[#c8c8c8]"
-              />
-              <p className="text-customtext text-[1.1rem]">No soy un robot</p>
-            </div>
 
             <div className="w-[100%] flex justify-center mt-[1rem]">
               <CustomButton

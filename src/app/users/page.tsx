@@ -52,7 +52,6 @@ export default function page() {
   };
 
   const handleOnSubmit = async (values: Record<string, string>) => {
-    setLoading(true);
     for (const key in values) {
       if (!values[key]) delete values[key];
     }
@@ -92,7 +91,7 @@ export default function page() {
                   labelText="ESTADO"
                   type="select"
                   options={[
-                    { name: "", value: "" },
+                    { name: "TODOS", value: "" },
                     ...ESTADOS.map((t) => ({ name: t, value: t })),
                   ]}
                 />
@@ -122,7 +121,7 @@ export default function page() {
                         element.estado,
                         element.nombre,
                         element.apellido,
-                        element.telefono,
+                        element.telefono || "",
                         element.rol,
                         element.productoras[0]?.nombre || "",
                         <ActionDropdownButton

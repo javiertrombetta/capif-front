@@ -12,7 +12,7 @@ import { sendApplication } from "@/services/auth";
 import CustomFileInput from "@/commons/CustomFileInput/CustomFileInput";
 import { SendApplication } from "@/types/user.types";
 import { uploadProducerDocument } from "@/services/producers";
-import { TipoDocumento, TipoPersona } from "@/types/productionCompany.types";
+import { TipoDocumento, TipoPersona } from "@/types/producers.types";
 import useModal from "@/hooks/useModal";
 import SubmitSendApplication from "@/components/Modals/SubmitSendApplication/SubmitSendApplication";
 
@@ -178,8 +178,6 @@ const page: FC = () => {
 
     await uploadProducerDocument(formData, idProductora);
   };
-
-  console.log(files);
 
   return (
     <CustomLayout>

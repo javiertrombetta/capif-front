@@ -75,6 +75,7 @@ export const changePassword = async (data_request: {
       confirmPassword: data_request.confirmPassword,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    throw error;
   }
 };
