@@ -9,13 +9,16 @@ import CustomTable from "@/commons/CustomTable/CustomTable";
 import Header from "@/commons/Header/Header";
 import Spinner from "@/commons/Spinner/Spinner";
 import { getAuditChanges } from "@/services/audits";
-import { GetAuditChangesResponse, TIPOS_AUDITORIA } from "@/types/audits.types";
-import { formatDate } from "@/utils/formatDate";
+import {
+  GetAuditChangesResponse,
+  TABLAS_DB,
+  TIPOS_AUDITORIA,
+} from "@/types/audits.types";
 
 const initialValues = {
   emailUsuario: "",
   tipoAuditoria: undefined,
-  tablaDb: "",
+  tablaDb: undefined,
   fechaDesde: "",
   fechaHasta: "",
 };
@@ -31,11 +34,7 @@ function page() {
   const getAuditChangesData = async (values?: typeof initialValues) => {
     setLoading(true);
     try {
-      const response = await getAuditChanges({
-        ...values,
-        fechaDesde: values?.fechaDesde ? formatDate(values?.fechaDesde) : "",
-        fechaHasta: values?.fechaHasta ? formatDate(values?.fechaHasta) : "",
-      });
+      const response = await getAuditChanges(values);
       setAudit(response);
     } catch (error) {
       toast.error(
@@ -69,15 +68,19 @@ function page() {
               type="select"
               labelText="TIPO"
               options={[
-                { name: "", value: "" },
+                { name: "TODOS", value: "" },
                 ...TIPOS_AUDITORIA.map((e) => ({ name: e, value: e })),
               ]}
             />
             <CustomSearchField
               id="tablaDb"
               name="tablaDb"
-              type="text"
+              type="select"
               labelText="TABLA DB"
+              options={[
+                { name: "TODAS", value: "" },
+                ...TABLAS_DB.map((e) => ({ name: e, value: e })),
+              ]}
             />
             <CustomSearchField
               id="fechaDesde"

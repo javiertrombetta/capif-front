@@ -31,7 +31,7 @@ const CashflowTransactionsDetailsModal = ({
   return (
     <div
       className={
-        "relative bg-white mb-[4rem] py-[1rem] rounded-[2rem] gap-[0.5rem] flex flex-col justify-center items-center"
+        "relative bg-white mb-[4rem] py-[1rem] min-w-[25rem] rounded-[2rem] gap-[0.5rem] flex flex-col justify-center items-center"
       }
     >
       <button onClick={closeModal} className="absolute top-[5%] right-[5%]">
@@ -45,12 +45,20 @@ const CashflowTransactionsDetailsModal = ({
         <div className="flex flex-col space-y-[0.5rem]">
           {modalData &&
             typeof modalData === "object" &&
-            Object.entries(modalData).map(([key, value]) => (
-              <div key={key} className="flex justify-between">
-                <p className="text-black font-bold">{key}</p>
-                <p className="text-black">{value}</p>
-              </div>
-            ))}
+            Object.entries(modalData)
+              .filter(([key, _]) => {
+                return (
+                  !/id_/.test(key) &&
+                  !/_id/.test(key) &&
+                  !["createdAt", "updatedAt"].includes(key)
+                );
+              })
+              .map(([key, value]) => (
+                <div key={key} className="flex justify-between space-x-[2rem]">
+                  <p className="text-black font-bold">{key}</p>
+                  <p className="text-black">{value}</p>
+                </div>
+              ))}
         </div>
         <CustomButton onClick={closeModal}>Cerrar</CustomButton>
       </div>
