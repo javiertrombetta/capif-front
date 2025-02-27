@@ -39,7 +39,7 @@ function page() {
   const [conflicts, setConflicts] = useState<Conflicto[]>([]);
   const [loading, setLoading] = useState(true);
   const dispatch = useAppDispatch();
-  const authData = useAppSelector((state) => state.auth);
+  const { vistas } = useAppSelector((state) => state.auth);
   const router = useRouter();
   const { openModal, closeModal } = useModal();
 
@@ -85,8 +85,16 @@ function page() {
 
   const handleMenuOptions = (id: string) => {
     return [
-      ...(authData.rol === ROLES.SUPER_ADMIN ||
-      authData.rol === ROLES.CAPIF_ADMIN
+      ...(vistas.some((v) => v.nombre === "Ver Participaciones Conflicto")
+        ? [
+            {
+              label: "Ver Participaciones",
+              onClick: () =>
+                router.push(`/repertoires/conflicts/${id}/history`),
+            },
+          ]
+        : []),
+      ...(vistas.some((v) => v.nombre === "Otorgar Prórroga Conflicto")
         ? [
             {
               label: "Otorgar Prórroga",
@@ -98,21 +106,10 @@ function page() {
                   />
                 ),
             },
-            {
-              label: "Ver Titulares",
-              onClick: () =>
-                router.push(`/repertoires/conflicts/${id}/history`),
-            },
           ]
         : []),
-      ...(authData.rol === ROLES.USER_PRODUCER ||
-      authData.rol === ROLES.EMPLOYEE
+      ...(vistas.some((v) => v.nombre === "Enviar Documentación Conflicto")
         ? [
-            {
-              label: "Confirmar Porcentaje",
-              onClick: () =>
-                handleOpenModal(ModalNames.CONFLICTS_CONFIRM_PERCENTAGE),
-            },
             {
               label: "Enviar Documentación",
               onClick: () =>

@@ -3,7 +3,6 @@ import React, { createContext, FC, ReactNode, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/hooks/storeHooks";
 import { ModalNames } from "@/types/modalNames";
 import { setModal } from "@/store/modalSlice";
-import SearchConflictsFilters from "../Modals/Conflicts/SearchConflictsFilters";
 import {
   FirstInstance,
   SecondInstance,
@@ -46,8 +45,6 @@ const ModalProvider: FC<ModalProvderProps> = ({ children }) => {
 
   const renderModal = (): ReactNode => {
     switch (modalData.type) {
-      case ModalNames.SEARCH_CONFLICTS_FILTERS:
-        return <SearchConflictsFilters onCloseModal={onCloseModal} />;
       case ModalNames.FIRST_INSTANCE:
         return <FirstInstance onCloseModal={onCloseModal} />;
       case ModalNames.SECOND_INSTANCE:
