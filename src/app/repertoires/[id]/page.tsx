@@ -160,9 +160,7 @@ function page() {
                       </div>
                     </div>
                     <div className="w-[100%] flex flex-col items-center justify-center mb-[1.5rem]">
-                      <p className="text-black font-bold">
-                        Duración del Repertorio
-                      </p>
+                      <p className="text-black font-bold">Duración del Tema</p>
                       <TimerInput
                         onChange={handleTime}
                         defaultTime={repertoire.duracion}
