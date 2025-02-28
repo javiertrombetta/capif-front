@@ -20,12 +20,14 @@ import Spinner from "@/commons/Spinner/Spinner";
 import CustomSwitch from "@/commons/CustomSwitch/CustomSwitch";
 import { ChangePasswordView } from "@/components/ChangePasswordView/ChangePasswordView";
 import UserFieldsView from "@/components/UserFieldsView/UserFieldsView";
+import { useRouter } from "next/navigation";
 
 export default function page() {
   const userId = useParams().id as string;
   const authData = useAppSelector((state) => state.auth);
   const [userData, setUserData] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   const handleGetUser = async () => {
     try {
@@ -74,6 +76,7 @@ export default function page() {
                 Datos
               </h3>
               <UserFieldsView
+                onGoBack={() => router.push("/users")}
                 userData={userData}
                 disabled={
                   !authData.vistas.some(
@@ -153,7 +156,6 @@ const ViewsFields = ({ userData }: { userData: User }) => {
       },
       {}
     );
-
   const { rol } = useAppSelector((state) => state.auth);
   const [views, setViews] = useState(userData.vistas);
 
