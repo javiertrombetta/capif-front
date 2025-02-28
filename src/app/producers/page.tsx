@@ -82,9 +82,6 @@ export default function page() {
               type="text"
             />
             <CustomButton type="submit">Buscar</CustomButton>
-            <CustomButton type="button">
-              <p className="whitespace-nowrap">Descargar CSV</p>
-            </CustomButton>
           </Form>
         </Formik>
         {loading ? (
