@@ -125,7 +125,10 @@ const ProducerView = ({
         <Formik
           initialValues={initialValues}
           validationSchema={validationEditProducer}
-          onSubmit={(values) => handleEditCompany(values)}
+          onSubmit={(values, { resetForm }) => {
+            handleEditCompany(values);
+            resetForm({ values });
+          }}
         >
           {({ isSubmitting, isValid, dirty, values, setValues }) => (
             <Form id="form" className="w-[100%]">
