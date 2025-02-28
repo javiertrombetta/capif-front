@@ -222,8 +222,8 @@ export const validationEditProducer = Yup.object({
 
 export const isrcValidation = Yup.object({
   ISRC: Yup.string()
-    .min(12, "El código de designación debe tener 11 caracteres.")
-    .max(12, "El código de designación debe tener 11 caracteres.")
+    .min(12, "El código de designación debe tener 12 caracteres.")
+    .max(12, "El código de designación debe tener 12 caracteres.")
     .required("El código de designación es requerido."),
 });
 

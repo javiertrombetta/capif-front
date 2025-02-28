@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
@@ -20,7 +20,6 @@ import Spinner from "@/commons/Spinner/Spinner";
 import CustomSwitch from "@/commons/CustomSwitch/CustomSwitch";
 import { ChangePasswordView } from "@/components/ChangePasswordView/ChangePasswordView";
 import UserFieldsView from "@/components/UserFieldsView/UserFieldsView";
-import { useRouter } from "next/navigation";
 
 export default function page() {
   const userId = useParams().id as string;
