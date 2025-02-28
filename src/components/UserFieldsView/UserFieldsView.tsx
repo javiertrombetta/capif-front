@@ -9,9 +9,11 @@ import { validationEditUser } from "@/utils/formValidations";
 const UserFieldsView = ({
   userData,
   disabled = false,
+  onGoBack,
 }: {
   userData: User;
   disabled?: boolean;
+  onGoBack: () => void;
 }) => {
   const initialValues = {
     nombre: userData?.nombre || "",
@@ -32,6 +34,7 @@ const UserFieldsView = ({
         });
       }
       toast.success("Usuario actualizado correctamente");
+      onGoBack();
     } catch (error) {
       toast.error("Error al actualizar el usuario");
       console.error(error);
