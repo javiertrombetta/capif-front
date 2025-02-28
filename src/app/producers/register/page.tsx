@@ -36,7 +36,6 @@ export interface ApplicationValues {
   codigo_postal: string;
   telefono: string;
   nacionalidad: string;
-  alias_cbu: string;
   cbu: string;
   datos_adicionales?: string;
   denominacion_sello?: string;
@@ -68,7 +67,6 @@ const page: FC = () => {
     codigo_postal: "",
     telefono: "",
     nacionalidad: "",
-    alias_cbu: "",
     cbu: "",
     datos_adicionales: "",
     denominacion_sello: "",
@@ -138,7 +136,6 @@ const page: FC = () => {
             codigo_postal: values.codigo_postal,
             telefono: values.telefono,
             nacionalidad: values.nacionalidad,
-            alias_cbu: values.alias_cbu,
             cbu: values.cbu,
             denominacion_sello: values.denominacion_sello,
             datos_adicionales: values.datos_adicionales,
