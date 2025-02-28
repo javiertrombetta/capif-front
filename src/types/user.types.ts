@@ -18,7 +18,6 @@ export interface SendApplication {
     codigo_postal: string;
     telefono: string;
     nacionalidad: string;
-    alias_cbu: string;
     cbu: string;
     denominacion_sello?: string;
     datos_adicionales?: string;
