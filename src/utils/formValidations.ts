@@ -113,7 +113,10 @@ export const validationRegisterApplication = Yup.object().shape({
     .required("El apellido es requerido"),
   telefono_usuario: Yup.string()
     .required("El teléfono del usuario es requerido")
-    .matches(/^\d+$/, "El teléfono debe contener solo números"),
+    .matches(/^\d+$/, "El teléfono debe contener solo números")
+    .min(6, "El teléfono debe tener al menos 6 caracteres")
+    .max(12, "El teléfono no debe exceder los 12 caracteres"),
+
   nombres_representante: Yup.string().required("El nombre es requerido"),
   apellidos_representante: Yup.string().required("El apellido es requerido"),
   tipo_persona: Yup.mixed<"FISICA" | "JURIDICA">()
@@ -135,8 +138,11 @@ export const validationRegisterApplication = Yup.object().shape({
     .required("El código postal es requerido")
     .matches(/^\d+$/, "El código postal debe ser numérico"),
   telefono: Yup.string()
-    .required("El teléfono es requerido")
-    .matches(/^\d+$/, "El teléfono debe contener solo números"),
+    .required("El teléfono del usuario es requerido")
+    .matches(/^\d+$/, "El teléfono debe contener solo números")
+    .min(6, "El teléfono debe tener al menos 6 caracteres")
+    .max(12, "El teléfono no debe exceder los 12 caracteres"),
+
   nacionalidad: Yup.string().required("La nacionalidad es requerida"),
   alias_cbu: Yup.string().required("El alias del CBU es requerido"),
   cbu: Yup.string()
