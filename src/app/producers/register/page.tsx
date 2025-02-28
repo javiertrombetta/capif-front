@@ -541,13 +541,13 @@ const EntityForm: FC<{
           type="text"
           labelText="CBU"
         />
-        <CustomField
+        {/* <CustomField
           width="w-[100%]"
           id="alias_cbu"
           name="alias_cbu"
           type="text"
           labelText="ALIAS"
-        />
+        /> */}
       </div>
     </div>
   );
