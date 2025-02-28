@@ -68,7 +68,7 @@ const CustomField: FC<CustomFieldProps> = ({
         return (
           <>
             <Field
-              onChange={onChange}
+              {...(onChange && { onChange })}
               disabled={disabled}
               as={type}
               id={id}
