@@ -110,8 +110,8 @@ function page() {
               { name: "ÁLBUM", isSortable: true },
               { name: "AÑO", isSortable: true },
               { name: "ISRC", isSortable: true },
-              { name: "PRODUCTORA", isSortable: true },
-              { name: "SELLOS", isSortable: true },
+              { name: "PRODUCTOR FONOGRÁFICO", isSortable: true },
+              // { name: "SELLOS", isSortable: true },
               { name: "# CONFLICTOS", isSortable: true },
               { name: "ESTADO", isSortable: true },
               { name: "Acción", isSortable: true },
@@ -123,7 +123,7 @@ function page() {
               r.anio_lanzamiento,
               r.isrc,
               r.productoraDelFonograma.nombre_productora,
-              r.sello_discografico,
+              // r.sello_discografico,
               r.cantidad_conflictos_activos,
               r.estado_fonograma,
               <ActionDropdownButton
@@ -144,6 +144,7 @@ function page() {
 export default page;
 
 const SearchPhonogramForm: FC = () => {
+  const { rol } = useAppSelector((state) => state.auth);
   return (
     <Form className="w-[100%] mt-[2rem] flex flex-col gap-[1rem]">
       <div className="w-[100%] flex justify-center items-center pl-[2rem] pr-[2rem] gap-[2rem]">
@@ -174,12 +175,15 @@ const SearchPhonogramForm: FC = () => {
       </div>
       <div className="w-[100%] flex justify-start items-end pl-[2rem] pr-[2rem] gap-[2rem]">
         <CustomSearchField name="isrc" id="isrc" type="text" labelText="ISRC" />
-        <CustomSearchField
-          name="nombre_productora"
-          id="nombre_productora"
-          type="text"
-          labelText="PRODUCTORA"
-        />
+        {rol === ROLES.CAPIF_ADMIN ||
+          (rol === ROLES.SUPER_ADMIN && (
+            <CustomSearchField
+              name="nombre_productora"
+              id="nombre_productora"
+              type="text"
+              labelText="PRODUCTOR FONOGRÁFICO"
+            />
+          ))}
         <CustomSearchField
           name="sello_discografico"
           id="sello_discografico"

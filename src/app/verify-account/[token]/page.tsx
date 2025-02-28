@@ -4,13 +4,14 @@ import { MdEmail } from "react-icons/md";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import Spinner from "@/commons/Spinner/Spinner";
 import "../../../styles/globals.css";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { verifyAccount } from "@/services/auth";
 
 const page: FC = () => {
   const [isVerified, setIsVerified] = useState<"pending" | "success" | "error">(
     "pending"
   );
+  const router = useRouter();
   const token = useParams().token;
   const handleVerifyEmail = async () => {
     try {
@@ -36,6 +37,10 @@ const page: FC = () => {
     );
   }
 
+  const pushLogin = () => {
+    router.push("/login");
+  };
+
   return (
     <div className="flex justify-center items-center h-[100vh] background">
       <div className="scale-[1] w-[35rem] h-[20rem] bg-[white] rounded-[2rem] flex flex-col items-center justify-center gap-[1rem] p-[1rem]">
@@ -48,7 +53,7 @@ const page: FC = () => {
         </p>
 
         <div>
-          <CustomButton>Ingresar</CustomButton>
+          <CustomButton onClick={pushLogin}>Ingresar</CustomButton>
         </div>
       </div>
     </div>

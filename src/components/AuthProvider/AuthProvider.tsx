@@ -13,6 +13,26 @@ const AuthProvider: FC<AuthProvider> = ({ children }) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const pathname = usePathname();
+  const noUserPathnames: string[] = [
+    "/",
+    "/login",
+    "/signup",
+    "/forgot-password",
+    "/verify-email",
+    "/verify-account/:token",
+    "/confirm-account/:token",
+    "/password-recovery/:token",
+    "/privacy-policy",
+  ];
+
+  const isNoUserPathname = (): boolean => {
+    return noUserPathnames.some((path) => {
+      const regex = new RegExp(
+        "^" + path.replace(/:([^/]+)/g, "([^/]+)") + "$"
+      );
+      return regex.test(pathname);
+    });
+  };
 
   const handleGetUserData = async () => {
     const data = await getAuthData();
@@ -32,15 +52,14 @@ const AuthProvider: FC<AuthProvider> = ({ children }) => {
     if (pathname === "/privacy-policy") {
       return;
     }
-
-    if (!data.id_usuario) {
+    if (!data.id_usuario && !isNoUserPathname()) {
       router.push("/login");
     } else {
       if (pathname === "/login" && data.estado === "HABILITADO") {
         router.push("/users");
         return;
       }
-      if (data.estado !== "HABILITADO") {
+      if (data.estado && data.estado !== "HABILITADO") {
         router.push("/producers/register");
       }
     }

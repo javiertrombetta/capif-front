@@ -1,13 +1,19 @@
 "use client";
+import { AxiosError } from "axios";
 import { Form, Formik } from "formik";
-import React, { Dispatch, FC, SetStateAction, useState } from "react";
+import React, {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { IoIosArrowForward } from "react-icons/io";
 import { toast } from "react-toastify";
 import { RxCross2 } from "react-icons/rx";
 import { useRouter } from "next/navigation";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomField from "@/commons/CustomField/CustomField";
-import CustomInput from "@/commons/CustomInput/CustomInput";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import CustomTable from "@/commons/CustomTable/CustomTable";
 import Header from "@/commons/Header/Header";
@@ -20,10 +26,12 @@ import {
 import {
   addRepertoireTitularities,
   createRepertoire,
+  getTerritories,
   uploadPhonogramFile,
   validateISRC,
 } from "@/services/repertoire";
 import { isrcValidation } from "@/utils/formValidations";
+import { GetTerritoriesResponse } from "@/types/repertoire.types";
 
 function page() {
   const router = useRouter();
@@ -34,7 +42,7 @@ function page() {
     | "load_audio"
     | "add_participation"
     | "edit_territoriality"
-  >("start");
+  >("edit_territoriality");
   const [audio, setAudio] = useState<File | null>(null);
   const dispatch = useAppDispatch();
   const authData = useAppSelector((state) => state.auth);
@@ -247,6 +255,10 @@ const SearchForISRC: FC<{ onSubmit: (isrc: string) => void }> = ({
       );
     } catch (error) {
       console.error(error);
+      if (error instanceof AxiosError) {
+        toast.error(error.request.data?.message || error.request.data?.error);
+      }
+      toast.error("Error al validar ISRC.");
     }
   };
 
@@ -342,7 +354,7 @@ const NewPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
               type="text"
               id="titulo"
               name="titulo"
-              labelText="Titulo"
+              labelText="Título"
             />
             <CustomField
               type="text"
@@ -358,7 +370,9 @@ const NewPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
             />
 
             <div className="w-[100%] mb-[1.5rem]">
-              <p className="text-black font-bold">Duración del Repertorio</p>
+              <p className="text-black font-bold">
+                Duración del Tema (Horas, Minutos, Segundos)
+              </p>
               <TimerInput
                 defaultTime={createPhogramCurrentData.duracion || ""}
                 onChange={handleTime}
@@ -375,7 +389,7 @@ const NewPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
               type="text"
               id="sello_discografico"
               name="sello_discografico"
-              labelText="Sello Discográfico"
+              labelText="Productor Originario"
             />
             <div className="w-[100%] flex flex-col">
               <label style={{ color: "black" }} className="font-bold">
@@ -629,20 +643,20 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
   );
 };
 
-const initialCountries = [
-  { name: "Paraguay", iso: "PY", selected: true },
-  { name: "Uruguay", iso: "UY", selected: true },
-  { name: "Brasil", iso: "BR", selected: true },
-  { name: "Guatemala", iso: "GT", selected: true },
-  { name: "Costa Rica", iso: "CR", selected: true },
-  { name: "El Salvador", iso: "SV", selected: true },
-  { name: "Panamá", iso: "PA", selected: true },
-  { name: "República Dominicana", iso: "DO", selected: true },
-  { name: "España", iso: "ES", selected: true },
-  { name: "India", iso: "IN", selected: true },
-  { name: "Italia", iso: "IT", selected: true },
-  { name: "Ucrania", iso: "UA", selected: true },
-];
+// const initialCountries = [
+//   { name: "Paraguay", iso: "PY", selected: true },
+//   { name: "Uruguay", iso: "UY", selected: true },
+//   { name: "Brasil", iso: "BR", selected: true },
+//   { name: "Guatemala", iso: "GT", selected: true },
+//   { name: "Costa Rica", iso: "CR", selected: true },
+//   { name: "El Salvador", iso: "SV", selected: true },
+//   { name: "Panamá", iso: "PA", selected: true },
+//   { name: "República Dominicana", iso: "DO", selected: true },
+//   { name: "España", iso: "ES", selected: true },
+//   { name: "India", iso: "IN", selected: true },
+//   { name: "Italia", iso: "IT", selected: true },
+//   { name: "Ucrania", iso: "UA", selected: true },
+// ];
 
 const EditTerritoriality: React.FC<{
   onSubmit: () => void;
@@ -651,16 +665,17 @@ const EditTerritoriality: React.FC<{
   const createPhogramCurrentData = useAppSelector(
     (state) => state.createPhonogram
   );
-  const [countries, setCountries] = useState(
-    createPhogramCurrentData.territorios.length > 0
-      ? initialCountries.map((c) => ({
-          ...c,
-          selected: createPhogramCurrentData.territorios.includes(c.iso)
-            ? true
-            : false,
-        }))
-      : initialCountries
-  );
+  const [countries, setCountries] = useState<
+    {
+      name: string;
+      iso: string;
+      selected: boolean;
+    }[]
+  >([]);
+  const [initialTerritories, setInitialTerritories] = useState<
+    GetTerritoriesResponse["data"]
+  >([]);
+  const [filtro, setFiltro] = useState("");
 
   const handleCheckboxChange = (iso: string) => {
     setCountries((prev) =>
@@ -687,35 +702,82 @@ const EditTerritoriality: React.FC<{
     onSubmit();
   };
 
-  return (
-    <div className="w-full flex flex-col justify-center items-center mt-12 px-12">
-      <div className="w-full flex justify-between items-center my-4 px-8">
-        <CustomInput type="text" label="Buscar Países" />
-        <CustomButton onClick={handleSubmit}>Continuar</CustomButton>
-      </div>
+  const handleBuscar = (filtro: string) => {
+    setFiltro(filtro);
+  };
 
-      <CustomTable
-        columnNames={[
-          {
-            name: "",
-            isSortable: false,
-            selectBox: true,
-            onChecked: handleCheckAll,
-          },
-          { name: "PAÍS", isSortable: true },
-          { name: "ISO", isSortable: true },
-        ]}
-        columnValues={countries.map((country) => [
-          <input
-            type="checkbox"
-            checked={country.selected}
-            onChange={() => handleCheckboxChange(country.iso)}
-            className="w-4 h-4"
-          />,
-          country.name,
-          country.iso,
-        ])}
-      />
+  const getTerritoriesData = async () => {
+    try {
+      const data = await getTerritories();
+      setInitialTerritories(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getTerritoriesData();
+  }, []);
+
+  useEffect(() => {
+    setCountries(
+      initialTerritories.map((c) => ({
+        name: c.nombre_pais,
+        iso: c.codigo_iso,
+        selected:
+          createPhogramCurrentData.territorios.length === 0 ||
+          createPhogramCurrentData?.territorios.includes(c.codigo_iso)
+            ? true
+            : false,
+      }))
+    );
+  }, [initialTerritories]);
+
+  return (
+    <div className="w-full flex flex-col justify-center items-center space-y-[1rem] mt-12 px-12 pb-[1rem] overflow-y-auto">
+      <div>
+        <p className="text-black font-bold">
+          Por medio de la presente manifiesto mi voluntad de que CAPIF me
+          represente para el cobro de derechos conexos frente a las sociedades
+          de gestión de los siguientes países que a continuación se detallan:
+        </p>
+      </div>
+      <div className="w-full flex items-center space-x-[1rem] my-4 px-8">
+        <label className="text-black font-bold">Buscar Países (nombre)</label>
+        <input
+          value={filtro}
+          onChange={(e) => handleBuscar(e.target.value)}
+          type="text"
+          className="padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-black"
+        />
+      </div>
+      <div className="w-[100%] flex-1 flex flex-col overflow-y-auto">
+        <CustomTable
+          columnNames={[
+            {
+              name: "",
+              isSortable: false,
+              selectBox: true,
+              onChecked: handleCheckAll,
+            },
+            { name: "PAÍS", isSortable: true },
+            { name: "ISO", isSortable: true },
+          ]}
+          columnValues={countries
+            .filter((c) => c.name.includes(filtro))
+            .map((country) => [
+              <input
+                type="checkbox"
+                checked={country.selected}
+                onChange={() => handleCheckboxChange(country.iso)}
+                className="w-4 h-4"
+              />,
+              country.name,
+              country.iso,
+            ])}
+        />
+      </div>
+      <CustomButton onClick={handleSubmit}>Continuar</CustomButton>
     </div>
   );
 };
@@ -742,11 +804,18 @@ const LoadAudio: FC<{
 
   return (
     <div className="w-[100%] flex flex-col justify-center items-center mt-[3rem] pl-[3rem] pr-[3rem]">
-      <p className="text-black font-bold">
-        Seleccione el archivo de audio (opcional)
+      <p className="text-black text-center py-[1rem]">
+        Para identificar si el fonograma ha sido utilizado, suba aquí el archivo
+        .mp3 correspondiente al tema. Los datos proporcionados y el audio serán
+        enviados al proveedor del sistema de monitoreo.
+        <br />
+        <strong>
+          Si ya lo ha declarado directamente Ud. al sistema de monitoreo, no es
+          necesario agregar el archivo de audio en este apartado.
+        </strong>
       </p>
 
-      <div className="w-[60%] flex flex-col justify-center items-center gap-[0.8rem] mt-[0.5rem]">
+      <div className="w-[60%] flex flex-col justify-center items-center gap-[0.8rem] mt-[1rem]">
         {audio ? (
           <div className="flex gap-[1rem]">
             <p className="text-black">{audio.name}</p>

@@ -1,7 +1,6 @@
 "use client";
 import React, { FC } from "react";
 import { MdEmail } from "react-icons/md";
-import CustomButton from "@/commons/CustomButton/CustomButton";
 import { useAppSelector } from "@/hooks/storeHooks";
 import Spinner from "@/commons/Spinner/Spinner";
 import "../../styles/globals.css";
@@ -32,9 +31,6 @@ const page: FC = () => {
           Si existe un error en la dirección de correo electrónico indicada,
           contáctese con derechos@capif.org.ar.
         </p>
-        <div>
-          <CustomButton>Reenviar Email</CustomButton>
-        </div>
       </div>
     </div>
   );

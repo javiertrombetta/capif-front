@@ -16,6 +16,33 @@ import { TipoDocumento, TipoPersona } from "@/types/producers.types";
 import useModal from "@/hooks/useModal";
 import SubmitSendApplication from "@/components/Modals/SubmitSendApplication/SubmitSendApplication";
 
+const PROVINCIAS = [
+  "Buenos Aires",
+  "CABA",
+  "Catamarca",
+  "Chaco",
+  "Chubut",
+  "Córdoba",
+  "Corrientes",
+  "Entre Ríos",
+  "Formosa",
+  "Jujuy",
+  "La Pampa",
+  "La Rioja",
+  "Mendoza",
+  "Misiones",
+  "Neuquén",
+  "Río Negro",
+  "Salta",
+  "San Juan",
+  "San Luis",
+  "Santa Cruz",
+  "Santa Fe",
+  "Santiago del Estero",
+  "Tierra del Fuego",
+  "Tucumán",
+] as const;
+
 export interface ApplicationValues {
   nombre_productora: string;
   nombre: string;
@@ -55,12 +82,12 @@ const page: FC = () => {
     telefono_usuario: "",
     tipo_persona: "FISICA",
     cuit_cuil: "",
-    email: "",
+    email: authUser.email || "",
     calle: "",
     numero: "",
     ciudad: "",
     localidad: "",
-    provincia: "",
+    provincia: "BUENOS AIRES",
     codigo_postal: "",
     telefono: "",
     nacionalidad: "",
@@ -121,7 +148,7 @@ const page: FC = () => {
         const requestData: SendApplication = {
           nombre: values.nombre,
           apellido: values.apellido,
-          telefono: values.telefono,
+          telefono: values.telefono_usuario,
           productoraData: {
             nombre_productora: values.nombre_productora,
             cuit_cuil: values.cuit_cuil,
@@ -162,7 +189,7 @@ const page: FC = () => {
       }
     } catch (error) {
       toast.error(
-        "Error al crear aplicación. Revisar campos e intentar nuevamente"
+        "Error al crear aplicación. Revisar que todos los campos se encuentren completos y los archivos de su DNI y comprobante de pago subidos."
       );
       console.log(error);
     }
@@ -230,7 +257,7 @@ const page: FC = () => {
 
               <div className="p-[1rem] w-[100%] flex flex-col border-[1px] border-[#c8c8c8] mt-[2rem]">
                 <p className="text-black font-bold text-3xl mb-[1rem]">
-                  Datos de la Productora
+                  Datos del Productor Fonográfico
                 </p>
                 <div className="flex gap-[2rem] mt-[2rem]">
                   <div className="flex gap-[0.5rem]">
@@ -277,7 +304,8 @@ const page: FC = () => {
                       handleFileRemove("dni_persona_fisica")
                     }
                   >
-                    CARGAR DOCUMENTO NACIONAL DE IDENTIDAD
+                    Cargue aquí una foto del frente de su documento nacional de
+                    identidad.
                   </DocumentInput>
                 ) : (
                   <>
@@ -290,8 +318,8 @@ const page: FC = () => {
                         handleFileRemove("dni_representante_legal")
                       }
                     >
-                      CARGAR DOCUMENTO NACIONAL DE IDENTIDAD DEL REPRESENTANTE
-                      LEGAL
+                      Cargue aquí una foto del frente del documento del
+                      representante legal.
                     </DocumentInput>
 
                     <DocumentInput
@@ -315,12 +343,11 @@ const page: FC = () => {
                   handleFileRemove={() => handleFileRemove("comprobante_ISRC")}
                 >
                   <p className="font-bold text-black mt-[2rem]">
-                    OTROS Documento Adicionales (Cargue aquí su comprobante de
-                    pago de alta de ISRC)
+                    Cargue aquí su comprobante de pago de alta de ISRC
                   </p>
                   <p className="font-bold text-black">
                     Para obtener el código de productor, el titular deberá
-                    abonar la suma de $ 10.000. El pago se realiza por el alta a
+                    abonar la suma de $ 15.000. El pago se realiza por el alta a
                     la siguiente cuenta bancaria:
                   </p>
                   <p className="font-bold text-black">BANCO GALICIA</p>
@@ -486,7 +513,7 @@ const EntityForm: FC<{
           id="datos_adicionales"
           name="datos_adicionales"
           type="text"
-          labelText="DATOS ADICIONALES"
+          labelText="DATOS ADICIONALES (OPCIONAL)"
         />
         <CustomField
           width="w-[100%]"
@@ -508,8 +535,9 @@ const EntityForm: FC<{
           width="w-[100%]"
           id="provincia"
           name="provincia"
-          type="text"
+          type="select"
           labelText="PROVINCIA"
+          options={PROVINCIAS.map((p) => ({ name: p, value: p }))}
         />
         <CustomField
           width="w-[100%]"
@@ -524,7 +552,7 @@ const EntityForm: FC<{
         id="telefono"
         name="telefono"
         type="text"
-        labelText="TELÉFONO"
+        labelText="TELÉFONO PRODUCTORA"
       />
       <CustomField
         width="w-[100%]"
@@ -539,15 +567,15 @@ const EntityForm: FC<{
           id="cbu"
           name="cbu"
           type="text"
-          labelText="CBU"
+          labelText="CBU/CVU"
         />
-        <CustomField
+        {/* <CustomField
           width="w-[100%]"
           id="alias_cbu"
           name="alias_cbu"
           type="text"
           labelText="ALIAS"
-        />
+        /> */}
       </div>
     </div>
   );

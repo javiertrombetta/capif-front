@@ -2,6 +2,7 @@ import {
   GetAuditChangesResponse,
   GetAuditRepertoireResponse,
   GetAuditSessionsResponse,
+  TablaDb,
   TipoAuditoria,
   TipoCambio,
 } from "@/types/audits.types";
@@ -15,7 +16,7 @@ interface GetAuditChangesParams {
   fechaHasta?: string;
   emailUsuario?: string;
   tipoAuditoria?: TipoAuditoria;
-  tablaDb?: string;
+  tablaDb?: TablaDb;
 }
 
 export const getAuditChanges = async (params?: GetAuditChangesParams) => {

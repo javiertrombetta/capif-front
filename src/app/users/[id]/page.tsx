@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
@@ -26,6 +26,7 @@ export default function page() {
   const authData = useAppSelector((state) => state.auth);
   const [userData, setUserData] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   const handleGetUser = async () => {
     try {
@@ -74,6 +75,7 @@ export default function page() {
                 Datos
               </h3>
               <UserFieldsView
+                onGoBack={() => router.push("/users")}
                 userData={userData}
                 disabled={
                   !authData.vistas.some(
@@ -153,7 +155,6 @@ const ViewsFields = ({ userData }: { userData: User }) => {
       },
       {}
     );
-
   const { rol } = useAppSelector((state) => state.auth);
   const [views, setViews] = useState(userData.vistas);
 
