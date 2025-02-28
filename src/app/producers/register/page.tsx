@@ -230,7 +230,7 @@ const page: FC = () => {
 
               <div className="p-[1rem] w-[100%] flex flex-col border-[1px] border-[#c8c8c8] mt-[2rem]">
                 <p className="text-black font-bold text-3xl mb-[1rem]">
-                  Datos de la Productora
+                  Datos del Productor Fonográfico
                 </p>
                 <div className="flex gap-[2rem] mt-[2rem]">
                   <div className="flex gap-[0.5rem]">
