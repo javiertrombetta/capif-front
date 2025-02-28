@@ -47,7 +47,7 @@ export default function page() {
           </h3>
           <UserFieldsView userData={user} disabled={true} />
         </div>
-        <ProducerView idProducer={user?.productoras[0].id} fieldsDisabled />
+        <ProducerView idProducer={user?.productoras[0].id} />
       </div>
       <div className="relative flex flex-row gap-[1rem] p-[1rem]">
         <CustomButton onClick={onAcceptApplication} className="bg-[#008d4c]">
