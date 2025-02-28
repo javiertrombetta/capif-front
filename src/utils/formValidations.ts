@@ -112,7 +112,7 @@ export const validationRegisterApplication = Yup.object().shape({
     .min(3, "Debe contener al menos 3 caracteres")
     .required("El apellido es requerido"),
   telefono_usuario: Yup.string()
-    .required("El teléfono del usuario es requerido")
+    .optional()
     .matches(/^\d+$/, "El teléfono debe contener solo números")
     .min(6, "El teléfono debe tener al menos 6 caracteres")
     .max(12, "El teléfono no debe exceder los 12 caracteres"),
@@ -128,9 +128,7 @@ export const validationRegisterApplication = Yup.object().shape({
   cuit_cuil: validacionCuitCuil,
   email: validacionEmail,
   calle: Yup.string().required("La calle es requerida"),
-  numero: Yup.string()
-    .required("El número es requerido")
-    .matches(/^\d+$/, "El número debe ser numérico"),
+  numero: Yup.string().optional(),
   ciudad: Yup.string().required("La ciudad es requerida"),
   localidad: Yup.string().required("La localidad es requerida"),
   provincia: Yup.string().required("La provincia es requerida"),
