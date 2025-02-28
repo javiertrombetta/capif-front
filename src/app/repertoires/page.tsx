@@ -111,7 +111,7 @@ function page() {
               { name: "AÑO", isSortable: true },
               { name: "ISRC", isSortable: true },
               { name: "PRODUCTORA", isSortable: true },
-              { name: "SELLOS", isSortable: true },
+              // { name: "SELLOS", isSortable: true },
               { name: "# CONFLICTOS", isSortable: true },
               { name: "ESTADO", isSortable: true },
               { name: "Acción", isSortable: true },
@@ -123,7 +123,7 @@ function page() {
               r.anio_lanzamiento,
               r.isrc,
               r.productoraDelFonograma.nombre_productora,
-              r.sello_discografico,
+              // r.sello_discografico,
               r.cantidad_conflictos_activos,
               r.estado_fonograma,
               <ActionDropdownButton
