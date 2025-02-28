@@ -691,6 +691,13 @@ const EditTerritoriality: React.FC<{
 
   return (
     <div className="w-full flex flex-col justify-center items-center mt-12 px-12">
+      <div>
+        <p className="text-black font-bold">
+          Por medio de la presente manifiesto mi voluntad de que CAPIF me
+          represente para el cobro de derechos conexos frente a las sociedades
+          de gestión de los siguientes países que a continuación se detallan:
+        </p>
+      </div>
       <div className="w-full flex justify-between items-center my-4 px-8">
         <CustomInput type="text" label="Buscar Países" />
         <CustomButton onClick={handleSubmit}>Continuar</CustomButton>
