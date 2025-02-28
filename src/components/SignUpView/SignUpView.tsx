@@ -78,7 +78,9 @@ const VerifyCuit: FC<VerifyCuitProps> = ({ onSubmit }) => {
 
     try {
       await validateCuit(values.cuit);
-      toast.success("El CUIT está disponible para registro.");
+      toast.success(
+        "El CUIT está disponible para registro. Por favor, ingrese su CUIT y cree una contraseña."
+      );
       onSubmit();
     } catch (error) {
       console.error(error);

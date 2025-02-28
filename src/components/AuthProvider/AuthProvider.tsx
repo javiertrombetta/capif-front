@@ -52,15 +52,14 @@ const AuthProvider: FC<AuthProvider> = ({ children }) => {
     if (pathname === "/privacy-policy") {
       return;
     }
-
-    if (!data.id_usuario && isNoUserPathname()) {
+    if (!data.id_usuario && !isNoUserPathname()) {
       router.push("/login");
     } else {
       if (pathname === "/login" && data.estado === "HABILITADO") {
         router.push("/users");
         return;
       }
-      if (data.estado !== "HABILITADO") {
+      if (data.estado && data.estado !== "HABILITADO") {
         router.push("/producers/register");
       }
     }
