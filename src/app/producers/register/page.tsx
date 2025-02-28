@@ -12,36 +12,13 @@ import { sendApplication } from "@/services/auth";
 import CustomFileInput from "@/commons/CustomFileInput/CustomFileInput";
 import { SendApplication } from "@/types/user.types";
 import { uploadProducerDocument } from "@/services/producers";
-import { TipoDocumento, TipoPersona } from "@/types/producers.types";
+import {
+  PROVINCIAS,
+  TipoDocumento,
+  TipoPersona,
+} from "@/types/producers.types";
 import useModal from "@/hooks/useModal";
 import SubmitSendApplication from "@/components/Modals/SubmitSendApplication/SubmitSendApplication";
-
-const PROVINCIAS = [
-  "Buenos Aires",
-  "CABA",
-  "Catamarca",
-  "Chaco",
-  "Chubut",
-  "Córdoba",
-  "Corrientes",
-  "Entre Ríos",
-  "Formosa",
-  "Jujuy",
-  "La Pampa",
-  "La Rioja",
-  "Mendoza",
-  "Misiones",
-  "Neuquén",
-  "Río Negro",
-  "Salta",
-  "San Juan",
-  "San Luis",
-  "Santa Cruz",
-  "Santa Fe",
-  "Santiago del Estero",
-  "Tierra del Fuego",
-  "Tucumán",
-] as const;
 
 export interface ApplicationValues {
   nombre_productora: string;
