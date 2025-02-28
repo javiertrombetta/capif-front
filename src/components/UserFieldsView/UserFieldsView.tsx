@@ -13,7 +13,7 @@ const UserFieldsView = ({
 }: {
   userData: User;
   disabled?: boolean;
-  onGoBack: () => void;
+  onGoBack?: () => void;
 }) => {
   const initialValues = {
     nombre: userData?.nombre || "",
@@ -34,7 +34,7 @@ const UserFieldsView = ({
         });
       }
       toast.success("Usuario actualizado correctamente");
-      onGoBack();
+      if (onGoBack) onGoBack();
     } catch (error) {
       toast.error("Error al actualizar el usuario");
       console.error(error);
