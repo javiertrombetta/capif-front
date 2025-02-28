@@ -37,7 +37,7 @@ const initialValues = {
 function page() {
   const [conflicts, setConflicts] = useState<Conflicto[]>([]);
   const [loading, setLoading] = useState(true);
-  const { vistas } = useAppSelector((state) => state.auth);
+  const { vistas, rol } = useAppSelector((state) => state.auth);
   const router = useRouter();
   const { openModal, closeModal } = useModal();
 
@@ -78,7 +78,7 @@ function page() {
   };
 
   const handleMenuOptions = (id: string) => {
-    return [
+    const options = [
       ...(vistas.some((v) => v.nombre === "Ver Participaciones Conflicto")
         ? [
             {
@@ -110,7 +110,10 @@ function page() {
             },
           ]
         : []),
-      {
+    ];
+
+    if (rol === ROLES.USER_PRODUCER || rol === ROLES.EMPLOYEE) {
+      options.push({
         label: "Desistir conflicto",
         onClick: () =>
           openModal(
@@ -119,8 +122,10 @@ function page() {
               onCloseModal={closeModal}
             />
           ),
-      },
-    ];
+      });
+    }
+
+    return options;
   };
 
   useEffect(() => {
