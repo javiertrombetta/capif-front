@@ -375,7 +375,7 @@ const NewPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
               type="text"
               id="sello_discografico"
               name="sello_discografico"
-              labelText="Sello Discográfico"
+              labelText="Productor Originario"
             />
             <div className="w-[100%] flex flex-col">
               <label style={{ color: "black" }} className="font-bold">
