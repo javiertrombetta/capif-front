@@ -110,7 +110,7 @@ function page() {
               { name: "ÁLBUM", isSortable: true },
               { name: "AÑO", isSortable: true },
               { name: "ISRC", isSortable: true },
-              { name: "PRODUCTORA", isSortable: true },
+              { name: "PRODUCTOR FONOGRÁFICO", isSortable: true },
               // { name: "SELLOS", isSortable: true },
               { name: "# CONFLICTOS", isSortable: true },
               { name: "ESTADO", isSortable: true },
@@ -181,7 +181,7 @@ const SearchPhonogramForm: FC = () => {
               name="nombre_productora"
               id="nombre_productora"
               type="text"
-              labelText="PRODUCTORA"
+              labelText="PRODUCTOR FONOGRÁFICO"
             />
           ))}
         <CustomSearchField
