@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Form, Formik } from "formik";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomField from "@/commons/CustomField/CustomField";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
@@ -18,6 +18,7 @@ import CustomFileInput from "@/commons/CustomFileInput/CustomFileInput";
 
 function page() {
   const params = useParams();
+  const router = useRouter();
   const [repertoire, setRepertoire] = useState<Repertoire | null>(null);
   const [file, setFile] = useState<File>();
   const [year, setYear] = useState("");
@@ -99,6 +100,7 @@ function page() {
           return prevState;
         });
         toast.success(message);
+        router.push("/repertoires");
       }
     } catch (error) {
       console.error(error);
