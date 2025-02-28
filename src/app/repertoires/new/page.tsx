@@ -342,7 +342,7 @@ const NewPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
               type="text"
               id="titulo"
               name="titulo"
-              labelText="Titulo"
+              labelText="Título"
             />
             <CustomField
               type="text"

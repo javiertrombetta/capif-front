@@ -128,7 +128,7 @@ function page() {
                         type="text"
                         id="titulo"
                         name="titulo"
-                        labelText="Titulo"
+                        labelText="Título"
                       />
                       <CustomField
                         type="text"
