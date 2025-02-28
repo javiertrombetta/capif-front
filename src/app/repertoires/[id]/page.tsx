@@ -128,7 +128,7 @@ function page() {
                         type="text"
                         id="titulo"
                         name="titulo"
-                        labelText="Titulo"
+                        labelText="Título"
                       />
                       <CustomField
                         type="text"
@@ -161,7 +161,7 @@ function page() {
                     </div>
                     <div className="w-[100%] flex flex-col items-center justify-center mb-[1.5rem]">
                       <p className="text-black font-bold">
-                        Duración del Repertorio
+                        Duración del Tema (Horas, minutos, segundos)
                       </p>
                       <TimerInput
                         onChange={handleTime}

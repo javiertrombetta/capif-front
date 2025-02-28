@@ -82,7 +82,7 @@ const page: FC = () => {
     telefono_usuario: "",
     tipo_persona: "FISICA",
     cuit_cuil: "",
-    email: "",
+    email: authUser.email || "",
     calle: "",
     numero: "",
     ciudad: "",
@@ -304,7 +304,8 @@ const page: FC = () => {
                       handleFileRemove("dni_persona_fisica")
                     }
                   >
-                    CARGAR DOCUMENTO NACIONAL DE IDENTIDAD
+                    Cargue aquí una foto del frente de su documento nacional de
+                    identidad.
                   </DocumentInput>
                 ) : (
                   <>
@@ -317,8 +318,8 @@ const page: FC = () => {
                         handleFileRemove("dni_representante_legal")
                       }
                     >
-                      CARGAR DOCUMENTO NACIONAL DE IDENTIDAD DEL REPRESENTANTE
-                      LEGAL
+                      Cargue aquí una foto del frente del documento del
+                      representante legal.
                     </DocumentInput>
 
                     <DocumentInput
@@ -342,12 +343,11 @@ const page: FC = () => {
                   handleFileRemove={() => handleFileRemove("comprobante_ISRC")}
                 >
                   <p className="font-bold text-black mt-[2rem]">
-                    OTROS Documento Adicionales (Cargue aquí su comprobante de
-                    pago de alta de ISRC)
+                    Cargue aquí su comprobante de pago de alta de ISRC
                   </p>
                   <p className="font-bold text-black">
                     Para obtener el código de productor, el titular deberá
-                    abonar la suma de $ 10.000. El pago se realiza por el alta a
+                    abonar la suma de $ 15.000. El pago se realiza por el alta a
                     la siguiente cuenta bancaria:
                   </p>
                   <p className="font-bold text-black">BANCO GALICIA</p>
@@ -569,13 +569,13 @@ const EntityForm: FC<{
           type="text"
           labelText="CBU/CVU"
         />
-        <CustomField
+        {/* <CustomField
           width="w-[100%]"
           id="alias_cbu"
           name="alias_cbu"
           type="text"
           labelText="ALIAS"
-        />
+        /> */}
       </div>
     </div>
   );
