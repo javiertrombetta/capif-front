@@ -55,7 +55,7 @@ const page: FC = () => {
     telefono_usuario: "",
     tipo_persona: "FISICA",
     cuit_cuil: "",
-    email: "",
+    email: authUser.email || "",
     calle: "",
     numero: "",
     ciudad: "",
