@@ -358,7 +358,9 @@ const NewPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
             />
 
             <div className="w-[100%] mb-[1.5rem]">
-              <p className="text-black font-bold">Duración del Tema</p>
+              <p className="text-black font-bold">
+                Duración del Tema (Horas, Minutos, Segundos)
+              </p>
               <TimerInput
                 defaultTime={createPhogramCurrentData.duracion || ""}
                 onChange={handleTime}
