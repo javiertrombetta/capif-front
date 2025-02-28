@@ -127,15 +127,10 @@ export default function page() {
                 <ActionDropdownButton
                   menuOptions={[
                     {
-                      label: "Ficha",
+                      label: "Ver Ficha",
                       icon: <FaUserAlt />,
                       onClick: () =>
                         redirectToOption(`/producers/${element.id_productora}`),
-                    },
-                    {
-                      label: "Repertorio",
-                      icon: <FaMusic />,
-                      onClick: () => redirectToOption("/"),
                     },
                   ]}
                 />,
