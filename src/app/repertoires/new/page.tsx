@@ -42,7 +42,7 @@ function page() {
     | "load_audio"
     | "add_participation"
     | "edit_territoriality"
-  >("edit_territoriality");
+  >("start");
   const [audio, setAudio] = useState<File | null>(null);
   const dispatch = useAppDispatch();
   const authData = useAppSelector((state) => state.auth);
@@ -382,14 +382,14 @@ const NewPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
               type="text"
               id="productor_originario"
               name="productor_originario"
-              labelText="Productor Originario"
+              labelText="Productor Fonográfico"
               disabled
             />
             <CustomField
               type="text"
               id="sello_discografico"
               name="sello_discografico"
-              labelText="Productor Originario"
+              labelText="Sello Discográfico"
             />
             <div className="w-[100%] flex flex-col">
               <label style={{ color: "black" }} className="font-bold">
