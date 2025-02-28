@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { FaMusic, FaUserAlt } from "react-icons/fa";
+import { FaUserAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/navigation";
@@ -13,6 +13,7 @@ import Spinner from "@/commons/Spinner/Spinner";
 import { getProducers } from "@/services/producers";
 import { ProductionCompany } from "@/types/producers.types";
 import CustomSearchField from "@/commons/CustomSearchField/CustomSearchField";
+import { AxiosError } from "axios";
 
 export default function page() {
   const [loading, setLoading] = useState(true);
@@ -37,7 +38,11 @@ export default function page() {
       setProducers(companies);
     } catch (error) {
       console.error(error);
-      toast.error("Error al obtener las productoras");
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.error || error.response?.data.message);
+      } else {
+        toast.error("Error al obtener las productoras");
+      }
       setProducers([]);
     } finally {
       setLoading(false);
