@@ -104,7 +104,7 @@ function page() {
             />
           ) : (
             <div className="text-black justify-self-center pt-[4rem]">
-              No se encontraron transacciones
+              No se encontraron datos
             </div>
           )}
         </div>
