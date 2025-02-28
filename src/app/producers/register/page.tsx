@@ -277,7 +277,8 @@ const page: FC = () => {
                       handleFileRemove("dni_persona_fisica")
                     }
                   >
-                    CARGAR DOCUMENTO NACIONAL DE IDENTIDAD
+                    Cargue aquí una foto del frente de su documento nacional de
+                    identidad.
                   </DocumentInput>
                 ) : (
                   <>
@@ -290,8 +291,8 @@ const page: FC = () => {
                         handleFileRemove("dni_representante_legal")
                       }
                     >
-                      CARGAR DOCUMENTO NACIONAL DE IDENTIDAD DEL REPRESENTANTE
-                      LEGAL
+                      Cargue aquí una foto del frente del documento del
+                      representante legal.
                     </DocumentInput>
 
                     <DocumentInput

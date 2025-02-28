@@ -104,7 +104,10 @@ export const Documents = ({
           uploadedDocuments={uploadedDocuments}
           documentType="dni_persona_fisica"
         >
-          <p className="font-black">CARGAR DOCUMENTO NACIONAL DE IDENTIDAD</p>
+          <p className="font-black">
+            Cargue aquí una foto del frente de su documento nacional de
+            identidad.
+          </p>
         </DocumentInput>
       ) : (
         <div className="flex flex-col space-y-[1rem]">
@@ -127,7 +130,8 @@ export const Documents = ({
             documentType="dni_representante_legal"
           >
             <p className="font-bold text-black">
-              CARGAR DOCUMENTO NACIONAL DE IDENTIDAD DEL REPRESENTANTE LEGAL
+              Cargue aquí una foto del frente del documento del representante
+              legal.
             </p>
           </DocumentInput>
         </div>
