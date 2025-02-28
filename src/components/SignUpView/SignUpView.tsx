@@ -110,10 +110,10 @@ const VerifyCuit: FC<VerifyCuitProps> = ({ onSubmit }) => {
                 </p>
 
                 <p className="text-[#7b7d7d] font-bold text-[0.9rem] text-center mt-[1rem]">
-                  Si Ud. Es una persona física consigne su CUIT, si se ha
-                  registrado en representación de una persona jurídica (sociedad
-                  anónima, fundación, etc.) consigne el CUIT de la persona
-                  jurídica.
+                  Si Ud. es una persona física consigne su CUIT/CUIL. Si por el
+                  contrario, se ha registrado en representación de una persona
+                  jurídica (sociedad anónima, fundación, etc.) consigne el CUIT
+                  de la persona jurídica.
                 </p>
               </div>
 
