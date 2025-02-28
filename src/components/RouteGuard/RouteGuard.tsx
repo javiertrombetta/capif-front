@@ -27,7 +27,8 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
     Conflictos: ["/repertoires/conflicts"],
     "Ver Participaciones Conflicto": ["/repertoires/conflicts/:id/history"],
     "Buscar Usuario": ["/users", "/users/:id"],
-    "Alta Usuario": ["/users/new", "/users/:id/application"],
+    "Alta Usuario": ["/users/new"],
+    "Ver Aplicación Usuario": ["/users/:id/application"],
     "Buscar Productora": ["/producers", "/producers/:id"],
     "Premios Gardel": ["/producers/gardel-awards"],
     Liquidaciones: ["/cashflow/settlements"],
@@ -35,7 +36,7 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
     Sesiones: ["/audits/sessions"],
     "Cambios en Repertorios": ["/audits/repertoire"],
     "Historial de Cambios": ["/audits"],
-    "Nueva productora": ["/producers/register"],
+    "Nueva productora": ["/producers/register", "/users/:id/application"],
   };
 
   const allowedViews = auth.vistas
