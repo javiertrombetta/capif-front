@@ -316,12 +316,11 @@ const page: FC = () => {
                   handleFileRemove={() => handleFileRemove("comprobante_ISRC")}
                 >
                   <p className="font-bold text-black mt-[2rem]">
-                    OTROS Documento Adicionales (Cargue aquí su comprobante de
-                    pago de alta de ISRC)
+                    Cargue aquí su comprobante de pago de alta de ISRC
                   </p>
                   <p className="font-bold text-black">
                     Para obtener el código de productor, el titular deberá
-                    abonar la suma de $ 10.000. El pago se realiza por el alta a
+                    abonar la suma de $ 15.000. El pago se realiza por el alta a
                     la siguiente cuenta bancaria:
                   </p>
                   <p className="font-bold text-black">BANCO GALICIA</p>
