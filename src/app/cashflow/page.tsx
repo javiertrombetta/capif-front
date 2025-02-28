@@ -58,19 +58,21 @@ function page() {
   return (
     <CustomLayout>
       <Header title="Resumen de Cuenta" />
-      <div className="w-[100%] flex-1 flex flex-col space-y-[1rem] overflow-y-auto">
-        <Formik initialValues={initialValues} onSubmit={handleOnSubmit}>
-          <Form className="h-[4rem] w-[100%] max-w-[20rem] flex items-end gap-[2rem] mt-[1rem] px-[2rem]">
-            <CustomSearchField
-              id="cuit"
-              name="cuit"
-              labelText="CUIT"
-              type="text"
-            />
-            <CustomButton type="submit">Buscar</CustomButton>
-          </Form>
-        </Formik>
-        <div className="w-[100%] mt-[2rem] flex-1 overflow-y-auto">
+      <div className="w-[100%] flex-1 flex flex-col space-y-[2rem] overflow-y-auto">
+        {vistas.some((v) => v.nombre === "Buscar Cuentas Corrientes") && (
+          <Formik initialValues={initialValues} onSubmit={handleOnSubmit}>
+            <Form className="h-[4rem] w-[100%] max-w-[20rem] flex items-end gap-[2rem] mt-[1rem] px-[2rem]">
+              <CustomSearchField
+                id="cuit"
+                name="cuit"
+                labelText="CUIT"
+                type="text"
+              />
+              <CustomButton type="submit">Buscar</CustomButton>
+            </Form>
+          </Formik>
+        )}
+        <div className="w-[100%] flex-1 overflow-y-auto">
           {loading ? (
             <div className="w-full h-full flex justify-center items-center">
               <Spinner color="black" />
