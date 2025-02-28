@@ -32,7 +32,10 @@ export interface Repertoire {
   sello_discografico: string;
   is_dominio_publico: boolean;
   cantidad_conflictos_activos: number;
-  archivoDelFonograma: string;
+  archivoDelFonograma: {
+    id_archivo: string;
+    ruta_archivo_audio: string;
+  };
   participantesDelFonograma: {
     id_participacion: string;
     productora_id: string;

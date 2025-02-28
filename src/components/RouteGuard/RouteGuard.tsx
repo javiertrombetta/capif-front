@@ -24,10 +24,8 @@ const RouteGuard: FC<RouteGuardProps> = ({ children }) => {
     "Ver Titularidad": ["/repertoires/:id/titularity"],
     "Crear Titularidad": ["/repertoires/:id/titularity/add-titular"],
     "Editar Titularidad": ["/repertoires/:id/titularity/:idtitularity"],
-    Conflictos: [
-      "/repertoires/conflicts",
-      "/repertoires/conflicts/:id/history",
-    ],
+    Conflictos: ["/repertoires/conflicts"],
+    "Ver Participaciones Conflicto": ["/repertoires/conflicts/:id/history"],
     "Buscar Usuario": ["/users", "/users/:id"],
     "Alta Usuario": ["/users/new", "/users/:id/application"],
     "Buscar Productora": ["/producers", "/producers/:id"],

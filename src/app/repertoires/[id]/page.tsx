@@ -2,23 +2,28 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Form, Formik } from "formik";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomField from "@/commons/CustomField/CustomField";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
 import Header from "@/commons/Header/Header";
 import TimerInput from "@/components/TimerInput/TimerInput";
-import useModal from "@/hooks/useModal";
-import { editRepertoire, getRepertoireById } from "@/services/repertoire";
+import {
+  editRepertoire,
+  getRepertoireById,
+  uploadPhonogramFile,
+} from "@/services/repertoire";
 import { Repertoire } from "@/types/repertoire.types";
-import { CancelEditPhonogramModal } from "@/components/Modals/EditPhonogramModals/EditPhonogramModals";
+import CustomFileInput from "@/commons/CustomFileInput/CustomFileInput";
 
 function page() {
   const params = useParams();
-  const { openModal } = useModal();
+  const router = useRouter();
   const [repertoire, setRepertoire] = useState<Repertoire | null>(null);
+  const [file, setFile] = useState<File>();
   const [year, setYear] = useState("");
   const [time, setTime] = useState<string>("");
+
   const currentYear = new Date().getFullYear();
 
   const initialValues = {
@@ -30,6 +35,28 @@ function page() {
 
   const handleTime = (formatedTime: string) => {
     setTime(formatedTime);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (
+      e.target.files &&
+      e.target.files.length > 0 &&
+      e.target.files[0].name.endsWith(".mp3")
+    ) {
+      setFile(e.target.files[0]);
+    } else {
+      toast.error("Por favor, seleccione un archivo MP3 válido.");
+    }
+  };
+
+  const handleSendFile = async () => {
+    if (file) {
+      const formData = new FormData();
+      formData.append("archivo", file);
+      if (params.id && !Array.isArray(params.id)) {
+        await uploadPhonogramFile(formData, params.id);
+      }
+    }
   };
 
   const handleInputYear = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,6 +100,7 @@ function page() {
           return prevState;
         });
         toast.success(message);
+        router.push("/repertoires");
       }
     } catch (error) {
       console.error(error);
@@ -87,72 +115,91 @@ function page() {
   return (
     <CustomLayout>
       <Header back title="Editar Fonograma" />
-      <div className="w-[100%] pr-[2rem] pl-[2rem] flex justify-center items-center">
+      <div className="w-[100%] p-[2rem] flex flex-col justify-center items-center space-y-[2rem]">
         {!repertoire ? null : (
-          <Formik onSubmit={handleSubmit} initialValues={initialValues}>
-            {({ isSubmitting, isValid, dirty }) => (
-              <Form className="w-[60%] flex flex-col justify-center items-center mt-[3rem]">
-                <CustomField
-                  type="text"
-                  id="titulo"
-                  name="titulo"
-                  labelText="Titulo"
-                />
-                <CustomField
-                  type="text"
-                  id="artista"
-                  name="artista"
-                  labelText="Artista"
-                />
-                <CustomField
-                  type="text"
-                  id="album"
-                  name="album"
-                  labelText="Album"
-                />
-                <div className="w-[100%] mb-[1.5rem]">
-                  <p className="text-black font-bold">
-                    Duración del Repertorio
-                  </p>
-                  <TimerInput
-                    onChange={handleTime}
-                    defaultTime={repertoire.duracion}
-                  />
+          <>
+            <div className="p-[1rem] w-[100%] flex flex-col border-[1px] border-[#c8c8c8]">
+              <h3 className="text-black text-3xl font-black mb-[1rem]">
+                Datos Repertorio
+              </h3>
+              <Formik onSubmit={handleSubmit} initialValues={initialValues}>
+                {({ isSubmitting, isValid, dirty }) => (
+                  <Form className="w-[100%] flex flex-col justify-center items-center">
+                    <div className="w-[100%] flex flex-row space-x-[1rem]">
+                      <CustomField
+                        type="text"
+                        id="titulo"
+                        name="titulo"
+                        labelText="Título"
+                      />
+                      <CustomField
+                        type="text"
+                        id="artista"
+                        name="artista"
+                        labelText="Artista"
+                      />
+                    </div>
+                    <div className="w-[100%] flex flex-row space-x-[1rem]">
+                      <CustomField
+                        type="text"
+                        id="album"
+                        name="album"
+                        labelText="Album"
+                      />
+                      <div className="w-[100%] flex flex-col">
+                        <label style={{ color: "black" }} className="font-bold">
+                          Año de Lanzamiento
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="AAAA"
+                          value={year}
+                          onChange={handleInputYear}
+                          className={
+                            "padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-[black] "
+                          }
+                        />
+                      </div>
+                    </div>
+                    <div className="w-[100%] flex flex-col items-center justify-center mb-[1.5rem]">
+                      <p className="text-black font-bold">
+                        Duración del Tema (Horas, minutos, segundos)
+                      </p>
+                      <TimerInput
+                        onChange={handleTime}
+                        defaultTime={repertoire.duracion}
+                      />
+                    </div>
+                    <CustomButton
+                      type="submit"
+                      disabled={isSubmitting || !isValid || !dirty}
+                      className="mt-[3rem]"
+                    >
+                      Guardar
+                    </CustomButton>
+                  </Form>
+                )}
+              </Formik>
+            </div>
+            <div className="p-[1rem] w-[100%] flex flex-col border-[1px] border-[#c8c8c8]">
+              <h3 className="text-black text-3xl font-black mb-[1rem]">
+                Archivo de Audio
+              </h3>
+              <CustomFileInput onChange={handleFileChange}>
+                Seleccione Archivo
+              </CustomFileInput>
+              {file ? (
+                <div className="flex flex-row space-x-[1rem] items-center py-[0.5rem]">
+                  <p className="text-black">{file.name}</p>
+                  <CustomButton onClick={handleSendFile}>Enviar</CustomButton>
                 </div>
-                <div className="w-[100%] flex flex-col">
-                  <label style={{ color: "black" }} className="font-bold">
-                    Año de Lanzamiento
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="AAAA"
-                    value={year}
-                    onChange={handleInputYear}
-                    className={
-                      "padding-left border-[#c8c8c8] border-[2px] outline-0 focus:border-[2px] focus:border-[#1280e1] h-[2rem] text-[black] "
-                    }
-                  />
-                </div>
-                <div className="w-[100%] flex justify-center gap-[1rem] mb-[2rem]">
-                  <CustomButton
-                    type="submit"
-                    disabled={isSubmitting || !isValid || !dirty}
-                    className="mt-[3rem]"
-                  >
-                    Guardar
-                  </CustomButton>
-
-                  <CustomButton
-                    onClick={() => openModal(<CancelEditPhonogramModal />)}
-                    type="button"
-                    className="mt-[3rem]"
-                  >
-                    Cancelar
-                  </CustomButton>
-                </div>
-              </Form>
-            )}
-          </Formik>
+              ) : (
+                <p className="py-[0.5rem] text-black">
+                  {repertoire?.archivoDelFonograma?.ruta_archivo_audio || ""}
+                </p>
+              )}
+            </div>
+          </>
         )}
       </div>
     </CustomLayout>

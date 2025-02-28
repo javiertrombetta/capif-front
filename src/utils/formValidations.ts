@@ -112,8 +112,11 @@ export const validationRegisterApplication = Yup.object().shape({
     .min(3, "Debe contener al menos 3 caracteres")
     .required("El apellido es requerido"),
   telefono_usuario: Yup.string()
-    .required("El teléfono del usuario es requerido")
-    .matches(/^\d+$/, "El teléfono debe contener solo números"),
+    .optional()
+    .matches(/^\d+$/, "El teléfono debe contener solo números")
+    .min(6, "El teléfono debe tener al menos 6 caracteres")
+    .max(12, "El teléfono no debe exceder los 12 caracteres"),
+
   nombres_representante: Yup.string().required("El nombre es requerido"),
   apellidos_representante: Yup.string().required("El apellido es requerido"),
   tipo_persona: Yup.mixed<"FISICA" | "JURIDICA">()
@@ -125,9 +128,7 @@ export const validationRegisterApplication = Yup.object().shape({
   cuit_cuil: validacionCuitCuil,
   email: validacionEmail,
   calle: Yup.string().required("La calle es requerida"),
-  numero: Yup.string()
-    .required("El número es requerido")
-    .matches(/^\d+$/, "El número debe ser numérico"),
+  numero: Yup.string().optional(),
   ciudad: Yup.string().required("La ciudad es requerida"),
   localidad: Yup.string().required("La localidad es requerida"),
   provincia: Yup.string().required("La provincia es requerida"),
@@ -135,8 +136,11 @@ export const validationRegisterApplication = Yup.object().shape({
     .required("El código postal es requerido")
     .matches(/^\d+$/, "El código postal debe ser numérico"),
   telefono: Yup.string()
-    .required("El teléfono es requerido")
-    .matches(/^\d+$/, "El teléfono debe contener solo números"),
+    .required("El teléfono del usuario es requerido")
+    .matches(/^\d+$/, "El teléfono debe contener solo números")
+    .min(6, "El teléfono debe tener al menos 6 caracteres")
+    .max(12, "El teléfono no debe exceder los 12 caracteres"),
+
   nacionalidad: Yup.string().required("La nacionalidad es requerida"),
   alias_cbu: Yup.string().required("El alias del CBU es requerido"),
   cbu: Yup.string()
@@ -218,8 +222,8 @@ export const validationEditProducer = Yup.object({
 
 export const isrcValidation = Yup.object({
   ISRC: Yup.string()
-    .min(12, "El código de designación debe tener 11 caracteres.")
-    .max(12, "El código de designación debe tener 11 caracteres.")
+    .min(12, "El código de designación debe tener 12 caracteres.")
+    .max(12, "El código de designación debe tener 12 caracteres.")
     .required("El código de designación es requerido."),
 });
 

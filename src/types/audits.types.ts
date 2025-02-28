@@ -1,3 +1,38 @@
+export const TABLAS_DB = [
+  "AuditoriaCambio",
+  "AuditoriaRepertorio",
+  "AuditoriaSesion",
+  "Cashflow",
+  "CashflowLiquidacion",
+  "CashflowMaestro",
+  "CashflowPago",
+  "CashflowPendiente",
+  "CashflowRechazo",
+  "CashflowTraspaso",
+  "Conflicto",
+  "ConflictoParte",
+  "Fonograma",
+  "FonogramaArchivo",
+  "FonogramaEnvio",
+  "FonogramaMaestro",
+  "FonogramaParticipacion",
+  "FonogramaTerritorio",
+  "FonogramaTerritorioMaestro",
+  "Productora",
+  "ProductoraDocumento",
+  "ProductoraDocumentoTipo",
+  "ProductoraISRC",
+  "ProductoraMensaje",
+  "ProductoraPremio",
+  "Usuario",
+  "UsuarioMaestro",
+  "UsuarioRol",
+  "UsuarioVista",
+  "UsuarioVistaMaestro",
+] as const;
+
+export type TablaDb = (typeof TABLAS_DB)[number];
+
 export const TIPOS_AUDITORIA = [
   "ALTA",
   "BAJA",
@@ -18,7 +53,7 @@ export interface UsuarioAuditoria {
 
 export interface AuditChange {
   id_auditoria: string;
-  modelo: string;
+  modelo: TablaDb;
   tipo_auditoria: TipoAuditoria;
   detalle: string;
   registranteDeAuditoria: UsuarioAuditoria;

@@ -66,11 +66,12 @@ export const desistConflict = async (id: string) => {
 };
 
 export const confirmPercentage = async (
+  conflict_id: string,
   participacion_id: string,
   porcentaje_confirmado: number
 ) => {
   const response = (await axiosInstance.post(
-    `/conflicts/${participacion_id}/validate-porcentage`,
+    `/conflicts/${conflict_id}/validate-porcentage`,
     {
       participacion_id,
       porcentaje_confirmado,

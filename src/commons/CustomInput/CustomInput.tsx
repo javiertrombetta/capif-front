@@ -8,6 +8,7 @@ interface CustomInputProps {
   containerClassName?: string;
   placeholder?: string;
   initialValue?: string;
+  disabled?: boolean;
 }
 
 const CustomInput: FC<CustomInputProps> = ({
@@ -17,6 +18,7 @@ const CustomInput: FC<CustomInputProps> = ({
   containerClassName,
   placeholder,
   initialValue,
+  disabled,
 }) => {
   return (
     <>
@@ -24,6 +26,7 @@ const CustomInput: FC<CustomInputProps> = ({
         <div className={`${containerClassName}`}>
           <p className="font-bold text-black">{label}</p>
           <input
+            disabled={disabled}
             defaultValue={initialValue}
             placeholder={placeholder}
             type={type}
@@ -32,6 +35,7 @@ const CustomInput: FC<CustomInputProps> = ({
         </div>
       ) : (
         <input
+          disabled={disabled}
           defaultValue={initialValue}
           placeholder={placeholder}
           type={type}
