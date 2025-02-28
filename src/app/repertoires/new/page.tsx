@@ -1,4 +1,5 @@
 "use client";
+import { AxiosError } from "axios";
 import { Form, Formik } from "formik";
 import React, { Dispatch, FC, SetStateAction, useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
@@ -247,6 +248,10 @@ const SearchForISRC: FC<{ onSubmit: (isrc: string) => void }> = ({
       );
     } catch (error) {
       console.error(error);
+      if (error instanceof AxiosError) {
+        toast.error(error.request.data?.message || error.request.data?.error);
+      }
+      toast.error("Error al validar ISRC.");
     }
   };
 

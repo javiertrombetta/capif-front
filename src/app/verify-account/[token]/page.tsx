@@ -4,9 +4,9 @@ import { MdEmail } from "react-icons/md";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import Spinner from "@/commons/Spinner/Spinner";
 import "../../../styles/globals.css";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { verifyAccount } from "@/services/auth";
-import { useRouter } from "next/navigation";
+
 const page: FC = () => {
   const [isVerified, setIsVerified] = useState<"pending" | "success" | "error">(
     "pending"
