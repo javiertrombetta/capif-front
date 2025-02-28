@@ -16,6 +16,33 @@ import { TipoDocumento, TipoPersona } from "@/types/producers.types";
 import useModal from "@/hooks/useModal";
 import SubmitSendApplication from "@/components/Modals/SubmitSendApplication/SubmitSendApplication";
 
+const PROVINCIAS = [
+  "Buenos Aires",
+  "CABA",
+  "Catamarca",
+  "Chaco",
+  "Chubut",
+  "Córdoba",
+  "Corrientes",
+  "Entre Ríos",
+  "Formosa",
+  "Jujuy",
+  "La Pampa",
+  "La Rioja",
+  "Mendoza",
+  "Misiones",
+  "Neuquén",
+  "Río Negro",
+  "Salta",
+  "San Juan",
+  "San Luis",
+  "Santa Cruz",
+  "Santa Fe",
+  "Santiago del Estero",
+  "Tierra del Fuego",
+  "Tucumán",
+] as const;
+
 export interface ApplicationValues {
   nombre_productora: string;
   nombre: string;
@@ -60,7 +87,7 @@ const page: FC = () => {
     numero: "",
     ciudad: "",
     localidad: "",
-    provincia: "",
+    provincia: "BUENOS AIRES",
     codigo_postal: "",
     telefono: "",
     nacionalidad: "",
@@ -121,7 +148,7 @@ const page: FC = () => {
         const requestData: SendApplication = {
           nombre: values.nombre,
           apellido: values.apellido,
-          telefono: values.telefono,
+          telefono: values.telefono_usuario,
           productoraData: {
             nombre_productora: values.nombre_productora,
             cuit_cuil: values.cuit_cuil,
@@ -162,7 +189,7 @@ const page: FC = () => {
       }
     } catch (error) {
       toast.error(
-        "Error al crear aplicación. Revisar campos e intentar nuevamente"
+        "Error al crear aplicación. Revisar que todos los campos se encuentren completos y los archivos de su DNI y comprobante de pago subidos."
       );
       console.log(error);
     }
@@ -486,7 +513,7 @@ const EntityForm: FC<{
           id="datos_adicionales"
           name="datos_adicionales"
           type="text"
-          labelText="DATOS ADICIONALES"
+          labelText="DATOS ADICIONALES (OPCIONAL)"
         />
         <CustomField
           width="w-[100%]"
@@ -508,8 +535,9 @@ const EntityForm: FC<{
           width="w-[100%]"
           id="provincia"
           name="provincia"
-          type="text"
+          type="select"
           labelText="PROVINCIA"
+          options={PROVINCIAS.map((p) => ({ name: p, value: p }))}
         />
         <CustomField
           width="w-[100%]"
@@ -524,7 +552,7 @@ const EntityForm: FC<{
         id="telefono"
         name="telefono"
         type="text"
-        labelText="TELÉFONO"
+        labelText="TELÉFONO PRODUCTORA"
       />
       <CustomField
         width="w-[100%]"
@@ -539,7 +567,7 @@ const EntityForm: FC<{
           id="cbu"
           name="cbu"
           type="text"
-          labelText="CBU"
+          labelText="CBU/CVU"
         />
         {/* <CustomField
           width="w-[100%]"
