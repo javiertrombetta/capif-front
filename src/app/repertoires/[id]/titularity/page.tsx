@@ -47,6 +47,16 @@ function page() {
     }
   };
 
+  const formatDate = (isoString: string): string => {
+    const date = new Date(isoString);
+
+    const day = date.getUTCDate().toString().padStart(2, "0");
+    const month = (date.getUTCMonth() + 1).toString().padStart(2, "0"); // Los meses van de 0 a 11
+    const year = date.getUTCFullYear();
+
+    return `${day}/${month}/${year}`;
+  };
+
   useEffect(() => {
     getTitularityData();
   }, []);
@@ -73,8 +83,8 @@ function page() {
               columnValues={titularities.map((t) => [
                 t.productoraDeParticipante.nombre_productora,
                 t.porcentaje_participacion,
-                t.fecha_participacion_inicio,
-                t.fecha_participacion_hasta,
+                formatDate(t.fecha_participacion_inicio),
+                formatDate(t.fecha_participacion_hasta),
                 <ActionDropdownButton
                   menuOptions={[
                     {
