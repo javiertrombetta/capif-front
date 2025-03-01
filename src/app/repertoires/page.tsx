@@ -1,4 +1,10 @@
 "use client";
+import React, { FC, useEffect, useState } from "react";
+import { FaSearch } from "react-icons/fa";
+import { toast } from "react-toastify";
+import { AxiosError } from "axios";
+import { Form, Formik } from "formik";
+import { useRouter } from "next/navigation";
 import { ActionDropdownButton } from "@/commons/ActionDropdownButton/ActionDropdownButton";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
@@ -10,11 +16,6 @@ import { useAppSelector } from "@/hooks/storeHooks";
 import { getRepertoires } from "@/services/repertoire";
 import { ROLES } from "@/types/auth.types";
 import { Repertoire } from "@/types/repertoire.types";
-import { Form, Formik } from "formik";
-import { useRouter } from "next/navigation";
-import React, { FC, useEffect, useState } from "react";
-import { FaSearch } from "react-icons/fa";
-import { toast } from "react-toastify";
 
 function page() {
   const router = useRouter();
@@ -67,7 +68,11 @@ function page() {
       setRepertoires(repertoires);
     } catch (error) {
       console.error(error);
-      toast.error("Error al obtener las productoras");
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.error || error.response?.data.message);
+      } else {
+        toast.error("Error al obtener las productoras");
+      }
       setRepertoires([]);
     } finally {
       setLoading(false);
@@ -111,7 +116,6 @@ function page() {
               { name: "AÑO", isSortable: true },
               { name: "ISRC", isSortable: true },
               { name: "PRODUCTOR FONOGRÁFICO", isSortable: true },
-              // { name: "SELLOS", isSortable: true },
               { name: "# CONFLICTOS", isSortable: true },
               { name: "ESTADO", isSortable: true },
               { name: "Acción", isSortable: true },
@@ -123,7 +127,6 @@ function page() {
               r.anio_lanzamiento,
               r.isrc,
               r.productoraDelFonograma.nombre_productora,
-              // r.sello_discografico,
               r.cantidad_conflictos_activos,
               r.estado_fonograma,
               <ActionDropdownButton

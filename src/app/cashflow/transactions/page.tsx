@@ -38,7 +38,6 @@ function page() {
   };
 
   const getCashflowData = async (values?: typeof initialValues) => {
-    console.log(searchParams.get("productora_id"));
     setLoading(true);
     try {
       const response = await getCashflowTransactions({
@@ -116,7 +115,7 @@ function page() {
                 t.monto,
                 t.saldo_resultante ?? "",
                 t.referencia ?? "",
-                t.fecha_transaccion,
+                new Date(t.fecha_transaccion).toLocaleString(),
                 <ActionDropdownButton
                   menuOptions={[
                     {

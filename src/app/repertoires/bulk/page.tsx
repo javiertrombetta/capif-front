@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import Papa from "papaparse";
+import { parse } from "papaparse";
 import CustomButton from "@/commons/CustomButton/CustomButton";
 import CustomFileInput from "@/commons/CustomFileInput/CustomFileInput";
 import CustomLayout from "@/commons/CustomLayout/CustomLayout";
@@ -29,7 +29,7 @@ export default function Page() {
   };
 
   const parseCSV = (file: File) => {
-    Papa.parse(file, {
+    parse(file, {
       complete: (result) => {
         const [header, ...rows] = result.data as string[][];
         setTableData({
@@ -47,6 +47,11 @@ export default function Page() {
         const formData = new FormData();
         formData.append("repertoiresFile", file);
         const response = await declareRepertoiresBulk(formData);
+        if (response.errores.length > 0) {
+          toast.warn(
+            "Uno o mas repertorios no fueron creados ya que presentar errores"
+          );
+        }
         toast.success(response.message);
       }
     } catch (error: unknown) {
