@@ -14,6 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      NEXT_PUBLIC_API_URL: "http://capif-back:3000/api/v1/"
+      NEXT_PUBLIC_PORT: "3001"
+      NEXT_PUBLIC_RECAPTCHA_SITE_KEY: "6LfZctYqAAAAAHj9_CL9_vfv-2okXZ7ccGwBefqs"
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -33,7 +38,11 @@ jobs:
         env:
           NEW_VERSION: ${{ env.NEW_VERSION }}
         run: |
-          docker build -t javiertrombetta/capif-front:$NEW_VERSION .
+          docker build \
+          --build-arg NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL} \
+          --build-arg NEXT_PUBLIC_PORT=${NEXT_PUBLIC_PORT} \
+          --build-arg NEXT_PUBLIC_RECAPTCHA_SITE_KEY=${NEXT_PUBLIC_RECAPTCHA_SITE_KEY} \
+          -t javiertrombetta/capif-front:$NEW_VERSION .
           docker tag javiertrombetta/capif-front:$NEW_VERSION javiertrombetta/capif-front:latest
           docker push javiertrombetta/capif-front:$NEW_VERSION
           docker push javiertrombetta/capif-front:latest
