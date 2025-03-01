@@ -33,20 +33,16 @@ jobs:
           install: true
           use: true
 
-      - name: Cache Docker layers
-        uses: actions/cache@v4
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
+      - name: Get Version
+        id: version
+        run: echo "NEW_VERSION=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
 
       - name: Build and Push Frontend Image
         id: docker_release_front
+        env:
+          NEW_VERSION: ${{ env.NEW_VERSION }}
         run: |
           docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 \
           -t javiertrombetta/capif-front:$NEW_VERSION \
           -t javiertrombetta/capif-front:latest \
-          --push \
-          --cache-from=type=local,src=/tmp/.buildx-cache \
-          --cache-to=type=local,dest=/tmp/.buildx-cache .
+          --push .
