@@ -142,7 +142,6 @@ export const validationRegisterApplication = Yup.object().shape({
     .max(12, "El teléfono no debe exceder los 12 caracteres"),
 
   nacionalidad: Yup.string().required("La nacionalidad es requerida"),
-  alias_cbu: Yup.string().required("El alias del CBU es requerido"),
   cbu: Yup.string()
     .required("El CBU es requerido")
     .matches(/^\d{22}$/, "El CBU debe contener exactamente 22 dígitos"),
@@ -207,9 +206,7 @@ export const validationEditProducer = Yup.object({
   cuit_representante: Yup.string().optional(),
   denominacion_sello: Yup.string().optional(),
   calle: Yup.string().required("La calle es requerida"),
-  numero: Yup.string()
-    .required("El número es requerido")
-    .matches(/^\d+$/, "El número debe ser numérico"),
+  numero: Yup.string().optional(),
   datos_adicionales: Yup.string().optional(),
   localidad: Yup.string().required("La localidad es requerida"),
   provincia: Yup.string().required("La provincia es requerida"),

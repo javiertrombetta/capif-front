@@ -42,7 +42,8 @@ function page() {
     | "load_audio"
     | "add_participation"
     | "edit_territoriality"
-  >("edit_territoriality");
+    | "accept_terms"
+  >("start");
   const [audio, setAudio] = useState<File | null>(null);
   const dispatch = useAppDispatch();
   const authData = useAppSelector((state) => state.auth);
@@ -64,6 +65,9 @@ function page() {
         break;
       case "load_audio":
         setFlowState("edit_territoriality");
+        break;
+      case "accept_terms":
+        setFlowState("load_audio");
         break;
     }
   };
@@ -171,6 +175,12 @@ function page() {
             >
               Cargar Audio
             </p>
+            <IoIosArrowForward color="#a6acaf" size={20} />
+            <p
+              className={`${flowState === "accept_terms" ? "text-black" : "text-[#a6acaf]"} font-bold`}
+            >
+              Finalizar
+            </p>
           </div>
           <div className="relative mt-[0.5rem]">
             <div className="absolute left-[3%] top-[20%]">
@@ -184,7 +194,6 @@ function page() {
           </div>
         </>
       )}
-
       {flowState === "start" ? (
         <SearchForISRC
           onSubmit={(isrc: string) => {
@@ -196,7 +205,6 @@ function page() {
           }}
         />
       ) : null}
-
       {flowState === "new_phonogram" && (
         <NewPhonogram
           onSubmit={() => {
@@ -204,11 +212,9 @@ function page() {
           }}
         />
       )}
-
       {flowState === "existing_repertoire" && (
         <ExistingPhonogram handleGoBack={handleGoBack} />
       )}
-
       {flowState === "add_participation" && (
         <AddParticipation
           onSubmit={() => {
@@ -224,8 +230,13 @@ function page() {
         />
       )}
       {flowState === "load_audio" && (
-        <LoadAudio audio={audio} setAudio={setAudio} onSubmit={onSubmit} />
+        <LoadAudio
+          audio={audio}
+          setAudio={setAudio}
+          onSubmit={() => setFlowState("accept_terms")}
+        />
       )}
+      {flowState === "accept_terms" && <AcceptTerms onSubmit={onSubmit} />}
     </CustomLayout>
   );
 }
@@ -382,14 +393,14 @@ const NewPhonogram: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
               type="text"
               id="productor_originario"
               name="productor_originario"
-              labelText="Productor Originario"
+              labelText="Productor Fonográfico"
               disabled
             />
             <CustomField
               type="text"
               id="sello_discografico"
               name="sello_discografico"
-              labelText="Productor Originario"
+              labelText="Sello Discográfico"
             />
             <div className="w-[100%] flex flex-col">
               <label style={{ color: "black" }} className="font-bold">
@@ -643,21 +654,6 @@ const AddParticipation: FC<{ onSubmit: () => void }> = ({ onSubmit }) => {
   );
 };
 
-// const initialCountries = [
-//   { name: "Paraguay", iso: "PY", selected: true },
-//   { name: "Uruguay", iso: "UY", selected: true },
-//   { name: "Brasil", iso: "BR", selected: true },
-//   { name: "Guatemala", iso: "GT", selected: true },
-//   { name: "Costa Rica", iso: "CR", selected: true },
-//   { name: "El Salvador", iso: "SV", selected: true },
-//   { name: "Panamá", iso: "PA", selected: true },
-//   { name: "República Dominicana", iso: "DO", selected: true },
-//   { name: "España", iso: "ES", selected: true },
-//   { name: "India", iso: "IN", selected: true },
-//   { name: "Italia", iso: "IT", selected: true },
-//   { name: "Ucrania", iso: "UA", selected: true },
-// ];
-
 const EditTerritoriality: React.FC<{
   onSubmit: () => void;
 }> = ({ onSubmit }) => {
@@ -785,7 +781,7 @@ const EditTerritoriality: React.FC<{
 const LoadAudio: FC<{
   audio: File | null;
   setAudio: Dispatch<SetStateAction<File | null>>;
-  onSubmit: () => Promise<void>;
+  onSubmit: () => void;
 }> = ({ audio, setAudio, onSubmit }) => {
   const loadAudio = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length <= 0) {
@@ -834,6 +830,52 @@ const LoadAudio: FC<{
           </button>
         )}
         <CustomButton onClick={onSubmit} type="submit">
+          Continuar
+        </CustomButton>
+      </div>
+    </div>
+  );
+};
+
+const AcceptTerms: FC<{
+  onSubmit: () => Promise<void>;
+}> = ({ onSubmit }) => {
+  const [accepted, setAccepted] = useState(false);
+
+  return (
+    <div className="w-[100%] flex flex-col justify-center items-center mt-[3rem] pl-[3rem] pr-[3rem]">
+      <p className="text-black text-center py-[1rem]">
+        <strong>
+          <input
+            type="checkbox"
+            id="accept_terms"
+            name="accept_terms"
+            checked={accepted}
+            onChange={(e) => setAccepted(e.target.checked)}
+            className="mr-[0.5rem]"
+          />
+          Aceptación de términos legales SI/NO <br />
+        </strong>
+        Declaro bajo juramento que poseo derechos suficientes sobre el
+        repertorio declarado para proceder al cobro de los derechos de
+        comunicación al público en el territorio de la República Argentina en
+        los períodos informados conforme lo establecido en las normas internas y
+        reglamento de CAPIF. Asimismo, me comprometo a notificar a CAPIF de
+        cualquier cambio respecto de dicha condición en un plazo máximo de diez
+        (10) días desde ocurrido el cambio o modificación. Presto conformidad
+        para que CAPIF efectúe notificaciones por medios electrónicos a la
+        casilla de correo denunciada como domicilio electrónico, manifestando
+        que será válida toda notificación e información de toda índole allí
+        enviada. La información ingresada en el formulario/archivo reviste el
+        carácter de declaración jurada debiendo ser fiable y fiel expresión de
+        la realidad
+      </p>
+
+      <div className="w-[60%] flex flex-col justify-center items-center gap-[0.8rem] mt-[1rem]">
+        <CustomButton
+          onClick={onSubmit}
+          {...(!accepted ? { disabled: true, background: "disabled" } : {})}
+        >
           Guardar y Finalizar
         </CustomButton>
       </div>

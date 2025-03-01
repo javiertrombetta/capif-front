@@ -116,10 +116,6 @@ function page() {
                 isSortable: true,
               },
               {
-                name: "ULTIMO FONOGRAMA DECLARADO",
-                isSortable: true,
-              },
-              {
                 name: "FECHA ULTIMO FONOGRAMA DECLARADO",
                 isSortable: true,
               },
@@ -136,8 +132,11 @@ function page() {
               nominations.length > 0
                 ? nominations.map((element) => [
                     element.productoraDelPremio.nombre_productora,
-                    "",
-                    element.productoraDelPremio.fecha_ultimo_fonograma || "",
+                    element.productoraDelPremio.fecha_ultimo_fonograma
+                      ? new Date(
+                          element.productoraDelPremio?.fecha_ultimo_fonograma?.toString()
+                        ).toLocaleString()
+                      : "",
                     element.codigo_postulacion,
                     new Date(
                       Date.parse(element.fecha_asignacion.toString())
