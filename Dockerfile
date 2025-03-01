@@ -39,8 +39,14 @@ COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/node_modules ./node_modules
 
+# Variables de entorno en tiempo de ejecución
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+ENV NEXT_PUBLIC_RECAPTCHA_SITE_KEY=${NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+ENV RECAPTCHA_SECRET_KEY=${RECAPTCHA_SECRET_KEY}
+ENV NEXT_PUBLIC_PORT=${NEXT_PUBLIC_PORT}
+
 # Exponer el puerto correcto
 EXPOSE ${NEXT_PUBLIC_PORT}
 
 # Comando de inicio
-CMD ["npm", "run", "start"]
+CMD ["sh", "-c", "NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL NEXT_PUBLIC_RECAPTCHA_SITE_KEY=$NEXT_PUBLIC_RECAPTCHA_SITE_KEY RECAPTCHA_SECRET_KEY=$RECAPTCHA_SECRET_KEY NEXT_PUBLIC_PORT=$NEXT_PUBLIC_PORT npm run start"]
