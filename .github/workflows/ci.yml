@@ -42,7 +42,7 @@ jobs:
         env:
           NEW_VERSION: ${{ env.NEW_VERSION }}
         run: |
-          docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 \
+          docker buildx build --platform linux/amd64,linux/arm64 \
           -t javiertrombetta/capif-front:$NEW_VERSION \
           -t javiertrombetta/capif-front:latest \
           --push .
