@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p ${NEXT_PUBLIC_PORT:-3001}",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p ${NEXT_PUBLIC_PORT:-3001}",
     "prepare": "husky install",
     "lint-staged": "lint-staged",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx --ignore-path .eslintignore --max-warnings=0",
