@@ -185,7 +185,10 @@ function page() {
               <h3 className="text-black text-3xl font-black mb-[1rem]">
                 Archivo de Audio
               </h3>
-              <CustomFileInput onChange={handleFileChange}>
+              <CustomFileInput
+                onChange={handleFileChange}
+                acceptedFormats=".mp3"
+              >
                 Seleccione Archivo
               </CustomFileInput>
               {file ? (

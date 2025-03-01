@@ -7,6 +7,7 @@ import CustomField from "@/commons/CustomField/CustomField";
 import { getProducerById, updateProducer } from "@/services/producers";
 import {
   ProductionCompanyByIdResponse,
+  PROVINCIAS,
   TipoPersona,
   UpdateProducerPayload,
 } from "@/types/producers.types";
@@ -18,7 +19,7 @@ const ProducerView = ({
   fieldsDisabled = true,
 }: {
   idProducer: string;
-  fieldsDisabled: boolean;
+  fieldsDisabled?: boolean;
 }) => {
   const [currentEntity, setCurrentEntity] = useState<TipoPersona>("FISICA");
   const [companyData, setCompanyData] = useState<
@@ -124,7 +125,10 @@ const ProducerView = ({
         <Formik
           initialValues={initialValues}
           validationSchema={validationEditProducer}
-          onSubmit={(values) => handleEditCompany(values)}
+          onSubmit={(values, { resetForm }) => {
+            handleEditCompany(values);
+            resetForm({ values });
+          }}
         >
           {({ isSubmitting, isValid, dirty, values, setValues }) => (
             <Form id="form" className="w-[100%]">
@@ -160,17 +164,15 @@ const ProducerView = ({
               </div>
 
               <EntityForm disabled={fieldsDisabled} entity={currentEntity} />
-              {!fieldsDisabled && (
-                <CustomButton
-                  {...(isSubmitting || !isValid || !dirty
-                    ? { disabled: true, background: "disabled" }
-                    : {})}
-                  type="submit"
-                  className="mt-[1rem]"
-                >
-                  Guardar
-                </CustomButton>
-              )}
+              <CustomButton
+                {...(isSubmitting || !isValid || !dirty
+                  ? { disabled: true, background: "disabled" }
+                  : {})}
+                type="submit"
+                className="mt-[1rem]"
+              >
+                Guardar
+              </CustomButton>
             </Form>
           )}
         </Formik>
@@ -201,7 +203,7 @@ const EntityForm: FC<{
           labelText="NOMBRE PRODUCTORA"
         />
         <CustomField
-          disabled={disabled}
+          disabled
           width="w-[100%]"
           id="cuit_cuil"
           name="cuit_cuil"
@@ -298,7 +300,6 @@ const EntityForm: FC<{
       />
       <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
         <CustomField
-          disabled={disabled}
           width="w-[100%]"
           id="calle"
           name="calle"
@@ -306,7 +307,6 @@ const EntityForm: FC<{
           labelText="CALLE"
         />
         <CustomField
-          disabled={disabled}
           width="w-[100%]"
           id="numero"
           name="numero"
@@ -316,7 +316,6 @@ const EntityForm: FC<{
       </div>
       <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
         <CustomField
-          disabled={disabled}
           width="w-[100%]"
           id="datos_adicionales"
           name="datos_adicionales"
@@ -324,7 +323,6 @@ const EntityForm: FC<{
           labelText="DATOS ADICIONALES"
         />
         <CustomField
-          disabled={disabled}
           width="w-[100%]"
           id="ciudad"
           name="ciudad"
@@ -334,7 +332,6 @@ const EntityForm: FC<{
       </div>
       <div className="flex w-[100%] gap-[2rem] mt-[1.5rem]">
         <CustomField
-          disabled={disabled}
           width="w-[100%]"
           id="localidad"
           name="localidad"
@@ -342,15 +339,14 @@ const EntityForm: FC<{
           labelText="LOCALIDAD"
         />
         <CustomField
-          disabled={disabled}
           width="w-[100%]"
           id="provincia"
           name="provincia"
-          type="text"
+          type="select"
           labelText="PROVINCIA"
+          options={PROVINCIAS.map((p) => ({ name: p, value: p }))}
         />
         <CustomField
-          disabled={disabled}
           width="w-[100%]"
           id="codigo_postal"
           name="codigo_postal"
@@ -380,7 +376,7 @@ const EntityForm: FC<{
           id="cbu"
           name="cbu"
           type="text"
-          labelText="CBU"
+          labelText="CBU/CVU"
         />
         {/* <CustomField
           width="w-[100%]"
