@@ -63,6 +63,8 @@ const LoginForm: FC = () => {
 
     if (data.estado === "HABILITADO") {
       router.push("/repertoires");
+    } else if (data.estado === "ENVIADO") {
+      router.push(`/users/${data.id_usuario}/application`);
     } else {
       router.push("/producers/register");
     }

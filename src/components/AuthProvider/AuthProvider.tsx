@@ -59,6 +59,10 @@ const AuthProvider: FC<AuthProvider> = ({ children }) => {
         router.push("/users");
         return;
       }
+      if (data.estado && data.estado === "ENVIADO") {
+        router.push(`/users/${data.id_usuario}/application`);
+        return;
+      }
       if (data.estado && data.estado !== "HABILITADO") {
         router.push("/producers/register");
       }
