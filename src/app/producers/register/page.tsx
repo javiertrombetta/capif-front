@@ -37,6 +37,7 @@ export interface ApplicationValues {
   telefono: string;
   nacionalidad: string;
   cbu: string;
+  alias_cbu: string;
   datos_adicionales?: string;
   denominacion_sello?: string;
   razon_social?: string;
@@ -68,6 +69,7 @@ const page: FC = () => {
     telefono: "",
     nacionalidad: "",
     cbu: "",
+    alias_cbu: "",
     datos_adicionales: "",
     denominacion_sello: "",
     razon_social: "",
@@ -137,6 +139,7 @@ const page: FC = () => {
             telefono: values.telefono,
             nacionalidad: values.nacionalidad,
             cbu: values.cbu,
+            alias_cbu: values.alias_cbu,
             denominacion_sello: values.denominacion_sello,
             datos_adicionales: values.datos_adicionales,
             ...(currentEntity === "FISICA"
@@ -543,13 +546,13 @@ const EntityForm: FC<{
           type="text"
           labelText="CBU/CVU"
         />
-        {/* <CustomField
+        <CustomField
           width="w-[100%]"
           id="alias_cbu"
           name="alias_cbu"
           type="text"
           labelText="ALIAS"
-        /> */}
+        />
       </div>
     </div>
   );
