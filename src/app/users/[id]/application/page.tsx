@@ -12,12 +12,13 @@ import UserFieldsView from "@/components/UserFieldsView/UserFieldsView";
 import useModal from "@/hooks/useModal";
 import { getPendingApplications } from "@/services/auth";
 import { User } from "@/types/user.types";
-
+import { useAppSelector } from "@/hooks/storeHooks";
+import { ROLES } from "@/types/auth.types";
 export default function page() {
   const { id } = useParams();
   const [user, setUser] = useState<User>();
   const { openModal } = useModal();
-
+  const authData = useAppSelector((state) => state.auth);
   const getProductoraPendiente = async () => {
     const user = await getPendingApplications(id as string);
     setUser(user);
@@ -49,14 +50,20 @@ export default function page() {
         </div>
         <ProducerView idProducer={user?.productoras[0].id} />
       </div>
-      <div className="relative flex flex-row gap-[1rem] p-[1rem]">
-        <CustomButton onClick={onAcceptApplication} className="bg-[#008d4c]">
-          Confirmar el Registro del Usuario
-        </CustomButton>
-        <CustomButton background="delete" onClick={onRejectApplication}>
-          Rechazar el Registro del Usuario
-        </CustomButton>
-      </div>
+      {authData.rol === ROLES.CAPIF_ADMIN ||
+        (authData.rol === ROLES.SUPER_ADMIN && (
+          <div className="relative flex flex-row gap-[1rem] p-[1rem]">
+            <CustomButton
+              onClick={onAcceptApplication}
+              className="bg-[#008d4c]"
+            >
+              Confirmar el Registro del Usuario
+            </CustomButton>
+            <CustomButton background="delete" onClick={onRejectApplication}>
+              Rechazar el Registro del Usuario
+            </CustomButton>
+          </div>
+        ))}
     </CustomLayout>
   );
 }
